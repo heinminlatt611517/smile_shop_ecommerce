@@ -25,6 +25,7 @@ const Color kCityTitleContainerTextColor = Color(0xFFF2F2F2);
 const Color kImageAndTicketInfoStartColor = Color.fromRGBO(38, 38, 38, 0.00);
 const Color kImageAndTicketInfoEndColor = Color.fromRGBO(39, 39, 39, 0.45);
 const Color kTpinTextColor = Color(0xFF888888);
+const Color kCartColor = Color(0xffCFCFCF);
 const Color kMTicketColor = Color(0xFFAAAAAA);
 const Color kCheckoutContainerStartColor = Color(0xFF444444);
 const Color kCheckoutContainerEndColor = Color(0xFF444444);

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:smile_shop/pages/sign_up_page.dart';
 import 'package:smile_shop/pages/splash_page.dart';
 import 'package:smile_shop/utils/fonts.dart';
 
@@ -22,7 +23,7 @@ class SmileShopApp extends StatelessWidget {
               primary: const Color.fromRGBO(255, 255, 255, 1.0)),
           useMaterial3: true,
           fontFamily: kInter),
-      home: const SplashPage(),
+      home: const SignUpPage(),
     );
   }
 }
