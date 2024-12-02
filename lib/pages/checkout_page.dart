@@ -5,6 +5,7 @@ import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 
 import '../widgets/cached_network_image_view.dart';
+import 'payment_method_page.dart';
 
 class CheckoutPage extends StatelessWidget {
   const CheckoutPage({super.key});
@@ -44,8 +45,8 @@ class CheckoutPage extends StatelessWidget {
       ),
       bottomNavigationBar: GestureDetector(
         onTap: () {
-          // Navigator.of(context).push(MaterialPageRoute(
-          //           builder: (builder) => const OtpPage()));
+          Navigator.of(context).push(MaterialPageRoute(
+                    builder: (builder) => const PaymentMethodPage()));
         },
         child: Container(
           margin: const EdgeInsets.only(bottom: 30, left: 16, right: 16),
