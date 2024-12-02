@@ -4,7 +4,8 @@ import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/widgets/cached_network_image_view.dart';
 
 class CartListItemView extends StatelessWidget {
-  const CartListItemView({super.key});
+  const CartListItemView({super.key, required this.isCheckout});
+  final bool isCheckout;
 
   @override
   Widget build(BuildContext context) {
@@ -15,14 +16,19 @@ class CartListItemView extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
-            padding: EdgeInsets.only(top: 25),
-            child: Icon(
-              Icons.check_box_outlined,
-              color: kPrimaryColor,
-              size: 20,
-            ),
-          ),
+          isCheckout == true
+              ? const SizedBox.shrink()
+              : Container(
+                  margin: const EdgeInsets.only(top: 28),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(3),
+                      border: Border.all(color: kCartColor)),
+                  child: const Icon(
+                    Icons.check,
+                    color: kPrimaryColor,
+                    size: 20,
+                  ),
+                ),
           const SizedBox(
             width: kMargin30,
           ),
@@ -58,7 +64,9 @@ class CartListItemView extends StatelessWidget {
                       style: TextStyle(
                           color: kTpinTextColor, fontSize: kTextSmall),
                     ),
-                    const SizedBox(width: kMargin6 + 1,),
+                    const SizedBox(
+                      width: kMargin6 + 1,
+                    ),
                     Container(
                       color: kCartColor.withOpacity(0.4),
                       height: 22,
@@ -83,7 +91,9 @@ class CartListItemView extends StatelessWidget {
                       'Ks 100000.00',
                       style: TextStyle(fontSize: kTextRegular2x),
                     ),
-                    SizedBox(width: kMargin30,),
+                    SizedBox(
+                      width: kMargin30,
+                    ),
                     Text(
                       '100 pt',
                       style:
@@ -94,24 +104,29 @@ class CartListItemView extends StatelessWidget {
                 const SizedBox(
                   height: kMargin10,
                 ),
-                Row(
-                  children: [
-                    const Spacer(),
-                    TextButton(
-                        onPressed: () {},
-                        child: const Icon(
-                          Icons.remove_circle,
-                          color: kCartColor,
-                        )),
-                    const Text('1'),
-                    TextButton(
-                        onPressed: () {},
-                        child: const Icon(
-                          Icons.add_circle,
-                          color: kCartColor,
-                        )),
-                  ],
-                )
+                isCheckout == true
+                    ? const Text('Qty: 1')
+                    : const SizedBox.shrink(),
+                isCheckout == true
+                    ? const SizedBox.shrink()
+                    : Row(
+                        children: [
+                          const Spacer(),
+                          TextButton(
+                              onPressed: () {},
+                              child: const Icon(
+                                Icons.remove_circle,
+                                color: kCartColor,
+                              )),
+                          const Text('1'),
+                          TextButton(
+                              onPressed: () {},
+                              child: const Icon(
+                                Icons.add_circle,
+                                color: kCartColor,
+                              )),
+                        ],
+                      )
               ],
             ),
           )
