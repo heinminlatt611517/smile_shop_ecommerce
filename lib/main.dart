@@ -23,7 +23,7 @@ class SmileShopApp extends StatelessWidget {
               primary: const Color.fromRGBO(255, 255, 255, 1.0)),
           useMaterial3: true,
           fontFamily: kInter),
-      home: const SignUpPage(),
+      home: const SplashPage(),
     );
   }
 }

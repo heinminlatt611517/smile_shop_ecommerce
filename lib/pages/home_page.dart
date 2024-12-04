@@ -3,9 +3,11 @@ import 'package:smile_shop/data/dummy_data/accessories_dummy_data.dart';
 import 'package:smile_shop/data/dummy_data/trending_products_dummy_data.dart';
 import 'package:smile_shop/list_items/trending_product_list_item_view.dart';
 import 'package:smile_shop/network/api_constants.dart';
+import 'package:smile_shop/pages/sub_category_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/strings.dart';
 import 'package:smile_shop/widgets/cached_network_image_view.dart';
+import 'package:smile_shop/widgets/icon_with_label_vertical_view.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../data/dummy_data/banner_section_dummy_data.dart';
@@ -272,16 +274,19 @@ class AccessoriesView extends StatelessWidget {
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         itemBuilder: (context, index) {
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-            const Icon(Icons.shopping_bag_rounded,color: kPrimaryColor,size: 30,),
-            const SizedBox(height: 4,),
-            Text(
-              textAlign: TextAlign.center,
-              accessoriesDummyData[index]['name'] ?? "",style:const TextStyle(color: Colors.black,fontSize:12
-            ),)
-          ],);
+          return InkWell(
+            onTap: (){
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SubCategoryPage(),
+                ),
+              );
+            },
+            child: IconWithLabelVerticalView(
+              isIconWithBg: true,
+              bgColor: kSecondaryColor,index: index,),
+          );
         },
         itemCount: accessoriesDummyData.length,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
