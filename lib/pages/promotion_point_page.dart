@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 
-class SmilePointPage extends StatefulWidget {
-  const SmilePointPage({super.key});
+class PromotionPointPage extends StatefulWidget {
+  const PromotionPointPage({super.key});
 
   @override
-  State<SmilePointPage> createState() => _SmilePointPageState();
+  State<PromotionPointPage> createState() => _PromotionPointPageState();
 }
 
 int? _selectedSegment = 0;
 
-class _SmilePointPageState extends State<SmilePointPage> {
+class _PromotionPointPageState extends State<PromotionPointPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,75 +20,40 @@ class _SmilePointPageState extends State<SmilePointPage> {
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: kSecondaryColor,
-        title: const Text('Smile Point'),
+        title: const Text('Promotion Point'),
       ),
       body: Column(
         children: [
           Container(
             width: double.infinity,
             color: kSecondaryColor,
-            child: Column(
+            child: const Column(
               children: [
-                const Text(
+                Text(
                   'You have                 ',
                   style: TextStyle(
-                      fontSize: kTextRegular, color: kBackgroundColor),
+                      fontSize: kTextRegular, color: Colors.black),
                 ),
-                const SizedBox(
+                SizedBox(
                   height: 7,
                 ),
-                const Text(
+                Text(
                   '500,000',
                   style: TextStyle(
                       fontSize: 32,
-                      color: Colors.black,
+                      color: kBackgroundColor,
                       fontWeight: FontWeight.bold),
                 ),
-                const Text(
-                  '                You have',
+                Text(
+                  '        promotion points',
                   style: TextStyle(
-                      fontSize: kTextRegular, color: kBackgroundColor),
+                      fontSize: kTextSmall, color: Colors.black),
                 ),
-                const SizedBox(
+                SizedBox(
                   height: 20,
                 ),
-                GestureDetector(
-                  onTap: () {
-                    
-                  },
-                  child: Container(
-                    height: 28,
-                    width: 122,
-                    decoration: BoxDecoration(
-                        color: kFillingFastColor,
-                        borderRadius: BorderRadius.circular(4)),
-                    child: const Center(
-                      child: Text(
-                        'Recharge Point',
-                        style: TextStyle(color: kBackgroundColor),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 18,
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width - 60,
-                  padding: const EdgeInsets.all(2),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(2),
-                      border: Border.all(color: kBackgroundColor)),
-                  child: const Center(
-                    child: Text(
-                      'Please set password to secure your smile point.',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 14,
-                )
+               
+              
               ],
             ),
           ),
