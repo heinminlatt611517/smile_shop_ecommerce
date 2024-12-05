@@ -61,13 +61,16 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> with SingleTick
                 TabBar(
                   unselectedLabelColor: Colors.black,
                   labelColor: kPrimaryColor,
+                  indicatorWeight: 1,
+                  dividerColor: Colors.transparent,
+                  indicatorSize: TabBarIndicatorSize.label,
+                  labelPadding:const EdgeInsets.symmetric (horizontal: 10),
                   tabs: const [
                     Text('Product Details', textAlign: TextAlign.center),
                     Text('Product Specifications', textAlign: TextAlign.center),
                     Text('After Sale', textAlign: TextAlign.center),
                   ],
                   controller: tabController,
-                  indicatorSize: TabBarIndicatorSize.tab,
                   indicatorColor: kPrimaryColor,
                 ),
               ),
@@ -154,20 +157,32 @@ class BannerSectionView extends StatelessWidget {
     return Column(
       children: [
         /// Page Banner View
-        SizedBox(
-          height: 260,
-          width: double.infinity,
-          child: PageView.builder(
-            controller: _bannerPageController,
-            itemBuilder: (context, index) {
-              return CachedNetworkImageView(
-                imageHeight: 120,
-                imageWidth: double.infinity,
-                imageUrl: bannerSectionDummyData[index],
-              );
-            },
-            itemCount: bannerSectionDummyData.length,
-          ),
+        Stack(
+          children: [
+            SizedBox(
+              height: 260,
+              width: double.infinity,
+              child: PageView.builder(
+                controller: _bannerPageController,
+                itemBuilder: (context, index) {
+                  return CachedNetworkImageView(
+                    imageHeight: 120,
+                    imageWidth: double.infinity,
+                    imageUrl: bannerSectionDummyData[index],
+                  );
+                },
+                itemCount: bannerSectionDummyData.length,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 50,horizontal: 20),
+              child: InkWell(
+                  onTap: (){
+                    Navigator.pop(context);
+                  },
+                  child: const Icon(Icons.keyboard_backspace)),
+            ),
+          ],
         ),
 
         /// Spacer

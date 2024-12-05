@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smile_shop/list_items/cart_list_item_view.dart';
 import 'package:smile_shop/pages/checkout_page.dart';
 import 'package:smile_shop/utils/colors.dart';
+import 'package:smile_shop/utils/dimens.dart';
 
 class CartPage extends StatelessWidget {
   const CartPage({super.key});
@@ -12,23 +13,28 @@ class CartPage extends StatelessWidget {
       backgroundColor: kBackgroundColor,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: kBackgroundColor,
+        backgroundColor: Colors.white,
         foregroundColor: Colors.black,
+        toolbarHeight: 20,
         centerTitle: true,
-        title: const Text('Cart'),
-        bottom: const PreferredSize(
-            preferredSize: Size(double.infinity, 50),
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 17),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('My Cart'),
-                  Text(
-                    'Manage',
-                    style: TextStyle(color: kPrimaryColor),
-                  )
-                ],
+        title: const Text('Cart',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+        bottom:  PreferredSize(
+            preferredSize:const Size(double.infinity, 40),
+            child: Container(
+              color: kBackgroundColor,
+              child:const Padding(
+                padding: EdgeInsets.only(left: kMarginMedium,right: kMarginMedium,top: kMarginMedium),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('My Cart'),
+                    Text(
+                      'Manage',
+                      style: TextStyle(color: kPrimaryColor),
+                    )
+                  ],
+                ),
               ),
             )),
       ),

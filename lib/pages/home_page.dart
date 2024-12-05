@@ -22,6 +22,8 @@ class HomePage extends StatelessWidget {
       backgroundColor: kBackgroundColor,
       body: CustomScrollView(
         slivers: [
+          ///spacer
+        const SliverToBoxAdapter(child: SizedBox(height: kMarginXXLarge,)),
           ///search view
           const SliverToBoxAdapter(
             child: Padding(
@@ -269,9 +271,10 @@ class AccessoriesView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: kMarginLarge),
+      padding: const EdgeInsets.only(top: kMarginXLarge),
       child: GridView.builder(
         shrinkWrap: true,
+        padding: EdgeInsets.zero,
         physics: const NeverScrollableScrollPhysics(),
         itemBuilder: (context, index) {
           return InkWell(
@@ -380,6 +383,7 @@ class TrendingProductsView extends StatelessWidget {
           ),
           GridView.builder(
             shrinkWrap: true,
+            padding: EdgeInsets.zero,
             physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
               return TrendingProductListItemView(

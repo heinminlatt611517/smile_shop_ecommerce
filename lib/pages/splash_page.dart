@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smile_shop/pages/login_page.dart';
 import 'package:smile_shop/pages/main_page.dart';
 
 import '../utils/colors.dart';
@@ -21,7 +22,7 @@ class _SplashPageState extends State<SplashPage> {
     super.initState();
     Future.delayed(const Duration(seconds: 4), () {
       Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const MainPage()));
+          MaterialPageRoute(builder: (context) => const LoginPage()));
     });
   }
 

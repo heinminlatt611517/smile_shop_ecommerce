@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smile_shop/pages/product_category_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import '../data/dummy_data/accessories_dummy_data.dart';
@@ -51,9 +52,19 @@ class SubCategoryView extends StatelessWidget {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
-        return  IconWithLabelVerticalView(
-          isIconWithBg: false,
-          bgColor: Colors.white,index: index,);
+        return  InkWell(
+          onTap: (){
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const ProductCategoryPage(),
+              ),
+            );
+          },
+          child: IconWithLabelVerticalView(
+            isIconWithBg: false,
+            bgColor: Colors.white,index: index,),
+        );
       },
       itemCount: accessoriesDummyData.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

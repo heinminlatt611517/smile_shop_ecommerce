@@ -105,7 +105,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       fontSize: kTextRegular, color: kPrimaryColor),
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
-                      
+                      Navigator.pop(context);
                     }),
             ]))
           ],

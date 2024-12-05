@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 import 'package:smile_shop/pages/login_page.dart';
+import 'package:smile_shop/pages/password_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 
@@ -38,6 +39,7 @@ class _OtpPageState extends State<OtpPage> {
       ),
     );
     return Scaffold(
+      backgroundColor: kBackgroundColor,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -141,7 +143,7 @@ class _OtpPageState extends State<OtpPage> {
               GestureDetector(
                 onTap: () {
                   Navigator.of(context).push(
-                      MaterialPageRoute(builder: (builder) => const LoginPage()));
+                      MaterialPageRoute(builder: (builder) => const PasswordPage()));
                 },
                 child: Container(
                   height: 40,
