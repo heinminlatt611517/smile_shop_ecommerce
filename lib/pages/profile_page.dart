@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:smile_shop/pages/edit_profile_page.dart';
+import 'package:smile_shop/pages/my_order_page.dart';
 import 'package:smile_shop/pages/smile_point_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/widgets/cached_network_image_view.dart';
+
+import 'product_refund_page.dart';
+import 'promotion_point_page.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -14,8 +18,8 @@ class ProfilePage extends StatelessWidget {
       backgroundColor: kBackgroundColor,
       appBar: AppBar(
         toolbarHeight: 185,
+        elevation: 0,
         backgroundColor: kSecondaryColor,
-        excludeHeaderSemantics: true,
         automaticallyImplyLeading: false,
         title: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -99,13 +103,29 @@ class ProfilePage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => const MyOrderPage()));
+                    },
+                    child: _buildProfileItem(context, title: 'To Pay')),
+                GestureDetector(
                   onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (_)=> const SmilePointPage()));
-                  },
-                  child: _buildProfileItem(context, title: 'To Pay')),
-                _buildProfileItem(context, title: 'To Ship'),
-                _buildProfileItem(context, title: 'To Receive'),
-                _buildProfileItem(context, title: 'To Review'),
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => const MyOrderPage()));
+                    },
+                  child: _buildProfileItem(context, title: 'To Ship')),
+                GestureDetector(
+                  onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => const MyOrderPage()));
+                    },
+                  child: _buildProfileItem(context, title: 'To Receive')),
+                GestureDetector(
+                  onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => const MyOrderPage()));
+                    },
+                  child: _buildProfileItem(context, title: 'To Review')),
               ],
             ),
             const SizedBox(
@@ -114,10 +134,26 @@ class ProfilePage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildProfileItem(context, title: 'To Pay'),
-                _buildProfileItem(context, title: 'To Ship'),
-                _buildProfileItem(context, title: 'To Receive'),
-                _buildProfileItem(context, title: 'To Review'),
+                GestureDetector(
+                  onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => const ProductRefundPage()));
+                    },
+                  child: _buildProfileItem(context, title: 'Refund')),
+                GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => const SmilePointPage()));
+                    },
+                    child: _buildProfileItem(context, title: 'Smile Wallet')),
+                GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => const PromotionPointPage()));
+                    },
+                    child:
+                        _buildProfileItem(context, title: 'Promotion Point')),
+                _buildProfileItem(context, title: 'Package'),
               ],
             ),
             const SizedBox(
@@ -126,10 +162,10 @@ class ProfilePage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildProfileItem(context, title: 'To Pay'),
-                _buildProfileItem(context, title: 'To Ship'),
-                _buildProfileItem(context, title: 'To Receive'),
-                _buildProfileItem(context, title: 'To Review'),
+                _buildProfileItem(context, title: 'My Favourite'),
+                _buildProfileItem(context, title: 'Language'),
+                _buildProfileItem(context, title: 'My Team'),
+                _buildProfileItem(context, title: 'Address'),
               ],
             ),
             const SizedBox(
@@ -138,9 +174,9 @@ class ProfilePage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildProfileItem(context, title: 'To Pay'),
-                _buildProfileItem(context, title: 'To Ship'),
-                _buildProfileItem(context, title: 'To Receive'),
+                _buildProfileItem(context, title: 'Referal Code'),
+                _buildProfileItem(context, title: 'About Us'),
+                _buildProfileItem(context, title: 'Contact Us'),
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.2,
                 ),
@@ -194,7 +230,7 @@ class ProfilePage extends StatelessWidget {
 
 Widget _buildProfileItem(BuildContext context, {required String title}) {
   return SizedBox(
-    width: MediaQuery.of(context).size.width * 0.2,
+    width: MediaQuery.of(context).size.width * 0.23,
     child: Column(
       children: [
         const Icon(

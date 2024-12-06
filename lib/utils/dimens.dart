@@ -8,6 +8,7 @@ const double kTextRegular = 14;
 const double kTextRegular18 = 18;
 const double kTextRegular3x = 20;
 const double kTextRegular22 = 22;
+const double kTextRegular32 = 22;
 
 const double kMargin6 = 6;
 const double kMargin5 = 5;
