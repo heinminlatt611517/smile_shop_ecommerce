@@ -133,6 +133,7 @@ class ProfilePage extends StatelessWidget {
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 GestureDetector(
                   onTap: () {
@@ -230,7 +231,7 @@ class ProfilePage extends StatelessWidget {
 
 Widget _buildProfileItem(BuildContext context, {required String title}) {
   return SizedBox(
-    width: MediaQuery.of(context).size.width * 0.23,
+    width: MediaQuery.of(context).size.width * 0.20,
     child: Column(
       children: [
         const Icon(
@@ -242,6 +243,7 @@ Widget _buildProfileItem(BuildContext context, {required String title}) {
         ),
         Text(
           title,
+          textAlign: TextAlign.center,
           style: const TextStyle(fontSize: kTextSmall),
         )
       ],

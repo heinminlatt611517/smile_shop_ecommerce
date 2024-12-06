@@ -1,4 +1,3 @@
-import 'package:easy_stepper/easy_stepper.dart';
 import 'package:flutter/material.dart';
 import 'package:smile_shop/list_items/my_order_list_item_view.dart';
 import 'package:smile_shop/utils/colors.dart';
@@ -120,23 +119,3 @@ class OrderDetailPage extends StatelessWidget {
   }
 }
 
-class OrderTrackingStepper extends StatefulWidget {
-  const OrderTrackingStepper({super.key});
-
-  @override
-  State<OrderTrackingStepper> createState() => _OrderTrackingStepperState();
-}
-
-class _OrderTrackingStepperState extends State<OrderTrackingStepper> {
-  @override
-  Widget build(BuildContext context) {
-    return const EasyStepper(
-      direction: Axis.vertical,
-      
-      activeStep: -1, steps: [
-      EasyStep(icon: Icon(Icons.card_travel)),
-      EasyStep(icon: Icon(Icons.card_travel)),
-      EasyStep(icon: Icon(Icons.card_travel)),
-    ]);
-  }
-}

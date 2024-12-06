@@ -22,27 +22,20 @@ class _SmileShopApi implements SmileShopApi {
 
 
   @override
-  Future<void> getNowPlayingMovies(
-    String apiKey,
-    String language,
-    String page,
-  ) async {
+  Future<LoginResponse> login(LoginRequest loginRequest) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{
-      r'api_key': apiKey,
-      r'language': language,
-      r'page': page,
-    };
+    final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<void>(Options(
+    final _data = <String, dynamic>{};
+    _data.addAll(loginRequest.toJson());
+    final _options = _setStreamType<LoginResponse>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
     )
         .compose(
           _dio.options,
-          '/3/movie/now_playing',
+          '/login',
           queryParameters: queryParameters,
           data: _data,
         )
@@ -51,7 +44,14 @@ class _SmileShopApi implements SmileShopApi {
           _dio.options.baseUrl,
           baseUrl,
         )));
-    await _dio.fetch<void>(_options);
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late LoginResponse _value;
+    try {
+      _value = LoginResponse.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      rethrow;
+    }
+    return _value;
   }
 
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {

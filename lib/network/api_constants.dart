@@ -2,7 +2,7 @@
 const String kBaseUrl = "https://api.themoviedb.org";
 
 ///End
-const String kEndPointGetNowPlaying = "/3/movie/now_playing";
+const String kEndPointLogin = "/login";
 
 ///Parameters
 const String kParamApiKey = "api_key";
