@@ -45,7 +45,7 @@ class _MainPageState extends State<MainPage> {
         },
         items: _getBottomNavigationBarItems(),
       ),
-      body: SafeArea(child: screenWidgets[currentIndex]),
+      body: screenWidgets[currentIndex],
     );
   }
 

@@ -20,6 +20,7 @@ class _SmilePointPageState extends State<SmilePointPage> {
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: kSecondaryColor,
+        surfaceTintColor: kSecondaryColor,
         title: const Text('Smile Point'),
       ),
       body: Column(
