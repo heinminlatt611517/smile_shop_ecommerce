@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:smile_shop/blocs/home_bloc.dart';
 import 'package:smile_shop/data/dummy_data/accessories_dummy_data.dart';
 import 'package:smile_shop/data/dummy_data/trending_products_dummy_data.dart';
 import 'package:smile_shop/list_items/trending_product_list_item_view.dart';
@@ -18,40 +20,43 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: kBackgroundColor,
-      body: CustomScrollView(
-        slivers: [
-          ///spacer
-        const SliverToBoxAdapter(child: SizedBox(height: kMarginXXLarge,)),
-          ///search view
-          const SliverToBoxAdapter(
-            child: Padding(
-              padding: EdgeInsets.all(kMarginLarge),
-              child: SearchView(),
+    return ChangeNotifierProvider(
+      create: (context) => HomeBloc(),
+      child: Scaffold(
+        backgroundColor: kBackgroundColor,
+        body: CustomScrollView(
+          slivers: [
+            ///spacer
+          const SliverToBoxAdapter(child: SizedBox(height: kMarginXXLarge,)),
+            ///search view
+            const SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.all(kMarginLarge),
+                child: SearchView(),
+              ),
             ),
-          ),
 
-          ///Banner view
-          SliverToBoxAdapter(
-            child: BannerSectionView(),
-          ),
+            ///Banner view
+            SliverToBoxAdapter(
+              child: BannerSectionView(),
+            ),
 
-          ///Campaign ,Daily check in and User Level view
-          const SliverToBoxAdapter(
-            child: CampaignDailyCheckInUserLevelView(),
-          ),
+            ///Campaign ,Daily check in and User Level view
+            const SliverToBoxAdapter(
+              child: CampaignDailyCheckInUserLevelView(),
+            ),
 
-          ///Accessories View
-          const SliverToBoxAdapter(
-            child: AccessoriesView(),
-          ),
+            ///Accessories View
+            const SliverToBoxAdapter(
+              child: AccessoriesView(),
+            ),
 
-          ///trending products view
-          const SliverToBoxAdapter(
-            child: TrendingProductsView(),
-          )
-        ],
+            ///trending products view
+            const SliverToBoxAdapter(
+              child: TrendingProductsView(),
+            )
+          ],
+        ),
       ),
     );
   }

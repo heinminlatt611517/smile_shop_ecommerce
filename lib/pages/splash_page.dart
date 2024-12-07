@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:smile_shop/pages/login_page.dart';
-import 'package:smile_shop/pages/main_page.dart';
 
 import '../utils/colors.dart';
 import '../utils/dimens.dart';

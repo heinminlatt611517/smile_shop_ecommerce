@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
-import '../data/dummy_data/accessories_dummy_data.dart';
 import '../data/dummy_data/trending_products_dummy_data.dart';
 import '../list_items/trending_product_list_item_view.dart';
 import '../network/api_constants.dart';
 import '../utils/strings.dart';
-import '../widgets/icon_with_label_vertical_view.dart';
 
 class ProductCategoryPage extends StatelessWidget {
   const ProductCategoryPage({super.key});
