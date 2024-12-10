@@ -3,15 +3,15 @@ part 'login_vo.g.dart';
 
 @JsonSerializable()
 class LoginVO {
-  @JsonKey(name: "token")
-  final String? token;
+  @JsonKey(name: "phone")
+  final String? phone;
 
-  @JsonKey(name: "name")
-  final String? name;
+  @JsonKey(name: "code")
+  final String? code;
 
   LoginVO({
-     this.token,
-     this.name,
+     this.phone,
+     this.code,
   });
 
   factory LoginVO.fromJson(Map<String, dynamic> json) =>

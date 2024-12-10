@@ -129,8 +129,8 @@ class _SignUpPageState extends State<SignUpPage> {
                      color: Colors.black12,
                      child: const Center(
                        child: LoadingView(
-                         indicatorColor: Colors.white,
-                         indicator: Indicator.ballRotate,
+                         indicatorColor: kPrimaryColor,
+                         indicator: Indicator.ballSpinFadeLoader,
                        ),
                      ),
                    ),

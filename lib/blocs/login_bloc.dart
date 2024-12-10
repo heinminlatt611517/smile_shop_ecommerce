@@ -8,7 +8,7 @@ import '../network/responses/login_response.dart';
 class LogInBloc extends ChangeNotifier {
   /// State
   bool isLoading = false;
-  String email = "";
+  String phone = "";
   String password = "";
   bool isShowPassword = true;
   bool isDisposed = false;
@@ -18,15 +18,15 @@ class LogInBloc extends ChangeNotifier {
 
   ///sign in
   Future<LoginResponse> onTapSign() {
-    var loginRequest = LoginRequest(email, password);
+    var loginRequest = LoginRequest(phone,"enduser",password);
     _showLoading();
     return _smileShopModel
         .login(loginRequest)
         .whenComplete(() => _hideLoading());
   }
   
-  void onEmailChanged(String email) {
-    this.email = email;
+  void onPhoneNumberChanged(String phone) {
+    this.phone = phone;
   }
 
   void onPasswordChanged(String password) {

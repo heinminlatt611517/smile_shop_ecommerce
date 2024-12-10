@@ -8,6 +8,8 @@ import 'package:smile_shop/pages/sign_up_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/utils/images.dart';
+import 'package:smile_shop/widgets/common_dialog.dart';
+import 'package:smile_shop/widgets/error_dialog_view.dart';
 
 import '../data/dummy_data/country_code.dart';
 import '../widgets/loading_view.dart';
@@ -30,18 +32,19 @@ class _LoginPageState extends State<LoginPage> {
       create: (context) => LogInBloc(),
       child: Scaffold(
         backgroundColor: kBackgroundColor,
-        body: Selector<LogInBloc,bool>(
-            selector: (context, bloc) => bloc.isLoading,
-            builder: (context, isLoading, child) =>
-                Stack(
-                  children: [
-                    SafeArea(
-                                  child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 16),
-                                child: SingleChildScrollView(
-                                  child: Column(
+        body: Selector<LogInBloc, bool>(
+          selector: (context, bloc) => bloc.isLoading,
+          builder: (context, isLoading, child) => Stack(
+            children: [
+              SafeArea(
+                  child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: SingleChildScrollView(
+                  child: Column(
                     children: [
-                      const SizedBox(height: 116,),
+                      const SizedBox(
+                        height: 116,
+                      ),
                       SizedBox(
                         height: 100,
                         width: 100,
@@ -54,16 +57,22 @@ class _LoginPageState extends State<LoginPage> {
                         height: 58,
                       ),
 
-                      normalPhoneTextField(
-                          controller: phoneController,
-                          hint: 'Enter phone number',
-                          phoneCode: "${selectedCountry.name} ${selectedCountry.code}",
-                          context: context,
-                          onChanged: (val) {
-                            setState(() {
-                              selectedCountry = val!;
-                            });
-                          }),
+                      Consumer<LogInBloc>(
+                        builder: (context, bloc, child) => normalPhoneTextField(
+                            controller: phoneController,
+                            hint: 'Enter phone number',
+                            phoneCode:
+                                "${selectedCountry.name} ${selectedCountry.code}",
+                            context: context,
+                            onChangeTextField: (v) {
+                              bloc.onPhoneNumberChanged(v);
+                            },
+                            onChanged: (val) {
+                              // setState(() {
+                              //   selectedCountry = val!;
+                              // });
+                            }),
+                      ),
 
                       const SizedBox(
                         height: kMargin30,
@@ -73,7 +82,8 @@ class _LoginPageState extends State<LoginPage> {
                         child: Row(
                           children: [
                             Container(
-                              margin: const EdgeInsets.only(left: kMarginMedium2),
+                              margin:
+                                  const EdgeInsets.only(left: kMarginMedium2),
                               child: Row(
                                 children: [
                                   const Icon(
@@ -92,14 +102,20 @@ class _LoginPageState extends State<LoginPage> {
                                 ],
                               ),
                             ),
-                            const Expanded(
-                              child: TextField(
-                                cursorColor: Colors.black,
-                                decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    contentPadding: EdgeInsets.symmetric(horizontal: 21),
-                                    hintText: 'Type your password',
-                                    hintStyle: TextStyle(color: Colors.grey)),
+                            Expanded(
+                              child: Consumer<LogInBloc>(
+                                builder: (context, bloc, child) => TextField(
+                                  cursorColor: Colors.black,
+                                  decoration: const InputDecoration(
+                                      border: InputBorder.none,
+                                      contentPadding:
+                                          EdgeInsets.symmetric(horizontal: 21),
+                                      hintText: 'Type your password',
+                                      hintStyle: TextStyle(color: Colors.grey)),
+                                  onChanged: (v) {
+                                    bloc.onPasswordChanged(v);
+                                  },
+                                ),
                               ),
                             ),
                           ],
@@ -129,8 +145,20 @@ class _LoginPageState extends State<LoginPage> {
 
                       GestureDetector(
                         onTap: () {
-                          Navigator.of(context).push(
-                              MaterialPageRoute(builder: (builder) => const MainPage()));
+                          var bloc =
+                              Provider.of<LogInBloc>(context, listen: false);
+
+                          bloc.onTapSign().then((value) {
+                            if (value.status == 1) {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (builder) => const MainPage()));
+                            }
+                          }).catchError((error) {
+                            showCommonDialog(
+                                context: context,
+                                dialogWidget: ErrorDialogView(
+                                    errorMessage: error.toString()));
+                          });
                         },
                         child: Container(
                           height: 40,
@@ -155,35 +183,36 @@ class _LoginPageState extends State<LoginPage> {
                           text: TextSpan(children: [
                         const TextSpan(
                             text: 'If you don\'t have an account.',
-                            style:
-                                TextStyle(fontSize: kTextRegular, color: Colors.black)),
+                            style: TextStyle(
+                                fontSize: kTextRegular, color: Colors.black)),
                         TextSpan(
                             text: ' Sign Up.',
                             style: const TextStyle(
                                 fontSize: kTextRegular, color: kPrimaryColor),
-                            recognizer: TapGestureRecognizer()..onTap = () {
-                              Navigator.of(context).push(
-                                  MaterialPageRoute(builder: (builder) => const SignUpPage()));
-                            }),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (builder) => const SignUpPage()));
+                              }),
                       ]))
                     ],
-                                  ),
-                                ),
-                              )),
-
-                    ///loading view
-                    if (isLoading)
-                      Container(
-                        color: Colors.black12,
-                        child: const Center(
-                          child: LoadingView(
-                            indicatorColor: Colors.white,
-                            indicator: Indicator.ballRotate,
-                          ),
-                        ),
-                      ),
-                  ],
+                  ),
                 ),
+              )),
+
+              ///loading view
+              if (isLoading)
+                Container(
+                  color: Colors.black12,
+                  child: const Center(
+                    child: LoadingView(
+                      indicatorColor: kPrimaryColor,
+                      indicator: Indicator.ballSpinFadeLoader,
+                    ),
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );

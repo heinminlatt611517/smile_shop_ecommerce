@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:smile_shop/data/vos/product_vo.dart';
+import 'package:smile_shop/network/api_constants.dart';
 import 'package:smile_shop/pages/product_details_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/widgets/cached_network_image_view.dart';
@@ -6,9 +8,10 @@ import 'package:smile_shop/widgets/cached_network_image_view.dart';
 import '../utils/dimens.dart';
 
 class TrendingProductListItemView extends StatelessWidget {
-  final String imageUrl;
+  final ProductVO? productVO;
+  final String? imageUrl;
 
-  const TrendingProductListItemView({super.key, required this.imageUrl});
+  const TrendingProductListItemView({super.key,this.productVO,this.imageUrl});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +20,7 @@ class TrendingProductListItemView extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const ProductDetailsPage(),
+            builder: (context) =>  ProductDetailsPage(productId: productVO?.id.toString() ?? "",),
           ),
         );
       },
@@ -30,7 +33,7 @@ class TrendingProductListItemView extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: CachedNetworkImageView(
-                  imageHeight: 120, imageWidth: double.infinity, imageUrl: imageUrl),
+                  imageHeight: 120, imageWidth: double.infinity, imageUrl: productVO?.image ?? errorImageUrl),
             ),
             const SizedBox(height: 10,),
             const Text(

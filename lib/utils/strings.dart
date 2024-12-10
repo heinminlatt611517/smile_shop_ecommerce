@@ -10,3 +10,7 @@ const kToClaimPointDailyLabel = "To claim point daily";
 const kUserLevelLabel = "User Level";
 const kCampaignLabel = "Campaign";
 const kLetPracticeAndEnjoyLabel = "Let's practice and enjoy it.";
+
+
+///hive
+const kLoginData = "LoginData";

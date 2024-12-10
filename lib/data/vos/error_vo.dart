@@ -5,17 +5,19 @@ part 'error_vo.g.dart';
 @JsonSerializable()
 class ErrorVO {
   @JsonKey(name: "status_code")
-  final int statusCode;
+  final int? statusCode;
 
-  @JsonKey(name: "status_message")
-  final String statusMessage;
+  @JsonKey(name: "message")
+  final String? message;
 
-  final bool success;
+  @JsonKey(name: "errors")
+  final List<String>? error;
+
 
   ErrorVO(
-      {required this.statusCode,
-      required this.statusMessage,
-      required this.success});
+      { this.statusCode,
+       this.message,
+       this.error});
 
   factory ErrorVO.fromJson(Map<String, dynamic> json) =>
       _$ErrorVOFromJson(json);

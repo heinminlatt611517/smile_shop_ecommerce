@@ -1,11 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:smile_shop/pages/sign_up_page.dart';
+import 'package:smile_shop/data/vos/search_product_vo.dart';
+import 'package:smile_shop/data/vos/user_vo.dart';
+import 'package:smile_shop/network/responses/login_response.dart';
 import 'package:smile_shop/pages/splash_page.dart';
+import 'package:smile_shop/persistence/hive_constants.dart';
 import 'package:smile_shop/utils/fonts.dart';
 
 void main() async {
   await Hive.initFlutter();
+
+  ///register hive adapter
+  Hive.registerAdapter(LoginResponseAdapter());
+  Hive.registerAdapter(UserVOAdapter());
+  Hive.registerAdapter(SearchProductVOAdapter());
+
+  ///open hive
+  await Hive.openBox<LoginResponse>(kBoxLoginResponse);
+  await Hive.openBox<SearchProductVO>(kBoxSearchProduct);
 
   runApp(const SmileShopApp());
 }

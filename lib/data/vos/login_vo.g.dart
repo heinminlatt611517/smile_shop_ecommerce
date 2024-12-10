@@ -7,11 +7,11 @@ part of 'login_vo.dart';
 // **************************************************************************
 
 LoginVO _$LoginVOFromJson(Map<String, dynamic> json) => LoginVO(
-      token: json['token'] as String?,
-      name: json['name'] as String?,
+      phone: json['phone'] as String?,
+      code: json['code'] as String?,
     );
 
 Map<String, dynamic> _$LoginVOToJson(LoginVO instance) => <String, dynamic>{
-      'token': instance.token,
-      'name': instance.name,
+      'phone': instance.phone,
+      'code': instance.code,
     };

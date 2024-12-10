@@ -1,0 +1,39 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'product_vo.dart';
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+ProductVO _$ProductVOFromJson(Map<String, dynamic> json) => ProductVO(
+      id: (json['id'] as num?)?.toInt(),
+      name: json['name'] as String?,
+      sku: json['sku'] as String?,
+      price: json['price'] as String?,
+      brandId: json['brand_id'] as String?,
+      subcategoryId: json['subcategory_id'] as String?,
+      image: json['image'] as String?,
+      subcategory: json['subcategory'] == null
+          ? null
+          : SubcategoryVO.fromJson(json['subcategory'] as Map<String, dynamic>),
+      brand: json['brand'] == null
+          ? null
+          : BrandVO.fromJson(json['brand'] as Map<String, dynamic>),
+      variantVO: (json['variant'] as List<dynamic>?)
+          ?.map((e) => VariantVO.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$ProductVOToJson(ProductVO instance) => <String, dynamic>{
+      'id': instance.id,
+      'name': instance.name,
+      'sku': instance.sku,
+      'price': instance.price,
+      'brand_id': instance.brandId,
+      'subcategory_id': instance.subcategoryId,
+      'image': instance.image,
+      'subcategory': instance.subcategory,
+      'brand': instance.brand,
+      'variant': instance.variantVO,
+    };

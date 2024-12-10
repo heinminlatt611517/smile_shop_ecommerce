@@ -26,12 +26,6 @@ class ProductCategoryPage extends StatelessWidget {
             ///spacer
             SliverToBoxAdapter(child: SizedBox(height: kMarginLarge,)),
 
-            ///ratings view
-            SliverToBoxAdapter(child: RatingsView(),),
-
-            ///spacer
-            SliverToBoxAdapter(child: SizedBox(height: kMarginLarge,)),
-
             ///product view
             SliverToBoxAdapter(child: ProductsView(),),
 
@@ -99,49 +93,6 @@ class SearchBarWithBackArrowView extends StatelessWidget {
   }
 }
 
-///ratings view
-class RatingsView extends StatelessWidget {
-  const RatingsView({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(children: [
-      ///filter
-      Container(
-        padding:const EdgeInsets.symmetric(horizontal: kMarginSmall),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(kMarginSmall),
-            color: Colors.grey.withOpacity(0.5)),
-        child:const Row(children: [
-          Icon(Icons.filter_alt_outlined,size: 20,),
-        Text('Filter'),
-        Icon(Icons.keyboard_arrow_down)
-      ],),),
-      const SizedBox(width: kMarginMedium2,),
-      ///rating
-      Container(
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(kMarginSmall),
-            color: Colors.grey.withOpacity(0.5)),
-        child:const Row(children: [
-           SizedBox(width: 10,),
-          Text('Rating'),
-          Icon(Icons.keyboard_arrow_down)
-        ],),),
-      const SizedBox(width: kMarginMedium2,),
-      ///Price
-      Container(
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(kMarginSmall),
-            color: Colors.grey.withOpacity(0.5)),
-        child:const Row(children: [
-          SizedBox(width: 10,),
-          Text('Price'),
-          Icon(Icons.keyboard_arrow_down)
-        ],),)
-    ],);
-  }
-}
 
 ///products view
 class ProductsView extends StatelessWidget {

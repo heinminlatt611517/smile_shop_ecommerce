@@ -7,10 +7,13 @@ class LoginRequest {
   @JsonKey(name: "phone")
   String? phone;
 
+  @JsonKey(name: "type")
+  String? type;
+
   @JsonKey(name: "password")
   String? password;
 
-  LoginRequest(this.phone, this.password);
+  LoginRequest(this.phone,this.type, this.password);
 
   factory LoginRequest.fromJson(Map<String, dynamic> json) =>
       _$LoginRequestFromJson(json);

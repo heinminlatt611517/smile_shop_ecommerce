@@ -7,6 +7,7 @@ Widget normalPhoneTextField(
     required String hint,
     required String phoneCode,
     required BuildContext context,
+    void Function(String)? onChangeTextField,
     required void Function(CountryCode?)? onChanged}) {
   return StatefulBuilder(
     builder: (_, setstate) => Container(
@@ -67,6 +68,9 @@ Widget normalPhoneTextField(
                       borderSide: const BorderSide(color: Colors.white),
                       borderRadius: BorderRadius.circular(10)),
                 ),
+                onChanged: (v){
+                  onChangeTextField!(v);
+                },
                 cursorColor: Colors.black,
                 style: const TextStyle(color: Colors.black),
                 keyboardType: TextInputType.phone,

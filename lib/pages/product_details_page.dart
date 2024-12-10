@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:loading_indicator/loading_indicator.dart';
+import 'package:provider/provider.dart';
+import 'package:smile_shop/blocs/product_details_bloc.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../data/dummy_data/banner_section_dummy_data.dart';
 import '../utils/dimens.dart';
 import '../widgets/cached_network_image_view.dart';
+import '../widgets/loading_view.dart';
 
 class ProductDetailsPage extends StatefulWidget {
-  const ProductDetailsPage({super.key});
+  final String? productId;
+  const ProductDetailsPage({super.key,required this.productId});
 
   @override
   State<ProductDetailsPage> createState() => _ProductDetailsPageState();
@@ -24,66 +29,89 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> with SingleTick
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: kBackgroundColor,
-      body: NestedScrollView(
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return <Widget>[
-            /// Banner Section View
-            SliverToBoxAdapter(
-              child: BannerSectionView(),
-            ),
+    return ChangeNotifierProvider(
+      create: (context) => ProductDetailsBloc(widget.productId ?? ""),
+      child: Scaffold(
+        backgroundColor: kBackgroundColor,
+        body: Selector<ProductDetailsBloc,bool>(
+          selector: (context , bloc ) => bloc.isLoading,
+          builder: (BuildContext context,isLoading, Widget? child) {
+          return Stack(
+            children: [
+              NestedScrollView(
+                headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+                  return <Widget>[
+                    /// Banner Section View
+                    SliverToBoxAdapter(
+                      child: BannerSectionView(),
+                    ),
 
-            /// Spacer
-            const SliverToBoxAdapter(
-              child: SizedBox(
-                height: kMarginMedium,
-              ),
-            ),
+                    /// Spacer
+                    const SliverToBoxAdapter(
+                      child: SizedBox(
+                        height: kMarginMedium,
+                      ),
+                    ),
 
-            /// Category and Return Point View
-            const SliverToBoxAdapter(
-              child: CategoryAndReturnPointView(),
-            ),
+                    /// Category and Return Point View
+                    const SliverToBoxAdapter(
+                      child: CategoryAndReturnPointView(),
+                    ),
 
-            /// Spacer
-            const SliverToBoxAdapter(
-              child: SizedBox(
-                height: kMarginMedium,
-              ),
-            ),
+                    /// Spacer
+                    const SliverToBoxAdapter(
+                      child: SizedBox(
+                        height: kMarginMedium,
+                      ),
+                    ),
 
-            /// Tab Bar
-            SliverPersistentHeader(
-              pinned: true,
-              floating: true,
-              delegate: _SliverAppBarDelegate(
-                TabBar(
-                  unselectedLabelColor: Colors.black,
-                  labelColor: kPrimaryColor,
-                  indicatorWeight: 1,
-                  dividerColor: Colors.transparent,
-                  indicatorSize: TabBarIndicatorSize.label,
-                  labelPadding:const EdgeInsets.symmetric (horizontal: 10),
-                  tabs: const [
-                    Text('Product Details', textAlign: TextAlign.center),
-                    Text('Product Specifications', textAlign: TextAlign.center),
-                    Text('After Sale', textAlign: TextAlign.center),
-                  ],
+                    /// Tab Bar
+                    SliverPersistentHeader(
+                      pinned: true,
+                      floating: true,
+                      delegate: _SliverAppBarDelegate(
+                        TabBar(
+                          unselectedLabelColor: Colors.black,
+                          labelColor: kPrimaryColor,
+                          indicatorWeight: 1,
+                          dividerColor: Colors.transparent,
+                          indicatorSize: TabBarIndicatorSize.label,
+                          labelPadding:const EdgeInsets.symmetric (horizontal: 10),
+                          tabs: const [
+                            Text('Product Details', textAlign: TextAlign.center),
+                            Text('Product Specifications', textAlign: TextAlign.center),
+                            Text('After Sale', textAlign: TextAlign.center),
+                          ],
+                          controller: tabController,
+                          indicatorColor: kPrimaryColor,
+                        ),
+                      ),
+                    ),
+                  ];
+                },
+                body: TabBarView(
                   controller: tabController,
-                  indicatorColor: kPrimaryColor,
+                  children: const [
+                    ProductDetailsView(),
+                    ProductDetailsView(),
+                    ProductDetailsView(),
+                  ],
                 ),
               ),
-            ),
-          ];
-        },
-        body: TabBarView(
-          controller: tabController,
-          children: const [
-            ProductDetailsView(),
-            ProductDetailsView(),
-            ProductDetailsView(),
-          ],
+
+              ///loading view
+              if (isLoading)
+                Container(
+                  color: Colors.black12,
+                  child: const Center(
+                    child: LoadingView(
+                      indicatorColor: kPrimaryColor,
+                      indicator: Indicator.ballSpinFadeLoader,
+                    ),
+                  ),
+                ),
+            ],
+          );}
         ),
       ),
     );

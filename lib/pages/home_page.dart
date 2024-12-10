@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smile_shop/blocs/home_bloc.dart';
 import 'package:smile_shop/data/dummy_data/accessories_dummy_data.dart';
-import 'package:smile_shop/data/dummy_data/trending_products_dummy_data.dart';
+import 'package:smile_shop/data/vos/product_response_data_vo.dart';
 import 'package:smile_shop/list_items/trending_product_list_item_view.dart';
-import 'package:smile_shop/network/api_constants.dart';
+import 'package:smile_shop/pages/search_product_page.dart';
 import 'package:smile_shop/pages/sub_category_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/strings.dart';
@@ -27,7 +27,11 @@ class HomePage extends StatelessWidget {
         body: CustomScrollView(
           slivers: [
             ///spacer
-          const SliverToBoxAdapter(child: SizedBox(height: kMarginXXLarge,)),
+            const SliverToBoxAdapter(
+                child: SizedBox(
+              height: kMarginXXLarge,
+            )),
+
             ///search view
             const SliverToBoxAdapter(
               child: Padding(
@@ -71,37 +75,43 @@ class SearchView extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: Container(
-            width: double.infinity, // Adjust the width as needed
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            decoration: BoxDecoration(
-              color: kSearchBackgroundColor,
-              borderRadius: BorderRadius.circular(8.0),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.2),
-                  spreadRadius: 1,
-                  blurRadius: 5,
-                  offset: const Offset(0, 3), // changes position of shadow
-                ),
-              ],
-            ),
-            child: const Row(
-              children: [
-                Icon(Icons.search),
-                SizedBox(width: 8.0), // Space between the icon and text field
-                Expanded(
-                  child: TextField(
-                    enabled: false,
-                    decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: kSearchHereHintLabel,
-                        hintStyle: TextStyle(
-                            fontSize: kTextRegular,
-                            fontWeight: FontWeight.bold)),
+          child: InkWell(
+            onTap: (){
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (builder) => const SearchProductPage()));
+            },
+            child: Container(
+              width: double.infinity, // Adjust the width as needed
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              decoration: BoxDecoration(
+                color: kSearchBackgroundColor,
+                borderRadius: BorderRadius.circular(8.0),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.2),
+                    spreadRadius: 1,
+                    blurRadius: 5,
+                    offset: const Offset(0, 3), // changes position of shadow
                   ),
-                ),
-              ],
+                ],
+              ),
+              child: const Row(
+                children: [
+                  Icon(Icons.search),
+                  SizedBox(width: 8.0), // Space between the icon and text field
+                  Expanded(
+                    child: TextField(
+                      enabled: false,
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: kSearchHereHintLabel,
+                          hintStyle: TextStyle(
+                              fontSize: kTextRegular,
+                              fontWeight: FontWeight.bold)),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -131,8 +141,8 @@ class CampaignDailyCheckInUserLevelView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: kMarginMedium2,
-      left: kMarginMedium2,right: kMarginMedium2),
+      padding: const EdgeInsets.only(
+          top: kMarginMedium2, left: kMarginMedium2, right: kMarginMedium2),
       child: Row(
         children: [
           ///daily check in and user level view
@@ -142,7 +152,7 @@ class CampaignDailyCheckInUserLevelView extends StatelessWidget {
               children: [
                 ///Daily check in view
                 Container(
-                  padding:const EdgeInsets.all(kMarginMedium2),
+                  padding: const EdgeInsets.all(kMarginMedium2),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(kMarginMedium),
                       gradient: const LinearGradient(
@@ -152,37 +162,50 @@ class CampaignDailyCheckInUserLevelView extends StatelessWidget {
                             Color(0xFFFDCC03),
                             Color(0xFFF5F5F5),
                           ])),
-                  child:  Row(children: [
-                    const Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                      Text(
-                        kDailyCheckInLabel,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: kTextRegular2x,
-                            color: Colors.black),
+                  child: Row(
+                    children: [
+                      const Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            kDailyCheckInLabel,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: kTextRegular2x,
+                                color: Colors.black),
+                          ),
+                          Text(
+                            kToClaimPointDailyLabel,
+                            style: TextStyle(
+                                fontWeight: FontWeight.normal,
+                                fontSize: kTextSmall,
+                                color: Colors.grey),
+                          ),
+                        ],
                       ),
-                      Text(
-                        kToClaimPointDailyLabel,
-                        style: TextStyle(
-                            fontWeight: FontWeight.normal,
-                            fontSize: kTextSmall,
-                            color: Colors.grey),
+                      const SizedBox(
+                        width: kMarginMedium,
                       ),
-                    ],),
-                    const SizedBox(width: kMarginMedium,),
-                    Container(
-                        padding:const EdgeInsets.all(kMarginMedium),
-                        decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(kMarginMedium
-                        )),
-                        child:const Icon(Icons.shop,color: kPrimaryColor,))
-                  ],),
+                      Container(
+                          padding: const EdgeInsets.all(kMarginMedium),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius:
+                                  BorderRadius.circular(kMarginMedium)),
+                          child: const Icon(
+                            Icons.shop,
+                            color: kPrimaryColor,
+                          ))
+                    ],
+                  ),
                 ),
-                const SizedBox(height: 10,),
+                const SizedBox(
+                  height: 10,
+                ),
+
                 ///User Level view
                 Container(
-                  padding:const EdgeInsets.all(kMarginMedium2),
+                  padding: const EdgeInsets.all(kMarginMedium2),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(kMarginMedium),
                       gradient: const LinearGradient(
@@ -192,32 +215,42 @@ class CampaignDailyCheckInUserLevelView extends StatelessWidget {
                             kPrimaryColor,
                             Color(0xFFF5F5F5),
                           ])),
-                  child:  Row(children: [
-                    const Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          kUserLevelLabel,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: kTextRegular2x,
-                              color: Colors.black),
-                        ),
-                        Text(
-                          kToClaimPointDailyLabel,
-                          style: TextStyle(
-                              fontWeight: FontWeight.normal,
-                              fontSize: kTextSmall,
-                              color: Colors.grey),
-                        ),
-                      ],),
-                    const SizedBox(width: kMarginMedium,),
-                    Container(
-                        padding:const EdgeInsets.all(kMarginMedium),
-                        decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(kMarginMedium
-                        )),
-                        child:const Icon(Icons.shop,color: kPrimaryColor,))
-                  ],),
+                  child: Row(
+                    children: [
+                      const Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            kUserLevelLabel,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: kTextRegular2x,
+                                color: Colors.black),
+                          ),
+                          Text(
+                            kToClaimPointDailyLabel,
+                            style: TextStyle(
+                                fontWeight: FontWeight.normal,
+                                fontSize: kTextSmall,
+                                color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        width: kMarginMedium,
+                      ),
+                      Container(
+                          padding: const EdgeInsets.all(kMarginMedium),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius:
+                                  BorderRadius.circular(kMarginMedium)),
+                          child: const Icon(
+                            Icons.shop,
+                            color: kPrimaryColor,
+                          ))
+                    ],
+                  ),
                 )
               ],
             ),
@@ -227,7 +260,7 @@ class CampaignDailyCheckInUserLevelView extends StatelessWidget {
           Expanded(
             child: Container(
               height: 150,
-              padding:const EdgeInsets.only(left: kMarginMedium2),
+              padding: const EdgeInsets.only(left: kMarginMedium2),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(kMarginMedium),
                   gradient: const LinearGradient(
@@ -237,15 +270,19 @@ class CampaignDailyCheckInUserLevelView extends StatelessWidget {
                         Color(0xFFFDCC03),
                         Color(0xFFF5F5F5),
                       ])),
-              child:   Column(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
                       alignment: Alignment.centerRight,
-                      padding:const EdgeInsets.all(kMarginMedium),
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(kMarginMedium
+                      padding: const EdgeInsets.all(kMarginMedium),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(kMarginMedium)),
+                      child: const Icon(
+                        Icons.shop,
+                        color: kPrimaryColor,
+                        size: 40,
                       )),
-                      child:const Icon(Icons.shop,color: kPrimaryColor,size: 40,)),
                   const Text(
                     kCampaignLabel,
                     style: TextStyle(
@@ -260,7 +297,8 @@ class CampaignDailyCheckInUserLevelView extends StatelessWidget {
                         fontSize: kTextSmall,
                         color: Colors.grey),
                   ),
-                ],),
+                ],
+              ),
             ),
           ),
         ],
@@ -283,7 +321,7 @@ class AccessoriesView extends StatelessWidget {
         physics: const NeverScrollableScrollPhysics(),
         itemBuilder: (context, index) {
           return InkWell(
-            onTap: (){
+            onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -293,7 +331,9 @@ class AccessoriesView extends StatelessWidget {
             },
             child: IconWithLabelVerticalView(
               isIconWithBg: true,
-              bgColor: kSecondaryColor,index: index,),
+              bgColor: kSecondaryColor,
+              index: index,
+            ),
           );
         },
         itemCount: accessoriesDummyData.length,
@@ -301,13 +341,11 @@ class AccessoriesView extends StatelessWidget {
             crossAxisCount: 3,
             mainAxisSpacing: 1.0,
             crossAxisSpacing: 1.0,
-            childAspectRatio: 2/1.5
-            ),
+            childAspectRatio: 2 / 1.5),
       ),
     );
   }
 }
-
 
 ///Banner Section View
 class BannerSectionView extends StatelessWidget {
@@ -386,22 +424,26 @@ class TrendingProductsView extends StatelessWidget {
           const SizedBox(
             height: 10,
           ),
-          GridView.builder(
-            shrinkWrap: true,
-            padding: EdgeInsets.zero,
-            physics: const NeverScrollableScrollPhysics(),
-            itemBuilder: (context, index) {
-              return TrendingProductListItemView(
-                  imageUrl: trendingProductDummyData[index]['image'] ??
-                      errorImageUrl);
-            },
-            itemCount: trendingProductDummyData.length,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: 14.0,
-                crossAxisSpacing: 10.0,
-                childAspectRatio: 2 / 2.7),
-          ),
+          Selector<HomeBloc, ProductResponseDataVO?>(
+              selector: (context, bloc) => bloc.productResponseDataVO,
+              builder: (context, productResponse, child) {
+
+                return productResponse == null ? const Center(child:
+                  CircularProgressIndicator(),)  : GridView.builder(
+                  shrinkWrap: true,
+                  padding: EdgeInsets.zero,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return TrendingProductListItemView(productVO: productResponse.products?[index],);
+                  },
+                  itemCount: productResponse.products?.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 14.0,
+                      crossAxisSpacing: 10.0,
+                      childAspectRatio: 2 / 2.7),
+                );
+              }),
         ],
       ),
     );
