@@ -4,13 +4,14 @@ const String kBaseUrl = "http://152.42.236.92";
 ///End
 const String kEndPointLogin = "/api/auth/login";
 const String kEndPointRegister = "/api/register";
-const String kEndPointOtpVerify = "/api/otp/verify";
-const String kEndPointOtpRequest = "/api/auth/otprequest";
+const String kEndPointOtpVerify = "/api/auth/otp-verify";
+const String kEndPointOtpRequest = "/api/auth/otp-request";
 const String kEndPointBanners = "/api/banners";
 const String kEndPointProducts = "/api/get/products/list";
 const String kEndPointProductDetails = "/api/get/product/detail";
 const String kEndPointBrandsAndCategories = "/api/get/brands_and_categories";
 const String kEndPointSearchProducts = "/api/product/search";
+const String kEndPointSetPassword = "/api/auth/set-password?Accept";
 
 ///Parameters
 const String kParamApiKey = "api_key";

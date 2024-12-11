@@ -11,6 +11,7 @@ import 'package:smile_shop/persistence/search_product_dao.dart';
 
 import '../../network/data_agents/retrofit_data_agent_impl.dart';
 import '../../network/data_agents/smile_shop_data_agent.dart';
+import '../../network/requests/otp_verify_request.dart';
 import '../../persistence/login_data_dao.dart';
 import '../vos/product_response_data_vo.dart';
 
@@ -60,8 +61,8 @@ class SmileShopModelImpl extends SmileShopModel {
 
   @override
   Future verifyOtp(
-      String endUserId, String code, String deviceId, String fcmToken) {
-    return mDataAgent.verifyOtp(endUserId, code, deviceId, fcmToken);
+      OtpVerifyRequest otpVerifyRequest) {
+    return mDataAgent.verifyOtp(otpVerifyRequest);
   }
 
   @override

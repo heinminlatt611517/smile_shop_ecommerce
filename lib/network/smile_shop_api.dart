@@ -3,6 +3,7 @@ import 'package:retrofit/error_logger.dart';
 import 'package:retrofit/http.dart';
 import 'package:smile_shop/network/requests/login_request.dart';
 import 'package:smile_shop/network/requests/otp_request.dart';
+import 'package:smile_shop/network/requests/set_password_request.dart';
 import 'package:smile_shop/network/responses/banner_response.dart';
 import 'package:smile_shop/network/responses/brands_and_categories_response.dart';
 import 'package:smile_shop/network/responses/login_response.dart';
@@ -10,6 +11,7 @@ import 'package:smile_shop/network/responses/product_details_response.dart';
 import 'package:smile_shop/network/responses/product_response.dart';
 
 import 'api_constants.dart';
+import 'requests/otp_verify_request.dart';
 
 part 'smile_shop_api.g.dart';
 
@@ -19,6 +21,9 @@ abstract class SmileShopApi {
 
   @POST(kEndPointLogin)
   Future<LoginResponse> login(@Body() LoginRequest loginRequest);
+
+  @POST(kEndPointSetPassword)
+  Future<LoginResponse> setPassword(@Body() SetPasswordRequest setPasswordRequest);
 
   @POST(kEndPointRegister)
   Future register(
@@ -56,10 +61,7 @@ abstract class SmileShopApi {
 
   @POST(kEndPointOtpVerify)
   Future verifyOtp(
-    @Field(kFieldEndUserId) int endUserId,
-    @Field(kFieldCode) String code,
-    @Field(kFieldCode) String deviceID,
-    @Field(kFieldFcmToken) String fcmToken,
+    @Body() OtpVerifyRequest otpVerifyRequest
   );
 
   @POST(kEndPointOtpRequest)

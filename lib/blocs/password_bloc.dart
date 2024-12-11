@@ -1,10 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:smile_shop/data/model/smile_shop_model.dart';
 import 'package:smile_shop/data/model/smile_shop_model_impl.dart';
-import 'package:smile_shop/network/requests/otp_request.dart';
 import 'package:smile_shop/network/requests/otp_verify_request.dart';
 
-class OtpBloc extends ChangeNotifier {
+class PasswordBloc extends ChangeNotifier {
   /// State
   bool isLoading = false;
   bool isDisposed = false;
@@ -13,15 +12,19 @@ class OtpBloc extends ChangeNotifier {
 
   var authToken = "";
   var endUserId = "";
-  var pinCode = "";
+  var password = "";
+  var confirmPassword = "";
 
-  OtpBloc(){
-    authToken = _smileShopModel.getLoginResponseFromDatabase()?.refreshToken ?? "";
-    endUserId = _smileShopModel.getLoginResponseFromDatabase()?.data?.id.toString() ?? "";
+  PasswordBloc() {
+    authToken =
+        _smileShopModel.getLoginResponseFromDatabase()?.refreshToken ?? "";
+    endUserId =
+        _smileShopModel.getLoginResponseFromDatabase()?.data?.id.toString() ??
+            "";
   }
 
   ///verify otp
-  Future onTapVerifyOtp() {
+  Future onTapConfirm() {
     var otpVerifyRequest = OtpVerifyRequest("", "");
     _showLoading();
     return _smileShopModel
@@ -29,17 +32,13 @@ class OtpBloc extends ChangeNotifier {
         .whenComplete(() => _hideLoading());
   }
 
-  ///request otp
-  Future requestOtp() {
-    var otpRequest = OtpRequest("", "");
-    _showLoading();
-    return _smileShopModel
-        .requestOtp(otpRequest)
-        .whenComplete(() => _hideLoading());
+  void onPasswordChanged(String newPassword) {
+    password = newPassword;
+    notifyListeners();
   }
 
-  void onPinCodeChange(String newPinCode){
-    pinCode = newPinCode;
+  void onConfirmPasswordChanged(String newConfirmPassword) {
+    confirmPassword = newConfirmPassword;
     notifyListeners();
   }
 

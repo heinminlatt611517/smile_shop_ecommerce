@@ -5,6 +5,7 @@ import 'package:smile_shop/data/vos/search_product_vo.dart';
 import 'package:smile_shop/network/requests/otp_request.dart';
 
 import '../../network/requests/login_request.dart';
+import '../../network/requests/otp_verify_request.dart';
 import '../../network/responses/login_response.dart';
 import '../vos/brand_and_category_vo.dart';
 import '../vos/product_response_data_vo.dart';
@@ -23,7 +24,7 @@ abstract class SmileShopModel {
       String endUserId, String productId, String acceptLanguage, String token);
 
 
-  Future verifyOtp(String endUserId,String code,String deviceId,String fcmToken);
+  Future verifyOtp(OtpVerifyRequest otpVerifyRequest);
 
   Future requestOtp(OtpRequest otpRequest);
 

@@ -46,10 +46,9 @@ class _OtpPageState extends State<OtpPage> {
     );
     return ChangeNotifierProvider(
       create: (context) => OtpBloc(),
-      child: Selector<OtpBloc,bool>(
+      child: Selector<OtpBloc, bool>(
         selector: (context, bloc) => bloc.isLoading,
-        builder: (context, isLoading, child) =>
-         Scaffold(
+        builder: (context, isLoading, child) => Scaffold(
           backgroundColor: kBackgroundColor,
           body: Stack(
             children: [
@@ -80,14 +79,14 @@ class _OtpPageState extends State<OtpPage> {
                         height: kMargin40,
                       ),
                       Consumer<OtpBloc>(
-                        builder: (context, bloc, child)
-                        => Directionality(
+                        builder: (context, bloc, child) => Directionality(
                           textDirection: TextDirection.ltr,
                           child: Pinput(
                             controller: pinController,
                             focusNode: focusNode,
                             defaultPinTheme: defaultPinTheme,
-                            separatorBuilder: (index) => const SizedBox(width: 30),
+                            separatorBuilder: (index) =>
+                                const SizedBox(width: 30),
                             onClipboardFound: (value) {
                               debugPrint('onClipboardFound: $value');
                               pinController.setText(value);
@@ -144,23 +143,25 @@ class _OtpPageState extends State<OtpPage> {
                           Spacer(),
                           Text(
                             'Code expired in 00:00',
-                            style: TextStyle(fontSize: kTextRegular, color: Colors.black),
+                            style: TextStyle(
+                                fontSize: kTextRegular, color: Colors.black),
                           ),
-                          SizedBox(width: 30,)
+                          SizedBox(
+                            width: 30,
+                          )
                         ],
                       ),
-
                       const SizedBox(
                         height: kMargin30,
                       ),
                       Consumer<OtpBloc>(
-                        builder: (context,bloc,child)=>
-                         GestureDetector(
+                        builder: (context, bloc, child) => GestureDetector(
                           onTap: () {
                             bloc.onTapVerifyOtp().then((value) {
                               if (value.statusCode == 1) {
                                 Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (builder) => const PasswordPage()));
+                                    builder: (builder) =>
+                                        const PasswordPage()));
                               }
                             }).catchError((error) {
                               showCommonDialog(
@@ -188,10 +189,17 @@ class _OtpPageState extends State<OtpPage> {
                         height: kMarginMedium3,
                       ),
                       Consumer<OtpBloc>(
-                        builder: (context,bloc,child)
-                        => GestureDetector(
+                        builder: (context, bloc, child) => GestureDetector(
                           onTap: () {
-                            bloc.requestOtp();
+                            bloc
+                                .requestOtp()
+                                .then((value) {})
+                                .catchError((error) {
+                              showCommonDialog(
+                                  context: context,
+                                  dialogWidget: ErrorDialogView(
+                                      errorMessage: error.toString()));
+                            });
                           },
                           child: Container(
                             height: 40,

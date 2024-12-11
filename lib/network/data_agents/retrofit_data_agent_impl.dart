@@ -9,6 +9,7 @@ import 'package:smile_shop/data/vos/product_vo.dart';
 import 'package:smile_shop/network/data_agents/smile_shop_data_agent.dart';
 import 'package:smile_shop/network/requests/login_request.dart';
 import 'package:smile_shop/network/requests/otp_request.dart';
+import 'package:smile_shop/network/requests/otp_verify_request.dart';
 import 'package:smile_shop/network/responses/login_response.dart';
 import 'package:smile_shop/network/smile_shop_api.dart';
 
@@ -83,9 +84,9 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
 
   @override
   Future verifyOtp(
-      String endUserId, String code, String deviceId, String fcmToken) {
+      OtpVerifyRequest otpVerifyRequest) {
     return mApi
-        .verifyOtp(int.parse(endUserId), code, deviceId, fcmToken)
+        .verifyOtp(otpVerifyRequest)
         .asStream()
         .map((response) => response)
         .first

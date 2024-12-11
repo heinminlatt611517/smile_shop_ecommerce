@@ -58,6 +58,41 @@ class _SmileShopApi implements SmileShopApi {
   }
 
   @override
+  Future<LoginResponse> setPassword(
+      SetPasswordRequest setPasswordRequest) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(setPasswordRequest.toJson());
+    final _options = _setStreamType<LoginResponse>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/api/auth/set-password?Accept',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late LoginResponse _value;
+    try {
+      _value = LoginResponse.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
   Future<dynamic> register(
     String invitationCode,
     String name,
@@ -261,21 +296,12 @@ class _SmileShopApi implements SmileShopApi {
   }
 
   @override
-  Future<dynamic> verifyOtp(
-    int endUserId,
-    String code,
-    String deviceID,
-    String fcmToken,
-  ) async {
+  Future<dynamic> verifyOtp(OtpVerifyRequest otpVerifyRequest) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final _data = {
-      'enduser_id': endUserId,
-      'code': code,
-      'code': deviceID,
-      'fcm_token': fcmToken,
-    };
+    final _data = <String, dynamic>{};
+    _data.addAll(otpVerifyRequest.toJson());
     final _options = _setStreamType<dynamic>(Options(
       method: 'POST',
       headers: _headers,
@@ -283,7 +309,7 @@ class _SmileShopApi implements SmileShopApi {
     )
         .compose(
           _dio.options,
-          '/api/otp/verify',
+          '/api/auth/otp-verify',
           queryParameters: queryParameters,
           data: _data,
         )
@@ -311,7 +337,7 @@ class _SmileShopApi implements SmileShopApi {
     )
         .compose(
           _dio.options,
-          '/api/auth/otprequest',
+          '/api/auth/otp-request',
           queryParameters: queryParameters,
           data: _data,
         )

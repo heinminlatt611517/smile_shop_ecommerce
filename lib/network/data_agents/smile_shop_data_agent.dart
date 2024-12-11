@@ -5,6 +5,7 @@ import 'package:smile_shop/data/vos/product_vo.dart';
 import 'package:smile_shop/network/requests/otp_request.dart';
 
 import '../requests/login_request.dart';
+import '../requests/otp_verify_request.dart';
 import '../responses/login_response.dart';
 
 abstract class SmileShopDataAgent {
@@ -21,7 +22,7 @@ abstract class SmileShopDataAgent {
       String endUserId, String productId, String acceptLanguage, String token);
 
   Future verifyOtp(
-      String endUserId, String code, String deviceId, String fcmToken);
+      OtpVerifyRequest otpVerifyRequest);
 
   Future requestOtp(OtpRequest otpRequest);
 
