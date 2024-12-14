@@ -21,8 +21,8 @@ class OtpBloc extends ChangeNotifier {
   }
 
   ///verify otp
-  Future onTapVerifyOtp() {
-    var otpVerifyRequest = OtpVerifyRequest("", "");
+  Future onTapVerifyOtp(String requestId) {
+    var otpVerifyRequest = OtpVerifyRequest(pinCode, requestId);
     _showLoading();
     return _smileShopModel
         .verifyOtp(otpVerifyRequest)
@@ -30,8 +30,8 @@ class OtpBloc extends ChangeNotifier {
   }
 
   ///request otp
-  Future requestOtp() {
-    var otpRequest = OtpRequest("", "");
+  Future requestOtp(String phone,String code) {
+    var otpRequest = OtpRequest(phone, code);
     _showLoading();
     return _smileShopModel
         .requestOtp(otpRequest)
@@ -40,6 +40,11 @@ class OtpBloc extends ChangeNotifier {
 
   void onPinCodeChange(String newPinCode){
     pinCode = newPinCode;
+    notifyListeners();
+  }
+
+  void onCompletePinCode(String completedPinCode){
+    pinCode = completedPinCode;
     notifyListeners();
   }
 

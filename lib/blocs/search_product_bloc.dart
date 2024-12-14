@@ -59,7 +59,7 @@ class SearchProductBloc extends ChangeNotifier {
       String query, String authToken, String acceptLanguage, String endUserId) {
     _showLoading();
     _smileShopModel
-        .searchProducts(query, authToken, acceptLanguage, endUserId)
+        .searchProductsByName( authToken, acceptLanguage, endUserId,1,query)
         .whenComplete(() => _hideLoading())
         .then((searchResults) {
       products = searchResults;
@@ -101,7 +101,7 @@ class SearchProductBloc extends ChangeNotifier {
   }
 
   @override
-  void onDispose() {
+  void dispose() {
     queryStreamController.close();
     _searchProductListSubscription?.cancel();
     isDisposed = true;

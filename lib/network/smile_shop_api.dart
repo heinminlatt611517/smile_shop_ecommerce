@@ -7,6 +7,7 @@ import 'package:smile_shop/network/requests/set_password_request.dart';
 import 'package:smile_shop/network/responses/banner_response.dart';
 import 'package:smile_shop/network/responses/brands_and_categories_response.dart';
 import 'package:smile_shop/network/responses/login_response.dart';
+import 'package:smile_shop/network/responses/otp_response.dart';
 import 'package:smile_shop/network/responses/product_details_response.dart';
 import 'package:smile_shop/network/responses/product_response.dart';
 
@@ -65,13 +66,23 @@ abstract class SmileShopApi {
   );
 
   @POST(kEndPointOtpRequest)
-  Future requestOtp(@Body() OtpRequest otpRequest);
+  Future<OtpResponse> requestOtp(@Body() OtpRequest otpRequest);
 
   @POST(kEndPointSearchProducts)
-  Future<ProductResponse> searchProducts(
+  Future<ProductResponse> searchProductsByName(
       @Header(kHeaderAuthorization) String token,
       @Header(kHeaderAcceptLanguage) String acceptLanguage,
       @Field(kFieldEndUserId) int endUserId,
-      @Field(kFieldName) String name,
+      @Field(kFieldPage) int page,
+      @Query(kParamName) String name,
+      );
+
+  @POST(kEndPointSearchProducts)
+  Future<ProductResponse> searchProductsByRating(
+      @Header(kHeaderAuthorization) String token,
+      @Header(kHeaderAcceptLanguage) String acceptLanguage,
+      @Field(kFieldEndUserId) int endUserId,
+      @Field(kFieldPage) int page,
+      @Query(kParamRating) int rating,
       );
 }

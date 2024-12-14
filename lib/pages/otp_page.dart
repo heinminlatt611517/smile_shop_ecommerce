@@ -12,7 +12,10 @@ import '../widgets/error_dialog_view.dart';
 import '../widgets/loading_view.dart';
 
 class OtpPage extends StatefulWidget {
-  const OtpPage({super.key});
+  final String? requestId;
+  final String? phone;
+  final String? referralCode;
+  const OtpPage({super.key,required this.requestId,required this.phone,required this.referralCode});
 
   @override
   State<OtpPage> createState() => _OtpPageState();
@@ -93,16 +96,17 @@ class _OtpPageState extends State<OtpPage> {
                             },
                             hapticFeedbackType: HapticFeedbackType.lightImpact,
                             onCompleted: (pin) {
-                              setState(() {
-                                isFilled = true;
-                              });
+                              // setState(() {
+                              //   isFilled = true;
+                              // });
+                              bloc.onCompletePinCode(pin);
                             },
                             onChanged: (value) {
-                              setState(() {
-                                if (pinController.text.length < 4) {
-                                  isFilled = false;
-                                }
-                              });
+                              // setState(() {
+                              //   if (pinController.text.length < 4) {
+                              //     isFilled = false;
+                              //   }
+                              // });
                               bloc.onPinCodeChange(value);
                             },
                             cursor: Column(
@@ -157,11 +161,11 @@ class _OtpPageState extends State<OtpPage> {
                       Consumer<OtpBloc>(
                         builder: (context, bloc, child) => GestureDetector(
                           onTap: () {
-                            bloc.onTapVerifyOtp().then((value) {
+                            bloc.onTapVerifyOtp(widget.requestId ?? "").then((value) {
                               if (value.statusCode == 1) {
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (builder) =>
-                                        const PasswordPage()));
+                                         PasswordPage(requestId: widget.requestId,phone: widget.phone,)));
                               }
                             }).catchError((error) {
                               showCommonDialog(
@@ -192,7 +196,7 @@ class _OtpPageState extends State<OtpPage> {
                         builder: (context, bloc, child) => GestureDetector(
                           onTap: () {
                             bloc
-                                .requestOtp()
+                                .requestOtp(widget.phone ?? "",widget.referralCode ?? "")
                                 .then((value) {})
                                 .catchError((error) {
                               showCommonDialog(

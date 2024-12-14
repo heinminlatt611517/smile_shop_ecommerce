@@ -8,10 +8,14 @@ import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/utils/images.dart';
 
 import '../data/dummy_data/country_code.dart';
+import '../widgets/common_dialog.dart';
+import '../widgets/error_dialog_view.dart';
 import '../widgets/loading_view.dart';
 
 class PasswordPage extends StatefulWidget {
-  const PasswordPage({super.key});
+  final String? requestId;
+  final String? phone;
+  const PasswordPage({super.key,required this.requestId,required this.phone});
 
   @override
   State<PasswordPage> createState() => _PasswordPageState();
@@ -144,8 +148,20 @@ class _PasswordPageState extends State<PasswordPage> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Navigator.of(context).push(
-                            MaterialPageRoute(builder: (builder) => const MainPage()));
+                        var bloc =
+                        Provider.of<PasswordBloc>(context, listen: false);
+
+                        bloc.onTapConfirm(widget.requestId??"", widget.phone??"").then((value) {
+                          if (value.status == 1) {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (builder) => const MainPage()));
+                          }
+                        }).catchError((error) {
+                          showCommonDialog(
+                              context: context,
+                              dialogWidget: ErrorDialogView(
+                                  errorMessage: error.toString()));
+                        });
                       },
                       child: Container(
                         height: 40,

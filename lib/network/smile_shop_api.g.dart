@@ -324,13 +324,13 @@ class _SmileShopApi implements SmileShopApi {
   }
 
   @override
-  Future<dynamic> requestOtp(OtpRequest otpRequest) async {
+  Future<OtpResponse> requestOtp(OtpRequest otpRequest) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(otpRequest.toJson());
-    final _options = _setStreamType<dynamic>(Options(
+    final _options = _setStreamType<OtpResponse>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -346,20 +346,27 @@ class _SmileShopApi implements SmileShopApi {
           _dio.options.baseUrl,
           baseUrl,
         )));
-    final _result = await _dio.fetch(_options);
-    final _value = _result.data;
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late OtpResponse _value;
+    try {
+      _value = OtpResponse.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
     return _value;
   }
 
   @override
-  Future<ProductResponse> searchProducts(
+  Future<ProductResponse> searchProductsByName(
     String token,
     String acceptLanguage,
     int endUserId,
+    int page,
     String name,
   ) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'name': name};
     final _headers = <String, dynamic>{
       r'Authorization': token,
       r'Accept-Language': acceptLanguage,
@@ -367,7 +374,7 @@ class _SmileShopApi implements SmileShopApi {
     _headers.removeWhere((k, v) => v == null);
     final _data = {
       'enduser_id': endUserId,
-      'name': name,
+      'page': page,
     };
     final _options = _setStreamType<ProductResponse>(Options(
       method: 'POST',
@@ -376,7 +383,53 @@ class _SmileShopApi implements SmileShopApi {
     )
         .compose(
           _dio.options,
-          '/api/product/search',
+          '/api/get/products/list',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late ProductResponse _value;
+    try {
+      _value = ProductResponse.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<ProductResponse> searchProductsByRating(
+    String token,
+    String acceptLanguage,
+    int endUserId,
+    int page,
+    int rating,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'rating': rating};
+    final _headers = <String, dynamic>{
+      r'Authorization': token,
+      r'Accept-Language': acceptLanguage,
+    };
+    _headers.removeWhere((k, v) => v == null);
+    final _data = {
+      'enduser_id': endUserId,
+      'page': page,
+    };
+    final _options = _setStreamType<ProductResponse>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/api/get/products/list',
           queryParameters: queryParameters,
           data: _data,
         )

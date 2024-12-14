@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:smile_shop/data/model/smile_shop_model.dart';
 import 'package:smile_shop/data/vos/banner_vo.dart';
 import 'package:smile_shop/data/vos/brand_and_category_vo.dart';
@@ -6,7 +5,9 @@ import 'package:smile_shop/data/vos/product_vo.dart';
 import 'package:smile_shop/data/vos/search_product_vo.dart';
 import 'package:smile_shop/network/requests/login_request.dart';
 import 'package:smile_shop/network/requests/otp_request.dart';
+import 'package:smile_shop/network/requests/set_password_request.dart';
 import 'package:smile_shop/network/responses/login_response.dart';
+import 'package:smile_shop/network/responses/otp_response.dart';
 import 'package:smile_shop/persistence/search_product_dao.dart';
 
 import '../../network/data_agents/retrofit_data_agent_impl.dart';
@@ -66,7 +67,7 @@ class SmileShopModelImpl extends SmileShopModel {
   }
 
   @override
-  Future requestOtp(OtpRequest otpRequest) {
+  Future<OtpResponse> requestOtp(OtpRequest otpRequest) {
     return mDataAgent.requestOtp(otpRequest);
   }
 
@@ -91,9 +92,20 @@ class SmileShopModelImpl extends SmileShopModel {
   }
 
   @override
-  Future<List<ProductVO>> searchProducts(
-      String query, String token, String acceptLanguage, String endUserId) {
-    return mDataAgent.searchProducts(query, token, acceptLanguage, endUserId);
+  Future<List<ProductVO>> searchProductsByName(
+      String token, String acceptLanguage, String endUserId,int pageNo,String name) {
+    return mDataAgent.searchProductsByName( token, acceptLanguage, endUserId,pageNo,name);
+  }
+
+  @override
+  Future<List<ProductVO>> searchProductsByRating(
+      String token, String acceptLanguage, String endUserId,int pageNo,int rating) {
+    return mDataAgent.searchProductsByRating( token, acceptLanguage, endUserId,pageNo,rating);
+  }
+
+  @override
+  Future setPassword(SetPasswordRequest setPasswordRequest) {
+    return mDataAgent.setPassword(setPasswordRequest);
   }
 
   ///get data from hive database

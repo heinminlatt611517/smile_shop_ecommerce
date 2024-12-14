@@ -3,9 +3,11 @@ import 'package:smile_shop/data/vos/brand_and_category_vo.dart';
 import 'package:smile_shop/data/vos/product_response_data_vo.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
 import 'package:smile_shop/network/requests/otp_request.dart';
+import 'package:smile_shop/network/responses/otp_response.dart';
 
 import '../requests/login_request.dart';
 import '../requests/otp_verify_request.dart';
+import '../requests/set_password_request.dart';
 import '../responses/login_response.dart';
 
 abstract class SmileShopDataAgent {
@@ -24,7 +26,10 @@ abstract class SmileShopDataAgent {
   Future verifyOtp(
       OtpVerifyRequest otpVerifyRequest);
 
-  Future requestOtp(OtpRequest otpRequest);
+  Future setPassword(
+      SetPasswordRequest setPasswordRequest);
+
+  Future<OtpResponse> requestOtp(OtpRequest otpRequest);
 
   Future<BrandAndCategoryVO> getBrandsAndCategories(
     String token,
@@ -32,6 +37,9 @@ abstract class SmileShopDataAgent {
     String endUserId,
   );
 
-  Future<List<ProductVO>> searchProducts(
-      String query,String token,String acceptLanguage,String endUserId);
+  Future<List<ProductVO>> searchProductsByName(
+      String token,String acceptLanguage,String endUserId,int pageNo,String name);
+
+  Future<List<ProductVO>> searchProductsByRating(
+      String token,String acceptLanguage,String endUserId,int pageNo,int rating);
 }

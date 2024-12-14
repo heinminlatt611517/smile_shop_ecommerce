@@ -3,6 +3,8 @@ import 'package:smile_shop/data/vos/banner_vo.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
 import 'package:smile_shop/data/vos/search_product_vo.dart';
 import 'package:smile_shop/network/requests/otp_request.dart';
+import 'package:smile_shop/network/requests/set_password_request.dart';
+import 'package:smile_shop/network/responses/otp_response.dart';
 
 import '../../network/requests/login_request.dart';
 import '../../network/requests/otp_verify_request.dart';
@@ -26,7 +28,9 @@ abstract class SmileShopModel {
 
   Future verifyOtp(OtpVerifyRequest otpVerifyRequest);
 
-  Future requestOtp(OtpRequest otpRequest);
+  Future setPassword(SetPasswordRequest setPasswordRequest);
+
+  Future<OtpResponse> requestOtp(OtpRequest otpRequest);
 
   Future<BrandAndCategoryVO> getBrandsAndCategories(
       String token,
@@ -34,12 +38,14 @@ abstract class SmileShopModel {
       String endUserId,
       );
 
-  Future<List<ProductVO>> searchProducts(
-      String query,String token,String acceptLanguage,String endUserId);
+  Future<List<ProductVO>> searchProductsByName(
+      String token,String acceptLanguage,String endUserId,int pageNo,String name);
+
+  Future<List<ProductVO>> searchProductsByRating(
+      String token,String acceptLanguage,String endUserId,int pageNo,int rating);
 
   ///get data from database
   LoginResponse? getLoginResponseFromDatabase();
-
   Stream<List<SearchProductVO>> getSearchProductFromDatabase();
   List<SearchProductVO> getFirstTimeSearchProductFromDatabase();
   SearchProductVO? getSearchProductByNameFromDatabase(String name);

@@ -178,7 +178,6 @@ class _LoginPageState extends State<LoginPage> {
                         height: kMargin30,
                       ),
 
-                      //
                       RichText(
                           text: TextSpan(children: [
                         const TextSpan(

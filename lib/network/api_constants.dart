@@ -10,12 +10,14 @@ const String kEndPointBanners = "/api/banners";
 const String kEndPointProducts = "/api/get/products/list";
 const String kEndPointProductDetails = "/api/get/product/detail";
 const String kEndPointBrandsAndCategories = "/api/get/brands_and_categories";
-const String kEndPointSearchProducts = "/api/product/search";
+const String kEndPointSearchProducts = "/api/get/products/list";
 const String kEndPointSetPassword = "/api/auth/set-password?Accept";
 
 ///Parameters
 const String kParamApiKey = "api_key";
 const String kParamQuery = "query";
+const String kParamName = "name";
+const String kParamRating = "rating";
 const String kHeaderAuthorization = "Authorization";
 const String kHeaderAcceptLanguage = "Accept-Language";
 const String kFieldAccessToken = "access-token";
