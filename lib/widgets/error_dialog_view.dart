@@ -30,7 +30,9 @@ class ErrorDialogView extends StatelessWidget {
             const SizedBox(height: 20,),
             const Text("Oops...",style: TextStyle(fontSize: kTextRegular2x,color: Colors.black,fontWeight: FontWeight.w600),),
             const SizedBox(height: 4,),
-            Text(errorMessage ?? "",style:const TextStyle(fontSize: kTextRegular,color: Colors.black,fontWeight: FontWeight.normal),),
+            Text(errorMessage ?? "",
+              textAlign: TextAlign.center,
+              style:const TextStyle(fontSize: kTextRegular,color: Colors.black,fontWeight: FontWeight.normal),),
 
             const SizedBox(height: 20,),
             Center(

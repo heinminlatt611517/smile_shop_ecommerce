@@ -149,9 +149,9 @@ class _LoginPageState extends State<LoginPage> {
                               Provider.of<LogInBloc>(context, listen: false);
 
                           bloc.onTapSign().then((value) {
-                            if (value.status == 1) {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (builder) => const MainPage()));
+                            if (value.statusCode == 200) {
+                              Navigator.of(context).pushAndRemoveUntil(
+                                  MaterialPageRoute(builder: (builder) => const MainPage()),(Route<dynamic> route) => false);
                             }
                           }).catchError((error) {
                             showCommonDialog(

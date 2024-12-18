@@ -3,6 +3,7 @@ import 'package:smile_shop/pages/main_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/utils/images.dart';
+import 'package:smile_shop/widgets/common_button_view.dart';
 
 class OrderSuccessfulPage extends StatelessWidget {
   const OrderSuccessfulPage({super.key});
@@ -36,25 +37,10 @@ class OrderSuccessfulPage extends StatelessWidget {
             const SizedBox(
               height: 23,
             ),
-            GestureDetector(
-              onTap: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (builder) => const MainPage()));
-              },
-              child: Container(
-                margin: const EdgeInsets.only(bottom: 30, left: 16, right: 16),
-                height: 40,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                    color: kPrimaryColor, borderRadius: BorderRadius.circular(4)),
-                child: const Center(
-                  child: Text(
-                    'Back',
-                    style: TextStyle(color: kBackgroundColor),
-                  ),
-                ),
-              ),
-            ),
+            CommonButtonView(label: 'Back', labelColor: Colors.white, bgColor: kPrimaryColor, onTapButton: (){
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (builder) => const MainPage()),(Route<dynamic> route) => false);
+            })
           ],
         ),
       ),

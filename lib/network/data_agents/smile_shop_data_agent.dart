@@ -1,8 +1,13 @@
 import 'package:smile_shop/data/vos/banner_vo.dart';
 import 'package:smile_shop/data/vos/brand_and_category_vo.dart';
+import 'package:smile_shop/data/vos/category_vo.dart';
 import 'package:smile_shop/data/vos/product_response_data_vo.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
+import 'package:smile_shop/data/vos/state_vo.dart';
+import 'package:smile_shop/data/vos/township_data_vo.dart';
+import 'package:smile_shop/network/requests/address_request.dart';
 import 'package:smile_shop/network/requests/otp_request.dart';
+import 'package:smile_shop/network/responses/address_response.dart';
 import 'package:smile_shop/network/responses/otp_response.dart';
 
 import '../requests/login_request.dart';
@@ -16,9 +21,11 @@ abstract class SmileShopDataAgent {
   Future register(String invitationCode, String name, String phone,
       String loginPassword, String paymentPassword);
 
-  Future<List<BannerVO>> banners();
+  Future<List<BannerVO>> banners(String acceptLanguage);
 
-  Future<ProductResponseDataVO> products(String token, String acceptLanguage,int endUserId,String page);
+  Future<List<CategoryVO>> categories();
+
+  Future<ProductResponseDataVO> products(String token, String acceptLanguage,int endUserId,int page);
 
   Future<ProductVO> getProductDetails(
       String endUserId, String productId, String acceptLanguage, String token);
@@ -42,4 +49,12 @@ abstract class SmileShopDataAgent {
 
   Future<List<ProductVO>> searchProductsByRating(
       String token,String acceptLanguage,String endUserId,int pageNo,int rating);
+
+  Future addNewAddress(String accessToken,String acceptLanguage,AddressRequest addressRequest);
+
+  Future<List<StateVO>> states();
+
+  Future<TownshipDataVO> townships(int stateId);
+
+  Future<AddressResponse> address(String accessToken,String acceptLanguage);
 }

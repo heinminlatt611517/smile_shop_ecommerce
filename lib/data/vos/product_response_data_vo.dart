@@ -13,7 +13,6 @@ class ProductResponseDataVO {
   @JsonKey(name: 'data')
   final List<ProductVO>? products;
 
-
   ProductResponseDataVO({
     this.currentPage,
     this.products

@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:smile_shop/data/vos/category_vo.dart';
 import 'package:smile_shop/utils/dimens.dart';
 
 import '../data/dummy_data/accessories_dummy_data.dart';
 import '../utils/colors.dart';
 
-class IconWithLabelVerticalView extends StatelessWidget {
+class CategoryVerticalIconWithLabelView extends StatelessWidget {
   final int? index;
   final Color bgColor;
   final bool? isIconWithBg;
-  const IconWithLabelVerticalView({super.key,this.index,required this.bgColor,this.isIconWithBg = false});
+  final CategoryVO? categoryVO;
+  const CategoryVerticalIconWithLabelView({super.key,this.index,required this.bgColor,this.isIconWithBg = false,this.categoryVO});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +33,7 @@ class IconWithLabelVerticalView extends StatelessWidget {
           const SizedBox(height: 4,),
           Text(
             textAlign: TextAlign.center,
-            accessoriesDummyData[index ?? 0]['name'] ?? "",style:const TextStyle(color: Colors.black,fontSize:12
+            categoryVO?.name ?? "",style:const TextStyle(color: Colors.black,fontSize:12
           ),)
         ],),
     );

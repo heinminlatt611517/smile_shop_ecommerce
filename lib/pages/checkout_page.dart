@@ -1,8 +1,10 @@
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:smile_shop/list_items/cart_list_item_view.dart';
+import 'package:smile_shop/pages/my_address_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
+import 'package:smile_shop/widgets/common_button_view.dart';
 
 import '../widgets/cached_network_image_view.dart';
 import 'payment_method_page.dart';
@@ -26,20 +28,33 @@ class CheckoutPage extends StatelessWidget {
             SizedBox(
               height: 13,
             ),
+            ///product
             CartListItemView(isCheckout: true),
+
+            ///address view
             _BuildAddressView(),
             SizedBox(
               height: 20,
             ),
+
+            ///delivery option view
             _BuildDeliveryOptionView(),
             SizedBox(
               height: 20,
             ),
+
+            ///promotion point view
             _BuildPromotionPointView(),
             SizedBox(
               height: 20,
             ),
-            _BuildOrderSummaryView()
+
+            ///order summary view
+            _BuildOrderSummaryView(),
+            SizedBox(
+              height: 20,
+            ),
+
           ],
         ),
       ),
@@ -71,37 +86,43 @@ class _BuildAddressView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      padding: const EdgeInsets.symmetric(horizontal: 30),
-      height: 50,
-      width: double.infinity,
-      decoration: BoxDecoration(
-          color: kFillingFastColor.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(10)),
-      child: const Row(
-        children: [
-          Text('Address'),
-          SizedBox(
-            width: 50,
-          ),
-          Expanded(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Flexible(
-                    child: Text(
-                  'No3 Baho Road..',
-                  overflow: TextOverflow.ellipsis,
-                )),
-                SizedBox(
-                  width: 20,
-                ),
-                Icon(Icons.chevron_right)
-              ],
+    return InkWell(
+      onTap: (){
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (builder) => const MyAddressPage()));
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 30),
+        height: 50,
+        width: double.infinity,
+        decoration: BoxDecoration(
+            color: kFillingFastColor.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(10)),
+        child: const Row(
+          children: [
+            Text('Address'),
+            SizedBox(
+              width: 50,
             ),
-          )
-        ],
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Flexible(
+                      child: Text(
+                    'No3 Baho Road..',
+                    overflow: TextOverflow.ellipsis,
+                  )),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  Icon(Icons.chevron_right)
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -257,7 +278,13 @@ class _BuildPromotionPointView extends StatelessWidget {
 Widget deliveryOptionModalSheet(BuildContext context) {
   return Container(
     height: 200,
-    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+    decoration: const BoxDecoration(
+      color: kBackgroundColor,
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(20),
+        topRight: Radius.circular(20),
+      ),
+    ),
     width: double.infinity,
     child: Column(
       children: [
@@ -286,13 +313,16 @@ Widget deliveryOptionModalSheet(BuildContext context) {
         Container(
           height: 40,
           width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          margin: const EdgeInsets.symmetric(horizontal: 20),
           decoration: BoxDecoration(
               color: kFillingFastColor.withOpacity(0.1),
               borderRadius: BorderRadius.circular(10)),
-          child: const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text('Standard Delivery'), Text('Free')],
+          child: const Padding(
+            padding: EdgeInsets.symmetric(horizontal: kMarginMedium),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [Text('Standard Delivery'), Text('Free')],
+            ),
           ),
         ),
         const SizedBox(
@@ -300,14 +330,17 @@ Widget deliveryOptionModalSheet(BuildContext context) {
         ),
         Container(
           height: 40,
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          margin: const EdgeInsets.symmetric(horizontal: 20),
           width: double.infinity,
           decoration: BoxDecoration(
               color: kFillingFastColor.withOpacity(0.1),
               borderRadius: BorderRadius.circular(10)),
-          child: const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text('Special Delivery'), Text('Ks 3500')],
+          child: const Padding(
+            padding: EdgeInsets.symmetric(horizontal: kMarginMedium),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [Text('Special Delivery'), Text('Ks 3500')],
+            ),
           ),
         )
       ],
@@ -317,10 +350,19 @@ Widget deliveryOptionModalSheet(BuildContext context) {
 
 Widget promotionPointModalSheet(BuildContext context) {
   return Container(
-    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+    decoration: const BoxDecoration(
+      color: kBackgroundColor,
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(20),
+        topRight: Radius.circular(20),
+      ),
+    ),
     width: double.infinity,
     child: Column(
       children: [
+        const SizedBox(
+          height: 20,
+        ),
         const Text(
           'Promotion Point',
           style: TextStyle(fontSize: kTextRegular2x),
@@ -333,76 +375,84 @@ Widget promotionPointModalSheet(BuildContext context) {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             children: [
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Use Promotion'),
-                  Row(
+              ///user promotion view
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(color: Colors.grey.withOpacity(0.2),borderRadius: BorderRadius.circular(kMarginMedium)),
+                child: Column(children: [
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        'use 7000 Points',
-                        style: TextStyle(color: Colors.yellow),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Icon(
-                        Icons.circle_outlined,
-                        color: Colors.yellow,
-                      )
-                    ],
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Row(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: const CachedNetworkImageView(
-                        imageHeight: 80,
-                        imageWidth: 80,
-                        imageUrl:
-                            'https://media.istockphoto.com/id/1311107708/photo/focused-cute-stylish-african-american-female-student-with-afro-dreadlocks-studying-remotely.jpg?s=612x612&w=0&k=20&c=OwxBza5YzLWkE_2abTKqLLW4hwhmM2PW9BotzOMMS5w='),
-                  ),
-                  const SizedBox(
-                    width: kMargin25,
-                  ),
-                  const Expanded(
-                      child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Product Name',
-                        overflow: TextOverflow.ellipsis,
-                        softWrap: true,
-                        style: TextStyle(
-                            fontSize: kTextRegular2x,
-                            fontWeight: FontWeight.w600),
-                      ),
-                      SizedBox(
-                        height: kMargin12,
-                      ),
+
+                      Text('Use Promotion'),
                       Row(
                         children: [
                           Text(
-                            'Ks 350000',
-                            style: TextStyle(
-                                decoration: TextDecoration.lineThrough),
+                            'use 7000 Points',
+                            style: TextStyle(color: kSecondaryColor),
                           ),
                           SizedBox(
-                            width: 20,
+                            width: 10,
                           ),
-                          Text('Ks 28000',
-                              style: TextStyle(
-                                  color: Colors.yellow, fontSize: kTextSmall))
+                          Icon(
+                            Icons.circle_outlined,
+                            color:kSecondaryColor,
+                          )
                         ],
-                      )
+                      ),
                     ],
-                  ))
-                ],
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: const CachedNetworkImageView(
+                            imageHeight: 80,
+                            imageWidth: 80,
+                            imageUrl:
+                            'https://media.istockphoto.com/id/1311107708/photo/focused-cute-stylish-african-american-female-student-with-afro-dreadlocks-studying-remotely.jpg?s=612x612&w=0&k=20&c=OwxBza5YzLWkE_2abTKqLLW4hwhmM2PW9BotzOMMS5w='),
+                      ),
+                      const SizedBox(
+                        width: kMargin25,
+                      ),
+                      const Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Product Name',
+                                overflow: TextOverflow.ellipsis,
+                                softWrap: true,
+                                style: TextStyle(
+                                    fontSize: kTextRegular2x,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                              SizedBox(
+                                height: kMargin12,
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    'Ks 350000',
+                                    style: TextStyle(
+                                        decoration: TextDecoration.lineThrough),
+                                  ),
+                                  SizedBox(
+                                    width: 20,
+                                  ),
+                                  Text('Ks 28000',
+                                      style: TextStyle(
+                                          color: kSecondaryColor, fontSize: kTextSmall))
+                                ],
+                              )
+                            ],
+                          ))
+                    ],
+                  ),
+                ],),
               ),
               const SizedBox(
                 height: kMargin45,
@@ -413,7 +463,7 @@ Widget promotionPointModalSheet(BuildContext context) {
                   Text('No Use'),
                   Icon(
                     Icons.circle_outlined,
-                    color: Colors.yellow,
+                    color: kSecondaryColor,
                   ),
                 ],
               ),
@@ -423,19 +473,12 @@ Widget promotionPointModalSheet(BuildContext context) {
         const SizedBox(
           height: 20,
         ),
-        const Spacer(),
-        Container(
-          height: 40,
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          width: double.infinity,
-          decoration: BoxDecoration(
-              color: kFillingFastColor,
-              borderRadius: BorderRadius.circular(10)),
-          child: const Center(
-              child: Text(
-            'Okay',
-            style: TextStyle(color: kBackgroundColor),
-          )),
+        Padding(
+          padding: const EdgeInsets.all(kMarginMedium2),
+          child: CommonButtonView(label: 'Okay', labelColor: Colors.white, bgColor: kPrimaryColor, onTapButton: (){
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (builder) => const PaymentMethodPage()));
+          }),
         )
       ],
     ),

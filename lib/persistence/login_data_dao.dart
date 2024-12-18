@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:smile_shop/network/responses/login_response.dart';
+import 'package:smile_shop/data/vos/login_data_vo.dart';
 import 'package:smile_shop/persistence/hive_constants.dart';
 
 import '../utils/strings.dart';
@@ -18,14 +18,13 @@ class LoginDataDao {
   /**------------------------- CRUD OPERATIONS --------------------------**/
 
   ///save login user data to hive
-  void saveLoginData(LoginResponse loginData) async {
-    debugPrint("Token::${loginData.refreshToken}");
-    getLoginDataBox().clear();
+  Future<void> saveLoginData(LoginDataVO loginData) async {
+    debugPrint("EndUserId::::${loginData.data?.id}");
     await getLoginDataBox().put(kLoginData, loginData);
   }
 
   ///get login user data from hive
-  LoginResponse? getLoginData() {
+  LoginDataVO? getLoginData() {
     return getLoginDataBox().get(kLoginData);
   }
 
@@ -36,7 +35,7 @@ class LoginDataDao {
 
   /**--------------------------- GET BOX ------------------------------**/
   ///get login user data box
-  Box<LoginResponse> getLoginDataBox() {
-    return Hive.box<LoginResponse>(kBoxLoginResponse);
+  Box<LoginDataVO> getLoginDataBox() {
+    return Hive.box<LoginDataVO>(kBoxLoginResponse);
   }
 }

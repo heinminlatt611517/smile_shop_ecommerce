@@ -1,11 +1,18 @@
+import 'package:flutter/cupertino.dart';
 import 'package:smile_shop/data/model/smile_shop_model.dart';
 import 'package:smile_shop/data/vos/banner_vo.dart';
 import 'package:smile_shop/data/vos/brand_and_category_vo.dart';
+import 'package:smile_shop/data/vos/category_vo.dart';
+import 'package:smile_shop/data/vos/login_data_vo.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
 import 'package:smile_shop/data/vos/search_product_vo.dart';
+import 'package:smile_shop/data/vos/state_vo.dart';
+import 'package:smile_shop/data/vos/township_data_vo.dart';
+import 'package:smile_shop/network/requests/address_request.dart';
 import 'package:smile_shop/network/requests/login_request.dart';
 import 'package:smile_shop/network/requests/otp_request.dart';
 import 'package:smile_shop/network/requests/set_password_request.dart';
+import 'package:smile_shop/network/responses/address_response.dart';
 import 'package:smile_shop/network/responses/login_response.dart';
 import 'package:smile_shop/network/responses/otp_response.dart';
 import 'package:smile_shop/persistence/search_product_dao.dart';
@@ -34,35 +41,30 @@ class SmileShopModelImpl extends SmileShopModel {
 
   @override
   Future<LoginResponse> login(LoginRequest loginRequest) {
-    return mDataAgent.login(loginRequest).then((response) {
-      var loginResponse = LoginResponse(
-          status: response.status,
-          message: response.message,
-          data: response.data,
-          refreshToken: response.refreshToken,
-          expire: response.expire,
-          accessToken: response.accessToken);
+    return mDataAgent.login(loginRequest).then((response) async{
+      debugPrint("UserDataVO>>>>${response.data?.data?.id}");
+
+      var loginResponse = LoginDataVO(
+          status: response.data?.status,
+          message: response.data?.message,
+          data: response.data?.data,
+          refreshToken: response.data?.refreshToken,
+          expire: response.data?.expire,
+          accessToken: response.data?.accessToken);
 
       ///save login data to hive
-      _loginDataDao.saveLoginData(loginResponse);
-      return loginResponse;
+     await _loginDataDao.saveLoginData(loginResponse);
+      return response;
     });
   }
 
   @override
-  Future<List<BannerVO>> banners() {
-    return mDataAgent.banners();
+  Future<List<BannerVO>> banners(String acceptLanguage) {
+    return mDataAgent.banners(acceptLanguage);
   }
 
   @override
-  Future<ProductResponseDataVO> products(
-      String token, String acceptLanguage, int endUserId, String page) {
-    return mDataAgent.products(token, acceptLanguage, endUserId, page);
-  }
-
-  @override
-  Future verifyOtp(
-      OtpVerifyRequest otpVerifyRequest) {
+  Future verifyOtp(OtpVerifyRequest otpVerifyRequest) {
     return mDataAgent.verifyOtp(otpVerifyRequest);
   }
 
@@ -92,15 +94,17 @@ class SmileShopModelImpl extends SmileShopModel {
   }
 
   @override
-  Future<List<ProductVO>> searchProductsByName(
-      String token, String acceptLanguage, String endUserId,int pageNo,String name) {
-    return mDataAgent.searchProductsByName( token, acceptLanguage, endUserId,pageNo,name);
+  Future<List<ProductVO>> searchProductsByName(String token,
+      String acceptLanguage, String endUserId, int pageNo, String name) {
+    return mDataAgent.searchProductsByName(
+        token, acceptLanguage, endUserId, pageNo, name);
   }
 
   @override
-  Future<List<ProductVO>> searchProductsByRating(
-      String token, String acceptLanguage, String endUserId,int pageNo,int rating) {
-    return mDataAgent.searchProductsByRating( token, acceptLanguage, endUserId,pageNo,rating);
+  Future<List<ProductVO>> searchProductsByRating(String token,
+      String acceptLanguage, String endUserId, int pageNo, int rating) {
+    return mDataAgent.searchProductsByRating(
+        token, acceptLanguage, endUserId, pageNo, rating);
   }
 
   @override
@@ -108,9 +112,43 @@ class SmileShopModelImpl extends SmileShopModel {
     return mDataAgent.setPassword(setPasswordRequest);
   }
 
+  @override
+  Future<List<CategoryVO>> categories() {
+    return mDataAgent.categories();
+  }
+
+  @override
+  Future addNewAddress(String accessToken, String acceptLanguage,
+      AddressRequest addressRequest) {
+    return mDataAgent.addNewAddress(
+        accessToken, acceptLanguage, addressRequest);
+  }
+
+  @override
+  Future<List<StateVO>> states() {
+    return mDataAgent.states();
+  }
+
+  @override
+  Future<TownshipDataVO> townships(int stateId) {
+    return mDataAgent.townships(stateId);
+  }
+
+  @override
+  Future<AddressResponse> address(String accessToken, String acceptLanguage) {
+    return mDataAgent.address(accessToken, acceptLanguage);
+  }
+
+  @override
+  Future<ProductResponseDataVO> products(String token, String acceptLanguage, int endUserId, int page
+      ) {
+    debugPrint("Token:::$token");
+    return mDataAgent.products(token, acceptLanguage, endUserId, page);
+  }
+
   ///get data from hive database
   @override
-  LoginResponse? getLoginResponseFromDatabase() {
+  LoginDataVO? getLoginResponseFromDatabase() {
     return _loginDataDao.getLoginData();
   }
 
@@ -145,4 +183,10 @@ class SmileShopModelImpl extends SmileShopModel {
   List<SearchProductVO> getFirstTimeSearchProductFromDatabase() {
     return _searchProductDao.getSearchProducts();
   }
+
+  @override
+  void clearSaveLoginData() {
+    _loginDataDao.clearUserData();
+  }
+
 }

@@ -36,31 +36,31 @@ class TrendingProductListItemView extends StatelessWidget {
                   imageHeight: 120, imageWidth: double.infinity, imageUrl: productVO?.image ?? errorImageUrl),
             ),
             const SizedBox(height: 10,),
-            const Text(
-              'Hair Accessories',
+             Text(
+              productVO?.name ?? "",
               style:
-                  TextStyle(fontWeight: FontWeight.bold, fontSize: kTextRegular2x),
+                  const TextStyle(fontWeight: FontWeight.bold, fontSize: kTextRegular2x),
             ),
             const SizedBox(height: 10,),
-            const Text(
-              'Beauty Category',
-              style: TextStyle(
+             Text(
+              productVO?.subcategory?.name ?? "",
+              style:const TextStyle(
                   fontWeight: FontWeight.normal,
                   fontSize: kTextRegular,
                   color: Colors.grey),
             ),
             const SizedBox(height: 10,),
-            const Row(
+             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Ks 3000',
-                  style: TextStyle(
+                  'Ks ${productVO?.price}',
+                  style:const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: kTextRegular2x,
                       color: kPrimaryColor),
                 ),
-                Text(
+                const Text(
                   '100 pt',
                   style: TextStyle(
                       fontWeight: FontWeight.normal,

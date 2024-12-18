@@ -29,8 +29,8 @@ class CartListItemView extends StatelessWidget {
                     size: 20,
                   ),
                 ),
-          const SizedBox(
-            width: kMargin30,
+           SizedBox(
+            width:isCheckout == true ? 0 : kMargin30,
           ),
           Expanded(
             child: Container(
@@ -42,7 +42,8 @@ class CartListItemView extends StatelessWidget {
                   const SizedBox(
                     height: kMarginMedium,
                   ),
-                  Row(children: [
+                  Row(
+                    children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(10),
                       child: const CachedNetworkImageView(
@@ -113,14 +114,15 @@ class CartListItemView extends StatelessWidget {
                               )
                             ],
                           ),
+                          isCheckout == true
+                              ? const Text(
+                              'Qty: 1')
+                              : const SizedBox.shrink(),
 
                         ],
                       ),
                     )
                   ],),
-                  isCheckout == true
-                      ? const Text('Qty: 1')
-                      : const SizedBox.shrink(),
                   isCheckout == true
                       ? const SizedBox.shrink()
                       : Row(

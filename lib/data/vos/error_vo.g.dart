@@ -11,10 +11,14 @@ ErrorVO _$ErrorVOFromJson(Map<String, dynamic> json) => ErrorVO(
       message: json['message'] as String?,
       error:
           (json['errors'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      errorDataVO: json['data'] == null
+          ? null
+          : ErrorDataVO.fromJson(json['data'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$ErrorVOToJson(ErrorVO instance) => <String, dynamic>{
       'status_code': instance.statusCode,
       'message': instance.message,
       'errors': instance.error,
+      'data': instance.errorDataVO,
     };

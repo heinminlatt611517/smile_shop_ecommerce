@@ -47,6 +47,10 @@ class SearchProductBloc extends ChangeNotifier {
         _makeSearchProductNetworkCall(
             query, authToken, kAcceptLanguageMM, endUserId);
       }
+      else {
+        products.clear();
+        _notifySafely();
+      }
     });
   }
 

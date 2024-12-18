@@ -22,6 +22,8 @@ class OtpBloc extends ChangeNotifier {
 
   ///verify otp
   Future onTapVerifyOtp(String requestId) {
+    debugPrint("RequestId:::$requestId");
+    debugPrint("Code:::$pinCode");
     var otpVerifyRequest = OtpVerifyRequest(pinCode, requestId);
     _showLoading();
     return _smileShopModel

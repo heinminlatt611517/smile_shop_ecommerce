@@ -4,13 +4,18 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:smile_shop/data/vos/banner_vo.dart';
 import 'package:smile_shop/data/vos/brand_and_category_vo.dart';
+import 'package:smile_shop/data/vos/category_vo.dart';
 import 'package:smile_shop/data/vos/product_response_data_vo.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
+import 'package:smile_shop/data/vos/state_vo.dart';
+import 'package:smile_shop/data/vos/township_data_vo.dart';
 import 'package:smile_shop/network/data_agents/smile_shop_data_agent.dart';
+import 'package:smile_shop/network/requests/address_request.dart';
 import 'package:smile_shop/network/requests/login_request.dart';
 import 'package:smile_shop/network/requests/otp_request.dart';
 import 'package:smile_shop/network/requests/otp_verify_request.dart';
 import 'package:smile_shop/network/requests/set_password_request.dart';
+import 'package:smile_shop/network/responses/address_response.dart';
 import 'package:smile_shop/network/responses/login_response.dart';
 import 'package:smile_shop/network/responses/otp_response.dart';
 import 'package:smile_shop/network/smile_shop_api.dart';
@@ -48,9 +53,9 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   }
 
   @override
-  Future<List<BannerVO>> banners() {
+  Future<List<BannerVO>> banners(String acceptLanguage) {
     return mApi
-        .banners()
+        .banners(acceptLanguage)
         .asStream()
         .map((response) => response.data ?? [])
         .first
@@ -60,9 +65,10 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   }
 
   @override
-  Future<ProductResponseDataVO> products(String token, String acceptLanguage,int endUserId,String page) {
+  Future<ProductResponseDataVO> products(
+      String token, String acceptLanguage, int endUserId, int page) {
     return mApi
-        .products(token, acceptLanguage,endUserId,page)
+        .products(token, acceptLanguage, endUserId, page)
         .asStream()
         .map((response) => response.data ?? ProductResponseDataVO())
         .first
@@ -72,10 +78,10 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   }
 
   @override
-  Future<ProductVO> getProductDetails(String endUserId, String productId, String acceptLanguage, String token
-      ) {
+  Future<ProductVO> getProductDetails(
+      String endUserId, String productId, String acceptLanguage, String token) {
     return mApi
-        .productDetail(token,acceptLanguage,endUserId,int.parse(productId))
+        .productDetail(token, acceptLanguage, endUserId, int.parse(productId))
         .asStream()
         .map((response) => response.data ?? ProductVO())
         .first
@@ -85,8 +91,7 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   }
 
   @override
-  Future verifyOtp(
-      OtpVerifyRequest otpVerifyRequest) {
+  Future verifyOtp(OtpVerifyRequest otpVerifyRequest) {
     return mApi
         .verifyOtp(otpVerifyRequest)
         .asStream()
@@ -123,9 +128,10 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   }
 
   @override
-  Future<BrandAndCategoryVO> getBrandsAndCategories(String token, String acceptLanguage, String endUserId) {
+  Future<BrandAndCategoryVO> getBrandsAndCategories(
+      String token, String acceptLanguage, String endUserId) {
     return mApi
-        .getBrandsAndCategories(token,acceptLanguage,endUserId)
+        .getBrandsAndCategories(token, acceptLanguage, endUserId)
         .asStream()
         .map((response) => response.data ?? BrandAndCategoryVO())
         .first
@@ -135,9 +141,11 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   }
 
   @override
-  Future<List<ProductVO>> searchProductsByName(String token,String acceptLanguage,String endUserId,int pageNo,String name) {
+  Future<List<ProductVO>> searchProductsByName(String token,
+      String acceptLanguage, String endUserId, int pageNo, String name) {
     return mApi
-        .searchProductsByName(token,acceptLanguage,int.parse(endUserId),pageNo,name)
+        .searchProductsByName(
+            token, acceptLanguage, int.parse(endUserId), pageNo, name)
         .asStream()
         .map((response) => response.data?.products ?? [])
         .first
@@ -147,9 +155,11 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   }
 
   @override
-  Future<List<ProductVO>> searchProductsByRating(String token, String acceptLanguage, String endUserId, int pageNo, int rating) {
+  Future<List<ProductVO>> searchProductsByRating(String token,
+      String acceptLanguage, String endUserId, int pageNo, int rating) {
     return mApi
-        .searchProductsByRating(token,acceptLanguage,int.parse(endUserId),pageNo,rating)
+        .searchProductsByRating(
+            token, acceptLanguage, int.parse(endUserId), pageNo, rating)
         .asStream()
         .map((response) => response.data?.products ?? [])
         .first
@@ -162,6 +172,67 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   Future setPassword(SetPasswordRequest setPasswordRequest) {
     return mApi
         .setPassword(setPasswordRequest)
+        .asStream()
+        .map((response) => response)
+        .first
+        .catchError((error) {
+      throw _createException(error);
+    });
+  }
+
+  @override
+  Future<List<CategoryVO>> categories() {
+    return mApi
+        .categories()
+        .asStream()
+        .map((response) => response.data ?? [])
+        .first
+        .catchError((error) {
+      throw _createException(error);
+    });
+  }
+
+  @override
+  Future addNewAddress(String accessToken, String acceptLanguage,
+      AddressRequest addressRequest) {
+    return mApi
+        .addNewAddress('Bearer $accessToken', acceptLanguage, addressRequest)
+        .asStream()
+        .map((response) => response)
+        .first
+        .catchError((error) {
+      throw _createException(error);
+    });
+  }
+
+  @override
+  Future<List<StateVO>> states() {
+    return mApi
+        .states()
+        .asStream()
+        .map((response) => response.data ?? [])
+        .first
+        .catchError((error) {
+      throw _createException(error);
+    });
+  }
+
+  @override
+  Future<TownshipDataVO> townships(int stateId) {
+    return mApi
+        .townships(stateId)
+        .asStream()
+        .map((response) => response.townshipDataVO ?? TownshipDataVO())
+        .first
+        .catchError((error) {
+      throw _createException(error);
+    });
+  }
+
+  @override
+  Future<AddressResponse> address(String accessToken, String acceptLanguage) {
+    return mApi
+        .address("Bearer $accessToken",acceptLanguage)
         .asStream()
         .map((response) => response)
         .first

@@ -6,7 +6,7 @@ import '../data/dummy_data/accessories_dummy_data.dart';
 import '../data/dummy_data/trending_products_dummy_data.dart';
 import '../list_items/trending_product_list_item_view.dart';
 import '../network/api_constants.dart';
-import '../widgets/icon_with_label_vertical_view.dart';
+import '../widgets/category_vertical_icon_with_label_view.dart';
 
 class SubCategoryPage extends StatelessWidget {
   const SubCategoryPage({super.key});
@@ -61,7 +61,7 @@ class SubCategoryView extends StatelessWidget {
               ),
             );
           },
-          child: IconWithLabelVerticalView(
+          child: CategoryVerticalIconWithLabelView(
             isIconWithBg: false,
             bgColor: Colors.white,index: index,),
         );

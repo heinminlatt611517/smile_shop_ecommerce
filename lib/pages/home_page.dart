@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smile_shop/blocs/home_bloc.dart';
-import 'package:smile_shop/data/dummy_data/accessories_dummy_data.dart';
+import 'package:smile_shop/data/vos/banner_vo.dart';
+import 'package:smile_shop/data/vos/category_vo.dart';
 import 'package:smile_shop/data/vos/product_response_data_vo.dart';
 import 'package:smile_shop/list_items/trending_product_list_item_view.dart';
+import 'package:smile_shop/network/api_constants.dart';
 import 'package:smile_shop/pages/search_product_page.dart';
 import 'package:smile_shop/pages/sub_category_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/strings.dart';
 import 'package:smile_shop/widgets/cached_network_image_view.dart';
-import 'package:smile_shop/widgets/icon_with_label_vertical_view.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-import '../data/dummy_data/banner_section_dummy_data.dart';
 import '../utils/dimens.dart';
+import '../widgets/category_vertical_icon_with_label_view.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -50,9 +51,9 @@ class HomePage extends StatelessWidget {
               child: CampaignDailyCheckInUserLevelView(),
             ),
 
-            ///Accessories View
+            ///Categories View
             const SliverToBoxAdapter(
-              child: AccessoriesView(),
+              child: CategoriesView(),
             ),
 
             ///trending products view
@@ -76,7 +77,7 @@ class SearchView extends StatelessWidget {
       children: [
         Expanded(
           child: InkWell(
-            onTap: (){
+            onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (builder) => const SearchProductPage()));
             },
@@ -307,41 +308,45 @@ class CampaignDailyCheckInUserLevelView extends StatelessWidget {
   }
 }
 
-///Accessories View
-class AccessoriesView extends StatelessWidget {
-  const AccessoriesView({super.key});
+///Categories View
+class CategoriesView extends StatelessWidget {
+  const CategoriesView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: kMarginXLarge),
-      child: GridView.builder(
-        shrinkWrap: true,
-        padding: EdgeInsets.zero,
-        physics: const NeverScrollableScrollPhysics(),
-        itemBuilder: (context, index) {
-          return InkWell(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const SubCategoryPage(),
-                ),
-              );
-            },
-            child: IconWithLabelVerticalView(
-              isIconWithBg: true,
-              bgColor: kSecondaryColor,
-              index: index,
-            ),
-          );
-        },
-        itemCount: accessoriesDummyData.length,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            mainAxisSpacing: 1.0,
-            crossAxisSpacing: 1.0,
-            childAspectRatio: 2 / 1.5),
+      child: Selector<HomeBloc, List<CategoryVO>>(
+        selector: (context, bloc) => bloc.categories,
+        builder: (context, categories, child) => GridView.builder(
+          shrinkWrap: true,
+          padding: EdgeInsets.zero,
+          physics: const NeverScrollableScrollPhysics(),
+          itemBuilder: (context, index) {
+            return InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const SubCategoryPage(),
+                  ),
+                );
+              },
+              child: CategoryVerticalIconWithLabelView(
+                isIconWithBg: true,
+                bgColor: kSecondaryColor,
+                index: index,
+                categoryVO: categories[index],
+              ),
+            );
+          },
+          itemCount: categories.length,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              mainAxisSpacing: 1.0,
+              crossAxisSpacing: 1.0,
+              childAspectRatio: 2 / 1.5),
+        ),
       ),
     );
   }
@@ -356,51 +361,55 @@ class BannerSectionView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ///Page Banner View
-        SizedBox(
-            height: kBannerHeight,
-            child: PageView.builder(
-              controller: _bannerPageController,
-              itemBuilder: (context, index) {
-                return Container(
-                  margin: const EdgeInsets.symmetric(horizontal: kMarginMedium),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(kMarginMedium),
-                    child: CachedNetworkImageView(
-                        imageHeight: 80,
-                        imageWidth: double.infinity,
-                        imageUrl: bannerSectionDummyData[index]),
-                  ),
-                );
-              },
-              itemCount: bannerSectionDummyData.length,
-            )),
+    return Selector<HomeBloc, List<BannerVO>>(
+      selector: (context, bloc) => bloc.banners,
+      builder: (context, banners, child) => Column(
+        children: [
+          ///Page Banner View
+          SizedBox(
+              height: kBannerHeight,
+              child: PageView.builder(
+                controller: _bannerPageController,
+                itemBuilder: (context, index) {
+                  return Container(
+                    margin:
+                        const EdgeInsets.symmetric(horizontal: kMarginMedium),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(kMarginMedium),
+                      child: CachedNetworkImageView(
+                          imageHeight: 80,
+                          imageWidth: double.infinity,
+                          imageUrl: banners[index].image ?? errorImageUrl),
+                    ),
+                  );
+                },
+                itemCount: banners.length,
+              )),
 
-        ///Spacer
-        const SizedBox(
-          height: kMarginMedium2,
-        ),
-
-        ///Dots indicator
-        SmoothPageIndicator(
-          controller: _bannerPageController,
-          count: bannerSectionDummyData.length,
-          axisDirection: Axis.horizontal,
-          effect: const SlideEffect(
-            dotHeight: kMarginMedium,
-            dotWidth: kMarginMedium,
-            dotColor: kInactiveColor,
-            activeDotColor: kPrimaryColor,
+          ///Spacer
+          const SizedBox(
+            height: kMarginMedium2,
           ),
-          onDotClicked: (index) {
-            _bannerPageController.animateToPage(index,
-                curve: Curves.easeOut,
-                duration: const Duration(milliseconds: 500));
-          },
-        )
-      ],
+
+          ///Dots indicator
+          SmoothPageIndicator(
+            controller: _bannerPageController,
+            count: banners.length,
+            axisDirection: Axis.horizontal,
+            effect: const SlideEffect(
+              dotHeight: kMarginMedium,
+              dotWidth: kMarginMedium,
+              dotColor: kInactiveColor,
+              activeDotColor: kPrimaryColor,
+            ),
+            onDotClicked: (index) {
+              _bannerPageController.animateToPage(index,
+                  curve: Curves.easeOut,
+                  duration: const Duration(milliseconds: 500));
+            },
+          )
+        ],
+      ),
     );
   }
 }
@@ -427,22 +436,27 @@ class TrendingProductsView extends StatelessWidget {
           Selector<HomeBloc, ProductResponseDataVO?>(
               selector: (context, bloc) => bloc.productResponseDataVO,
               builder: (context, productResponse, child) {
-
-                return productResponse == null ? const Center(child:
-                  CircularProgressIndicator(),)  : GridView.builder(
-                  shrinkWrap: true,
-                  padding: EdgeInsets.zero,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return TrendingProductListItemView(productVO: productResponse.products?[index],);
-                  },
-                  itemCount: productResponse.products?.length,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 14.0,
-                      crossAxisSpacing: 10.0,
-                      childAspectRatio: 2 / 2.7),
-                );
+                return productResponse == null
+                    ? const Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : GridView.builder(
+                        shrinkWrap: true,
+                        padding: EdgeInsets.zero,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          return TrendingProductListItemView(
+                            productVO: productResponse.products?[index],
+                          );
+                        },
+                        itemCount: productResponse.products?.length,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                mainAxisSpacing: 14.0,
+                                crossAxisSpacing: 10.0,
+                                childAspectRatio: 2 / 2.7),
+                      );
               }),
         ],
       ),

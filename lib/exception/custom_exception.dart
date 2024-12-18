@@ -6,5 +6,5 @@ class CustomException implements Exception {
   CustomException(this.errorVO);
 
   @override
-  String toString() => errorVO.error?.isEmpty ?? true ? errorVO.message ?? "" : errorVO.error!.first;
+  String toString() => errorVO.getErrorMessage();
 }

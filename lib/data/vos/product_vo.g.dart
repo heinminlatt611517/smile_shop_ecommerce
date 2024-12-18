@@ -23,16 +23,25 @@ ProductVO _$ProductVOFromJson(Map<String, dynamic> json) => ProductVO(
       variantVO: (json['variant'] as List<dynamic>?)
           ?.map((e) => VariantVO.fromJson(e as Map<String, dynamic>))
           .toList(),
+      images:
+          (json['images'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      rating: (json['rating'] as num?)?.toInt(),
+      description: json['description'] as String?,
+      highlight: json['highlight'] as String?,
     );
 
 Map<String, dynamic> _$ProductVOToJson(ProductVO instance) => <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
       'sku': instance.sku,
+      'highlight': instance.highlight,
+      'description': instance.description,
       'price': instance.price,
       'brand_id': instance.brandId,
+      'rating': instance.rating,
       'subcategory_id': instance.subcategoryId,
       'image': instance.image,
+      'images': instance.images,
       'subcategory': instance.subcategory,
       'brand': instance.brand,
       'variant': instance.variantVO,

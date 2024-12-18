@@ -12,6 +12,20 @@ const String kEndPointProductDetails = "/api/get/product/detail";
 const String kEndPointBrandsAndCategories = "/api/get/brands_and_categories";
 const String kEndPointSearchProducts = "/api/get/products/list";
 const String kEndPointSetPassword = "/api/auth/set-password?Accept";
+const String kEndPointProfile = "/api/profile";
+const String kEndPointUpdateProfile = "/api/profile/update";
+const String kEndPointCategories = "/api/categories";
+const String kEndPointSubCategoryByCategory = "api/subcategory-by-category";
+const String kEndPointRating = "/api/rate-product";
+const String kEndPointNewsDetails = "/api/news/detail";
+const String kEndPointNews = "/api/news";
+const String kEndPointAddNewAddress = "/api/store/address";
+const String kEndPointAddressList = "/api/get/address";
+const String kEndPointEditAddress = "/api/edit/address";
+const String kEndPointAddressCategory = "/api/address-categroy";
+const String kEndPointDeleteAddress = "/api/delete/address";
+const String kEndPointStates = "/api/state";
+const String kEndPointTownships = "/api/state";
 
 ///Parameters
 const String kParamApiKey = "api_key";
@@ -44,4 +58,4 @@ const kAcceptLanguageEn = "en";
 const kAcceptLanguageCh = "ch";
 
 
-const errorImageUrl = "https://reputationtoday.in/wp-content/uploads/2019/11/110-1102775_download-empty-profile-hd-png-download.jpg";
+const errorImageUrl = "https://i0.wp.com/www.bishoprook.com/wp-content/uploads/2021/05/placeholder-image-gray-16x9-1.png?ssl=1";

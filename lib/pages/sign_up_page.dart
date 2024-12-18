@@ -104,7 +104,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                 Provider.of<SignupBloc>(context, listen: false);
 
                             bloc.onTapSignUp().then((value) {
-                              if (value.status == 1) {
+                              if (value.status == 200) {
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (builder) => OtpPage(
                                         requestId:

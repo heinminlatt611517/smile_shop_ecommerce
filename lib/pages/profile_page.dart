@@ -1,17 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:smile_shop/pages/edit_profile_page.dart';
+import 'package:smile_shop/pages/login_page.dart';
 import 'package:smile_shop/pages/my_order_page.dart';
 import 'package:smile_shop/pages/smile_point_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/widgets/cached_network_image_view.dart';
 
+import '../data/model/smile_shop_model.dart';
+import '../data/model/smile_shop_model_impl.dart';
 import 'product_refund_page.dart';
 import 'promotion_point_page.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  ///Model
+  final SmileShopModel _model = SmileShopModelImpl();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -192,15 +202,22 @@ class ProfilePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child: Container(
-                height: 40,
-                decoration: BoxDecoration(
-                    color: kPrimaryColor,
-                    borderRadius: BorderRadius.circular(4)),
-                child: const Center(
-                  child: Text(
-                    'Log Out',
-                    style: TextStyle(color: kBackgroundColor),
+              child: InkWell(
+                onTap: (){
+                  _model.clearSaveLoginData();
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (builder) => const LoginPage()),(Route<dynamic> route) => false);
+                },
+                child: Container(
+                  height: 40,
+                  decoration: BoxDecoration(
+                      color: kPrimaryColor,
+                      borderRadius: BorderRadius.circular(4)),
+                  child: const Center(
+                    child: Text(
+                      'Log Out',
+                      style: TextStyle(color: kBackgroundColor),
+                    ),
                   ),
                 ),
               ),

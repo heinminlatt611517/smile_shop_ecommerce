@@ -153,8 +153,8 @@ class _PasswordPageState extends State<PasswordPage> {
 
                         bloc.onTapConfirm(widget.requestId??"", widget.phone??"").then((value) {
                           if (value.status == 1) {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (builder) => const MainPage()));
+                            Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(builder: (builder) => const MainPage()),(Route<dynamic> route) => false);
                           }
                         }).catchError((error) {
                           showCommonDialog(

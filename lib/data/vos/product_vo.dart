@@ -16,17 +16,29 @@ class ProductVO {
   @JsonKey(name: 'sku')
   final String? sku;
 
+  @JsonKey(name: 'highlight')
+  final String? highlight;
+
+  @JsonKey(name: 'description')
+  final String? description;
+
   @JsonKey(name: 'price')
   final String? price;
 
   @JsonKey(name: 'brand_id')
   final String? brandId;
 
+  @JsonKey(name: 'rating')
+  final int? rating;
+
   @JsonKey(name: 'subcategory_id')
   final String? subcategoryId;
 
   @JsonKey(name: 'image')
   final String? image;
+
+  @JsonKey(name: 'images')
+  final List<String>? images;
 
   @JsonKey(name: 'subcategory')
   final SubcategoryVO? subcategory;
@@ -37,18 +49,21 @@ class ProductVO {
   @JsonKey(name: 'variant')
   final List<VariantVO>? variantVO;
 
-  ProductVO({
-    this.id,
-    this.name,
-    this.sku,
-    this.price,
-    this.brandId,
-    this.subcategoryId,
-    this.image,
-    this.subcategory,
-    this.brand,
-    this.variantVO
-  });
+  ProductVO(
+      {this.id,
+      this.name,
+      this.sku,
+      this.price,
+      this.brandId,
+      this.subcategoryId,
+      this.image,
+      this.subcategory,
+      this.brand,
+      this.variantVO,
+      this.images,
+      this.rating,
+      this.description,
+      this.highlight});
 
   factory ProductVO.fromJson(Map<String, dynamic> json) =>
       _$ProductVOFromJson(json);

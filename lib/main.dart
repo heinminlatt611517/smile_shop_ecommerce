@@ -6,6 +6,7 @@ import 'package:smile_shop/network/responses/login_response.dart';
 import 'package:smile_shop/pages/splash_page.dart';
 import 'package:smile_shop/persistence/hive_constants.dart';
 import 'package:smile_shop/utils/fonts.dart';
+import 'data/vos/login_data_vo.dart';
 
 void main() async {
   await Hive.initFlutter();
@@ -16,7 +17,7 @@ void main() async {
   Hive.registerAdapter(SearchProductVOAdapter());
 
   ///open hive
-  await Hive.openBox<LoginResponse>(kBoxLoginResponse);
+  await Hive.openBox<LoginDataVO>(kBoxLoginResponse);
   await Hive.openBox<SearchProductVO>(kBoxSearchProduct);
 
   runApp(const SmileShopApp());
