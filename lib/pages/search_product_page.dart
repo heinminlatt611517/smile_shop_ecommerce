@@ -7,7 +7,9 @@ import 'package:smile_shop/data/vos/search_product_vo.dart';
 import 'package:smile_shop/list_items/search_product_history_list_item_view.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
+import 'package:smile_shop/widgets/svg_image_view.dart';
 import '../list_items/trending_product_list_item_view.dart';
+import '../utils/images.dart';
 import '../utils/strings.dart';
 import '../widgets/loading_view.dart';
 
@@ -20,12 +22,11 @@ class SearchProductPage extends StatelessWidget {
       create: (context) => SearchProductBloc(),
       child: Scaffold(
           backgroundColor: kBackgroundColor,
-          body: Selector<SearchProductBloc,bool>(
-              selector: (context, bloc) => bloc.isLoading,
-              builder: (context, isLoading, child) =>
-             Stack(
-               children: [
-                 Padding(
+          body: Selector<SearchProductBloc, bool>(
+            selector: (context, bloc) => bloc.isLoading,
+            builder: (context, isLoading, child) => Stack(
+              children: [
+                Padding(
                   padding: const EdgeInsets.all(kMarginMedium2),
                   child: CustomScrollView(
                     slivers: [
@@ -49,8 +50,10 @@ class SearchProductPage extends StatelessWidget {
                       ///search history view
                       Selector<SearchProductBloc, List<ProductVO>>(
                         selector: (context, bloc) => bloc.products,
-                        builder: (context, products, child) => SliverToBoxAdapter(
-                          child: Selector<SearchProductBloc, List<SearchProductVO>>(
+                        builder: (context, products, child) =>
+                            SliverToBoxAdapter(
+                          child: Selector<SearchProductBloc,
+                              List<SearchProductVO>>(
                             selector: (context, bloc) => bloc.searchProducts,
                             builder: (context, snapshot, child) {
                               if (snapshot.isNotEmpty) {
@@ -61,14 +64,14 @@ class SearchProductPage extends StatelessWidget {
                                             children: [
                                               const Text(
                                                 'Search History',
-                                                style:
-                                                    TextStyle(fontSize: kTextRegular),
+                                                style: TextStyle(
+                                                    fontSize: kTextRegular),
                                               ),
                                               const Spacer(),
                                               InkWell(
                                                 onTap: () {
-                                                  var bloc = context
-                                                      .read<SearchProductBloc>();
+                                                  var bloc = context.read<
+                                                      SearchProductBloc>();
                                                   bloc.onTapClearAll();
                                                 },
                                                 child: const Row(
@@ -76,6 +79,7 @@ class SearchProductPage extends StatelessWidget {
                                                     Text(
                                                       'Clear All',
                                                       style: TextStyle(
+                                                           fontSize: kTextRegular,
                                                           color: Colors.grey),
                                                     ),
                                                     SizedBox(
@@ -84,6 +88,7 @@ class SearchProductPage extends StatelessWidget {
                                                     Icon(
                                                       Icons.delete,
                                                       color: Colors.grey,
+                                                      size: 18,
                                                     )
                                                   ],
                                                 ),
@@ -93,17 +98,19 @@ class SearchProductPage extends StatelessWidget {
                                           ListView.builder(
                                             shrinkWrap: true,
                                             padding: const EdgeInsets.symmetric(
-                                                vertical: kMarginMedium,
+                                                vertical: kMarginMedium2,
                                                 horizontal: kMarginLarge),
                                             itemCount: snapshot.length,
                                             itemBuilder: (context, index) {
-                                              var bloc =
-                                                  context.read<SearchProductBloc>();
+                                              var bloc = context
+                                                  .read<SearchProductBloc>();
                                               return SearchProductHistoryListItemView(
-                                                  searchProductVO: snapshot[index],
+                                                  searchProductVO:
+                                                      snapshot[index],
                                                   bloc: bloc);
                                             },
                                           ),
+
                                           ///spacer
                                           const SizedBox(
                                             height: kMarginLarge,
@@ -123,8 +130,8 @@ class SearchProductPage extends StatelessWidget {
                       SliverToBoxAdapter(
                         child: Selector<SearchProductBloc, List<ProductVO>>(
                           selector: (context, bloc) => bloc.products,
-                          builder: (context, snapshot, child) {
-                            if (snapshot.isNotEmpty) {
+                          builder: (context, products, child) {
+                            if (products.isNotEmpty) {
                               ///search result
                               return Column(
                                 children: [
@@ -135,13 +142,14 @@ class SearchProductPage extends StatelessWidget {
                                   GridView.builder(
                                     shrinkWrap: true,
                                     padding: EdgeInsets.zero,
-                                    physics: const NeverScrollableScrollPhysics(),
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
                                     itemBuilder: (context, index) {
                                       return TrendingProductListItemView(
-                                        productVO: snapshot[index],
+                                        productVO: products[index],
                                       );
                                     },
-                                    itemCount: snapshot.length,
+                                    itemCount: products.length,
                                     gridDelegate:
                                         const SliverGridDelegateWithFixedCrossAxisCount(
                                             crossAxisCount: 2,
@@ -152,28 +160,46 @@ class SearchProductPage extends StatelessWidget {
                                 ],
                               );
                             } else {
-                              return const SizedBox.shrink();
+                              return Selector<SearchProductBloc, bool>(
+                                  selector: (context , bloc ) => bloc.isScreenLaunch,
+                                  builder: (context, isFirstTimeScreenLaunch, child) =>
+                                    isFirstTimeScreenLaunch==true ? const SizedBox.shrink() : Center(
+                                    child: Column(
+                                      children: [
+                                        const SizedBox(height: 100,),
+                                        Image.asset(
+                                          kNoResultImage,
+                                          fit: BoxFit.contain,
+                                          height: kSplashAppLogoHeight,
+                                          width: kSplashAppLogoWidth,
+                                        ),
+                                        const Text(
+                                          textAlign: TextAlign.center,
+                                          'There were no result\nTry a new search.',style: TextStyle(fontSize: kTextSmall),),
+                                      ],
+                                    ),
+                                  ));
                             }
                           },
                         ),
                       )
                     ],
                   ),
-                             ),
+                ),
 
-                 ///loading view
-                 if (isLoading)
-                   Container(
-                     color: Colors.black12,
-                     child: const Center(
-                       child: LoadingView(
-                         indicatorColor: kPrimaryColor,
-                         indicator: Indicator.ballSpinFadeLoader,
-                       ),
-                     ),
-                   ),
-               ],
-             ),
+                ///loading view
+                if (isLoading)
+                  Container(
+                    color: Colors.black12,
+                    child: const Center(
+                      child: LoadingView(
+                        indicatorColor: kPrimaryColor,
+                        indicator: Indicator.ballSpinFadeLoader,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           )),
     );
   }
@@ -192,7 +218,7 @@ class SearchBarWithBackArrowView extends StatelessWidget {
             onTap: () {
               Navigator.pop(context);
             },
-            child: const Icon(Icons.keyboard_backspace)),
+            child: const SvgImageView(imageName: kBackSvgIcon,imageHeight: 20,imageWidth: 20,),),
         const SizedBox(
           height: kMarginMedium2,
         ),

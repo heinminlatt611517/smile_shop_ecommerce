@@ -17,11 +17,16 @@ class SubcategoryVO {
   @JsonKey(name: 'category')
   final CategoryVO? category;
 
+  @JsonKey(name: 'image')
+  final String? image;
+
+
   SubcategoryVO({
     this.id,
     this.categoryId,
     this.name,
     this.category,
+    this.image
   });
 
   factory SubcategoryVO.fromJson(Map<String, dynamic> json) =>

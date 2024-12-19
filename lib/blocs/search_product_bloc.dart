@@ -21,6 +21,7 @@ class SearchProductBloc extends ChangeNotifier {
   StreamSubscription? _searchProductListSubscription;
   bool isLoading = false;
   bool isDisposed = false;
+  bool isScreenLaunch = true;
 
   SearchProductBloc() {
     ///first time get search product list from database
@@ -48,8 +49,9 @@ class SearchProductBloc extends ChangeNotifier {
             query, authToken, kAcceptLanguageMM, endUserId);
       }
       else {
-        products.clear();
-        _notifySafely();
+        isScreenLaunch = true;
+        products = [];
+        notifyListeners();
       }
     });
   }
@@ -68,13 +70,16 @@ class SearchProductBloc extends ChangeNotifier {
         .then((searchResults) {
       products = searchResults;
 
-      ///check search product is already exist in database
-      var searchProductVOByNameFromDatabase =
-          _smileShopModel.getSearchProductByNameFromDatabase(query);
-      if (searchProductVOByNameFromDatabase == null) {
-        var searchProductVO = SearchProductVO(name: query);
-        _smileShopModel.addSingleSearchProductToDatabase(searchProductVO);
+      if(searchResults.isNotEmpty){
+        ///check search product is already exist in database
+        var searchProductVOByNameFromDatabase =
+        _smileShopModel.getSearchProductByNameFromDatabase(query);
+        if (searchProductVOByNameFromDatabase == null) {
+          var searchProductVO = SearchProductVO(name: query);
+          _smileShopModel.addSingleSearchProductToDatabase(searchProductVO);
+        }
       }
+      isScreenLaunch = false;
 
       notifyListeners();
     });

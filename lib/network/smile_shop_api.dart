@@ -5,6 +5,7 @@ import 'package:smile_shop/network/requests/address_request.dart';
 import 'package:smile_shop/network/requests/login_request.dart';
 import 'package:smile_shop/network/requests/otp_request.dart';
 import 'package:smile_shop/network/requests/set_password_request.dart';
+import 'package:smile_shop/network/requests/sub_category_request.dart';
 import 'package:smile_shop/network/responses/address_categories_response.dart';
 import 'package:smile_shop/network/responses/address_response.dart';
 import 'package:smile_shop/network/responses/banner_response.dart';
@@ -15,6 +16,7 @@ import 'package:smile_shop/network/responses/otp_response.dart';
 import 'package:smile_shop/network/responses/product_details_response.dart';
 import 'package:smile_shop/network/responses/product_response.dart';
 import 'package:smile_shop/network/responses/state_response.dart';
+import 'package:smile_shop/network/responses/sub_category_response.dart';
 import 'package:smile_shop/network/responses/township_response.dart';
 
 import 'api_constants.dart';
@@ -132,5 +134,12 @@ abstract class SmileShopApi {
   @GET(kEndPointAddressCategory)
   Future<AddressCategoriesResponse> addressCategories(
       @Header(kHeaderAuthorization) String token,
+      );
+
+  @POST(kEndPointSubCategoryByCategory)
+  Future<SubCategoryResponse> subCategoryByCategory(
+      @Header(kHeaderAuthorization) String token,
+      @Header(kHeaderAcceptLanguage) String acceptLanguage,
+      @Body() SubCategoryRequest subCategoryRequest
       );
 }

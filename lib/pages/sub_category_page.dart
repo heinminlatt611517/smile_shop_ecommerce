@@ -1,49 +1,96 @@
 import 'package:flutter/material.dart';
+import 'package:loading_indicator/loading_indicator.dart';
+import 'package:provider/provider.dart';
+import 'package:smile_shop/blocs/sub_category_bloc.dart';
+import 'package:smile_shop/data/vos/category_vo.dart';
+import 'package:smile_shop/data/vos/sub_category_vo.dart';
 import 'package:smile_shop/pages/product_category_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
-import '../data/dummy_data/accessories_dummy_data.dart';
+import 'package:smile_shop/widgets/loading_view.dart';
+import 'package:smile_shop/widgets/subcategory_vertical_icon_with_label_view.dart';
 import '../data/dummy_data/trending_products_dummy_data.dart';
 import '../list_items/trending_product_list_item_view.dart';
 import '../network/api_constants.dart';
-import '../widgets/category_vertical_icon_with_label_view.dart';
+import '../utils/images.dart';
 
 class SubCategoryPage extends StatelessWidget {
-  const SubCategoryPage({super.key});
+  final CategoryVO? categoryVO;
+
+  const SubCategoryPage({super.key, required this.categoryVO});
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
-      backgroundColor: kBackgroundColor,
-        appBar: AppBar(
-          centerTitle: true,
-          automaticallyImplyLeading: true,
-          backgroundColor: Colors.white,
-          title: const Text('Sub category',style: TextStyle(fontSize: kTextRegular2x,fontWeight: FontWeight.bold),),
-        ),
-      body: const Padding(
-        padding: EdgeInsets.all(kMarginMedium2),
-        child: CustomScrollView(
-          slivers: [
-            ///sub category view
-            SliverToBoxAdapter(child: SubCategoryView(),),
+    return ChangeNotifierProvider(
+      create: (context) => SubCategoryBloc(categoryVO?.id ?? 0),
+      child: Scaffold(
+          backgroundColor: kBackgroundColor,
+          appBar: AppBar(
+            centerTitle: true,
+            automaticallyImplyLeading: false,
+            leadingWidth: 40,
+            leading: InkWell(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(left: kMarginMedium2),
+                child: Image.asset(
+                  kBackIcon,
+                  fit: BoxFit.contain,
+                  height: 20,
+                  width: 20,
+                ),
+              ),
+            ),
+            backgroundColor: Colors.white,
+            title: Text(
+              categoryVO?.name ?? "",
+              style: const TextStyle(
+                  fontSize: kTextRegular2x, fontWeight: FontWeight.bold),
+            ),
+          ),
+          body: Selector<SubCategoryBloc, List<SubcategoryVO>>(
+              selector: (context, bloc) => bloc.subCategories,
+              builder: (context, subCategories, child) {
+                return subCategories.isEmpty
+                    ? const LoadingView(
+                        indicator: Indicator.ballSpinFadeLoader,
+                        indicatorColor: kPrimaryColor)
+                    : Padding(
+                        padding: const EdgeInsets.all(kMarginMedium2),
+                        child: CustomScrollView(
+                          slivers: [
+                            ///sub category view
+                            SliverToBoxAdapter(
+                              child: SubCategoryView(
+                                subCategories: subCategories,
+                              ),
+                            ),
 
-            ///spacer
-            SliverToBoxAdapter(child: SizedBox(height: kMarginMedium2,)),
+                            ///spacer
+                            const SliverToBoxAdapter(
+                                child: SizedBox(
+                              height: kMarginMedium2,
+                            )),
 
-            ///product view
-            SliverToBoxAdapter(child: ProductsView(),),
-
-          ],
-        ),
-      )
+                            ///product view
+                            const SliverToBoxAdapter(
+                              child: ProductsView(),
+                            ),
+                          ],
+                        ),
+                      );
+              })),
     );
   }
 }
 
 ///sub category view
 class SubCategoryView extends StatelessWidget {
-  const SubCategoryView({super.key});
+  final List<SubcategoryVO> subCategories;
+
+  const SubCategoryView({super.key, required this.subCategories});
 
   @override
   Widget build(BuildContext context) {
@@ -52,8 +99,8 @@ class SubCategoryView extends StatelessWidget {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
-        return  InkWell(
-          onTap: (){
+        return InkWell(
+          onTap: () {
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -61,18 +108,17 @@ class SubCategoryView extends StatelessWidget {
               ),
             );
           },
-          child: CategoryVerticalIconWithLabelView(
-            isIconWithBg: false,
-            bgColor: Colors.white,index: index,),
+          child: SubCategoryVerticalIconWithLabelView(
+            subcategoryVO: subCategories[index],
+          ),
         );
       },
-      itemCount: accessoriesDummyData.length,
+      itemCount: subCategories.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 4,
           mainAxisSpacing: 10.0,
           crossAxisSpacing: 10.0,
-          childAspectRatio: 2/1.8
-      ),
+          childAspectRatio: 2 / 1.8),
     );
   }
 }
@@ -89,8 +135,8 @@ class ProductsView extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
         return TrendingProductListItemView(
-            imageUrl: trendingProductDummyData[index]['image'] ??
-                errorImageUrl);
+            imageUrl:
+                trendingProductDummyData[index]['image'] ?? errorImageUrl);
       },
       itemCount: trendingProductDummyData.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -101,6 +147,3 @@ class ProductsView extends StatelessWidget {
     );
   }
 }
-
-
-

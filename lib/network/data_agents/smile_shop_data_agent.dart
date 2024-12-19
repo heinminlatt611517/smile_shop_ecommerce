@@ -4,9 +4,11 @@ import 'package:smile_shop/data/vos/category_vo.dart';
 import 'package:smile_shop/data/vos/product_response_data_vo.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
 import 'package:smile_shop/data/vos/state_vo.dart';
+import 'package:smile_shop/data/vos/sub_category_vo.dart';
 import 'package:smile_shop/data/vos/township_data_vo.dart';
 import 'package:smile_shop/network/requests/address_request.dart';
 import 'package:smile_shop/network/requests/otp_request.dart';
+import 'package:smile_shop/network/requests/sub_category_request.dart';
 import 'package:smile_shop/network/responses/address_response.dart';
 import 'package:smile_shop/network/responses/otp_response.dart';
 
@@ -25,16 +27,15 @@ abstract class SmileShopDataAgent {
 
   Future<List<CategoryVO>> categories();
 
-  Future<ProductResponseDataVO> products(String token, String acceptLanguage,int endUserId,int page);
+  Future<ProductResponseDataVO> products(
+      String token, String acceptLanguage, int endUserId, int page);
 
   Future<ProductVO> getProductDetails(
       String endUserId, String productId, String acceptLanguage, String token);
 
-  Future verifyOtp(
-      OtpVerifyRequest otpVerifyRequest);
+  Future verifyOtp(OtpVerifyRequest otpVerifyRequest);
 
-  Future setPassword(
-      SetPasswordRequest setPasswordRequest);
+  Future setPassword(SetPasswordRequest setPasswordRequest);
 
   Future<OtpResponse> requestOtp(OtpRequest otpRequest);
 
@@ -44,24 +45,28 @@ abstract class SmileShopDataAgent {
     String endUserId,
   );
 
-  Future<List<ProductVO>> searchProductsByName(
-      String token,String acceptLanguage,String endUserId,int pageNo,String name);
+  Future<List<ProductVO>> searchProductsByName(String token,
+      String acceptLanguage, String endUserId, int pageNo, String name);
 
-  Future<List<ProductVO>> searchProductsByRating(
-      String token,String acceptLanguage,String endUserId,int pageNo,int rating);
+  Future<List<ProductVO>> searchProductsByRating(String token,
+      String acceptLanguage, String endUserId, int pageNo, int rating);
 
-  Future addNewAddress(String accessToken,String acceptLanguage,AddressRequest addressRequest);
+  Future addNewAddress(
+      String accessToken, String acceptLanguage, AddressRequest addressRequest);
 
   Future<List<StateVO>> states();
 
   Future<TownshipDataVO> townships(int stateId);
 
-  Future<AddressResponse> address(String accessToken,String acceptLanguage);
+  Future<AddressResponse> address(String accessToken, String acceptLanguage);
 
-  Future deleteAddress(String accessToken,int addressId);
+  Future deleteAddress(String accessToken, int addressId);
 
-  Future editAddress(String accessToken,int addressId,AddressRequest addressRequest);
+  Future editAddress(
+      String accessToken, int addressId, AddressRequest addressRequest);
 
   Future<List<CategoryVO>> addressCategories(String accessToken);
 
+  Future<List<SubcategoryVO>> subCategoryByCategory(String token,
+      String acceptLanguage, SubCategoryRequest subCategoryRequest);
 }

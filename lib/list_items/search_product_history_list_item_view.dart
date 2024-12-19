@@ -21,7 +21,7 @@ class SearchProductHistoryListItemView extends StatelessWidget {
               onTap: (){
                 bloc.queryStreamController.sink.add(searchProductVO?.name ?? "");
               },
-                child: Text(searchProductVO?.name ?? "")),
+                child: Text(searchProductVO?.name ?? "",style:const TextStyle(fontSize: kTextRegular),)),
             const Spacer(),
             InkWell(
                 onTap: () {
@@ -30,7 +30,7 @@ class SearchProductHistoryListItemView extends StatelessWidget {
                 },
                 child: const Icon(
                   Icons.clear,
-                  size: 18,
+                  size: 14,
                   color: Colors.grey,
                 ))
           ],

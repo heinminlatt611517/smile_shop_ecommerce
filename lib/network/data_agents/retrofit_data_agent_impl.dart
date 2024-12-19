@@ -8,6 +8,7 @@ import 'package:smile_shop/data/vos/category_vo.dart';
 import 'package:smile_shop/data/vos/product_response_data_vo.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
 import 'package:smile_shop/data/vos/state_vo.dart';
+import 'package:smile_shop/data/vos/sub_category_vo.dart';
 import 'package:smile_shop/data/vos/township_data_vo.dart';
 import 'package:smile_shop/network/data_agents/smile_shop_data_agent.dart';
 import 'package:smile_shop/network/requests/address_request.dart';
@@ -15,6 +16,7 @@ import 'package:smile_shop/network/requests/login_request.dart';
 import 'package:smile_shop/network/requests/otp_request.dart';
 import 'package:smile_shop/network/requests/otp_verify_request.dart';
 import 'package:smile_shop/network/requests/set_password_request.dart';
+import 'package:smile_shop/network/requests/sub_category_request.dart';
 import 'package:smile_shop/network/responses/address_response.dart';
 import 'package:smile_shop/network/responses/login_response.dart';
 import 'package:smile_shop/network/responses/otp_response.dart';
@@ -232,7 +234,7 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   @override
   Future<AddressResponse> address(String accessToken, String acceptLanguage) {
     return mApi
-        .address("Bearer $accessToken",acceptLanguage)
+        .address("Bearer $accessToken", acceptLanguage)
         .asStream()
         .map((response) => response)
         .first
@@ -242,9 +244,9 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   }
 
   @override
-  Future deleteAddress(String accessToken,int addressId) {
+  Future deleteAddress(String accessToken, int addressId) {
     return mApi
-        .deleteAddress("Bearer $accessToken",addressId)
+        .deleteAddress("Bearer $accessToken", addressId)
         .asStream()
         .map((response) => response)
         .first
@@ -254,9 +256,10 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   }
 
   @override
-  Future editAddress(String accessToken, int addressId, AddressRequest addressRequest) {
+  Future editAddress(
+      String accessToken, int addressId, AddressRequest addressRequest) {
     return mApi
-        .editAddress("Bearer $accessToken",addressId,addressRequest)
+        .editAddress("Bearer $accessToken", addressId, addressRequest)
         .asStream()
         .map((response) => response)
         .first
@@ -266,10 +269,22 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   }
 
   @override
-  Future<List<CategoryVO>> addressCategories(String accessToken
-      ) {
+  Future<List<CategoryVO>> addressCategories(String accessToken) {
     return mApi
         .addressCategories(accessToken)
+        .asStream()
+        .map((response) => response.data ?? [])
+        .first
+        .catchError((error) {
+      throw _createException(error);
+    });
+  }
+
+  @override
+  Future<List<SubcategoryVO>> subCategoryByCategory(String token,
+      String acceptLanguage, SubCategoryRequest subCategoryRequest) {
+    return mApi
+        .subCategoryByCategory(token, acceptLanguage, subCategoryRequest)
         .asStream()
         .map((response) => response.data ?? [])
         .first
@@ -285,7 +300,10 @@ CustomException _createException(dynamic error) {
   if (error is DioException) {
     errorVO = _parseDioError(error);
   } else {
-    errorVO = ErrorVO(statusCode: 0, message: "UnExcepted error",);
+    errorVO = ErrorVO(
+      statusCode: 0,
+      message: "UnExcepted error",
+    );
   }
   return CustomException(errorVO);
 }
@@ -309,7 +327,6 @@ ErrorVO _parseDioError(DioException error) {
       return ErrorVO(statusCode: 0, message: "No response data");
     }
   } catch (e) {
-    return ErrorVO(
-        statusCode: 0, message: "Invalid DioException Format");
+    return ErrorVO(statusCode: 0, message: "Invalid DioException Format");
   }
 }

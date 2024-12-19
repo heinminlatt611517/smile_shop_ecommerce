@@ -1,4 +1,3 @@
-
 import 'package:smile_shop/data/vos/banner_vo.dart';
 import 'package:smile_shop/data/vos/category_vo.dart';
 import 'package:smile_shop/data/vos/login_data_vo.dart';
@@ -12,11 +11,13 @@ import 'package:smile_shop/network/responses/otp_response.dart';
 import '../../network/requests/address_request.dart';
 import '../../network/requests/login_request.dart';
 import '../../network/requests/otp_verify_request.dart';
+import '../../network/requests/sub_category_request.dart';
 import '../../network/responses/address_response.dart';
 import '../../network/responses/login_response.dart';
 import '../vos/brand_and_category_vo.dart';
 import '../vos/product_response_data_vo.dart';
 import '../vos/state_vo.dart';
+import '../vos/sub_category_vo.dart';
 
 abstract class SmileShopModel {
   Future<LoginResponse> login(LoginRequest loginRequest);
@@ -28,7 +29,8 @@ abstract class SmileShopModel {
 
   Future<List<CategoryVO>> categories();
 
-  Future<ProductResponseDataVO> products(String token,String acceptLanguage,int endUserId,int page);
+  Future<ProductResponseDataVO> products(
+      String token, String acceptLanguage, int endUserId, int page);
 
   Future<ProductVO> getProductDetails(
       String endUserId, String productId, String acceptLanguage, String token);
@@ -40,40 +42,50 @@ abstract class SmileShopModel {
   Future<OtpResponse> requestOtp(OtpRequest otpRequest);
 
   Future<BrandAndCategoryVO> getBrandsAndCategories(
-      String token,
-      String acceptLanguage,
-      String endUserId,
-      );
+    String token,
+    String acceptLanguage,
+    String endUserId,
+  );
 
-  Future<List<ProductVO>> searchProductsByName(
-      String token,String acceptLanguage,String endUserId,int pageNo,String name);
+  Future<List<ProductVO>> searchProductsByName(String token,
+      String acceptLanguage, String endUserId, int pageNo, String name);
 
-  Future<List<ProductVO>> searchProductsByRating(
-      String token,String acceptLanguage,String endUserId,int pageNo,int rating);
+  Future<List<ProductVO>> searchProductsByRating(String token,
+      String acceptLanguage, String endUserId, int pageNo, int rating);
 
-  Future addNewAddress(String accessToken,String acceptLanguage,AddressRequest addressRequest);
+  Future addNewAddress(
+      String accessToken, String acceptLanguage, AddressRequest addressRequest);
 
   Future<List<StateVO>> states();
 
   Future<TownshipDataVO> townships(int stateId);
 
-  Future<AddressResponse> address(String accessToken,String acceptLanguage);
+  Future<AddressResponse> address(String accessToken, String acceptLanguage);
 
-  Future deleteAddress(String accessToken,int addressId);
+  Future deleteAddress(String accessToken, int addressId);
 
-  Future editAddress(String accessToken,int addressId,AddressRequest addressRequest);
+  Future editAddress(
+      String accessToken, int addressId, AddressRequest addressRequest);
 
   Future<List<CategoryVO>> addressCategories(String accessToken);
 
+  Future<List<SubcategoryVO>> subCategoryByCategory(String token,
+      String acceptLanguage, SubCategoryRequest subCategoryRequest);
 
   ///get data from database
   LoginDataVO? getLoginResponseFromDatabase();
-  Stream<List<SearchProductVO>> getSearchProductFromDatabase();
-  List<SearchProductVO> getFirstTimeSearchProductFromDatabase();
-  SearchProductVO? getSearchProductByNameFromDatabase(String name);
-  void clearSaveLoginData();
-  void clearSearchProduct();
-  void clearSingleSearchProduct(String name);
-  void addSingleSearchProductToDatabase(SearchProductVO searchProductVO);
 
+  Stream<List<SearchProductVO>> getSearchProductFromDatabase();
+
+  List<SearchProductVO> getFirstTimeSearchProductFromDatabase();
+
+  SearchProductVO? getSearchProductByNameFromDatabase(String name);
+
+  void clearSaveLoginData();
+
+  void clearSearchProduct();
+
+  void clearSingleSearchProduct(String name);
+
+  void addSingleSearchProductToDatabase(SearchProductVO searchProductVO);
 }

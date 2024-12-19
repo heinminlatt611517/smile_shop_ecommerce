@@ -7,11 +7,13 @@ import 'package:smile_shop/data/vos/login_data_vo.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
 import 'package:smile_shop/data/vos/search_product_vo.dart';
 import 'package:smile_shop/data/vos/state_vo.dart';
+import 'package:smile_shop/data/vos/sub_category_vo.dart';
 import 'package:smile_shop/data/vos/township_data_vo.dart';
 import 'package:smile_shop/network/requests/address_request.dart';
 import 'package:smile_shop/network/requests/login_request.dart';
 import 'package:smile_shop/network/requests/otp_request.dart';
 import 'package:smile_shop/network/requests/set_password_request.dart';
+import 'package:smile_shop/network/requests/sub_category_request.dart';
 import 'package:smile_shop/network/responses/address_response.dart';
 import 'package:smile_shop/network/responses/login_response.dart';
 import 'package:smile_shop/network/responses/otp_response.dart';
@@ -41,7 +43,7 @@ class SmileShopModelImpl extends SmileShopModel {
 
   @override
   Future<LoginResponse> login(LoginRequest loginRequest) {
-    return mDataAgent.login(loginRequest).then((response) async{
+    return mDataAgent.login(loginRequest).then((response) async {
       debugPrint("UserDataVO>>>>${response.data?.data?.id}");
 
       var loginResponse = LoginDataVO(
@@ -53,7 +55,7 @@ class SmileShopModelImpl extends SmileShopModel {
           accessToken: response.data?.accessToken);
 
       ///save login data to hive
-     await _loginDataDao.saveLoginData(loginResponse);
+      await _loginDataDao.saveLoginData(loginResponse);
       return response;
     });
   }
@@ -140,8 +142,8 @@ class SmileShopModelImpl extends SmileShopModel {
   }
 
   @override
-  Future<ProductResponseDataVO> products(String token, String acceptLanguage, int endUserId, int page
-      ) {
+  Future<ProductResponseDataVO> products(
+      String token, String acceptLanguage, int endUserId, int page) {
     debugPrint("Token:::$token");
     return mDataAgent.products(token, acceptLanguage, endUserId, page);
   }
@@ -152,7 +154,8 @@ class SmileShopModelImpl extends SmileShopModel {
   }
 
   @override
-  Future editAddress(String accessToken, int addressId, AddressRequest addressRequest) {
+  Future editAddress(
+      String accessToken, int addressId, AddressRequest addressRequest) {
     return mDataAgent.editAddress(accessToken, addressId, addressRequest);
   }
 
@@ -161,9 +164,12 @@ class SmileShopModelImpl extends SmileShopModel {
     return mDataAgent.addressCategories(accessToken);
   }
 
-
-
-
+  @override
+  Future<List<SubcategoryVO>> subCategoryByCategory(String token,
+      String acceptLanguage, SubCategoryRequest subCategoryRequest) {
+    return mDataAgent.subCategoryByCategory(
+        token, acceptLanguage, subCategoryRequest);
+  }
 
   ///get data from hive database
   @override
@@ -207,5 +213,4 @@ class SmileShopModelImpl extends SmileShopModel {
   void clearSaveLoginData() {
     _loginDataDao.clearUserData();
   }
-
 }

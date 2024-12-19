@@ -6,11 +6,10 @@ import '../data/dummy_data/accessories_dummy_data.dart';
 import '../utils/colors.dart';
 
 class CategoryVerticalIconWithLabelView extends StatelessWidget {
-  final int? index;
   final Color bgColor;
   final bool? isIconWithBg;
   final CategoryVO? categoryVO;
-  const CategoryVerticalIconWithLabelView({super.key,this.index,required this.bgColor,this.isIconWithBg = false,this.categoryVO});
+  const CategoryVerticalIconWithLabelView({super.key,required this.bgColor,this.isIconWithBg = false,this.categoryVO});
 
   @override
   Widget build(BuildContext context) {
@@ -27,9 +26,6 @@ class CategoryVerticalIconWithLabelView extends StatelessWidget {
                     padding: EdgeInsets.all(8.0),
                     child: Icon(Icons.shopping_bag_rounded,color: Colors.black,size: 30,),
                   ))),
-          Visibility(
-              visible: isIconWithBg == true ? false : true,
-              child: const Icon(Icons.shopping_bag_rounded,color: kPrimaryColor,size: 30,)),
           const SizedBox(height: 4,),
           Text(
             textAlign: TextAlign.center,

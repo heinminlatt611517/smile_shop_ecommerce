@@ -328,14 +328,13 @@ class CategoriesView extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const SubCategoryPage(),
+                    builder: (context) =>  SubCategoryPage(categoryVO: categories[index],),
                   ),
                 );
               },
               child: CategoryVerticalIconWithLabelView(
                 isIconWithBg: true,
                 bgColor: kSecondaryColor,
-                index: index,
                 categoryVO: categories[index],
               ),
             );
