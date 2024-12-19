@@ -57,4 +57,11 @@ abstract class SmileShopDataAgent {
   Future<TownshipDataVO> townships(int stateId);
 
   Future<AddressResponse> address(String accessToken,String acceptLanguage);
+
+  Future deleteAddress(String accessToken,int addressId);
+
+  Future editAddress(String accessToken,int addressId,AddressRequest addressRequest);
+
+  Future<List<CategoryVO>> addressCategories(String accessToken);
+
 }

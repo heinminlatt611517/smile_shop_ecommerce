@@ -5,7 +5,6 @@ import 'package:smile_shop/data/vos/login_data_vo.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
 import 'package:smile_shop/data/vos/search_product_vo.dart';
 import 'package:smile_shop/data/vos/township_data_vo.dart';
-import 'package:smile_shop/data/vos/user_vo.dart';
 import 'package:smile_shop/network/requests/otp_request.dart';
 import 'package:smile_shop/network/requests/set_password_request.dart';
 import 'package:smile_shop/network/responses/otp_response.dart';
@@ -59,6 +58,12 @@ abstract class SmileShopModel {
   Future<TownshipDataVO> townships(int stateId);
 
   Future<AddressResponse> address(String accessToken,String acceptLanguage);
+
+  Future deleteAddress(String accessToken,int addressId);
+
+  Future editAddress(String accessToken,int addressId,AddressRequest addressRequest);
+
+  Future<List<CategoryVO>> addressCategories(String accessToken);
 
 
   ///get data from database

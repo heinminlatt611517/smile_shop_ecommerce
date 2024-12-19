@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:smile_shop/data/vos/address_vo.dart';
+import 'package:smile_shop/data/vos/address_data_vo.dart';
 
 part 'address_response.g.dart';
 
@@ -12,7 +12,7 @@ class AddressResponse {
   final String? message;
 
   @JsonKey(name: "data")
-  final List<AddressVO>? data;
+  final AddressDataVO? data;
 
   AddressResponse(
       {this.status,

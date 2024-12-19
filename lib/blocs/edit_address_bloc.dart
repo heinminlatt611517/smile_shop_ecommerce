@@ -1,13 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:smile_shop/data/model/smile_shop_model.dart';
 import 'package:smile_shop/data/model/smile_shop_model_impl.dart';
-import 'package:smile_shop/data/vos/category_vo.dart';
+import 'package:smile_shop/data/vos/address_vo.dart';
 import 'package:smile_shop/data/vos/state_vo.dart';
 import 'package:smile_shop/data/vos/township_vo.dart';
-import 'package:smile_shop/network/api_constants.dart';
 import 'package:smile_shop/network/requests/address_request.dart';
 
-class AddNewAddressBloc extends ChangeNotifier {
+class EditAddressBloc extends ChangeNotifier {
   /// State
   bool isTownshipLoading = false;
   bool isLoading = false;
@@ -21,27 +20,34 @@ class AddNewAddressBloc extends ChangeNotifier {
   int? townshipId;
   List<StateVO> states = [];
   List<TownshipVO> townships = [];
-  List<CategoryVO> addressCategories = [];
-  int? addressCategoryId = 1;
+  int? addressCategoryId;
 
   final SmileShopModel _smileShopModel = SmileShopModelImpl();
 
-  AddNewAddressBloc() {
+  EditAddressBloc(AddressVO? addressVO) {
+    ///init address data
+    initAddressData(addressVO);
+
     accessToken =
         _smileShopModel.getLoginResponseFromDatabase()?.accessToken ?? "";
 
     ///get state list
     _smileShopModel.states().then((stateResponse) {
       states = stateResponse;
-      fetchTownshipsByStateId(states.first.id ?? 0);
+      fetchTownshipsByStateId(addressVO?.stateVO?.id ?? 0);
       _notifySafely();
     });
+  }
 
-    ///get address categories list
-    _smileShopModel.addressCategories(accessToken).then((addressCategoryResponse) {
-      addressCategories = addressCategoryResponse;
-      _notifySafely();
-    });
+  void initAddressData(AddressVO? addressVO){
+     phone = addressVO?.phone ?? "";
+     name = addressVO?.address ?? "";
+     stateId = addressVO?.stateId;
+     isDefault = addressVO?.isDefault;
+     townshipId = addressVO?.townshipId;
+     addressCategoryId = addressVO?.categoryId;
+     isChecked = addressVO?.isDefault == 1 ? true : false;
+     notifyListeners();
   }
 
   ///fetch townships by state id
@@ -57,7 +63,7 @@ class AddNewAddressBloc extends ChangeNotifier {
   }
 
   ///save
-  Future onTapSave() {
+  Future onTapSave(int addressId) {
       var addressRequest = AddressRequest(
           phone: phone,
           address: name,
@@ -70,7 +76,7 @@ class AddNewAddressBloc extends ChangeNotifier {
 
       _showLoading();
       return _smileShopModel
-          .addNewAddress(accessToken, kAcceptLanguageEn, addressRequest)
+          .editAddress(accessToken, addressId, addressRequest)
           .whenComplete(() => _hideLoading());
   }
 
@@ -115,6 +121,7 @@ class AddNewAddressBloc extends ChangeNotifier {
   }
 
   void onTownshipIdChanged(int townshipId) {
+    debugPrint("Id:::$townshipId");
     this.townshipId = townshipId;
     _notifySafely();
   }

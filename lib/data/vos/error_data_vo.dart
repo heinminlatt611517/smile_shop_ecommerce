@@ -4,17 +4,14 @@ part 'error_data_vo.g.dart';
 
 @JsonSerializable()
 class ErrorDataVO {
-  @JsonKey(name: 'status')
-  final bool? status;
+  @JsonKey(name: 'password')
+  final List<String>? password;
 
-  @JsonKey(name: 'message')
-  final String? message;
-
-  @JsonKey(name: 'request_id')
-  final String? requestId;
+  @JsonKey(name: 'type')
+  final List<String>? type;
 
 
-  ErrorDataVO({this.status, this.message,this.requestId});
+  ErrorDataVO({this.password, this.type});
 
   factory ErrorDataVO.fromJson(Map<String, dynamic> json) =>
       _$ErrorDataVOFromJson(json);

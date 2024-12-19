@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:smile_shop/blocs/my_address_bloc.dart';
 import 'package:smile_shop/data/vos/address_vo.dart';
 import 'package:smile_shop/list_items/address_list_item_view.dart';
+import 'package:smile_shop/pages/edit_address_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 
@@ -45,7 +46,6 @@ class MyAddressPage extends StatelessWidget {
                         onTap: (){
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (builder) => const AddNewAddressPage(
-                                isEdit: false,
                               )));
                         },
                         child: Container(
@@ -80,8 +80,8 @@ class MyAddressPage extends StatelessWidget {
                               addressVO: addressList[index],
                                 onTapEdit: (){
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (builder) => const AddNewAddressPage(
-                                    isEdit: true,
+                                  builder: (builder) =>  EditAddressPage(
+                                    addressVO: addressList[index],
                                   )));
                             });
                           },

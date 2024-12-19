@@ -240,24 +240,63 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
       throw _createException(error);
     });
   }
+
+  @override
+  Future deleteAddress(String accessToken,int addressId) {
+    return mApi
+        .deleteAddress("Bearer $accessToken",addressId)
+        .asStream()
+        .map((response) => response)
+        .first
+        .catchError((error) {
+      throw _createException(error);
+    });
+  }
+
+  @override
+  Future editAddress(String accessToken, int addressId, AddressRequest addressRequest) {
+    return mApi
+        .editAddress("Bearer $accessToken",addressId,addressRequest)
+        .asStream()
+        .map((response) => response)
+        .first
+        .catchError((error) {
+      throw _createException(error);
+    });
+  }
+
+  @override
+  Future<List<CategoryVO>> addressCategories(String accessToken
+      ) {
+    return mApi
+        .addressCategories(accessToken)
+        .asStream()
+        .map((response) => response.data ?? [])
+        .first
+        .catchError((error) {
+      throw _createException(error);
+    });
+  }
 }
 
 ///custom exception
 CustomException _createException(dynamic error) {
   ErrorVO errorVO;
-  debugPrint("Error:$error");
   if (error is DioException) {
     errorVO = _parseDioError(error);
   } else {
-    errorVO = ErrorVO(statusCode: 0, message: "UnExcepted error", error: []);
+    errorVO = ErrorVO(statusCode: 0, message: "UnExcepted error",);
   }
   return CustomException(errorVO);
 }
 
 ErrorVO _parseDioError(DioException error) {
+  debugPrint("Error:$error");
   try {
     if (error.response != null || error.response?.data != null) {
       var data = error.response?.data;
+
+      debugPrint("Data$data");
 
       ///Json string to Map<String,dynamic>
       if (data is String) {
@@ -267,10 +306,10 @@ ErrorVO _parseDioError(DioException error) {
       ///Map<String,dynamic> to ErrorVO
       return ErrorVO.fromJson(data);
     } else {
-      return ErrorVO(statusCode: 0, message: "No response data", error: []);
+      return ErrorVO(statusCode: 0, message: "No response data");
     }
   } catch (e) {
     return ErrorVO(
-        statusCode: 0, message: "Invalid DioException Format", error: []);
+        statusCode: 0, message: "Invalid DioException Format");
   }
 }

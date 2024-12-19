@@ -5,6 +5,7 @@ import 'package:smile_shop/network/requests/address_request.dart';
 import 'package:smile_shop/network/requests/login_request.dart';
 import 'package:smile_shop/network/requests/otp_request.dart';
 import 'package:smile_shop/network/requests/set_password_request.dart';
+import 'package:smile_shop/network/responses/address_categories_response.dart';
 import 'package:smile_shop/network/responses/address_response.dart';
 import 'package:smile_shop/network/responses/banner_response.dart';
 import 'package:smile_shop/network/responses/brands_and_categories_response.dart';
@@ -114,4 +115,22 @@ abstract class SmileShopApi {
     @Header(kHeaderAuthorization) String token,
     @Header(kHeaderAcceptLanguage) String acceptLanguage,
   );
+
+  @GET("$kEndPointDeleteAddress/{address_id}")
+  Future<TownshipResponse> deleteAddress(
+      @Header(kHeaderAuthorization) String token,
+      @Path("address_id") int addressId,
+      );
+
+  @POST("$kEndPointEditAddress/{address_id}")
+  Future<TownshipResponse> editAddress(
+      @Header(kHeaderAuthorization) String token,
+      @Path("address_id") int addressId,
+      @Body() AddressRequest addressRequest
+      );
+
+  @GET(kEndPointAddressCategory)
+  Future<AddressCategoriesResponse> addressCategories(
+      @Header(kHeaderAuthorization) String token,
+      );
 }

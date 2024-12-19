@@ -9,16 +9,13 @@ part of 'error_vo.dart';
 ErrorVO _$ErrorVOFromJson(Map<String, dynamic> json) => ErrorVO(
       statusCode: (json['status_code'] as num?)?.toInt(),
       message: json['message'] as String?,
-      error:
-          (json['errors'] as List<dynamic>?)?.map((e) => e as String).toList(),
-      errorDataVO: json['data'] == null
+      data: json['errors'] == null
           ? null
-          : ErrorDataVO.fromJson(json['data'] as Map<String, dynamic>),
+          : ErrorDataVO.fromJson(json['errors'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$ErrorVOToJson(ErrorVO instance) => <String, dynamic>{
       'status_code': instance.statusCode,
       'message': instance.message,
-      'errors': instance.error,
-      'data': instance.errorDataVO,
+      'errors': instance.data,
     };

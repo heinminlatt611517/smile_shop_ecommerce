@@ -12,25 +12,27 @@ class ErrorVO {
   final String? message;
 
   @JsonKey(name: "errors")
-  final List<String>? error;
+  final ErrorDataVO? data;
 
-  @JsonKey(name: "data")
-  final ErrorDataVO? errorDataVO;
-
-  ErrorVO({this.statusCode, this.message, this.error,this.errorDataVO});
+  ErrorVO({this.statusCode, this.message,this.data});
 
   factory ErrorVO.fromJson(Map<String, dynamic> json) =>
       _$ErrorVOFromJson(json);
 
   Map<String, dynamic> toJson() => _$ErrorVOToJson(this);
 
-  String getErrorMessage() {
-    if (error != null && error!.isNotEmpty) {
-      return error!.join(', ');
+  String? getErrorMessages() {
+    if (data == null) return message ?? "";
+
+    List<String> errors = [];
+
+    if (data?.password != null) {
+      errors.addAll(data!.password!);
     }
-    if(errorDataVO != null){
-      return errorDataVO?.message ?? "";
+    if (data?.type != null) {
+      errors.addAll(data!.type!);
     }
-    return message ?? '';
+
+    return errors.isNotEmpty ? errors.join('\n') : message;
   }
 }

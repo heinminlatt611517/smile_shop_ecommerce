@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:provider/provider.dart';
+import 'package:smile_shop/blocs/my_address_bloc.dart';
 import 'package:smile_shop/data/vos/search_product_vo.dart';
 import 'package:smile_shop/data/vos/user_vo.dart';
-import 'package:smile_shop/network/responses/login_response.dart';
 import 'package:smile_shop/pages/splash_page.dart';
 import 'package:smile_shop/persistence/hive_constants.dart';
 import 'package:smile_shop/utils/fonts.dart';
@@ -20,9 +21,12 @@ void main() async {
   await Hive.openBox<LoginDataVO>(kBoxLoginResponse);
   await Hive.openBox<SearchProductVO>(kBoxSearchProduct);
 
-  runApp(const SmileShopApp());
+  runApp(MultiProvider(
+      providers: [ChangeNotifierProvider(
+        create: (_) => MyAddressBloc(),
+      ),],
+      child: const SmileShopApp()));
 }
-
 class SmileShopApp extends StatelessWidget {
   const SmileShopApp({super.key});
 

@@ -25,6 +25,9 @@ class AddressRequest {
   @JsonKey(name: "township_id")
   final int? townshipId;
 
+  @JsonKey(name: "name")
+  final String? name;
+
   AddressRequest({
     this.phone,
     this.address,
@@ -33,6 +36,7 @@ class AddressRequest {
     this.isDefault,
     this.categoryId,
     this.townshipId,
+    this.name
   });
 
   factory AddressRequest.fromJson(Map<String, dynamic> json) =>

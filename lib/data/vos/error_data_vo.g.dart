@@ -7,14 +7,14 @@ part of 'error_data_vo.dart';
 // **************************************************************************
 
 ErrorDataVO _$ErrorDataVOFromJson(Map<String, dynamic> json) => ErrorDataVO(
-      status: json['status'] as bool?,
-      message: json['message'] as String?,
-      requestId: json['request_id'] as String?,
+      password: (json['password'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+      type: (json['type'] as List<dynamic>?)?.map((e) => e as String).toList(),
     );
 
 Map<String, dynamic> _$ErrorDataVOToJson(ErrorDataVO instance) =>
     <String, dynamic>{
-      'status': instance.status,
-      'message': instance.message,
-      'request_id': instance.requestId,
+      'password': instance.password,
+      'type': instance.type,
     };

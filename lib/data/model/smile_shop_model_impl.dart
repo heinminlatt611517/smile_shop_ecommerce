@@ -146,6 +146,25 @@ class SmileShopModelImpl extends SmileShopModel {
     return mDataAgent.products(token, acceptLanguage, endUserId, page);
   }
 
+  @override
+  Future deleteAddress(String accessToken, int addressId) {
+    return mDataAgent.deleteAddress(accessToken, addressId);
+  }
+
+  @override
+  Future editAddress(String accessToken, int addressId, AddressRequest addressRequest) {
+    return mDataAgent.editAddress(accessToken, addressId, addressRequest);
+  }
+
+  @override
+  Future<List<CategoryVO>> addressCategories(String accessToken) {
+    return mDataAgent.addressCategories(accessToken);
+  }
+
+
+
+
+
   ///get data from hive database
   @override
   LoginDataVO? getLoginResponseFromDatabase() {

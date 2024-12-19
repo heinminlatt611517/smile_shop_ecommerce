@@ -6,5 +6,5 @@ class CustomException implements Exception {
   CustomException(this.errorVO);
 
   @override
-  String toString() => errorVO.getErrorMessage();
+  String toString() => errorVO.getErrorMessages() ?? "";
 }
