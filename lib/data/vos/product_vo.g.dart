@@ -3,6 +3,92 @@
 part of 'product_vo.dart';
 
 // **************************************************************************
+// TypeAdapterGenerator
+// **************************************************************************
+
+class ProductVOAdapter extends TypeAdapter<ProductVO> {
+  @override
+  final int typeId = 3;
+
+  @override
+  ProductVO read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return ProductVO(
+      id: fields[0] as int?,
+      name: fields[1] as String?,
+      sku: fields[2] as String?,
+      price: fields[5] as int?,
+      brandId: fields[6] as int?,
+      subcategoryId: fields[8] as int?,
+      image: fields[9] as String?,
+      subcategory: fields[11] as SubcategoryVO?,
+      brand: fields[12] as BrandVO?,
+      variantVO: (fields[13] as List?)?.cast<VariantVO>(),
+      images: (fields[10] as List?)?.cast<String>(),
+      rating: fields[7] as int?,
+      description: fields[4] as String?,
+      highlight: fields[3] as String?,
+      qtyCount: fields[14] as int?,
+      isChecked: fields[15] as bool?,
+      totalPrice: fields[16] as int?,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, ProductVO obj) {
+    writer
+      ..writeByte(17)
+      ..writeByte(0)
+      ..write(obj.id)
+      ..writeByte(1)
+      ..write(obj.name)
+      ..writeByte(2)
+      ..write(obj.sku)
+      ..writeByte(3)
+      ..write(obj.highlight)
+      ..writeByte(4)
+      ..write(obj.description)
+      ..writeByte(5)
+      ..write(obj.price)
+      ..writeByte(6)
+      ..write(obj.brandId)
+      ..writeByte(7)
+      ..write(obj.rating)
+      ..writeByte(8)
+      ..write(obj.subcategoryId)
+      ..writeByte(9)
+      ..write(obj.image)
+      ..writeByte(10)
+      ..write(obj.images)
+      ..writeByte(11)
+      ..write(obj.subcategory)
+      ..writeByte(12)
+      ..write(obj.brand)
+      ..writeByte(13)
+      ..write(obj.variantVO)
+      ..writeByte(14)
+      ..write(obj.qtyCount)
+      ..writeByte(15)
+      ..write(obj.isChecked)
+      ..writeByte(16)
+      ..write(obj.totalPrice);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ProductVOAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+// **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 

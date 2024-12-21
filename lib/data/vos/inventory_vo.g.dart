@@ -3,6 +3,62 @@
 part of 'inventory_vo.dart';
 
 // **************************************************************************
+// TypeAdapterGenerator
+// **************************************************************************
+
+class InventoryVOAdapter extends TypeAdapter<InventoryVO> {
+  @override
+  final int typeId = 12;
+
+  @override
+  InventoryVO read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return InventoryVO(
+      id: fields[0] as int?,
+      productVariantId: fields[1] as int?,
+      warehouseId: fields[2] as int?,
+      quantity: fields[3] as String?,
+      createdAt: fields[4] as String?,
+      updatedAt: fields[5] as String?,
+      deletedAt: fields[6] as String?,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, InventoryVO obj) {
+    writer
+      ..writeByte(7)
+      ..writeByte(0)
+      ..write(obj.id)
+      ..writeByte(1)
+      ..write(obj.productVariantId)
+      ..writeByte(2)
+      ..write(obj.warehouseId)
+      ..writeByte(3)
+      ..write(obj.quantity)
+      ..writeByte(4)
+      ..write(obj.createdAt)
+      ..writeByte(5)
+      ..write(obj.updatedAt)
+      ..writeByte(6)
+      ..write(obj.deletedAt);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is InventoryVOAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+// **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 

@@ -13,6 +13,7 @@ import 'package:smile_shop/network/responses/brands_and_categories_response.dart
 import 'package:smile_shop/network/responses/category_response.dart';
 import 'package:smile_shop/network/responses/login_response.dart';
 import 'package:smile_shop/network/responses/otp_response.dart';
+import 'package:smile_shop/network/responses/payment_response.dart';
 import 'package:smile_shop/network/responses/product_details_response.dart';
 import 'package:smile_shop/network/responses/product_response.dart';
 import 'package:smile_shop/network/responses/state_response.dart';
@@ -95,7 +96,7 @@ abstract class SmileShopApi {
     @Header(kHeaderAcceptLanguage) String acceptLanguage,
     @Field(kFieldEndUserId) int endUserId,
     @Field(kFieldPage) int page,
-    @Query(kParamRating) int rating,
+    @Query(kParamRating) double rating,
   );
 
   @POST(kEndPointAddNewAddress)
@@ -141,5 +142,21 @@ abstract class SmileShopApi {
       @Header(kHeaderAuthorization) String token,
       @Header(kHeaderAcceptLanguage) String acceptLanguage,
       @Body() SubCategoryRequest subCategoryRequest
+      );
+
+  @POST(kEndPointOrder)
+  Future<ProductResponse> postOrder(
+      @Header(kHeaderAuthorization) String token,
+      @Header(kHeaderAcceptLanguage) String acceptLanguage,
+      @Field(kFieldProductId) int productId,
+      @Field(kFieldSubTotal) int subTotal,
+      @Field(kFieldPaymentType) int paymentType,
+      @Field(kFieldItems) String itemList
+      );
+
+  @GET(kEndPointPayments)
+  Future<PaymentResponse> payments(
+      @Header(kHeaderAuthorization) String token,
+      @Header(kHeaderAcceptLanguage) String acceptLanguage,
       );
 }

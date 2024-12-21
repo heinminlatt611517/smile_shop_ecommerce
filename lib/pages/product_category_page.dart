@@ -3,10 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:smile_shop/blocs/product_category_bloc.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
-import '../data/dummy_data/trending_products_dummy_data.dart';
 import '../data/vos/product_response_data_vo.dart';
 import '../list_items/trending_product_list_item_view.dart';
-import '../network/api_constants.dart';
 import '../utils/images.dart';
 import '../utils/strings.dart';
 

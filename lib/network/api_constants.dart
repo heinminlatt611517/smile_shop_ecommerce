@@ -26,6 +26,8 @@ const String kEndPointAddressCategory = "/api/address-categroy";
 const String kEndPointDeleteAddress = "/api/delete/address";
 const String kEndPointStates = "/api/state";
 const String kEndPointTownships = "/api/state";
+const String kEndPointOrder  = '/api/order';
+const String kEndPointPayments  = '/api/payments';
 
 ///Parameters
 const String kParamApiKey = "api_key";
@@ -40,6 +42,9 @@ const String kFieldPhone = "phone";
 const String kFieldOtp = "otp";
 const String kFieldEndUserId = "enduser_id";
 const String kFieldProductId = "product_id";
+const String kFieldSubTotal = "subtotal";
+const String kFieldPaymentType = "payment_type";
+const String kFieldItems= "items";
 const String kFieldCode = "code";
 const String kFieldDeviceId = "device_id";
 const String kFieldFcmToken = "fcm_token";

@@ -1,6 +1,7 @@
 import 'package:smile_shop/data/vos/banner_vo.dart';
 import 'package:smile_shop/data/vos/brand_and_category_vo.dart';
 import 'package:smile_shop/data/vos/category_vo.dart';
+import 'package:smile_shop/data/vos/payment_vo.dart';
 import 'package:smile_shop/data/vos/product_response_data_vo.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
 import 'package:smile_shop/data/vos/state_vo.dart';
@@ -27,11 +28,11 @@ abstract class SmileShopDataAgent {
 
   Future<List<CategoryVO>> categories(String type);
 
-  Future<ProductResponseDataVO> products(
-      String token, String acceptLanguage, int endUserId, int page);
+  Future<ProductResponseDataVO> products(String token, String acceptLanguage,
+      int endUserId, int page);
 
-  Future<ProductVO> getProductDetails(
-      String endUserId, String productId, String acceptLanguage, String token);
+  Future<ProductVO> getProductDetails(String endUserId, String productId,
+      String acceptLanguage, String token);
 
   Future verifyOtp(OtpVerifyRequest otpVerifyRequest);
 
@@ -39,20 +40,18 @@ abstract class SmileShopDataAgent {
 
   Future<OtpResponse> requestOtp(OtpRequest otpRequest);
 
-  Future<BrandAndCategoryVO> getBrandsAndCategories(
-    String token,
-    String acceptLanguage,
-    String endUserId,
-  );
+  Future<BrandAndCategoryVO> getBrandsAndCategories(String token,
+      String acceptLanguage,
+      String endUserId,);
 
   Future<List<ProductVO>> searchProductsByName(String token,
       String acceptLanguage, String endUserId, int pageNo, String name);
 
   Future<List<ProductVO>> searchProductsByRating(String token,
-      String acceptLanguage, String endUserId, int pageNo, int rating);
+      String acceptLanguage, String endUserId, int pageNo, double rating);
 
-  Future addNewAddress(
-      String accessToken, String acceptLanguage, AddressRequest addressRequest);
+  Future addNewAddress(String accessToken, String acceptLanguage,
+      AddressRequest addressRequest);
 
   Future<List<StateVO>> states();
 
@@ -62,11 +61,20 @@ abstract class SmileShopDataAgent {
 
   Future deleteAddress(String accessToken, int addressId);
 
-  Future editAddress(
-      String accessToken, int addressId, AddressRequest addressRequest);
+  Future editAddress(String accessToken, int addressId,
+      AddressRequest addressRequest);
 
   Future<List<CategoryVO>> addressCategories(String accessToken);
 
   Future<List<SubcategoryVO>> subCategoryByCategory(String token,
       String acceptLanguage, SubCategoryRequest subCategoryRequest);
+
+  Future<void> postOrder(String token,
+      String acceptLanguage,
+      int productId,
+      int subTotal,
+      int paymentType,
+      String itemList);
+
+  Future<List<PaymentVO>> payments(String token, String acceptLanguage);
 }

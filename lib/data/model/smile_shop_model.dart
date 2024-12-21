@@ -15,6 +15,7 @@ import '../../network/requests/sub_category_request.dart';
 import '../../network/responses/address_response.dart';
 import '../../network/responses/login_response.dart';
 import '../vos/brand_and_category_vo.dart';
+import '../vos/payment_vo.dart';
 import '../vos/product_response_data_vo.dart';
 import '../vos/state_vo.dart';
 import '../vos/sub_category_vo.dart';
@@ -51,7 +52,7 @@ abstract class SmileShopModel {
       String acceptLanguage, String endUserId, int pageNo, String name);
 
   Future<List<ProductVO>> searchProductsByRating(String token,
-      String acceptLanguage, String endUserId, int pageNo, int rating);
+      String acceptLanguage, String endUserId, int pageNo, double rating);
 
   Future addNewAddress(
       String accessToken, String acceptLanguage, AddressRequest addressRequest);
@@ -88,4 +89,19 @@ abstract class SmileShopModel {
   void clearSingleSearchProduct(String name);
 
   void addSingleSearchProductToDatabase(SearchProductVO searchProductVO);
+
+  Future<void> postOrder(String token,
+      String acceptLanguage,
+      int productId,
+      int subTotal,
+      int paymentType,
+      String itemList);
+
+  Future<List<PaymentVO>> payments(String token, String acceptLanguage);
+
+  ///for cart list
+  List<ProductVO> firstTimeGetProductFromDatabase();
+  void saveProductToHive(ProductVO product);
+  void deleteProductById(int productId);
+  Stream<List<ProductVO>> getProductFromDatabase();
 }

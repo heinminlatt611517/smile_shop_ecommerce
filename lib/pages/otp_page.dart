@@ -162,11 +162,9 @@ class _OtpPageState extends State<OtpPage> {
                         builder: (context, bloc, child) => GestureDetector(
                           onTap: () {
                             bloc.onTapVerifyOtp(widget.requestId ?? "").then((value) {
-                              if (value.statusCode == 1) {
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (builder) =>
                                          PasswordPage(requestId: widget.requestId,phone: widget.phone,)));
-                              }
                             }).catchError((error) {
                               showCommonDialog(
                                   context: context,

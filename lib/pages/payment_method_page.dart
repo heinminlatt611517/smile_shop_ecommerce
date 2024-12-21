@@ -1,156 +1,113 @@
 import 'package:flutter/material.dart';
+import 'package:loading_indicator/loading_indicator.dart';
+import 'package:provider/provider.dart';
+import 'package:smile_shop/blocs/payment_bloc.dart';
+import 'package:smile_shop/list_items/payment_method_list_item_view.dart';
 import 'package:smile_shop/pages/order_successful_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
-import 'package:smile_shop/widgets/cached_network_image_view.dart';
 import 'package:smile_shop/widgets/common_button_view.dart';
+
+import '../widgets/common_dialog.dart';
+import '../widgets/error_dialog_view.dart';
+import '../widgets/loading_view.dart';
 
 class PaymentMethodPage extends StatelessWidget {
   const PaymentMethodPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: kBackgroundColor,
-      appBar: AppBar(
+    return ChangeNotifierProvider(
+      create: (context) => PaymentBloc(),
+      child: Scaffold(
         backgroundColor: kBackgroundColor,
-        surfaceTintColor: kBackgroundColor,
-        centerTitle: true,
-        title: const Text('Payment Method'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Choose type of payment.',style: TextStyle(fontSize: kTextRegular2x),),
-            const SizedBox(
-              height: kMargin30,
-            ),
-            MediaQuery.removePadding(
-                context: context,
-                removeBottom: true,
-                removeTop: true,
-                child: ListView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: 4,
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      return index == 3 ? Container(
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(kMarginMedium)),
-                        margin: const EdgeInsets.only(bottom: 20),
-                        padding:
-                        const EdgeInsets.symmetric(horizontal: kMargin25,vertical: kMarginMedium2),
-                        width: double.infinity,
-                        child:  Column(
-                          children: [
-                            const Row(
-                              children: [
-                                CachedNetworkImageView(
-                                    imageHeight: 45,
-                                    imageWidth: 45,
-                                    imageUrl:
-                                    'https://play-lh.googleusercontent.com/cnKJYzzHFAE5ZRepCsGVhv7ZnoDfK8Wu5z6lMefeT-45fTNfUblK_gF3JyW5VZsjFc4'),
-                                SizedBox(
-                                  width: kMargin25,
-                                ),
-                                Text('Kpay'),
-                              ],
-                            ),
-                            const SizedBox(height: kMarginLarge,),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Container(
-                                  height: 45,
-                                  width: 50,
-                                  padding: const EdgeInsets.all(3),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5),
-                                      border: Border.all(color: kFillingFastColor)),
-                                  child: const CachedNetworkImageView(
-                                      imageHeight: 45,
-                                      imageWidth: 45,
-                                      imageUrl:
-                                      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3V1gApW44x8AYf4lZB7KVxWjMupExtAX2OA&s'),
-                                ),
-                                Container(
-                                  height: 45,
-                                  width: 50,
-                                  padding: const EdgeInsets.all(3),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5),
-                                      border: Border.all(color: kFillingFastColor)),
-                                  child: const CachedNetworkImageView(
-                                      imageHeight: 45,
-                                      imageWidth: 45,
-                                      imageUrl:
-                                      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3V1gApW44x8AYf4lZB7KVxWjMupExtAX2OA&s'),
-                                ),
-                                Container(
-                                  height: 45,
-                                  width: 50,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5),
-                                      border: Border.all(color: kFillingFastColor)),
-                                  padding: const EdgeInsets.all(3),
-                                  child: const CachedNetworkImageView(
-                                      imageHeight: 45,
-                                      imageWidth: 45,
-                                      imageUrl:
-                                      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3V1gApW44x8AYf4lZB7KVxWjMupExtAX2OA&s'),
-                                ),
-                                Container(
-                                  height: 45,
-                                  width: 50,
-                                  padding: const EdgeInsets.all(3),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5),
-                                      border: Border.all(color: kFillingFastColor)),
-                                  child: const CachedNetworkImageView(
-                                      imageHeight: 45,
-                                      imageWidth: 45,
-                                      imageUrl:
-                                      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3V1gApW44x8AYf4lZB7KVxWjMupExtAX2OA&s'),
-                                )
-                              ],
-                            ),
-                          ],
-                        ),
-                      ) : Container(
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(kMarginMedium)),
-                        margin: const EdgeInsets.only(bottom: 20),
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: kMargin25),
-                        height: 70,
-                        width: double.infinity,
-                        child: const Row(
-                          children: [
-                            CachedNetworkImageView(
-                                imageHeight: 45,
-                                imageWidth: 45,
-                                imageUrl:
-                                    'https://play-lh.googleusercontent.com/cnKJYzzHFAE5ZRepCsGVhv7ZnoDfK8Wu5z6lMefeT-45fTNfUblK_gF3JyW5VZsjFc4'),
-                            SizedBox(
-                              width: kMargin25,
-                            ),
-                            Text('Kpay'),
-                          ],
-                        ),
-                      );
-                    })),
-            const SizedBox(
-              height: kMargin80,
-            ),
-            CommonButtonView(label: 'Check Out', labelColor: Colors.white, bgColor: kPrimaryColor, onTapButton: (){
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (builder) => const OrderSuccessfulPage()));
-            }),
-          ],
+        appBar: AppBar(
+          backgroundColor: kBackgroundColor,
+          surfaceTintColor: kBackgroundColor,
+          centerTitle: true,
+          title: const Text('Payment Method'),
+        ),
+        body: Selector<PaymentBloc, bool>(
+          selector: (context, bloc) => bloc.isLoading,
+          builder: (BuildContext context, isLoading, Widget? child) => Stack(
+            children: [
+              ///body view
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Choose type of payment.',
+                      style: TextStyle(fontSize: kTextRegular2x),
+                    ),
+                    const SizedBox(
+                      height: kMargin30,
+                    ),
+                    MediaQuery.removePadding(
+                        context: context,
+                        removeBottom: true,
+                        removeTop: true,
+                        child: Consumer<PaymentBloc>(
+                          builder: (context, bloc, child) => ListView.builder(
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: 4,
+                              shrinkWrap: true,
+                              itemBuilder: (context, index) {
+                                //bool isLastIndex = index == _items.length - 1;
+                                bool isLastIndex = index == 3;
+                                return PaymentMethodListItemView(
+                                  currentIndex: index,
+                                  isLastIndex: isLastIndex,
+                                  isSelected: bloc.isSelected(index),
+                                  onTapPayment: (currentIndex) {
+                                    bloc.onSelectPayment(currentIndex);
+                                  },
+                                );
+                              }),
+                        )),
+                    const SizedBox(
+                      height: kMargin80,
+                    ),
+                    Consumer<PaymentBloc>(
+                      builder: (context, bloc, child) => CommonButtonView(
+                          label: 'Check Out',
+                          labelColor: Colors.white,
+                          bgColor: kPrimaryColor,
+                          onTapButton: () {
+                            bloc
+                                .onTapCheckout(18, 5, 1,
+                                    "[{variant_product_id : 1,product_id:1, variant_attribute_value_id : 1 , qty : 2}]")
+                                .then((value) {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (builder) =>
+                                      const OrderSuccessfulPage()));
+                            }).catchError((error) {
+                              showCommonDialog(
+                                  context: context,
+                                  dialogWidget: ErrorDialogView(
+                                      errorMessage: error.toString()));
+                            });
+                          }),
+                    ),
+                  ],
+                ),
+              ),
+
+              ///loading view
+              if (isLoading)
+                Container(
+                  color: Colors.black12,
+                  child: const Center(
+                    child: LoadingView(
+                      indicatorColor: kPrimaryColor,
+                      indicator: Indicator.ballSpinFadeLoader,
+                    ),
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );

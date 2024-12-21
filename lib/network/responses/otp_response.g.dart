@@ -7,7 +7,7 @@ part of 'otp_response.dart';
 // **************************************************************************
 
 OtpResponse _$OtpResponseFromJson(Map<String, dynamic> json) => OtpResponse(
-      status: (json['status'] as num?)?.toInt(),
+      status: (json['status_code'] as num?)?.toInt(),
       data: json['data'] == null
           ? null
           : OtpVO.fromJson(json['data'] as Map<String, dynamic>),
@@ -15,6 +15,6 @@ OtpResponse _$OtpResponseFromJson(Map<String, dynamic> json) => OtpResponse(
 
 Map<String, dynamic> _$OtpResponseToJson(OtpResponse instance) =>
     <String, dynamic>{
-      'status': instance.status,
+      'status_code': instance.status,
       'data': instance.data,
     };

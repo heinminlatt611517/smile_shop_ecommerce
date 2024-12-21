@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
+import 'package:smile_shop/blocs/cart_bloc.dart';
 import 'package:smile_shop/blocs/product_details_bloc.dart';
 import 'package:smile_shop/blocs/product_details_bottom_sheet_bloc.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
@@ -163,26 +164,33 @@ class _ProductDetailsPageState extends State<ProductDetailsPage>
                                 selector: (context, bloc) => bloc.productVO,
                                 builder: (context, product, child) => Row(
                                   children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                          borderRadius: const BorderRadius.only(
-                                              topLeft: Radius.circular(6),
-                                              bottomLeft: Radius.circular(6)),
-                                          color: kPrimaryColor,
-                                          gradient: LinearGradient(
-                                              begin: Alignment.centerLeft,
-                                              end: Alignment.centerRight,
-                                              colors: [
-                                                kSecondaryColor,
-                                                kPrimaryColor.withOpacity(0.7),
-                                              ])),
-                                      child: const Padding(
-                                        padding: EdgeInsets.all(8.0),
-                                        child: Text(
-                                          'Add To Cart',
-                                          style: TextStyle(
-                                              color: kBackgroundColor,
-                                              fontWeight: FontWeight.bold),
+                                    InkWell(
+                                      onTap: (){
+                                        var bloc = Provider.of<ProductDetailsBloc>(context,
+                                            listen: false);
+                                        bloc.onTapAddToCart();
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            borderRadius: const BorderRadius.only(
+                                                topLeft: Radius.circular(6),
+                                                bottomLeft: Radius.circular(6)),
+                                            color: kPrimaryColor,
+                                            gradient: LinearGradient(
+                                                begin: Alignment.centerLeft,
+                                                end: Alignment.centerRight,
+                                                colors: [
+                                                  kSecondaryColor,
+                                                  kPrimaryColor.withOpacity(0.7),
+                                                ])),
+                                        child: const Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Text(
+                                            'Add To Cart',
+                                            style: TextStyle(
+                                                color: kBackgroundColor,
+                                                fontWeight: FontWeight.bold),
+                                          ),
                                         ),
                                       ),
                                     ),

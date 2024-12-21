@@ -6,7 +6,7 @@ part 'otp_response.g.dart';
 
 @JsonSerializable()
 class OtpResponse {
-  @JsonKey(name: "status")
+  @JsonKey(name: "status_code")
   final int? status;
 
   @JsonKey(name: "data")

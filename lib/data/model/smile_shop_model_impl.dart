@@ -4,6 +4,7 @@ import 'package:smile_shop/data/vos/banner_vo.dart';
 import 'package:smile_shop/data/vos/brand_and_category_vo.dart';
 import 'package:smile_shop/data/vos/category_vo.dart';
 import 'package:smile_shop/data/vos/login_data_vo.dart';
+import 'package:smile_shop/data/vos/payment_vo.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
 import 'package:smile_shop/data/vos/search_product_vo.dart';
 import 'package:smile_shop/data/vos/state_vo.dart';
@@ -17,6 +18,7 @@ import 'package:smile_shop/network/requests/sub_category_request.dart';
 import 'package:smile_shop/network/responses/address_response.dart';
 import 'package:smile_shop/network/responses/login_response.dart';
 import 'package:smile_shop/network/responses/otp_response.dart';
+import 'package:smile_shop/persistence/product_dao.dart';
 import 'package:smile_shop/persistence/search_product_dao.dart';
 
 import '../../network/data_agents/retrofit_data_agent_impl.dart';
@@ -40,6 +42,7 @@ class SmileShopModelImpl extends SmileShopModel {
   ///Dao
   final LoginDataDao _loginDataDao = LoginDataDao();
   final SearchProductDao _searchProductDao = SearchProductDao();
+  final ProductDao _productDao = ProductDao();
 
   @override
   Future<LoginResponse> login(LoginRequest loginRequest) {
@@ -104,7 +107,7 @@ class SmileShopModelImpl extends SmileShopModel {
 
   @override
   Future<List<ProductVO>> searchProductsByRating(String token,
-      String acceptLanguage, String endUserId, int pageNo, int rating) {
+      String acceptLanguage, String endUserId, int pageNo, double rating) {
     return mDataAgent.searchProductsByRating(
         token, acceptLanguage, endUserId, pageNo, rating);
   }
@@ -171,6 +174,16 @@ class SmileShopModelImpl extends SmileShopModel {
         token, acceptLanguage, subCategoryRequest);
   }
 
+  @override
+  Future<void> postOrder(String token, String acceptLanguage, int productId, int subTotal, int paymentType, String itemList) {
+    return mDataAgent.postOrder(token, acceptLanguage, productId, subTotal, paymentType, itemList);
+  }
+
+  @override
+  Future<List<PaymentVO>> payments(String token, String acceptLanguage) {
+   return mDataAgent.payments(token, acceptLanguage);
+  }
+
   ///get data from hive database
   @override
   LoginDataVO? getLoginResponseFromDatabase() {
@@ -213,4 +226,27 @@ class SmileShopModelImpl extends SmileShopModel {
   void clearSaveLoginData() {
     _loginDataDao.clearUserData();
   }
+
+  ///get add to cart product list from database
+  @override
+  List<ProductVO> firstTimeGetProductFromDatabase() {
+    return _productDao.getProducts();
+  }
+
+  @override
+  Stream<List<ProductVO>> getProductFromDatabase() {
+    return _productDao.watchProductBox().map((_) => _productDao.getProducts());
+  }
+
+  @override
+  void saveProductToHive(ProductVO product) {
+    return _productDao.saveSearchProduct(product);
+  }
+
+  @override
+  void deleteProductById(int productId) {
+    return _productDao.deleteSearchProduct(productId);
+  }
+
+
 }

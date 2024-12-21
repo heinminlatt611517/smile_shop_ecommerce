@@ -28,6 +28,14 @@ class ProductDetailsBloc extends ChangeNotifier {
     });
   }
 
+  void onTapAddToCart(){
+    debugPrint("ProductName>>>>>>>${productVO?.name}");
+    _smileShopModel.saveProductToHive(
+        productVO?.copyWith(
+            totalPrice: 0,
+            qtyCount: 1) ?? ProductVO());
+  }
+
   void _showLoading() {
     isLoading = true;
     _notifySafely();

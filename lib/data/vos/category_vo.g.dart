@@ -3,6 +3,50 @@
 part of 'category_vo.dart';
 
 // **************************************************************************
+// TypeAdapterGenerator
+// **************************************************************************
+
+class CategoryVOAdapter extends TypeAdapter<CategoryVO> {
+  @override
+  final int typeId = 5;
+
+  @override
+  CategoryVO read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return CategoryVO(
+      id: fields[0] as int?,
+      name: fields[1] as String?,
+      subCategories: (fields[2] as List?)?.cast<SubcategoryVO>(),
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, CategoryVO obj) {
+    writer
+      ..writeByte(3)
+      ..writeByte(0)
+      ..write(obj.id)
+      ..writeByte(1)
+      ..write(obj.name)
+      ..writeByte(2)
+      ..write(obj.subCategories);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is CategoryVOAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+// **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 

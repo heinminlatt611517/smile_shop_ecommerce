@@ -22,15 +22,19 @@ class SearchProductBloc extends ChangeNotifier {
   bool isLoading = false;
   bool isDisposed = false;
   bool isScreenLaunch = true;
+  bool isShowRatingView = false;
+  bool isShowPriceView = false;
+  var authToken = "";
+  var endUserId = "";
 
   SearchProductBloc() {
     ///first time get search product list from database
     getFirstTimeSearchProductsFromDatabase();
 
     ///get data from database
-    var authToken =
+     authToken =
         _smileShopModel.getLoginResponseFromDatabase()?.refreshToken ?? "";
-    var endUserId =
+     endUserId =
         _smileShopModel.getLoginResponseFromDatabase()?.data?.id.toString() ??
             "";
 
@@ -96,6 +100,31 @@ class SearchProductBloc extends ChangeNotifier {
   void _showLoading() {
     isLoading = true;
     _notifySafely();
+  }
+
+  void onTapRating(double rating){
+    debugPrint("Rating::::$rating");
+    _smileShopModel
+        .searchProductsByRating( authToken, kAcceptLanguageEn, endUserId,1,rating)
+        .whenComplete(() => _hideLoading())
+        .then((searchResults) {
+      products = searchResults;
+      if(searchResults.isEmpty){
+        isScreenLaunch = false;
+        products = [];
+      }
+      _notifySafely();
+    });
+  }
+
+  void onTapPrice(){
+    isShowPriceView = !isShowPriceView;
+    isShowRatingView = false;
+    _notifySafely();
+  }
+
+  bool isChangeBackground(){
+    return isShowRatingView == true || isShowPriceView == true ? true : false;
   }
 
   void _hideLoading() {

@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:smile_shop/blocs/cart_bloc.dart';
+import 'package:smile_shop/data/vos/product_vo.dart';
+import 'package:smile_shop/network/api_constants.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/widgets/cached_network_image_view.dart';
 
 class CartListItemView extends StatelessWidget {
-  const CartListItemView({super.key, required this.isCheckout});
   final bool isCheckout;
+  final ProductVO? productVO;
+  const CartListItemView({super.key, required this.isCheckout,this.productVO});
 
   @override
   Widget build(BuildContext context) {
@@ -19,16 +24,13 @@ class CartListItemView extends StatelessWidget {
         children: [
           isCheckout == true
               ? const SizedBox.shrink()
-              : Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(3),
-                      border: Border.all(color: kCartColor)),
-                  child: const Icon(
-                    Icons.check,
-                    color: kPrimaryColor,
-                    size: 20,
-                  ),
-                ),
+              : Checkbox(
+              checkColor: kPrimaryColor,
+              value: productVO?.isChecked ?? false, onChanged: (value){
+            var bloc = Provider.of<CartBloc>(context,
+                listen: false);
+            bloc.onTapChecked(productVO!);
+          }),
            SizedBox(
             width:isCheckout == true ? 0 : kMargin30,
           ),
@@ -46,11 +48,10 @@ class CartListItemView extends StatelessWidget {
                     children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(10),
-                      child: const CachedNetworkImageView(
+                      child:  CachedNetworkImageView(
                           imageHeight: 80,
                           imageWidth: 80,
-                          imageUrl:
-                          'https://media.istockphoto.com/id/1311107708/photo/focused-cute-stylish-african-american-female-student-with-afro-dreadlocks-studying-remotely.jpg?s=612x612&w=0&k=20&c=OwxBza5YzLWkE_2abTKqLLW4hwhmM2PW9BotzOMMS5w='),
+                          imageUrl:productVO?.images?.first ?? errorImageUrl),
                     ),
                     const SizedBox(
                       width: kMarginMedium3,
@@ -60,11 +61,11 @@ class CartListItemView extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text(
-                            'Product Name',
+                           Text(
+                            productVO?.name ?? "",
                             overflow: TextOverflow.ellipsis,
                             softWrap: true,
-                            style: TextStyle(
+                            style:const TextStyle(
                                 fontSize: kTextRegular2x, fontWeight: FontWeight.w600),
                           ),
                           const SizedBox(
@@ -72,9 +73,9 @@ class CartListItemView extends StatelessWidget {
                           ),
                           Row(
                             children: [
-                              const Text(
-                                'Hair Care',
-                                style: TextStyle(
+                               Text(
+                                productVO?.subcategory?.name ?? "",
+                                style:const TextStyle(
                                     color: kTpinTextColor, fontSize: kTextSmall),
                               ),
                               const SizedBox(
@@ -96,18 +97,18 @@ class CartListItemView extends StatelessWidget {
                           const SizedBox(
                             height: kMargin10,
                           ),
-                          const Row(
+                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Text(
                                 overflow: TextOverflow.ellipsis,
-                                'Ks 100000.00',
-                                style: TextStyle(fontSize: kTextRegular2x),
+                                productVO?.totalPrice.toString() == "0" ? 'Ks ${productVO?.price.toString()}' : 'Ks ${productVO?.totalPrice.toString()}',
+                                style:const TextStyle(fontSize: kTextRegular2x),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: kMargin30,
                               ),
-                              Text(
+                              const Text(
                                 '100 pt',
                                 style:
                                 TextStyle(color: kPrimaryColor, fontSize: kTextSmall),
@@ -115,8 +116,8 @@ class CartListItemView extends StatelessWidget {
                             ],
                           ),
                           isCheckout == true
-                              ? const Text(
-                              'Qty: 1')
+                              ?  Text(
+                              'Qty: ${productVO?.qtyCount.toString()}')
                               : const SizedBox.shrink(),
 
                         ],
@@ -128,13 +129,18 @@ class CartListItemView extends StatelessWidget {
                       : Row(
                     children: [
                       const Spacer(),
+                      ///minus button
                       TextButton(
                           style: TextButton.styleFrom(
                             minimumSize: Size.zero,
                             padding: EdgeInsets.zero,
                             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            var bloc = Provider.of<CartBloc>(context,
+                                listen: false);
+                            bloc.onTapDecreaseQty(productVO!);
+                          },
                           child: const Icon(
                             Icons.remove_circle,
                             color: kCartColor,
@@ -142,17 +148,23 @@ class CartListItemView extends StatelessWidget {
                       const SizedBox(
                         width: kMarginMedium,
                       ),
-                      const Text('1'),
+                       Text(productVO?.qtyCount.toString() ?? ""),
                       const SizedBox(
                         width: kMarginMedium,
                       ),
+
+                      ///increase button
                       TextButton(
                           style: TextButton.styleFrom(
                             minimumSize: Size.zero,
                             padding: EdgeInsets.zero,
                             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            var bloc = Provider.of<CartBloc>(context,
+                                listen: false);
+                            bloc.onTapIncreaseQty(productVO!);
+                          },
                           child: const Icon(
                             Icons.add_circle,
                             color: kCartColor,
