@@ -21,7 +21,7 @@ class ProductDetailsBloc extends ChangeNotifier {
 
     ///get brands and categories
     _smileShopModel
-        .getProductDetails(endUserId, productId, kAcceptLanguageMM, authToken)
+        .getProductDetails(endUserId, productId, kAcceptLanguageEn, authToken)
         .then((productDetailsResponse) {
       productVO = productDetailsResponse;
       notifyListeners();

@@ -8,3 +8,4 @@ const kPhotoFrameImage = 'assets/images/photo_frame.png';
 const kNoResultImage = 'assets/images/no_result_img.png';
 const kBackIcon = 'assets/images/back_icon.png';
 const kBackSvgIcon = 'assets/images/back_img.svg';
+const kMapImg = 'assets/images/map.png';

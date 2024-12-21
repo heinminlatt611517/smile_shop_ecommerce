@@ -46,7 +46,7 @@ class SearchProductBloc extends ChangeNotifier {
         .listen((query) {
       if (query.isNotEmpty) {
         _makeSearchProductNetworkCall(
-            query, authToken, kAcceptLanguageMM, endUserId);
+            query, authToken, kAcceptLanguageEn, endUserId);
       }
       else {
         isScreenLaunch = true;

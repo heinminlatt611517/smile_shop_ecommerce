@@ -8,9 +8,9 @@ part of 'variant_vo.dart';
 
 VariantVO _$VariantVOFromJson(Map<String, dynamic> json) => VariantVO(
       id: (json['id'] as num?)?.toInt(),
-      productId: json['product_id'] as String?,
+      productId: (json['product_id'] as num?)?.toInt(),
       sku: json['SKU'] as String?,
-      price: json['price'] as String?,
+      price: (json['price'] as num?)?.toInt(),
       dealerLevel1Price: json['dealer_level_1_price'] as String?,
       dealerLevel2Price: json['dealer_level_2_price'] as String?,
       dealerLevel3Price: json['dealer_level_3_price'] as String?,
@@ -23,7 +23,7 @@ VariantVO _$VariantVOFromJson(Map<String, dynamic> json) => VariantVO(
           ? null
           : SizeVO.fromJson(json['size'] as Map<String, dynamic>),
       images: (json['images'] as List<dynamic>?)
-              ?.map((e) => e as String)
+              ?.map((e) => ImageVO.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
       extendedPriceVO: json['extended_price'] == null
@@ -33,6 +33,8 @@ VariantVO _$VariantVOFromJson(Map<String, dynamic> json) => VariantVO(
       inventoryVO: json['inventory'] == null
           ? null
           : InventoryVO.fromJson(json['inventory'] as Map<String, dynamic>),
+      promotionPoint: (json['promotion_point'] as num?)?.toInt(),
+      redeemPoint: (json['redeem_point'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$VariantVOToJson(VariantVO instance) => <String, dynamic>{
@@ -50,4 +52,6 @@ Map<String, dynamic> _$VariantVOToJson(VariantVO instance) => <String, dynamic>{
       'images': instance.images,
       'extended_price': instance.extendedPriceVO,
       'inventory': instance.inventoryVO,
+      'promotion_point': instance.promotionPoint,
+      'redeem_point': instance.redeemPoint,
     };

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:smile_shop/blocs/product_details_bloc.dart';
 import 'package:smile_shop/blocs/product_details_bottom_sheet_bloc.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
+import 'package:smile_shop/data/vos/variant_vo.dart';
 import 'package:smile_shop/network/api_constants.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/widgets/common_button_view.dart';
@@ -114,10 +115,10 @@ class _ProductDetailsPageState extends State<ProductDetailsPage>
                           },
                           body: TabBarView(
                             controller: tabController,
-                            children: const [
-                              ProductDetailsView(),
-                              ProductDetailsView(),
-                              ProductDetailsView(),
+                            children:  [
+                              ProductDetailsView(images: product?.images ?? [],),
+                              ProductDetailsView(images: product?.images ?? [],),
+                              ProductDetailsView(images: product?.images ?? [],),
                             ],
                           ),
                         ),
@@ -187,7 +188,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage>
                                     ),
                                        InkWell(
                                           onTap: () {
-                                            showBuyNowBottomSheet(context, product);
+                                            showBuyNowBottomSheet(context,product?.variantVO?.isNotEmpty ?? true ?  product?.variantVO?.first : VariantVO(),product?.name ?? "");
                                           },
                                           child: Container(
                                             decoration: const BoxDecoration(
@@ -254,14 +255,15 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
 
 /// Product Details View
 class ProductDetailsView extends StatelessWidget {
-  const ProductDetailsView({super.key});
+  final List<String> images;
+  const ProductDetailsView({super.key,required this.images});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: kMarginLarge),
       child: ListView.builder(
-        itemCount: bannerSectionDummyData.length,
+        itemCount: images.length,
         padding: EdgeInsets.zero,
         itemBuilder: (context, index) {
           return Padding(
@@ -273,7 +275,7 @@ class ProductDetailsView extends StatelessWidget {
             child: CachedNetworkImageView(
               imageHeight: 340,
               imageWidth: double.infinity,
-              imageUrl: bannerSectionDummyData[index],
+              imageUrl: images[index],
             ),
           );
         },
@@ -293,6 +295,7 @@ class BannerSectionView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint("ImageLength:::${images.length}");
     return Column(
       children: [
         /// Page Banner View
@@ -474,9 +477,11 @@ class CategoryAndReturnPointView extends StatelessWidget {
   }
 }
 
+///bottomsheet
 void showBuyNowBottomSheet(
     BuildContext context,
-    ProductVO? productVO,
+    VariantVO? variantVO,
+    String productName
     ) {
   showModalBottomSheet(
     context: context,
@@ -514,12 +519,11 @@ void showBuyNowBottomSheet(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const ClipRRect(
+                     ClipRRect(
                       child: CachedNetworkImageView(
                         imageHeight: 100,
                         imageWidth: 100,
-                        imageUrl:
-                        'https://media.istockphoto.com/id/1311107708/photo/focused-cute-stylish-african-american-female-student-with-afro-dreadlocks-studying-remotely.jpg?s=612x612&w=0&k=20&c=OwxBza5YzLWkE_2abTKqLLW4hwhmM2PW9BotzOMMS5w=',
+                        imageUrl:variantVO?.images.isNotEmpty ?? true ? variantVO?.images.first.url ?? errorImageUrl : errorImageUrl,
                       ),
                     ),
                     const SizedBox(
@@ -529,7 +533,7 @@ void showBuyNowBottomSheet(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          productVO?.name ?? "",
+                          productName,
                           overflow: TextOverflow.ellipsis,
                           softWrap: true,
                           style: const TextStyle(
@@ -544,7 +548,7 @@ void showBuyNowBottomSheet(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Text(
-                              productVO?.price.toString() ?? "",
+                              variantVO?.price.toString() ?? "",
                               style: const TextStyle(fontSize: kTextRegular2x),
                             ),
                             const SizedBox(
@@ -638,50 +642,57 @@ void showBuyNowBottomSheet(
                 ),
 
                 ///quality increase and decrease view
-                Row(
-                  children: [
-                    const Text(
-                      'Quantity',
-                      style: TextStyle(color: Colors.black, fontSize: kTextRegular2x),
-                    ),
-                    const Spacer(),
+                Consumer<ProductDetailsBottomSheetBloc>(
+                  builder: (context,bloc,child) =>
+                   Row(
+                    children: [
+                      const Text(
+                        'Quantity',
+                        style: TextStyle(color: Colors.black, fontSize: kTextRegular2x),
+                      ),
+                      const Spacer(),
 
-                    ///increase and decrease
-                    TextButton(
-                      style: TextButton.styleFrom(
-                        minimumSize: Size.zero,
-                        padding: EdgeInsets.zero,
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ///increase and decrease
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          minimumSize: Size.zero,
+                          padding: EdgeInsets.zero,
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                        onPressed: () {
+                          bloc.onTapMinus();
+                        },
+                        child: const Icon(
+                          Icons.remove_circle,
+                          color: kPrimaryColor,
+                        ),
                       ),
-                      onPressed: () {},
-                      child: const Icon(
-                        Icons.remove_circle,
-                        color: kPrimaryColor,
+                      const SizedBox(
+                        width: kMarginMedium,
                       ),
-                    ),
-                    const SizedBox(
-                      width: kMarginMedium,
-                    ),
-                    const Text('1'),
-                    const SizedBox(
-                      width: kMarginMedium,
-                    ),
-                    TextButton(
-                      style: TextButton.styleFrom(
-                        minimumSize: Size.zero,
-                        padding: EdgeInsets.zero,
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                       Text(bloc.quantityCount.toString()),
+                      const SizedBox(
+                        width: kMarginMedium,
                       ),
-                      onPressed: () {},
-                      child: const Icon(
-                        Icons.add_circle,
-                        color: kPrimaryColor,
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          minimumSize: Size.zero,
+                          padding: EdgeInsets.zero,
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                        onPressed: () {
+                          bloc.onTapAdd();
+                        },
+                        child: const Icon(
+                          Icons.add_circle,
+                          color: kPrimaryColor,
+                        ),
                       ),
-                    ),
-                    const SizedBox(
-                      width: kMarginXXLarge,
-                    ),
-                  ],
+                      const SizedBox(
+                        width: kMarginXXLarge,
+                      ),
+                    ],
+                  ),
                 ),
 
                 ///spacer

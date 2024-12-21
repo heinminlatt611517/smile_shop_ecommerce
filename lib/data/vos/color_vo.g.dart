@@ -7,7 +7,7 @@ part of 'color_vo.dart';
 // **************************************************************************
 
 ColorVO _$ColorVOFromJson(Map<String, dynamic> json) => ColorVO(
-      variantProductId: json['varient_product_id'] as String?,
+      variantProductId: (json['varient_product_id'] as num?)?.toInt(),
       value: json['value'] as String?,
     );
 

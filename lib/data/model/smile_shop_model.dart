@@ -27,7 +27,7 @@ abstract class SmileShopModel {
 
   Future<List<BannerVO>> banners(String acceptLanguage);
 
-  Future<List<CategoryVO>> categories();
+  Future<List<CategoryVO>> categories(String type);
 
   Future<ProductResponseDataVO> products(
       String token, String acceptLanguage, int endUserId, int page);

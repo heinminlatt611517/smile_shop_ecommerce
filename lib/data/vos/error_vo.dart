@@ -27,10 +27,13 @@ class ErrorVO {
     List<String> errors = [];
 
     if (data?.password != null) {
-      errors.addAll(data!.password!);
+      errors.add(data!.password!);
     }
     if (data?.type != null) {
-      errors.addAll(data!.type!);
+      errors.add(data!.type!);
+    }
+    if (data?.phone != null) {
+      errors.add(data!.phone!);
     }
 
     return errors.isNotEmpty ? errors.join('\n') : message;

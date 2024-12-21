@@ -43,10 +43,16 @@ class MyAddressPage extends StatelessWidget {
 
                       ///add address view
                       InkWell(
-                        onTap: (){
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (builder) => const AddNewAddressPage(
-                              )));
+                        onTap: ()async{
+                          final bool? isUpdated = await Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (builder) =>const AddNewAddressPage(
+                              ),
+                            ),
+                          );
+                          if (isUpdated == true) {
+                            context.read<MyAddressBloc>().refreshAddress();
+                          }
                         },
                         child: Container(
                           height: 100,
@@ -67,7 +73,6 @@ class MyAddressPage extends StatelessWidget {
                         height: 13,
                       ),
 
-
                       ///address list item view
                       Selector<MyAddressBloc,List<AddressVO>>(
                         selector: (context , bloc ) => bloc.addressList,
@@ -78,11 +83,18 @@ class MyAddressPage extends StatelessWidget {
                           itemBuilder: (context, index) {
                             return AddressListItemView(
                               addressVO: addressList[index],
-                                onTapEdit: (){
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (builder) =>  EditAddressPage(
+                                onTapEdit: () async{
+                              final bool? isUpdated = await Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (builder) => EditAddressPage(
                                     addressVO: addressList[index],
-                                  )));
+                                  ),
+                                ),
+                              );
+                              if (isUpdated == true) {
+                                context.read<MyAddressBloc>().refreshAddress();
+                              }
+
                             });
                           },
                           separatorBuilder: (context, index) {

@@ -10,6 +10,7 @@ import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/widgets/loading_view.dart';
 import 'package:smile_shop/widgets/subcategory_vertical_icon_with_label_view.dart';
 import '../data/dummy_data/trending_products_dummy_data.dart';
+import '../data/vos/product_response_data_vo.dart';
 import '../list_items/trending_product_list_item_view.dart';
 import '../network/api_constants.dart';
 import '../utils/images.dart';
@@ -129,21 +130,30 @@ class ProductsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      padding: EdgeInsets.zero,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemBuilder: (context, index) {
-        return TrendingProductListItemView(
-            imageUrl:
-                trendingProductDummyData[index]['image'] ?? errorImageUrl);
-      },
-      itemCount: trendingProductDummyData.length,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          mainAxisSpacing: 14.0,
-          crossAxisSpacing: 10.0,
-          childAspectRatio: 2 / 2.7),
-    );
+    return Selector<SubCategoryBloc, ProductResponseDataVO?>(
+        selector: (context, bloc) => bloc.productResponseDataVO,
+        builder: (context, productResponse, child) {
+          return productResponse == null
+              ? const Center(
+            child: CircularProgressIndicator(),
+          )
+              : GridView.builder(
+            shrinkWrap: true,
+            padding: EdgeInsets.zero,
+            physics: const NeverScrollableScrollPhysics(),
+            itemBuilder: (context, index) {
+              return TrendingProductListItemView(
+                productVO: productResponse.products?[index],
+              );
+            },
+            itemCount: productResponse.products?.length,
+            gridDelegate:
+            const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 14.0,
+                crossAxisSpacing: 10.0,
+                childAspectRatio: 2 / 2.7),
+          );
+        });
   }
 }

@@ -7,7 +7,7 @@ part of 'size_vo.dart';
 // **************************************************************************
 
 SizeVO _$SizeVOFromJson(Map<String, dynamic> json) => SizeVO(
-      variantProductId: json['varient_product_id'] as String?,
+      variantProductId: (json['varient_product_id'] as num?)?.toInt(),
       value: json['value'] as String?,
     );
 

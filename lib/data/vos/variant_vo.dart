@@ -1,6 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:smile_shop/data/vos/color_vo.dart';
 import 'package:smile_shop/data/vos/extended_price_vo.dart';
+import 'package:smile_shop/data/vos/image_vo.dart';
 import 'package:smile_shop/data/vos/inventory_vo.dart';
 import 'package:smile_shop/data/vos/size_vo.dart';
 
@@ -12,13 +13,13 @@ class VariantVO {
   final int? id;
 
   @JsonKey(name: 'product_id')
-  final String? productId;
+  final int? productId;
 
   @JsonKey(name: 'SKU')
   final String? sku;
 
   @JsonKey(name: 'price')
-  final String? price;
+  final int? price;
 
   @JsonKey(name: 'dealer_level_1_price')
   final String? dealerLevel1Price;
@@ -42,13 +43,19 @@ class VariantVO {
   final SizeVO? sizeVO;
 
   @JsonKey(name: 'images')
-  final List<String> images;
+  final List<ImageVO> images;
 
   @JsonKey(name: 'extended_price')
   final ExtendedPriceVO? extendedPriceVO;
 
   @JsonKey(name: 'inventory')
   final InventoryVO? inventoryVO;
+
+  @JsonKey(name: 'promotion_point')
+  final int? promotionPoint;
+
+  @JsonKey(name: 'redeem_point')
+  final int? redeemPoint;
 
   VariantVO({
     this.id,
@@ -65,6 +72,8 @@ class VariantVO {
     this.images = const [],
     this.extendedPriceVO,
     this.inventoryVO,
+    this.promotionPoint,
+    this.redeemPoint
   });
 
   factory VariantVO.fromJson(Map<String, dynamic> json) =>

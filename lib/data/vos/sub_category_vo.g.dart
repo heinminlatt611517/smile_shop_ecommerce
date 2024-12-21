@@ -11,10 +11,10 @@ SubcategoryVO _$SubcategoryVOFromJson(Map<String, dynamic> json) =>
       id: (json['id'] as num?)?.toInt(),
       categoryId: json['category_id'] as String?,
       name: json['name'] as String?,
+      image: json['image'] as String?,
       category: json['category'] == null
           ? null
           : CategoryVO.fromJson(json['category'] as Map<String, dynamic>),
-      image: json['image'] as String?,
     );
 
 Map<String, dynamic> _$SubcategoryVOToJson(SubcategoryVO instance) =>
@@ -22,6 +22,6 @@ Map<String, dynamic> _$SubcategoryVOToJson(SubcategoryVO instance) =>
       'id': instance.id,
       'category_id': instance.categoryId,
       'name': instance.name,
-      'category': instance.category,
       'image': instance.image,
+      'category': instance.category,
     };

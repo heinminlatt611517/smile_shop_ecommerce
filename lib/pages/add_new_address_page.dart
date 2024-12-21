@@ -8,6 +8,7 @@ import 'package:smile_shop/data/vos/state_vo.dart';
 import 'package:smile_shop/data/vos/township_vo.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
+import 'package:smile_shop/utils/images.dart';
 import 'package:smile_shop/widgets/common_button_view.dart';
 import 'package:smile_shop/widgets/dynamic_drop_down_widget.dart';
 import 'package:smile_shop/widgets/textfiled_with_label_input_view.dart';
@@ -107,7 +108,7 @@ class AddNewAddressPage extends StatelessWidget {
                             bgColor: kPrimaryColor,
                             onTapButton: () {
                               bloc.onTapSave().then((value) {
-                                  Navigator.pop(context);
+                                  Navigator.pop(context,true);
                               }).catchError((error) {
                                 showCommonDialog(
                                     context: context,
@@ -336,7 +337,12 @@ class StateTownshipAndMapDropdownView extends StatelessWidget {
             decoration: BoxDecoration(
                 color: Colors.blueAccent,
                 borderRadius: BorderRadius.circular(kMarginMedium)),
-            child:const Icon(Icons.map),
+            child:Image.asset(
+              kMapImg,
+              fit: BoxFit.contain,
+              height: 50,
+              width: double.infinity,
+            ),
           )
         ],
       ),

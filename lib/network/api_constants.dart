@@ -32,6 +32,7 @@ const String kParamApiKey = "api_key";
 const String kParamQuery = "query";
 const String kParamName = "name";
 const String kParamRating = "rating";
+const String kParamType = "type";
 const String kHeaderAuthorization = "Authorization";
 const String kHeaderAcceptLanguage = "Accept-Language";
 const String kFieldAccessToken = "access-token";

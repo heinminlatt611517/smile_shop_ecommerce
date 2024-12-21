@@ -166,9 +166,9 @@ class _SmileShopApi implements SmileShopApi {
   }
 
   @override
-  Future<CategoryResponse> categories() async {
+  Future<CategoryResponse> categories(String name) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'type': name};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<CategoryResponse>(Options(

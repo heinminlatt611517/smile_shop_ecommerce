@@ -23,8 +23,6 @@ class MyAddressBloc extends ChangeNotifier {
     _showLoading();
     var accessToken = _smileShopModel.getLoginResponseFromDatabase()?.accessToken ?? "";
 
-    debugPrint("AccessToken:::$accessToken");
-
     _smileShopModel.address(accessToken, kAcceptLanguageEn).then((addressResponse) {
       addressList = addressResponse.data?.addressVO ?? [];
       _hideLoading();
@@ -33,6 +31,7 @@ class MyAddressBloc extends ChangeNotifier {
   }
 
   void refreshAddress() {
+    debugPrint("RefreshAddress");
     _loadAddress();
   }
 

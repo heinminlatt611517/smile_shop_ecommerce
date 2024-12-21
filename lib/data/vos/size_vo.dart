@@ -4,7 +4,7 @@ part 'size_vo.g.dart';
 @JsonSerializable()
 class SizeVO {
   @JsonKey(name: 'varient_product_id')
-  final String? variantProductId;
+  final int? variantProductId;
 
   @JsonKey(name: 'value')
   final String? value;

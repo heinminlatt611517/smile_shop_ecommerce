@@ -10,9 +10,9 @@ ProductVO _$ProductVOFromJson(Map<String, dynamic> json) => ProductVO(
       id: (json['id'] as num?)?.toInt(),
       name: json['name'] as String?,
       sku: json['sku'] as String?,
-      price: json['price'] as String?,
-      brandId: json['brand_id'] as String?,
-      subcategoryId: json['subcategory_id'] as String?,
+      price: (json['price'] as num?)?.toInt(),
+      brandId: (json['brand_id'] as num?)?.toInt(),
+      subcategoryId: (json['subcategory_id'] as num?)?.toInt(),
       image: json['image'] as String?,
       subcategory: json['subcategory'] == null
           ? null

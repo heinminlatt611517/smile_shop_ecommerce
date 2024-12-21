@@ -50,7 +50,7 @@ abstract class SmileShopApi {
       );
 
   @GET(kEndPointCategories)
-  Future<CategoryResponse> categories();
+  Future<CategoryResponse> categories(@Query(kParamType) String name,);
 
   @POST(kEndPointProducts)
   Future<ProductResponse> products(

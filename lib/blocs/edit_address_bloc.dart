@@ -28,13 +28,15 @@ class EditAddressBloc extends ChangeNotifier {
     ///init address data
     initAddressData(addressVO);
 
+    debugPrint("StateId>>>>>>>>>${addressVO?.stateId}");
+
     accessToken =
         _smileShopModel.getLoginResponseFromDatabase()?.accessToken ?? "";
 
     ///get state list
     _smileShopModel.states().then((stateResponse) {
       states = stateResponse;
-      fetchTownshipsByStateId(addressVO?.stateVO?.id ?? 0);
+      fetchTownshipsByStateId(addressVO?.stateId ?? 0);
       _notifySafely();
     });
   }

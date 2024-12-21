@@ -23,16 +23,16 @@ class ProductVO {
   final String? description;
 
   @JsonKey(name: 'price')
-  final String? price;
+  final int? price;
 
   @JsonKey(name: 'brand_id')
-  final String? brandId;
+  final int? brandId;
 
   @JsonKey(name: 'rating')
   final int? rating;
 
   @JsonKey(name: 'subcategory_id')
-  final String? subcategoryId;
+  final int? subcategoryId;
 
   @JsonKey(name: 'image')
   final String? image;

@@ -27,12 +27,10 @@ class HomeBloc extends ChangeNotifier {
     });
 
     ///get categories list
-    _smileShopModel.categories().then((categoryResponse){
+    _smileShopModel.categories("home").then((categoryResponse){
       categories = categoryResponse;
       notifyListeners();
     });
-
-    debugPrint("EndUserId::::$endUserId");
 
     ///get product list
     _smileShopModel.products(authToken, kAcceptLanguageEn,int.parse(endUserId),1).then((productResponse){
@@ -47,7 +45,5 @@ class HomeBloc extends ChangeNotifier {
     });
 
   }
-
-
 
 }
