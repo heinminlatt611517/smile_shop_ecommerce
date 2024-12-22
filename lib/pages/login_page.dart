@@ -10,6 +10,7 @@ import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/utils/images.dart';
 import 'package:smile_shop/widgets/common_dialog.dart';
 import 'package:smile_shop/widgets/error_dialog_view.dart';
+import 'package:smile_shop/widgets/input_view_lock_icon.dart';
 
 import '../data/dummy_data/country_code.dart';
 import '../widgets/loading_view.dart';
@@ -75,51 +76,17 @@ class _LoginPageState extends State<LoginPage> {
                       ),
 
                       const SizedBox(
-                        height: kMargin30,
+                        height: kMargin34,
                       ),
-                      // referal
-                      SizedBox(
-                        child: Row(
-                          children: [
-                            Container(
-                              margin:
-                                  const EdgeInsets.only(left: kMarginMedium2),
-                              child: Row(
-                                children: [
-                                  const Icon(
-                                    Icons.lock_outline,
-                                    color: Colors.grey,
-                                    size: 20,
-                                  ),
-                                  const SizedBox(
-                                    width: 15,
-                                  ),
-                                  Container(
-                                    width: 1,
-                                    height: 34,
-                                    color: Colors.grey,
-                                  )
-                                ],
-                              ),
-                            ),
-                            Expanded(
-                              child: Consumer<LogInBloc>(
-                                builder: (context, bloc, child) => TextField(
-                                  cursorColor: Colors.black,
-                                  decoration: const InputDecoration(
-                                      border: InputBorder.none,
-                                      contentPadding:
-                                          EdgeInsets.symmetric(horizontal: 21),
-                                      hintText: 'Type your password',
-                                      hintStyle: TextStyle(color: Colors.grey)),
-                                  onChanged: (v) {
-                                    bloc.onPasswordChanged(v);
-                                  },
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+
+                      ///password input view
+                      Consumer<LogInBloc>(
+                        builder: (context,bloc,child) =>
+                         InputViewLockIcon(
+                             hintLabel: 'Type your password',
+                             onChangeValue: (value){
+                           bloc.onPasswordChanged(value);
+                        }),
                       ),
 
                       const SizedBox(

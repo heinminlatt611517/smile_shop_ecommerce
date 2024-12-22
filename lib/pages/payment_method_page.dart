@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:smile_shop/blocs/payment_bloc.dart';
+import 'package:smile_shop/data/vos/payment_vo.dart';
 import 'package:smile_shop/list_items/payment_method_list_item_view.dart';
 import 'package:smile_shop/pages/order_successful_page.dart';
 import 'package:smile_shop/utils/colors.dart';
@@ -45,28 +46,32 @@ class PaymentMethodPage extends StatelessWidget {
                     const SizedBox(
                       height: kMargin30,
                     ),
-                    MediaQuery.removePadding(
-                        context: context,
-                        removeBottom: true,
-                        removeTop: true,
-                        child: Consumer<PaymentBloc>(
-                          builder: (context, bloc, child) => ListView.builder(
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: 4,
-                              shrinkWrap: true,
-                              itemBuilder: (context, index) {
-                                //bool isLastIndex = index == _items.length - 1;
-                                bool isLastIndex = index == 3;
-                                return PaymentMethodListItemView(
-                                  currentIndex: index,
-                                  isLastIndex: isLastIndex,
-                                  isSelected: bloc.isSelected(index),
-                                  onTapPayment: (currentIndex) {
-                                    bloc.onSelectPayment(currentIndex);
-                                  },
-                                );
-                              }),
-                        )),
+                    Selector<PaymentBloc,List<PaymentVO>>(
+                      selector: (context , bloc ) => bloc.payments,
+                      builder: (context,paymentMethods,child) =>
+                       MediaQuery.removePadding(
+                          context: context,
+                          removeBottom: true,
+                          removeTop: true,
+                          child: Consumer<PaymentBloc>(
+                            builder: (context, bloc, child) => ListView.builder(
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: paymentMethods.length,
+                                shrinkWrap: true,
+                                itemBuilder: (context, index) {
+                                  bool isLastIndex = index == paymentMethods.length - 1;
+                                  return PaymentMethodListItemView(
+                                    currentIndex: index,
+                                    isLastIndex: isLastIndex,
+                                    paymentVO: paymentMethods[index],
+                                    isSelected: bloc.isSelected(index),
+                                    onTapPayment: (currentIndex) {
+                                      bloc.onSelectPayment(currentIndex);
+                                    },
+                                  );
+                                }),
+                          )),
+                    ),
                     const SizedBox(
                       height: kMargin80,
                     ),
@@ -76,9 +81,16 @@ class PaymentMethodPage extends StatelessWidget {
                           labelColor: Colors.white,
                           bgColor: kPrimaryColor,
                           onTapButton: () {
+                            var variantList = [
+                              {
+                                "variant_product_id": 1,
+                                "product_id": 1,
+                                "variant_attribute_value_id": 1,
+                                "qty": 2
+                              }
+                            ];
                             bloc
-                                .onTapCheckout(18, 5, 1,
-                                    "[{variant_product_id : 1,product_id:1, variant_attribute_value_id : 1 , qty : 2}]")
+                                .onTapCheckout(18, 5, 1, variantList)
                                 .then((value) {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (builder) =>

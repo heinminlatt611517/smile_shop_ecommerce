@@ -15,6 +15,7 @@ import '../../network/requests/sub_category_request.dart';
 import '../../network/responses/address_response.dart';
 import '../../network/responses/login_response.dart';
 import '../vos/brand_and_category_vo.dart';
+import '../vos/order_vo.dart';
 import '../vos/payment_vo.dart';
 import '../vos/product_response_data_vo.dart';
 import '../vos/state_vo.dart';
@@ -95,7 +96,7 @@ abstract class SmileShopModel {
       int productId,
       int subTotal,
       int paymentType,
-      String itemList);
+      List itemList);
 
   Future<List<PaymentVO>> payments(String token, String acceptLanguage);
 
@@ -104,4 +105,8 @@ abstract class SmileShopModel {
   void saveProductToHive(ProductVO product);
   void deleteProductById(int productId);
   Stream<List<ProductVO>> getProductFromDatabase();
+  ProductVO? getProductByIdFromDatabase(int id);
+
+  Future<List<OrderVO>> orderList(String token,String acceptLanguage);
+  Future<OrderVO> orderDetails(String token,String acceptLanguage,int orderId);
 }

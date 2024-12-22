@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:smile_shop/data/vos/banner_vo.dart';
 import 'package:smile_shop/data/vos/brand_and_category_vo.dart';
 import 'package:smile_shop/data/vos/category_vo.dart';
+import 'package:smile_shop/data/vos/order_vo.dart';
 import 'package:smile_shop/data/vos/payment_vo.dart';
 import 'package:smile_shop/data/vos/product_response_data_vo.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
@@ -296,10 +297,10 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
 
   @override
   Future<void> postOrder(String token, String acceptLanguage, int productId,
-      int subTotal, int paymentType, String itemList) {
+      int subTotal, int paymentType, List itemList) {
     return mApi
         .postOrder(
-            token, acceptLanguage, productId, subTotal, paymentType, itemList)
+            "Bearer $token", acceptLanguage, productId, subTotal, paymentType.toString(), '[{"variant_product_id" : 1,"product_id":1, "variant_attribute_value_id" : 1 , "qty" : 2}]')
         .asStream()
         .map((response) => response)
         .first
@@ -313,6 +314,30 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
       ) {
     return mApi
         .payments(token, acceptLanguage)
+        .asStream()
+        .map((response) => response.data ?? [])
+        .first
+        .catchError((error) {
+      throw _createException(error);
+    });
+  }
+
+  @override
+  Future<OrderVO> orderDetails(String token, String acceptLanguage, int orderId) {
+    return mApi
+        .orderDetails(token, acceptLanguage,orderId)
+        .asStream()
+        .map((response) => response.data ?? OrderVO())
+        .first
+        .catchError((error) {
+      throw _createException(error);
+    });
+  }
+
+  @override
+  Future<List<OrderVO>> orderList(String token, String acceptLanguage) {
+    return mApi
+        .orders(token, acceptLanguage)
         .asStream()
         .map((response) => response.data ?? [])
         .first

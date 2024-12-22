@@ -18,24 +18,25 @@ class PaymentBloc extends ChangeNotifier {
 
   PaymentBloc() {
     authToken =
-        _smileShopModel.getLoginResponseFromDatabase()?.refreshToken ?? "";
+        _smileShopModel.getLoginResponseFromDatabase()?.accessToken ?? "";
 
-    debugPrint("AuthToken>>>>>>>$authToken");
+    debugPrint(authToken);
+
     ///get payment menthod list
-    // _smileShopModel.payments(accessToken,kAcceptLanguageEn).then((paymentListResponse) {
-    //   payments = paymentListResponse;
-    //   _notifySafely();
-    // });
+    _smileShopModel.payments(authToken,kAcceptLanguageEn).then((paymentListResponse) {
+      payments = paymentListResponse;
+      _notifySafely();
+    });
   }
 
 
   ///check out
   Future<void> onTapCheckout(int productId, int subTotal, int paymentType,
-      String variantVOList) {
+      List variantVOList) {
     _showLoading();
     return _smileShopModel
         .postOrder(authToken, kAcceptLanguageEn, productId, subTotal,
-            paymentType, variantVOList.toString())
+            paymentType,variantVOList)
         .whenComplete(() => _hideLoading());
   }
 

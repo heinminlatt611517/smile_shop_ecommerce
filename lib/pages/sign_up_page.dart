@@ -79,17 +79,25 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                       // referal
                       Consumer<SignupBloc>(
-                        builder: (context, bloc, child) => TextField(
-                          cursorColor: Colors.black,
-                          onChanged: (value) {
-                            bloc.onReferralCodeChanged(value);
-                          },
-                          decoration: const InputDecoration(
-                              border: InputBorder.none,
-                              contentPadding:
-                                  EdgeInsets.symmetric(horizontal: 21),
-                              hintText: 'Enter referral code',
-                              hintStyle: TextStyle(color: Colors.grey)),
+                        builder: (context, bloc, child) => Container(
+                          color: Colors.white,
+                          height: 55,
+                          child: Center(
+                            child: TextField(
+                              cursorColor: Colors.black,
+                              onChanged: (value) {
+                                bloc.onReferralCodeChanged(value);
+                              },
+                              decoration: const InputDecoration(
+                                  filled: true,
+                                  fillColor: Colors.white,
+                                  border: InputBorder.none,
+                                  contentPadding:
+                                      EdgeInsets.symmetric(horizontal: 21),
+                                  hintText: 'Enter referral code',
+                                  hintStyle: TextStyle(color: Colors.grey)),
+                            ),
+                          ),
                         ),
                       ),
 

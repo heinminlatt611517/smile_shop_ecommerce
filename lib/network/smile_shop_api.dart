@@ -12,6 +12,8 @@ import 'package:smile_shop/network/responses/banner_response.dart';
 import 'package:smile_shop/network/responses/brands_and_categories_response.dart';
 import 'package:smile_shop/network/responses/category_response.dart';
 import 'package:smile_shop/network/responses/login_response.dart';
+import 'package:smile_shop/network/responses/order_details_response.dart';
+import 'package:smile_shop/network/responses/order_response.dart';
 import 'package:smile_shop/network/responses/otp_response.dart';
 import 'package:smile_shop/network/responses/payment_response.dart';
 import 'package:smile_shop/network/responses/product_details_response.dart';
@@ -145,12 +147,12 @@ abstract class SmileShopApi {
       );
 
   @POST(kEndPointOrder)
-  Future<ProductResponse> postOrder(
+  Future<void> postOrder(
       @Header(kHeaderAuthorization) String token,
       @Header(kHeaderAcceptLanguage) String acceptLanguage,
       @Field(kFieldProductId) int productId,
       @Field(kFieldSubTotal) int subTotal,
-      @Field(kFieldPaymentType) int paymentType,
+      @Field(kFieldPaymentType) String paymentType,
       @Field(kFieldItems) String itemList
       );
 
@@ -158,5 +160,18 @@ abstract class SmileShopApi {
   Future<PaymentResponse> payments(
       @Header(kHeaderAuthorization) String token,
       @Header(kHeaderAcceptLanguage) String acceptLanguage,
+      );
+
+  @GET(kEndPointOrderList)
+  Future<OrderResponse> orders(
+      @Header(kHeaderAuthorization) String token,
+      @Header(kHeaderAcceptLanguage) String acceptLanguage,
+      );
+
+  @POST("$kEndPointOrderDetails/{order_id}")
+  Future<OrderDetailsResponse> orderDetails(
+      @Header(kHeaderAuthorization) String token,
+      @Header(kHeaderAcceptLanguage) String acceptLanguage,
+      @Path("order_id") int addressId,
       );
 }

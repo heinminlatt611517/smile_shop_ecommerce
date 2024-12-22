@@ -27,6 +27,8 @@ const String kEndPointDeleteAddress = "/api/delete/address";
 const String kEndPointStates = "/api/state";
 const String kEndPointTownships = "/api/state";
 const String kEndPointOrder  = '/api/order';
+const String kEndPointOrderList  = '/api/profile/orders';
+const String kEndPointOrderDetails  = '/api/profile/order/detail';
 const String kEndPointPayments  = '/api/payments';
 
 ///Parameters

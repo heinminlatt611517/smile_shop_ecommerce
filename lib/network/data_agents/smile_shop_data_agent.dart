@@ -1,6 +1,7 @@
 import 'package:smile_shop/data/vos/banner_vo.dart';
 import 'package:smile_shop/data/vos/brand_and_category_vo.dart';
 import 'package:smile_shop/data/vos/category_vo.dart';
+import 'package:smile_shop/data/vos/order_vo.dart';
 import 'package:smile_shop/data/vos/payment_vo.dart';
 import 'package:smile_shop/data/vos/product_response_data_vo.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
@@ -74,7 +75,10 @@ abstract class SmileShopDataAgent {
       int productId,
       int subTotal,
       int paymentType,
-      String itemList);
+      List itemList);
 
   Future<List<PaymentVO>> payments(String token, String acceptLanguage);
+
+  Future<List<OrderVO>> orderList(String token,String acceptLanguage);
+  Future<OrderVO> orderDetails(String token,String acceptLanguage,int orderId);
 }

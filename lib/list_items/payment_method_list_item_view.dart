@@ -14,17 +14,27 @@ class PaymentMethodListItemView extends StatelessWidget {
   final int currentIndex;
 
   const PaymentMethodListItemView(
-      {super.key, this.paymentVO, this.isLastIndex, this.isSelected,required this.onTapPayment,required this.currentIndex});
+      {super.key,
+      this.paymentVO,
+      this.isLastIndex,
+      this.isSelected,
+      required this.onTapPayment,
+      required this.currentIndex});
 
   @override
   Widget build(BuildContext context) {
     return isLastIndex == true
         ? GestureDetector(
-      onTap:(){ onTapPayment(currentIndex);},
-          child: Container(
+            onTap: () {
+              onTapPayment(currentIndex);
+            },
+            child: Container(
               decoration: BoxDecoration(
                   color: Colors.white,
-                  border: Border.all(color: isSelected == true ? kPrimaryColor : Colors.transparent),
+                  border: Border.all(
+                      color: isSelected == true
+                          ? kPrimaryColor
+                          : Colors.transparent),
                   borderRadius: BorderRadius.circular(kMarginMedium)),
               margin: const EdgeInsets.only(bottom: 20),
               padding: const EdgeInsets.symmetric(
@@ -109,13 +119,18 @@ class PaymentMethodListItemView extends StatelessWidget {
                 ],
               ),
             ),
-        )
+          )
         : GestureDetector(
-          onTap:(){ onTapPayment(currentIndex);},
-          child: Container(
+            onTap: () {
+              onTapPayment(currentIndex);
+            },
+            child: Container(
               decoration: BoxDecoration(
                   color: Colors.white,
-                  border: Border.all(color: isSelected == true ? kPrimaryColor : Colors.transparent),
+                  border: Border.all(
+                      color: isSelected == true
+                          ? kPrimaryColor
+                          : Colors.transparent),
                   borderRadius: BorderRadius.circular(kMarginMedium)),
               margin: const EdgeInsets.only(bottom: 20),
               padding: const EdgeInsets.symmetric(horizontal: kMargin25),
@@ -123,10 +138,11 @@ class PaymentMethodListItemView extends StatelessWidget {
               width: double.infinity,
               child: Row(
                 children: [
-                  CachedNetworkImageView(
-                      imageHeight: 45,
-                      imageWidth: 45,
-                      imageUrl: paymentVO?.image ?? errorImageUrl),
+                  Image.network(
+                    paymentVO?.image ?? errorImageUrl,
+                    height: 45,
+                    width: 45,
+                  ),
                   const SizedBox(
                     width: kMargin25,
                   ),
@@ -134,6 +150,6 @@ class PaymentMethodListItemView extends StatelessWidget {
                 ],
               ),
             ),
-        );
+          );
   }
 }

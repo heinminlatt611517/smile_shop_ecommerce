@@ -4,6 +4,7 @@ import 'package:smile_shop/data/vos/banner_vo.dart';
 import 'package:smile_shop/data/vos/brand_and_category_vo.dart';
 import 'package:smile_shop/data/vos/category_vo.dart';
 import 'package:smile_shop/data/vos/login_data_vo.dart';
+import 'package:smile_shop/data/vos/order_vo.dart';
 import 'package:smile_shop/data/vos/payment_vo.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
 import 'package:smile_shop/data/vos/search_product_vo.dart';
@@ -175,7 +176,7 @@ class SmileShopModelImpl extends SmileShopModel {
   }
 
   @override
-  Future<void> postOrder(String token, String acceptLanguage, int productId, int subTotal, int paymentType, String itemList) {
+  Future<void> postOrder(String token, String acceptLanguage, int productId, int subTotal, int paymentType, List itemList) {
     return mDataAgent.postOrder(token, acceptLanguage, productId, subTotal, paymentType, itemList);
   }
 
@@ -227,6 +228,16 @@ class SmileShopModelImpl extends SmileShopModel {
     _loginDataDao.clearUserData();
   }
 
+  @override
+  Future<OrderVO> orderDetails(String token, String acceptLanguage, int orderId) {
+   return mDataAgent.orderDetails(token, acceptLanguage, orderId);
+  }
+
+  @override
+  Future<List<OrderVO>> orderList(String token, String acceptLanguage) {
+    return mDataAgent.orderList(token, acceptLanguage);
+  }
+
   ///get add to cart product list from database
   @override
   List<ProductVO> firstTimeGetProductFromDatabase() {
@@ -248,5 +259,9 @@ class SmileShopModelImpl extends SmileShopModel {
     return _productDao.deleteSearchProduct(productId);
   }
 
+  @override
+  ProductVO? getProductByIdFromDatabase(int id) {
+   return _productDao.getProductById(id);
+  }
 
 }

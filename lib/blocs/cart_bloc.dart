@@ -10,7 +10,12 @@ class CartBloc extends ChangeNotifier {
 
   ///Products to show
   List<ProductVO> productList = [];
+  List<ProductVO> filterProductByIsChecked = [];
   StreamSubscription? _productListSubscription;
+  int? totalProductPrice;
+  List<int> subTotalPrice = [];
+  bool isDisposed = false;
+  bool isAllSelectedProduct = false;
 
   CartBloc(){
     ///first time get products from database
@@ -23,6 +28,18 @@ class CartBloc extends ChangeNotifier {
           productList = books;
           notifyListeners();
         });
+
+    if(productList.isNotEmpty){
+      calculateTotalProductPrice();
+    }
+  }
+
+  void onTapSelectAll(){
+    isAllSelectedProduct = !isAllSelectedProduct;
+    onTapSelectAllProduct();
+    firstTimeGetProductsFromDatabase();
+    calculateTotalProductPrice();
+    _notifySafely();
   }
 
   void firstTimeGetProductsFromDatabase() {
@@ -39,6 +56,8 @@ class CartBloc extends ChangeNotifier {
       var newProductVO = productVO.copyWith(isChecked: true);
       _smileShopModel.saveProductToHive(newProductVO);
     }
+    firstTimeGetProductsFromDatabase();
+    calculateTotalProductPrice();
   }
 
   void onTapIncreaseQty(ProductVO productVO){
@@ -46,11 +65,11 @@ class CartBloc extends ChangeNotifier {
     var newProductVO = productVO.copyWith(qtyCount: productVO.qtyCount!+1);
     var updatedTotalPrice = newProductVO.qtyCount! * (initialPrice);
     _smileShopModel.saveProductToHive(newProductVO.copyWith(totalPrice: updatedTotalPrice));
+    firstTimeGetProductsFromDatabase();
+    calculateTotalProductPrice();
   }
 
   void onTapDecreaseQty(ProductVO productVO){
-    debugPrint("QtyCount:::::${productVO.qtyCount}");
-
     if (productVO.qtyCount! >= 0){
       int initialQtyPrice = productVO.price!;
       var newProductVO = productVO.copyWith(qtyCount: productVO.qtyCount! - 1);
@@ -60,14 +79,49 @@ class CartBloc extends ChangeNotifier {
     if(productVO.qtyCount == 1){
     _smileShopModel.deleteProductById(productVO.id!);
     }
+    firstTimeGetProductsFromDatabase();
+    calculateTotalProductPrice();
+  }
 
+  void calculateTotalProductPrice(){
+        filterProductByIsChecked =
+            productList.where((product) => product.isChecked == true).toList();
+        if(filterProductByIsChecked.isNotEmpty){
+          subTotalPrice = filterProductByIsChecked.map((e) => e.totalPrice!).toList();
+          totalProductPrice = subTotalPrice.reduce((first,second) => first+second);
+          _notifySafely();
+        }
+        else {
+          totalProductPrice = 0;
+          _notifySafely();
+        }
+  }
+
+  void _notifySafely() {
+    if (!isDisposed) {
+      notifyListeners();
+    }
+  }
+
+  void onTapSelectAllProduct(){
+    if(isAllSelectedProduct == true){
+      for(var product in productList){
+        _smileShopModel.saveProductToHive(product.copyWith(isChecked: true));
+      }
+    }
+    else {
+      for(var product in productList){
+        _smileShopModel.saveProductToHive(product.copyWith(isChecked: false));
+      }
+    }
   }
 
 
   @override
   void dispose() {
-    _productListSubscription?.cancel();
     super.dispose();
+    _productListSubscription?.cancel();
+    isDisposed = true;
   }
 
 }

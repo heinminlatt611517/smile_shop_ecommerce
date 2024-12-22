@@ -28,12 +28,36 @@ class ProductDetailsBloc extends ChangeNotifier {
     });
   }
 
-  void onTapAddToCart(){
-    debugPrint("ProductName>>>>>>>${productVO?.name}");
-    _smileShopModel.saveProductToHive(
-        productVO?.copyWith(
-            totalPrice: 0,
-            qtyCount: 1) ?? ProductVO());
+  void onTapAddToCart(BuildContext context) {
+    if (productVO != null) {
+      var oldProduct =
+          _smileShopModel.getProductByIdFromDatabase(productVO?.id ?? 0);
+      if (oldProduct == null) {
+        _smileShopModel.saveProductToHive(
+            productVO?.copyWith(totalPrice: productVO?.price, qtyCount: 1) ??
+                ProductVO());
+
+        showSnackBar(context, '${productVO?.name} added to cart successfully!',Colors.green);
+      } else {
+        int initialPrice = oldProduct.price!;
+        var newProductVO = oldProduct.copyWith(qtyCount: oldProduct.qtyCount!+1);
+        var updatedTotalPrice = newProductVO.qtyCount! * (initialPrice);
+        _smileShopModel.saveProductToHive(newProductVO.copyWith(totalPrice: updatedTotalPrice));
+        showSnackBar(context, '${productVO?.name} added to cart successfully!',Colors.green);
+      }
+    } else {
+      showSnackBar(context, 'Failed to add product to cart.',Colors.red);
+    }
+  }
+
+  void showSnackBar(BuildContext context, String description,Color snackBarColor) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(description),
+        backgroundColor: snackBarColor,
+        duration: const Duration(seconds: 2),
+      ),
+    );
   }
 
   void _showLoading() {

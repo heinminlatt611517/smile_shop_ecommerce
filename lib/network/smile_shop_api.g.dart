@@ -776,12 +776,12 @@ class _SmileShopApi implements SmileShopApi {
   }
 
   @override
-  Future<ProductResponse> postOrder(
+  Future<void> postOrder(
     String token,
     String acceptLanguage,
     int productId,
     int subTotal,
-    int paymentType,
+    String paymentType,
     String itemList,
   ) async {
     final _extra = <String, dynamic>{};
@@ -797,7 +797,7 @@ class _SmileShopApi implements SmileShopApi {
       'payment_type': paymentType,
       'items': itemList,
     };
-    final _options = _setStreamType<ProductResponse>(Options(
+    final _options = _setStreamType<void>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -813,15 +813,7 @@ class _SmileShopApi implements SmileShopApi {
           _dio.options.baseUrl,
           baseUrl,
         )));
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late ProductResponse _value;
-    try {
-      _value = ProductResponse.fromJson(_result.data!);
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
-      rethrow;
-    }
-    return _value;
+    await _dio.fetch<void>(_options);
   }
 
   @override
@@ -857,6 +849,87 @@ class _SmileShopApi implements SmileShopApi {
     late PaymentResponse _value;
     try {
       _value = PaymentResponse.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<OrderResponse> orders(
+    String token,
+    String acceptLanguage,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{
+      r'Authorization': token,
+      r'Accept-Language': acceptLanguage,
+    };
+    _headers.removeWhere((k, v) => v == null);
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<OrderResponse>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/api/profile/orders',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late OrderResponse _value;
+    try {
+      _value = OrderResponse.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<OrderDetailsResponse> orderDetails(
+    String token,
+    String acceptLanguage,
+    int addressId,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{
+      r'Authorization': token,
+      r'Accept-Language': acceptLanguage,
+    };
+    _headers.removeWhere((k, v) => v == null);
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<OrderDetailsResponse>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/api/profile/order/detail/${addressId}',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late OrderDetailsResponse _value;
+    try {
+      _value = OrderDetailsResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;

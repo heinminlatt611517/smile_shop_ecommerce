@@ -51,7 +51,7 @@ class CartListItemView extends StatelessWidget {
                       child:  CachedNetworkImageView(
                           imageHeight: 80,
                           imageWidth: 80,
-                          imageUrl:productVO?.images?.first ?? errorImageUrl),
+                          imageUrl:productVO?.images?.isNotEmpty ?? true ? productVO?.images?.first ?? errorImageUrl : errorImageUrl),
                     ),
                     const SizedBox(
                       width: kMarginMedium3,

@@ -43,11 +43,9 @@ class _ProductDetailsPageState extends State<ProductDetailsPage>
       create: (context) => ProductDetailsBloc(widget.productId ?? ""),
       child: Selector<ProductDetailsBloc, bool>(
         selector: (context, bloc) => bloc.isLoading,
-        builder: (BuildContext context, isLoading, Widget? child) =>
-         Scaffold(
+        builder: (BuildContext context, isLoading, Widget? child) => Scaffold(
           backgroundColor: kBackgroundColor,
-          body:
-          Selector<ProductDetailsBloc, ProductVO?>(
+          body: Selector<ProductDetailsBloc, ProductVO?>(
               selector: (context, bloc) => bloc.productVO,
               builder: (context, product, child) {
                 return Stack(
@@ -97,8 +95,8 @@ class _ProductDetailsPageState extends State<ProductDetailsPage>
                                     indicatorWeight: 1,
                                     dividerColor: Colors.transparent,
                                     indicatorSize: TabBarIndicatorSize.label,
-                                    labelPadding:
-                                    const EdgeInsets.symmetric(horizontal: 10),
+                                    labelPadding: const EdgeInsets.symmetric(
+                                        horizontal: 10),
                                     tabs: const [
                                       Text('Product Details',
                                           textAlign: TextAlign.center),
@@ -116,10 +114,16 @@ class _ProductDetailsPageState extends State<ProductDetailsPage>
                           },
                           body: TabBarView(
                             controller: tabController,
-                            children:  [
-                              ProductDetailsView(images: product?.images ?? [],),
-                              ProductDetailsView(images: product?.images ?? [],),
-                              ProductDetailsView(images: product?.images ?? [],),
+                            children: [
+                              ProductDetailsView(
+                                images: product?.images ?? [],
+                              ),
+                              ProductDetailsView(
+                                images: product?.images ?? [],
+                              ),
+                              ProductDetailsView(
+                                images: product?.images ?? [],
+                              ),
                             ],
                           ),
                         ),
@@ -149,7 +153,9 @@ class _ProductDetailsPageState extends State<ProductDetailsPage>
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               VerticalIconWithLabelView(
-                                  onTap: () {}, icon: Icons.chat, label: "Live Chat"),
+                                  onTap: () {},
+                                  icon: Icons.chat,
+                                  label: "Live Chat"),
                               VerticalIconWithLabelView(
                                   onTap: () {},
                                   icon: Icons.shopping_cart_outlined,
@@ -165,23 +171,28 @@ class _ProductDetailsPageState extends State<ProductDetailsPage>
                                 builder: (context, product, child) => Row(
                                   children: [
                                     InkWell(
-                                      onTap: (){
-                                        var bloc = Provider.of<ProductDetailsBloc>(context,
-                                            listen: false);
-                                        bloc.onTapAddToCart();
+                                      onTap: () {
+                                        var bloc =
+                                            Provider.of<ProductDetailsBloc>(
+                                                context,
+                                                listen: false);
+                                        bloc.onTapAddToCart(context);
                                       },
                                       child: Container(
                                         decoration: BoxDecoration(
-                                            borderRadius: const BorderRadius.only(
-                                                topLeft: Radius.circular(6),
-                                                bottomLeft: Radius.circular(6)),
+                                            borderRadius:
+                                                const BorderRadius.only(
+                                                    topLeft: Radius.circular(6),
+                                                    bottomLeft:
+                                                        Radius.circular(6)),
                                             color: kPrimaryColor,
                                             gradient: LinearGradient(
                                                 begin: Alignment.centerLeft,
                                                 end: Alignment.centerRight,
                                                 colors: [
                                                   kSecondaryColor,
-                                                  kPrimaryColor.withOpacity(0.7),
+                                                  kPrimaryColor
+                                                      .withOpacity(0.7),
                                                 ])),
                                         child: const Padding(
                                           padding: EdgeInsets.all(8.0),
@@ -194,27 +205,34 @@ class _ProductDetailsPageState extends State<ProductDetailsPage>
                                         ),
                                       ),
                                     ),
-                                       InkWell(
-                                          onTap: () {
-                                            showBuyNowBottomSheet(context,product?.variantVO?.isNotEmpty ?? true ?  product?.variantVO?.first : VariantVO(),product?.name ?? "");
-                                          },
-                                          child: Container(
-                                            decoration: const BoxDecoration(
-                                              borderRadius: BorderRadius.only(
-                                                  topRight: Radius.circular(6),
-                                                  bottomRight: Radius.circular(6)),
-                                              color: kPrimaryColor,
-                                            ),
-                                            child: const Padding(
-                                              padding: EdgeInsets.all(8.0),
-                                              child: Text(
-                                                'Buy Now',
-                                                style: TextStyle(
-                                                    color: kBackgroundColor,
-                                                    fontWeight: FontWeight.bold),
-                                              ),
-                                            ),
+                                    InkWell(
+                                      onTap: () {
+                                        showBuyNowBottomSheet(
+                                            context,
+                                            product?.variantVO?.isNotEmpty ??
+                                                    true
+                                                ? product?.variantVO?.first
+                                                : VariantVO(),
+                                            product?.name ?? "",
+                                            product);
+                                      },
+                                      child: Container(
+                                        decoration: const BoxDecoration(
+                                          borderRadius: BorderRadius.only(
+                                              topRight: Radius.circular(6),
+                                              bottomRight: Radius.circular(6)),
+                                          color: kPrimaryColor,
+                                        ),
+                                        child: const Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Text(
+                                            'Buy Now',
+                                            style: TextStyle(
+                                                color: kBackgroundColor,
+                                                fontWeight: FontWeight.bold),
                                           ),
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -226,8 +244,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage>
                     ),
                   ],
                 );
-              }
-          ),
+              }),
         ),
       ),
     );
@@ -264,7 +281,8 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
 /// Product Details View
 class ProductDetailsView extends StatelessWidget {
   final List<String> images;
-  const ProductDetailsView({super.key,required this.images});
+
+  const ProductDetailsView({super.key, required this.images});
 
   @override
   Widget build(BuildContext context) {
@@ -486,11 +504,8 @@ class CategoryAndReturnPointView extends StatelessWidget {
 }
 
 ///bottomsheet
-void showBuyNowBottomSheet(
-    BuildContext context,
-    VariantVO? variantVO,
-    String productName
-    ) {
+void showBuyNowBottomSheet(BuildContext context, VariantVO? variantVO,
+    String productName, ProductVO? productVO) {
   showModalBottomSheet(
     context: context,
     builder: (context) {
@@ -527,11 +542,13 @@ void showBuyNowBottomSheet(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                     ClipRRect(
+                    ClipRRect(
                       child: CachedNetworkImageView(
                         imageHeight: 100,
                         imageWidth: 100,
-                        imageUrl:variantVO?.images.isNotEmpty ?? true ? variantVO?.images.first.url ?? errorImageUrl : errorImageUrl,
+                        imageUrl: variantVO?.images.isNotEmpty ?? true
+                            ? variantVO?.images.first.url ?? errorImageUrl
+                            : errorImageUrl,
                       ),
                     ),
                     const SizedBox(
@@ -584,7 +601,8 @@ void showBuyNowBottomSheet(
                 ///color view
                 const Text(
                   'Color',
-                  style: TextStyle(color: Colors.black, fontSize: kTextRegular2x),
+                  style:
+                      TextStyle(color: Colors.black, fontSize: kTextRegular2x),
                 ),
 
                 ///spacer
@@ -605,16 +623,20 @@ void showBuyNowBottomSheet(
                           bool isSelected = bloc.isSelected(index);
 
                           return Padding(
-                            padding: const EdgeInsets.only(right: kMarginMedium),
+                            padding:
+                                const EdgeInsets.only(right: kMarginMedium),
                             child: InkWell(
                               onTap: () {
-                                bloc.toggleSelectionColor(index); // Toggle selection
+                                bloc.toggleSelectionColor(
+                                    index); // Toggle selection
                               },
                               child: Container(
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(8),
                                   border: Border.all(
-                                    color: isSelected ? kPrimaryColor : Colors.grey,
+                                    color: isSelected
+                                        ? kPrimaryColor
+                                        : Colors.grey,
                                     width: 1,
                                   ),
                                 ),
@@ -651,12 +673,12 @@ void showBuyNowBottomSheet(
 
                 ///quality increase and decrease view
                 Consumer<ProductDetailsBottomSheetBloc>(
-                  builder: (context,bloc,child) =>
-                   Row(
+                  builder: (context, bloc, child) => Row(
                     children: [
                       const Text(
                         'Quantity',
-                        style: TextStyle(color: Colors.black, fontSize: kTextRegular2x),
+                        style: TextStyle(
+                            color: Colors.black, fontSize: kTextRegular2x),
                       ),
                       const Spacer(),
 
@@ -678,7 +700,7 @@ void showBuyNowBottomSheet(
                       const SizedBox(
                         width: kMarginMedium,
                       ),
-                       Text(bloc.quantityCount.toString()),
+                      Text(bloc.quantityCount.toString()),
                       const SizedBox(
                         width: kMarginMedium,
                       ),
@@ -709,15 +731,24 @@ void showBuyNowBottomSheet(
                 ),
 
                 ///buy now button
-                CommonButtonView(
-                  label: 'Buy Now',
-                  labelColor: Colors.white,
-                  bgColor: kPrimaryColor,
-                  onTapButton: () {
-                    Navigator.pop(context);
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (builder) => const CheckoutPage()));
-                  },
+                Consumer<ProductDetailsBottomSheetBloc>(
+                  builder: (context, bloc, child) => CommonButtonView(
+                    label: 'Buy Now',
+                    labelColor: Colors.white,
+                    bgColor: kPrimaryColor,
+                    onTapButton: () {
+                      Navigator.pop(context);
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (builder) => CheckoutPage(
+                                productList: [
+                                  productVO?.copyWith(
+                                          totalPrice: productVO.price,
+                                          qtyCount: bloc.quantityCount) ??
+                                      ProductVO()
+                                ],
+                              )));
+                    },
+                  ),
                 ),
 
                 ///spacer

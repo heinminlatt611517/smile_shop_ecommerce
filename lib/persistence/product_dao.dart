@@ -34,6 +34,11 @@ class ProductDao {
      return getProductBox().get(title);
   }
 
+  ///get product by id
+  ProductVO? getProductById(int id)  {
+    return getProductBox().get(id);
+  }
+
   ///clear product
   void clearProduct() async {
     await getProductBox().clear();

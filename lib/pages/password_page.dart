@@ -10,6 +10,7 @@ import 'package:smile_shop/utils/images.dart';
 import '../data/dummy_data/country_code.dart';
 import '../widgets/common_dialog.dart';
 import '../widgets/error_dialog_view.dart';
+import '../widgets/input_view_lock_icon.dart';
 import '../widgets/loading_view.dart';
 
 class PasswordPage extends StatefulWidget {
@@ -56,96 +57,33 @@ class _PasswordPageState extends State<PasswordPage> {
                     const SizedBox(
                       height: kMargin30,
                     ),
-                    SizedBox(
-                      child: Row(
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.only(left: kMarginMedium2),
-                            child: Row(
-                              children: [
-                                const Icon(
-                                  Icons.lock_outline,
-                                  color: Colors.grey,
-                                  size: 20,
-                                ),
-                                const SizedBox(
-                                  width: 15,
-                                ),
-                                Container(
-                                  width: 1,
-                                  height: 34,
-                                  color: Colors.grey,
-                                )
-                              ],
-                            ),
-                          ),
-                          Consumer<PasswordBloc>(
-                            builder: (context,bloc,child) =>
-                              Expanded(
-                              child: TextField(
-                                cursorColor: Colors.black,
-                                onChanged: (value){
-                                  bloc.onPasswordChanged(value);
-                                },
-                                decoration:const InputDecoration(
-                                    border: InputBorder.none,
-                                    contentPadding: EdgeInsets.symmetric(horizontal: 21),
-                                    hintText: 'Set your password',
-                                    hintStyle: TextStyle(color: Colors.grey)),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                    ///set your password view
+                    Consumer<PasswordBloc>(
+                      builder: (context,bloc,child) =>
+                          InputViewLockIcon(
+                              hintLabel: 'Set your password',
+                              onChangeValue: (value){
+                                bloc.onPasswordChanged(value);
+                              }),
                     ),
                     const SizedBox(
-                      height: kMarginMedium3,
+                      height: kMargin34,
                     ),
-                    SizedBox(
-                      child: Row(
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.only(left: kMarginMedium2),
-                            child: Row(
-                              children: [
-                                const Icon(
-                                  Icons.lock_outline,
-                                  color: Colors.grey,
-                                  size: 20,
-                                ),
-                                const SizedBox(
-                                  width: 15,
-                                ),
-                                Container(
-                                  width: 1,
-                                  height: 34,
-                                  color: Colors.grey,
-                                )
-                              ],
-                            ),
-                          ),
-                          Consumer<PasswordBloc>(
-                            builder: (context,bloc,child)=>
-                              Expanded(
-                              child: TextField(
-                                cursorColor: Colors.black,
-                                onChanged: (value){
-                                  bloc.onConfirmPasswordChanged(value);
-                                },
-                                decoration:const InputDecoration(
-                                    border: InputBorder.none,
-                                    contentPadding: EdgeInsets.symmetric(horizontal: 21),
-                                    hintText: 'Retype your password',
-                                    hintStyle: TextStyle(color: Colors.grey)),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+
+                    ///retype your password view
+                    Consumer<PasswordBloc>(
+                      builder: (context,bloc,child) =>
+                          InputViewLockIcon(
+                              hintLabel: 'Retype your password',
+                              onChangeValue: (value){
+                                bloc.onConfirmPasswordChanged(value);
+                              }),
                     ),
                     const SizedBox(
-                      height: kMargin30,
+                      height: kMargin34,
                     ),
+
+                    ///confirm button
                     GestureDetector(
                       onTap: () {
                         var bloc =

@@ -47,7 +47,7 @@ class AddressListItemView extends StatelessWidget {
 
               ///address
                Text(
-                '${addressVO?.townshipVO?.name},${addressVO?.stateVO?.name}',
+                '${addressVO?.townshipVO?.name ?? ""},${addressVO?.stateVO?.name ?? ""}',
                 style:const TextStyle(fontSize: kTextRegular),
               ),
 
