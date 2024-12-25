@@ -55,6 +55,7 @@ const String kFieldName = "name";
 const String kFieldPage = "page";
 const String kFieldLoginPassword = "login_password";
 const String kFieldPaymentPassword = "payment_password";
+const String kFieldAppType= "app_type";
 
 
 ///Constant Values

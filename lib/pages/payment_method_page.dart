@@ -3,6 +3,7 @@ import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:smile_shop/blocs/payment_bloc.dart';
 import 'package:smile_shop/data/vos/payment_vo.dart';
+import 'package:smile_shop/data/vos/product_vo.dart';
 import 'package:smile_shop/list_items/payment_method_list_item_view.dart';
 import 'package:smile_shop/pages/order_successful_page.dart';
 import 'package:smile_shop/utils/colors.dart';
@@ -14,12 +15,20 @@ import '../widgets/error_dialog_view.dart';
 import '../widgets/loading_view.dart';
 
 class PaymentMethodPage extends StatelessWidget {
-  const PaymentMethodPage({super.key});
+  final int? productSubTotalPrice;
+  final bool? isFromCartPage;
+  final List<ProductVO>? productList;
+
+  const PaymentMethodPage(
+      {super.key,
+      required this.productSubTotalPrice,
+      required this.isFromCartPage,
+      required this.productList});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => PaymentBloc(),
+      create: (context) => PaymentBloc(productList ?? []),
       child: Scaffold(
         backgroundColor: kBackgroundColor,
         appBar: AppBar(
@@ -46,31 +55,37 @@ class PaymentMethodPage extends StatelessWidget {
                     const SizedBox(
                       height: kMargin30,
                     ),
-                    Selector<PaymentBloc,List<PaymentVO>>(
-                      selector: (context , bloc ) => bloc.payments,
-                      builder: (context,paymentMethods,child) =>
-                       MediaQuery.removePadding(
-                          context: context,
-                          removeBottom: true,
-                          removeTop: true,
-                          child: Consumer<PaymentBloc>(
-                            builder: (context, bloc, child) => ListView.builder(
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: paymentMethods.length,
-                                shrinkWrap: true,
-                                itemBuilder: (context, index) {
-                                  bool isLastIndex = index == paymentMethods.length - 1;
-                                  return PaymentMethodListItemView(
-                                    currentIndex: index,
-                                    isLastIndex: isLastIndex,
-                                    paymentVO: paymentMethods[index],
-                                    isSelected: bloc.isSelected(index),
-                                    onTapPayment: (currentIndex) {
-                                      bloc.onSelectPayment(currentIndex);
-                                    },
-                                  );
-                                }),
-                          )),
+                    Selector<PaymentBloc, List<PaymentVO>>(
+                      selector: (context, bloc) => bloc.payments,
+                      builder: (context, paymentMethods, child) =>
+                          MediaQuery.removePadding(
+                              context: context,
+                              removeBottom: true,
+                              removeTop: true,
+                              child: Consumer<PaymentBloc>(
+                                builder: (context, bloc, child) =>
+                                    ListView.builder(
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
+                                        itemCount: paymentMethods.length,
+                                        shrinkWrap: true,
+                                        itemBuilder: (context, index) {
+                                          bool isLastIndex = index ==
+                                              paymentMethods.length - 1;
+                                          return PaymentMethodListItemView(
+                                            currentIndex: index,
+                                            isLastIndex: isLastIndex,
+                                            paymentVO: paymentMethods[index],
+                                            isSelected: bloc.isSelected(index),
+                                            onTapPayment: (currentIndex) {
+                                              bloc.onSelectPayment(
+                                                  currentIndex,
+                                                  paymentMethods[index].code ??
+                                                      "");
+                                            },
+                                          );
+                                        }),
+                              )),
                     ),
                     const SizedBox(
                       height: kMargin80,
@@ -90,8 +105,12 @@ class PaymentMethodPage extends StatelessWidget {
                               }
                             ];
                             bloc
-                                .onTapCheckout(18, 5, 1, variantList)
+                                .onTapCheckout(
+                                    18, productSubTotalPrice ?? 0, variantList)
                                 .then((value) {
+                              if (isFromCartPage == true) {
+                                bloc.clearAddToCartProductByProductIdFromDatabase();
+                              }
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (builder) =>
                                       const OrderSuccessfulPage()));

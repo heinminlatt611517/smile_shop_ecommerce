@@ -20,19 +20,22 @@ class CategoryVOAdapter extends TypeAdapter<CategoryVO> {
       id: fields[0] as int?,
       name: fields[1] as String?,
       subCategories: (fields[2] as List?)?.cast<SubcategoryVO>(),
+      image: fields[3] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, CategoryVO obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
       ..write(obj.name)
       ..writeByte(2)
-      ..write(obj.subCategories);
+      ..write(obj.subCategories)
+      ..writeByte(3)
+      ..write(obj.image);
   }
 
   @override
@@ -56,6 +59,7 @@ CategoryVO _$CategoryVOFromJson(Map<String, dynamic> json) => CategoryVO(
       subCategories: (json['subcategory'] as List<dynamic>?)
           ?.map((e) => SubcategoryVO.fromJson(e as Map<String, dynamic>))
           .toList(),
+      image: json['image'] as String?,
     );
 
 Map<String, dynamic> _$CategoryVOToJson(CategoryVO instance) =>
@@ -63,4 +67,5 @@ Map<String, dynamic> _$CategoryVOToJson(CategoryVO instance) =>
       'id': instance.id,
       'name': instance.name,
       'subcategory': instance.subCategories,
+      'image': instance.image,
     };

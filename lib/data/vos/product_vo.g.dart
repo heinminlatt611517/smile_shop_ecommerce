@@ -34,13 +34,14 @@ class ProductVOAdapter extends TypeAdapter<ProductVO> {
       qtyCount: fields[14] as int?,
       isChecked: fields[15] as bool?,
       totalPrice: fields[16] as int?,
+      colorName: fields[17] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, ProductVO obj) {
     writer
-      ..writeByte(17)
+      ..writeByte(18)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -74,7 +75,9 @@ class ProductVOAdapter extends TypeAdapter<ProductVO> {
       ..writeByte(15)
       ..write(obj.isChecked)
       ..writeByte(16)
-      ..write(obj.totalPrice);
+      ..write(obj.totalPrice)
+      ..writeByte(17)
+      ..write(obj.colorName);
   }
 
   @override

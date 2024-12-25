@@ -77,6 +77,10 @@ class VariantVO {
   @HiveField(15)
   final int? redeemPoint;
 
+  @JsonKey(name: 'color_name')
+  @HiveField(16)
+  final String? colorName;
+
   VariantVO({
     this.id,
     this.productId,
@@ -93,7 +97,8 @@ class VariantVO {
     this.extendedPriceVO,
     this.inventoryVO,
     this.promotionPoint,
-    this.redeemPoint
+    this.redeemPoint,
+    this.colorName
   });
 
   factory VariantVO.fromJson(Map<String, dynamic> json) =>

@@ -37,6 +37,8 @@ class TrendingProductListItemView extends StatelessWidget {
             ),
             const SizedBox(height: 10,),
              Text(
+               maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               productVO?.name ?? "",
               style:
                   const TextStyle(fontWeight: FontWeight.bold, fontSize: kTextRegular2x),

@@ -74,8 +74,9 @@ abstract class SmileShopDataAgent {
       String acceptLanguage,
       int productId,
       int subTotal,
-      int paymentType,
-      List itemList);
+      String paymentType,
+      List itemList,
+      String appType);
 
   Future<List<PaymentVO>> payments(String token, String acceptLanguage);
 

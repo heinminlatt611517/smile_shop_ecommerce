@@ -176,8 +176,8 @@ class SmileShopModelImpl extends SmileShopModel {
   }
 
   @override
-  Future<void> postOrder(String token, String acceptLanguage, int productId, int subTotal, int paymentType, List itemList) {
-    return mDataAgent.postOrder(token, acceptLanguage, productId, subTotal, paymentType, itemList);
+  Future<void> postOrder(String token, String acceptLanguage, int productId, int subTotal, String paymentType, List itemList,String appType) {
+    return mDataAgent.postOrder(token, acceptLanguage, productId, subTotal, paymentType, itemList,appType);
   }
 
   @override
@@ -262,6 +262,16 @@ class SmileShopModelImpl extends SmileShopModel {
   @override
   ProductVO? getProductByIdFromDatabase(int id) {
    return _productDao.getProductById(id);
+  }
+
+  @override
+  void clearSaveAddToCartProduct() {
+    _productDao.clearProduct();
+  }
+
+  @override
+  void clearSaveAddToCartProductByProductId(int productId) {
+    _productDao.deleteSearchProduct(productId);
   }
 
 }

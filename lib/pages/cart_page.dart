@@ -27,34 +27,6 @@ class CartPage extends StatelessWidget {
             'Cart',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
-          bottom: PreferredSize(
-              preferredSize: const Size(double.infinity, 40),
-              child: Selector<CartBloc, List<ProductVO>>(
-                selector: (context, bloc) => bloc.productList,
-                builder: (context, products, Widget? child) => Visibility(
-                  visible: products.isNotEmpty,
-                  child: Container(
-                    color: kBackgroundColor,
-                    child: const Padding(
-                      padding: EdgeInsets.only(
-                          left: kMarginMedium,
-                          right: kMarginMedium,
-                          top: kMarginMedium),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('My Cart'),
-                          Text(
-                            'Manage',
-                            style: TextStyle(color: kPrimaryColor),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              )),
         ),
         body: Selector<CartBloc, List<ProductVO>>(
           selector: (context, bloc) => bloc.productList,
@@ -79,15 +51,45 @@ class CartPage extends StatelessWidget {
                     ],
                   ),
                 )
-              : ListView.builder(
-                  padding: const EdgeInsets.symmetric(vertical: 20),
-                  itemCount: products.length,
-                  itemBuilder: (context, index) {
-                    return CartListItemView(
-                      productVO: products[index],
-                      isCheckout: false,
-                    );
-                  }),
+              : Column(
+                children: [
+                  Visibility(
+                    visible: products.isNotEmpty,
+                    child: Container(
+                      color: kBackgroundColor,
+                      child: const Padding(
+                        padding: EdgeInsets.only(
+                            left: kMarginMedium,
+                            right: kMarginMedium,
+                            top: kMarginMedium),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('My Cart'),
+                            Text(
+                              'Manage',
+                              style: TextStyle(color: kPrimaryColor),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                        padding: const EdgeInsets.symmetric(vertical: 20),
+                        itemCount: products.length,
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          return CartListItemView(
+                            productVO: products[index],
+                            isCheckout: false,
+                          );
+                        }),
+                  ),
+                ],
+              ),
         ),
         bottomNavigationBar: Selector<CartBloc, List<ProductVO>>(
           selector: (context, bloc) => bloc.productList,
@@ -140,6 +142,7 @@ class CartPage extends StatelessWidget {
                           .isNotEmpty) {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (builder) => CheckoutPage(
+                                  isFromCartPage: true,
                                   productList: products
                                       .where((product) =>
                                           product.isChecked == true)

@@ -16,8 +16,10 @@ import 'payment_method_page.dart';
 
 class CheckoutPage extends StatelessWidget {
   final List<ProductVO>? productList;
+  final bool? isFromCartPage;
 
-  const CheckoutPage({super.key, this.productList});
+  const CheckoutPage(
+      {super.key, this.productList, required this.isFromCartPage});
 
   @override
   Widget build(BuildContext context) {
@@ -81,21 +83,29 @@ class CheckoutPage extends StatelessWidget {
             ),
           ),
         ),
-        bottomNavigationBar: GestureDetector(
-          onTap: () {
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (builder) => const PaymentMethodPage()));
-          },
-          child: Container(
-            margin: const EdgeInsets.only(bottom: 30, left: 16, right: 16),
-            height: 40,
-            width: double.infinity,
-            decoration: BoxDecoration(
-                color: kPrimaryColor, borderRadius: BorderRadius.circular(4)),
-            child: const Center(
-              child: Text(
-                'Pay Now',
-                style: TextStyle(color: kBackgroundColor),
+
+        ///pay now
+        bottomNavigationBar: Consumer<CheckOutBloc>(
+          builder: (context, bloc, child) => GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (builder) => PaymentMethodPage(
+                        productSubTotalPrice: bloc.totalSummaryProductPrice,
+                        isFromCartPage: isFromCartPage,
+                        productList: productList,
+                      )));
+            },
+            child: Container(
+              margin: const EdgeInsets.only(bottom: 30, left: 16, right: 16),
+              height: 40,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                  color: kPrimaryColor, borderRadius: BorderRadius.circular(4)),
+              child: const Center(
+                child: Text(
+                  'Pay Now',
+                  style: TextStyle(color: kBackgroundColor),
+                ),
               ),
             ),
           ),
@@ -164,12 +174,11 @@ class _BuildDeliveryOptionView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<CheckOutBloc>(
-      builder: (context,bloc,child) =>
-       GestureDetector(
+      builder: (context, bloc, child) => GestureDetector(
         onTap: () {
           showModalBottomSheet(
               context: context,
-              builder: (builder) => deliveryOptionModalSheet(context,bloc));
+              builder: (builder) => deliveryOptionModalSheet(context, bloc));
         },
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -179,7 +188,7 @@ class _BuildDeliveryOptionView extends StatelessWidget {
           decoration: BoxDecoration(
               color: kFillingFastColor.withOpacity(0.1),
               borderRadius: BorderRadius.circular(10)),
-          child:  Row(
+          child: Row(
             children: [
               const Text('Delivery Options'),
               const SizedBox(
@@ -191,7 +200,9 @@ class _BuildDeliveryOptionView extends StatelessWidget {
                   children: [
                     Flexible(
                         child: Text(
-                      bloc.isSelectedStandardDelivery ? kStandardDelivery : kSpecialDelivery,
+                      bloc.isSelectedStandardDelivery
+                          ? kStandardDelivery
+                          : kSpecialDelivery,
                       overflow: TextOverflow.ellipsis,
                     )),
                     const SizedBox(
@@ -247,7 +258,7 @@ class _BuildOrderSummaryView extends StatelessWidget {
           ),
           const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text('Delivery'), Text('Ks 35000')],
+            children: [Text('Delivery'), Text('Ks 3500')],
           ),
           const SizedBox(
             height: 20,
@@ -321,10 +332,7 @@ class _BuildPromotionPointView extends StatelessWidget {
 }
 
 ///delivery option bottom sheet
-Widget deliveryOptionModalSheet(
-    BuildContext context,
-    CheckOutBloc bloc
-    ) {
+Widget deliveryOptionModalSheet(BuildContext context, CheckOutBloc bloc) {
   return Container(
     height: 200,
     decoration: const BoxDecoration(
@@ -359,60 +367,61 @@ Widget deliveryOptionModalSheet(
         const SizedBox(
           height: 20,
         ),
-
-           InkWell(
-            onTap: () {
-              bloc.onTapAddStandardDelivery();
-              Navigator.pop(context);
-            },
-            child: Container(
-              height: 40,
-              width: double.infinity,
-              margin: const EdgeInsets.symmetric(horizontal: 20),
-              decoration: BoxDecoration(
-                  border: Border.all(
-                      color: bloc.isSelectedStandardDelivery ? kPrimaryColor : Colors.transparent,
-                      width: 1),
-                  color: kFillingFastColor.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(10)),
-              child: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: kMarginMedium),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [Text(kStandardDelivery), Text('Free')],
-                ),
+        InkWell(
+          onTap: () {
+            bloc.onTapAddStandardDelivery();
+            Navigator.pop(context);
+          },
+          child: Container(
+            height: 40,
+            width: double.infinity,
+            margin: const EdgeInsets.symmetric(horizontal: 20),
+            decoration: BoxDecoration(
+                border: Border.all(
+                    color: bloc.isSelectedStandardDelivery
+                        ? kPrimaryColor
+                        : Colors.transparent,
+                    width: 1),
+                color: kFillingFastColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(10)),
+            child: const Padding(
+              padding: EdgeInsets.symmetric(horizontal: kMarginMedium),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [Text(kStandardDelivery), Text('Free')],
               ),
             ),
           ),
-
+        ),
         const SizedBox(
           height: 20,
         ),
-
-           InkWell(
-            onTap: () {
-              bloc.onTapAddStandardDelivery();
-              Navigator.pop(context);
-            },
-            child: Container(
-              height: 40,
-              margin: const EdgeInsets.symmetric(horizontal: 20),
-              width: double.infinity,
-              decoration: BoxDecoration(
-                  border: Border.all(
-                      color: bloc.isSelectedSpecialDelivery ? kPrimaryColor : Colors.transparent,
-                      width: 1),
-                  color: kFillingFastColor.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(10)),
-              child: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: kMarginMedium),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [Text(kSpecialDelivery), Text('Ks 3500')],
-                ),
+        InkWell(
+          onTap: () {
+            bloc.onTapAddStandardDelivery();
+            Navigator.pop(context);
+          },
+          child: Container(
+            height: 40,
+            margin: const EdgeInsets.symmetric(horizontal: 20),
+            width: double.infinity,
+            decoration: BoxDecoration(
+                border: Border.all(
+                    color: bloc.isSelectedSpecialDelivery
+                        ? kPrimaryColor
+                        : Colors.transparent,
+                    width: 1),
+                color: kFillingFastColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(10)),
+            child: const Padding(
+              padding: EdgeInsets.symmetric(horizontal: kMarginMedium),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [Text(kSpecialDelivery), Text('Ks 3500')],
               ),
             ),
           ),
+        ),
       ],
     ),
   );
@@ -554,8 +563,7 @@ Widget promotionPointModalSheet(BuildContext context) {
               label: 'Okay',
               labelColor: Colors.white,
               bgColor: kPrimaryColor,
-              onTapButton: () {
-              }),
+              onTapButton: () {}),
         )
       ],
     ),

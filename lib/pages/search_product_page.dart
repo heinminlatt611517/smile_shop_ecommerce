@@ -64,42 +64,45 @@ class SearchProductPage extends StatelessWidget {
                                     return products.isEmpty
                                         ? Column(
                                             children: [
-                                              Row(
-                                                children: [
-                                                  const Text(
-                                                    'Search History',
-                                                    style: TextStyle(
-                                                        fontSize: kTextRegular),
-                                                  ),
-                                                  const Spacer(),
-                                                  InkWell(
-                                                    onTap: () {
-                                                      var bloc = context.read<
-                                                          SearchProductBloc>();
-                                                      bloc.onTapClearAll();
-                                                    },
-                                                    child: const Row(
-                                                      children: [
-                                                        Text(
-                                                          'Clear All',
-                                                          style: TextStyle(
-                                                              fontSize:
-                                                                  kTextRegular,
-                                                              color:
-                                                                  Colors.grey),
-                                                        ),
-                                                        SizedBox(
-                                                          width: kMarginSmall,
-                                                        ),
-                                                        Icon(
-                                                          Icons.delete,
-                                                          color: Colors.grey,
-                                                          size: 18,
-                                                        )
-                                                      ],
+                                              Padding(
+                                                padding: const EdgeInsets.symmetric(horizontal: kMarginMedium2),
+                                                child: Row(
+                                                  children: [
+                                                    const Text(
+                                                      'Search History',
+                                                      style: TextStyle(
+                                                          fontSize: kTextRegular),
                                                     ),
-                                                  )
-                                                ],
+                                                    const Spacer(),
+                                                    InkWell(
+                                                      onTap: () {
+                                                        var bloc = context.read<
+                                                            SearchProductBloc>();
+                                                        bloc.onTapClearAll();
+                                                      },
+                                                      child: const Row(
+                                                        children: [
+                                                          Text(
+                                                            'Clear All',
+                                                            style: TextStyle(
+                                                                fontSize:
+                                                                    kTextRegular,
+                                                                color:
+                                                                    Colors.grey),
+                                                          ),
+                                                          SizedBox(
+                                                            width: kMarginSmall,
+                                                          ),
+                                                          Icon(
+                                                            Icons.delete,
+                                                            color: Colors.grey,
+                                                            size: 18,
+                                                          )
+                                                        ],
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
                                               ),
                                               ListView.builder(
                                                 shrinkWrap: true,

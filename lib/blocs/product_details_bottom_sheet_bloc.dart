@@ -4,14 +4,21 @@ class ProductDetailsBottomSheetBloc extends ChangeNotifier {
 
   int? selectedIndex;
   int? quantityCount = 1;
-  final List<String> colors = [
-    "Black",
-    "White",
-    "Orange"
-  ];
+  var selectedColor = "";
+  int? updateTotalPrice;
 
-  void toggleSelectionColor(int index) {
+
+  ProductDetailsBottomSheetBloc(this.selectedColor,this.updateTotalPrice){
+  }
+
+  void toggleSelectionColor(int index,String colorName) {
+    selectedColor = colorName;
     selectedIndex = isSelected(index) ? -1 : index;
+    notifyListeners();
+  }
+
+  void calculateTotalPrice(){
+    updateTotalPrice = quantityCount! * updateTotalPrice!;
     notifyListeners();
   }
 
@@ -21,12 +28,14 @@ class ProductDetailsBottomSheetBloc extends ChangeNotifier {
 
   void onTapAdd(){
     quantityCount = (quantityCount!+1);
+    calculateTotalPrice();
     notifyListeners();
   }
 
   void onTapMinus(){
     if(quantityCount! > 0){
       quantityCount = (quantityCount!-1);
+      calculateTotalPrice();
       notifyListeners();
     }
   }

@@ -1,6 +1,7 @@
 import 'package:smile_shop/data/model/smile_shop_model.dart';
 import 'package:smile_shop/data/model/smile_shop_model_impl.dart';
 import 'package:smile_shop/data/vos/payment_vo.dart';
+import 'package:smile_shop/data/vos/product_vo.dart';
 import 'package:smile_shop/network/api_constants.dart';
 import 'package:flutter/material.dart';
 
@@ -14,39 +15,51 @@ class PaymentBloc extends ChangeNotifier {
   bool isDisposed = false;
   var authToken = "";
   List<PaymentVO> payments = [];
+  List<ProductVO> products = [];
   int? selectedIndex;
+  var selectedPaymentType = "";
 
-  PaymentBloc() {
+  PaymentBloc(this.products) {
     authToken =
         _smileShopModel.getLoginResponseFromDatabase()?.accessToken ?? "";
 
     debugPrint(authToken);
 
     ///get payment menthod list
-    _smileShopModel.payments(authToken,kAcceptLanguageEn).then((paymentListResponse) {
+    _smileShopModel
+        .payments(authToken, kAcceptLanguageEn)
+        .then((paymentListResponse) {
       payments = paymentListResponse;
       _notifySafely();
     });
   }
 
-
   ///check out
-  Future<void> onTapCheckout(int productId, int subTotal, int paymentType,
-      List variantVOList) {
+  Future<void> onTapCheckout(
+      int productId, int subTotal, List variantVOList) {
     _showLoading();
     return _smileShopModel
         .postOrder(authToken, kAcceptLanguageEn, productId, subTotal,
-            paymentType,variantVOList)
-        .whenComplete(() => _hideLoading());
+            selectedPaymentType, variantVOList, 'app')
+        .whenComplete(() {
+      _hideLoading();
+    } );
   }
 
-  void onSelectPayment(int index) {
+  void onSelectPayment(int index,String paymentType) {
     selectedIndex = isSelected(index) ? -1 : index;
+    selectedPaymentType = paymentType;
     notifyListeners();
   }
 
   bool isSelected(int index) {
     return index == selectedIndex;
+  }
+
+  void clearAddToCartProductByProductIdFromDatabase(){
+    for(var product in products){
+      _smileShopModel.clearSaveAddToCartProductByProductId(product.id ?? 0);
+    }
   }
 
   void _showLoading() {

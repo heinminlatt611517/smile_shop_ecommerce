@@ -10,6 +10,7 @@ class ProductDetailsBloc extends ChangeNotifier {
   ProductVO? productVO;
   bool isLoading = false;
   bool isDisposed = false;
+  var selectedColorName = "";
 
   ProductDetailsBloc(String productId) {
     ///get data from database
@@ -24,6 +25,7 @@ class ProductDetailsBloc extends ChangeNotifier {
         .getProductDetails(endUserId, productId, kAcceptLanguageEn, authToken)
         .then((productDetailsResponse) {
       productVO = productDetailsResponse;
+      selectedColorName = productVO?.variantVO?.first.colorName ?? "";
       notifyListeners();
     });
   }
@@ -34,7 +36,7 @@ class ProductDetailsBloc extends ChangeNotifier {
           _smileShopModel.getProductByIdFromDatabase(productVO?.id ?? 0);
       if (oldProduct == null) {
         _smileShopModel.saveProductToHive(
-            productVO?.copyWith(totalPrice: productVO?.price, qtyCount: 1) ??
+            productVO?.copyWith(totalPrice: productVO?.price, qtyCount: 1,colorName: selectedColorName) ??
                 ProductVO());
 
         showSnackBar(context, '${productVO?.name} added to cart successfully!',Colors.green);
@@ -42,12 +44,17 @@ class ProductDetailsBloc extends ChangeNotifier {
         int initialPrice = oldProduct.price!;
         var newProductVO = oldProduct.copyWith(qtyCount: oldProduct.qtyCount!+1);
         var updatedTotalPrice = newProductVO.qtyCount! * (initialPrice);
-        _smileShopModel.saveProductToHive(newProductVO.copyWith(totalPrice: updatedTotalPrice));
+        _smileShopModel.saveProductToHive(newProductVO.copyWith(totalPrice: updatedTotalPrice,colorName: selectedColorName));
         showSnackBar(context, '${productVO?.name} added to cart successfully!',Colors.green);
       }
     } else {
       showSnackBar(context, 'Failed to add product to cart.',Colors.red);
     }
+  }
+
+  void onTapColor(String colorName){
+    selectedColorName = colorName;
+    _notifySafely();
   }
 
   void showSnackBar(BuildContext context, String description,Color snackBarColor) {

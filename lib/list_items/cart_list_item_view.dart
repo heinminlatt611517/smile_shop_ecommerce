@@ -6,6 +6,7 @@ import 'package:smile_shop/network/api_constants.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/widgets/cached_network_image_view.dart';
+import 'package:smile_shop/widgets/promotion_point_view.dart';
 
 class CartListItemView extends StatelessWidget {
   final bool isCheckout;
@@ -31,9 +32,12 @@ class CartListItemView extends StatelessWidget {
                 listen: false);
             bloc.onTapChecked(productVO!);
           }),
-           SizedBox(
-            width:isCheckout == true ? 0 : kMargin30,
-          ),
+           Visibility(
+             visible: isCheckout == false,
+             child:const SizedBox(
+              width: 10,
+             ),
+           ),
           Expanded(
             child: Container(
               padding:const EdgeInsets.symmetric(horizontal: kMarginMedium),
@@ -73,11 +77,15 @@ class CartListItemView extends StatelessWidget {
                           ),
                           Row(
                             children: [
-                               Text(
-                                productVO?.subcategory?.name ?? "",
-                                style:const TextStyle(
-                                    color: kTpinTextColor, fontSize: kTextSmall),
-                              ),
+                               Expanded(
+                                 child: Text(
+                                   maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  productVO?.subcategory?.name ?? "",
+                                  style:const TextStyle(
+                                      color: kTpinTextColor, fontSize: kTextSmall),
+                                                               ),
+                               ),
                               const SizedBox(
                                 width: kMargin6 + 1,
                               ),
@@ -85,10 +93,10 @@ class CartListItemView extends StatelessWidget {
                                 color: kCartColor.withOpacity(0.4),
                                 height: 22,
                                 padding: const EdgeInsets.symmetric(horizontal: 5),
-                                child: const Center(
+                                child:  Center(
                                   child: Text(
-                                    'Color Family: White',
-                                    style: TextStyle(fontSize: kTextSmall),
+                                    'Color Family: ${productVO?.colorName}',
+                                    style:const TextStyle(fontSize: kTextSmall),
                                   ),
                                 ),
                               )
@@ -108,11 +116,7 @@ class CartListItemView extends StatelessWidget {
                               const SizedBox(
                                 width: kMargin30,
                               ),
-                              const Text(
-                                '100 pt',
-                                style:
-                                TextStyle(color: kPrimaryColor, fontSize: kTextSmall),
-                              )
+                              const PromotionPointView()
                             ],
                           ),
                           isCheckout == true

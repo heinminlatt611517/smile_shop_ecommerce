@@ -297,10 +297,16 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
 
   @override
   Future<void> postOrder(String token, String acceptLanguage, int productId,
-      int subTotal, int paymentType, List itemList) {
+      int subTotal, String paymentType, List itemList, String appType) {
     return mApi
         .postOrder(
-            "Bearer $token", acceptLanguage, productId, subTotal, paymentType.toString(), '[{"variant_product_id" : 1,"product_id":1, "variant_attribute_value_id" : 1 , "qty" : 2}]')
+            "Bearer $token",
+            acceptLanguage,
+            productId,
+            subTotal,
+            paymentType,
+            '[{"variant_product_id" : 1,"product_id":1, "variant_attribute_value_id" : 1 , "qty" : 2}]',
+            appType)
         .asStream()
         .map((response) => response)
         .first
@@ -310,8 +316,7 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   }
 
   @override
-  Future<List<PaymentVO>> payments(String token, String acceptLanguage
-      ) {
+  Future<List<PaymentVO>> payments(String token, String acceptLanguage) {
     return mApi
         .payments(token, acceptLanguage)
         .asStream()
@@ -323,9 +328,10 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   }
 
   @override
-  Future<OrderVO> orderDetails(String token, String acceptLanguage, int orderId) {
+  Future<OrderVO> orderDetails(
+      String token, String acceptLanguage, int orderId) {
     return mApi
-        .orderDetails(token, acceptLanguage,orderId)
+        .orderDetails(token, acceptLanguage, orderId)
         .asStream()
         .map((response) => response.data ?? OrderVO())
         .first

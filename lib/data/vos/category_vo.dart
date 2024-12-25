@@ -21,7 +21,11 @@ class CategoryVO {
   @HiveField(2)
   final List<SubcategoryVO>? subCategories;
 
-  CategoryVO({this.id, this.name,this.subCategories});
+  @JsonKey(name: 'image')
+  @HiveField(3)
+  final String? image;
+
+  CategoryVO({this.id, this.name,this.subCategories,this.image});
 
   factory CategoryVO.fromJson(Map<String, dynamic> json) =>
       _$CategoryVOFromJson(json);

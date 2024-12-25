@@ -153,7 +153,8 @@ abstract class SmileShopApi {
       @Field(kFieldProductId) int productId,
       @Field(kFieldSubTotal) int subTotal,
       @Field(kFieldPaymentType) String paymentType,
-      @Field(kFieldItems) String itemList
+      @Field(kFieldItems) String itemList,
+      @Field(kFieldAppType) String appType,
       );
 
   @GET(kEndPointPayments)

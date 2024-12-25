@@ -33,13 +33,14 @@ class VariantVOAdapter extends TypeAdapter<VariantVO> {
       inventoryVO: fields[13] as InventoryVO?,
       promotionPoint: fields[14] as int?,
       redeemPoint: fields[15] as int?,
+      colorName: fields[16] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, VariantVO obj) {
     writer
-      ..writeByte(16)
+      ..writeByte(17)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -71,7 +72,9 @@ class VariantVOAdapter extends TypeAdapter<VariantVO> {
       ..writeByte(14)
       ..write(obj.promotionPoint)
       ..writeByte(15)
-      ..write(obj.redeemPoint);
+      ..write(obj.redeemPoint)
+      ..writeByte(16)
+      ..write(obj.colorName);
   }
 
   @override
@@ -118,6 +121,7 @@ VariantVO _$VariantVOFromJson(Map<String, dynamic> json) => VariantVO(
           : InventoryVO.fromJson(json['inventory'] as Map<String, dynamic>),
       promotionPoint: (json['promotion_point'] as num?)?.toInt(),
       redeemPoint: (json['redeem_point'] as num?)?.toInt(),
+      colorName: json['color_name'] as String?,
     );
 
 Map<String, dynamic> _$VariantVOToJson(VariantVO instance) => <String, dynamic>{
@@ -137,4 +141,5 @@ Map<String, dynamic> _$VariantVOToJson(VariantVO instance) => <String, dynamic>{
       'inventory': instance.inventoryVO,
       'promotion_point': instance.promotionPoint,
       'redeem_point': instance.redeemPoint,
+      'color_name': instance.colorName,
     };

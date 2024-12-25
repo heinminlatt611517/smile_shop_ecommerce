@@ -9,13 +9,17 @@ import 'package:smile_shop/data/vos/variant_vo.dart';
 import 'package:smile_shop/network/api_constants.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/widgets/common_button_view.dart';
+import 'package:smile_shop/widgets/promotion_point_view.dart';
 import 'package:smile_shop/widgets/vertical_icon_with_label_view.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../data/dummy_data/banner_section_dummy_data.dart';
 import '../utils/dimens.dart';
+import '../utils/images.dart';
 import '../widgets/cached_network_image_view.dart';
+import '../widgets/hex_color.dart';
 import '../widgets/loading_view.dart';
+import '../widgets/svg_image_view.dart';
 import 'checkout_page.dart';
 
 class ProductDetailsPage extends StatefulWidget {
@@ -211,8 +215,8 @@ class _ProductDetailsPageState extends State<ProductDetailsPage>
                                             context,
                                             product?.variantVO?.isNotEmpty ??
                                                     true
-                                                ? product?.variantVO?.first
-                                                : VariantVO(),
+                                                ? product?.variantVO
+                                                : [],
                                             product?.name ?? "",
                                             product);
                                       },
@@ -351,10 +355,19 @@ class BannerSectionView extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 20),
               child: InkWell(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Icon(Icons.keyboard_backspace)),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Container(
+                  padding:const EdgeInsets.all(kMarginMedium),
+                  decoration:const BoxDecoration(color: Colors.white,shape: BoxShape.circle),
+                  child: const SvgImageView(
+                    imageName: kBackSvgIcon,
+                    imageHeight: 20,
+                    imageWidth: 20,
+                  ),
+                ),
+              ),
             ),
           ],
         ),
@@ -401,12 +414,15 @@ class CategoryAndReturnPointView extends StatelessWidget {
               vertical: kMarginMedium, horizontal: kMarginMedium),
           child: Row(
             children: [
-              Text(
-                productVO?.name ?? "",
-                style: const TextStyle(
-                    fontSize: kTextRegular2x, fontWeight: FontWeight.bold),
+              Expanded(
+                child: Text(
+                  maxLines: 2,
+                  productVO?.name ?? "",
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                      fontSize: kTextRegular2x, fontWeight: FontWeight.bold),
+                ),
               ),
-              const Spacer(),
               const Icon(
                 Icons.star,
                 color: Colors.black,
@@ -430,17 +446,7 @@ class CategoryAndReturnPointView extends StatelessWidget {
                     fontSize: kTextRegular, fontWeight: FontWeight.normal),
               ),
               const Spacer(),
-              const Icon(
-                Icons.currency_bitcoin,
-                color: kSecondaryColor,
-              ),
-              const Text(
-                '100 pt',
-                style: TextStyle(
-                    fontSize: kTextRegular,
-                    fontWeight: FontWeight.bold,
-                    color: kSecondaryColor),
-              ),
+              const PromotionPointView()
             ],
           ),
         ),
@@ -484,17 +490,7 @@ class CategoryAndReturnPointView extends StatelessWidget {
                     fontSize: kTextRegular2x, fontWeight: FontWeight.bold),
               ),
               Spacer(),
-              Icon(
-                Icons.currency_bitcoin,
-                color: kSecondaryColor,
-              ),
-              Text(
-                '50 pt',
-                style: TextStyle(
-                    fontSize: kTextRegular,
-                    fontWeight: FontWeight.bold,
-                    color: kSecondaryColor),
-              )
+              PromotionPointView(),
             ],
           ),
         ),
@@ -504,13 +500,14 @@ class CategoryAndReturnPointView extends StatelessWidget {
 }
 
 ///bottomsheet
-void showBuyNowBottomSheet(BuildContext context, VariantVO? variantVO,
+void showBuyNowBottomSheet(BuildContext context, List<VariantVO>? variantVO,
     String productName, ProductVO? productVO) {
   showModalBottomSheet(
     context: context,
     builder: (context) {
       return ChangeNotifierProvider(
-        create: (context) => ProductDetailsBottomSheetBloc(),
+        create: (context) => ProductDetailsBottomSheetBloc(
+            variantVO?.first.colorName ?? "", variantVO?.first.price),
         child: Container(
           decoration: const BoxDecoration(
             color: kBackgroundColor,
@@ -546,49 +543,46 @@ void showBuyNowBottomSheet(BuildContext context, VariantVO? variantVO,
                       child: CachedNetworkImageView(
                         imageHeight: 100,
                         imageWidth: 100,
-                        imageUrl: variantVO?.images.isNotEmpty ?? true
-                            ? variantVO?.images.first.url ?? errorImageUrl
+                        imageUrl: variantVO?.first.images.isNotEmpty ?? true
+                            ? variantVO?.first.images.first.url ?? errorImageUrl
                             : errorImageUrl,
                       ),
                     ),
                     const SizedBox(
                       width: kMarginMedium3,
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          productName,
-                          overflow: TextOverflow.ellipsis,
-                          softWrap: true,
-                          style: const TextStyle(
-                            fontSize: kTextRegular2x,
-                            fontWeight: FontWeight.w600,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            productName,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: kTextRegular2x,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
-                        ),
-                        const SizedBox(
-                          height: kMargin10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(
-                              variantVO?.price.toString() ?? "",
-                              style: const TextStyle(fontSize: kTextRegular2x),
-                            ),
-                            const SizedBox(
-                              width: kMargin30,
-                            ),
-                            const Text(
-                              '100 pt',
-                              style: TextStyle(
-                                color: kPrimaryColor,
-                                fontSize: kTextSmall,
+                          const SizedBox(
+                            height: kMargin10,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Ks ${variantVO?.first.price.toString() ?? ""}",
+                                style:
+                                    const TextStyle(fontSize: kTextRegular2x),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
+                              const SizedBox(
+                                width: kMargin30,
+                              ),
+                              const PromotionPointView()
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -600,7 +594,7 @@ void showBuyNowBottomSheet(BuildContext context, VariantVO? variantVO,
 
                 ///color view
                 const Text(
-                  'Color',
+                  'Available Color',
                   style:
                       TextStyle(color: Colors.black, fontSize: kTextRegular2x),
                 ),
@@ -618,7 +612,7 @@ void showBuyNowBottomSheet(BuildContext context, VariantVO? variantVO,
                       child: ListView.builder(
                         shrinkWrap: true,
                         scrollDirection: Axis.horizontal,
-                        itemCount: bloc.colors.length,
+                        itemCount: variantVO?.length,
                         itemBuilder: (context, index) {
                           bool isSelected = bloc.isSelected(index);
 
@@ -628,33 +622,25 @@ void showBuyNowBottomSheet(BuildContext context, VariantVO? variantVO,
                             child: InkWell(
                               onTap: () {
                                 bloc.toggleSelectionColor(
-                                    index); // Toggle selection
+                                    index, variantVO?[index].colorName ?? "");
+                                var productDetailBloc =
+                                    Provider.of<ProductDetailsBloc>(context,
+                                        listen: false);
+                                productDetailBloc.onTapColor(
+                                    variantVO?[index].colorName ?? "");
                               },
                               child: Container(
+                                width: 20,
+                                height: 20,
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
+                                  shape: BoxShape.circle, // Circle shape
+                                  color: hexToColor(
+                                      variantVO?[index].colorVO?.value ?? ""),
                                   border: Border.all(
                                     color: isSelected
                                         ? kPrimaryColor
                                         : Colors.grey,
                                     width: 1,
-                                  ),
-                                ),
-                                child: Center(
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: kMarginMedium),
-                                    child: Text(
-                                      bloc.colors[index],
-                                      style: TextStyle(
-                                        color: isSelected
-                                            ? kPrimaryColor
-                                            : Colors.black,
-                                        fontWeight: isSelected
-                                            ? FontWeight.bold
-                                            : FontWeight.normal,
-                                      ),
-                                    ),
                                   ),
                                 ),
                               ),
@@ -740,9 +726,11 @@ void showBuyNowBottomSheet(BuildContext context, VariantVO? variantVO,
                       Navigator.pop(context);
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (builder) => CheckoutPage(
+                                isFromCartPage: false,
                                 productList: [
                                   productVO?.copyWith(
-                                          totalPrice: productVO.price,
+                                          colorName: bloc.selectedColor,
+                                          totalPrice: bloc.updateTotalPrice,
                                           qtyCount: bloc.quantityCount) ??
                                       ProductVO()
                                 ],

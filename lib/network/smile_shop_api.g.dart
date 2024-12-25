@@ -783,6 +783,7 @@ class _SmileShopApi implements SmileShopApi {
     int subTotal,
     String paymentType,
     String itemList,
+    String appType,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -796,6 +797,7 @@ class _SmileShopApi implements SmileShopApi {
       'subtotal': subTotal,
       'payment_type': paymentType,
       'items': itemList,
+      'app_type': appType,
     };
     final _options = _setStreamType<void>(Options(
       method: 'POST',

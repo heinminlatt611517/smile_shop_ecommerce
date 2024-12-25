@@ -85,6 +85,10 @@ abstract class SmileShopModel {
 
   void clearSaveLoginData();
 
+  void clearSaveAddToCartProduct();
+
+  void clearSaveAddToCartProductByProductId(int productId);
+
   void clearSearchProduct();
 
   void clearSingleSearchProduct(String name);
@@ -95,8 +99,9 @@ abstract class SmileShopModel {
       String acceptLanguage,
       int productId,
       int subTotal,
-      int paymentType,
-      List itemList);
+      String paymentType,
+      List itemList,
+      String appType);
 
   Future<List<PaymentVO>> payments(String token, String acceptLanguage);
 
