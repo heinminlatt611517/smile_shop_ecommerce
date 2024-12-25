@@ -7,6 +7,7 @@ import 'package:smile_shop/list_items/address_list_item_view.dart';
 import 'package:smile_shop/pages/edit_address_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
+import 'package:smile_shop/widgets/custom_app_bar_view.dart';
 
 import '../widgets/loading_view.dart';
 import 'add_new_address_page.dart';
@@ -20,12 +21,7 @@ class MyAddressPage extends StatelessWidget {
       create: (context) => MyAddressBloc(),
       child: Scaffold(
         backgroundColor: kBackgroundColor,
-        appBar: AppBar(
-          backgroundColor: kBackgroundColor,
-          surfaceTintColor: kBackgroundColor,
-          centerTitle: true,
-          title: const Text('My Address'),
-        ),
+        appBar:const CustomAppBarView(title: 'My Address'),
         body: Selector<MyAddressBloc,bool>(
             selector: (context, bloc) => bloc.isLoading,
             builder: (context, isLoading, child) =>

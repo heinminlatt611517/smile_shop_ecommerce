@@ -3,13 +3,15 @@ import 'package:provider/provider.dart';
 import 'package:smile_shop/blocs/product_category_bloc.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
+import 'package:smile_shop/widgets/custom_app_bar_view.dart';
 import '../data/vos/product_response_data_vo.dart';
 import '../list_items/trending_product_list_item_view.dart';
 import '../utils/images.dart';
 import '../utils/strings.dart';
 
 class ProductCategoryPage extends StatelessWidget {
-  const ProductCategoryPage({super.key});
+  final String? categoryName;
+  const ProductCategoryPage({super.key,required this.categoryName});
 
   @override
   Widget build(BuildContext context) {
@@ -17,25 +19,7 @@ class ProductCategoryPage extends StatelessWidget {
       create: (context)=>ProductCategoryBloc(),
       child:   Scaffold(
         backgroundColor: kBackgroundColor,
-        appBar: AppBar(
-          centerTitle: false,
-          automaticallyImplyLeading: false,
-          backgroundColor: Colors.white,
-          title: InkWell(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Padding(
-              padding: const EdgeInsets.only(left: kMarginMedium2),
-              child: Image.asset(
-                kBackIcon,
-                fit: BoxFit.contain,
-                height: 20,
-                width: 20,
-              ),
-            ),
-          ),
-        ),
+        appBar: CustomAppBarView(title: categoryName),
         body: const Padding(
           padding:EdgeInsets.all(kMarginMedium2),
           child: CustomScrollView(

@@ -9,8 +9,10 @@ import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/utils/strings.dart';
 import 'package:smile_shop/widgets/common_button_view.dart';
+import 'package:smile_shop/widgets/custom_app_bar_view.dart';
 
 import '../data/vos/product_vo.dart';
+import '../utils/images.dart';
 import '../widgets/cached_network_image_view.dart';
 import 'payment_method_page.dart';
 
@@ -27,12 +29,7 @@ class CheckoutPage extends StatelessWidget {
       create: (context) => CheckOutBloc(productList ?? []),
       child: Scaffold(
         backgroundColor: kBackgroundColor,
-        appBar: AppBar(
-          backgroundColor: kBackgroundColor,
-          surfaceTintColor: kBackgroundColor,
-          centerTitle: true,
-          title: const Text('Check Out'),
-        ),
+        appBar:  CustomAppBarView(title: 'Check Out'),
         body: Selector<CheckOutBloc, List<AddressVO>>(
           selector: (context, bloc) => bloc.addressList,
           builder: (context, addressList, child) => SingleChildScrollView(

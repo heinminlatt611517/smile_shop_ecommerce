@@ -15,7 +15,12 @@ class OtpPage extends StatefulWidget {
   final String? requestId;
   final String? phone;
   final String? referralCode;
-  const OtpPage({super.key,required this.requestId,required this.phone,required this.referralCode});
+
+  const OtpPage(
+      {super.key,
+      required this.requestId,
+      required this.phone,
+      required this.referralCode});
 
   @override
   State<OtpPage> createState() => _OtpPageState();
@@ -26,7 +31,6 @@ class _OtpPageState extends State<OtpPage> {
   final focusNode = FocusNode();
   final formKey = GlobalKey<FormState>();
   bool isFilled = false;
-  bool isCounting = false;
 
   @override
   Widget build(BuildContext context) {
@@ -96,17 +100,9 @@ class _OtpPageState extends State<OtpPage> {
                             },
                             hapticFeedbackType: HapticFeedbackType.lightImpact,
                             onCompleted: (pin) {
-                              // setState(() {
-                              //   isFilled = true;
-                              // });
                               bloc.onCompletePinCode(pin);
                             },
                             onChanged: (value) {
-                              // setState(() {
-                              //   if (pinController.text.length < 4) {
-                              //     isFilled = false;
-                              //   }
-                              // });
                               bloc.onPinCodeChange(value);
                             },
                             cursor: Column(
@@ -142,29 +138,43 @@ class _OtpPageState extends State<OtpPage> {
                       const SizedBox(
                         height: kMarginMedium3,
                       ),
-                      const Row(
-                        children: [
-                          Spacer(),
-                          Text(
-                            'Code expired in 00:00',
-                            style: TextStyle(
-                                fontSize: kTextRegular, color: Colors.black),
-                          ),
-                          SizedBox(
-                            width: 30,
-                          )
-                        ],
+                      Consumer<OtpBloc>(
+                        builder: (context, bloc, child) {
+                          final minutes = (bloc.remainingSeconds / 60).floor();
+                          final seconds = bloc.remainingSeconds % 60;
+                          return Row(
+                            children: [
+                              const Spacer(),
+                              Text(
+                                'Code expired in ${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
+                                style: const TextStyle(
+                                  fontSize: kTextRegular,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 30,
+                              ),
+                            ],
+                          );
+                        },
                       ),
                       const SizedBox(
                         height: kMargin30,
                       ),
+
+                      ///on tap verify button
                       Consumer<OtpBloc>(
                         builder: (context, bloc, child) => GestureDetector(
                           onTap: () {
-                            bloc.onTapVerifyOtp(widget.requestId ?? "").then((value) {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (builder) =>
-                                         PasswordPage(requestId: widget.requestId,phone: widget.phone,)));
+                            bloc
+                                .onTapVerifyOtp(widget.requestId ?? "")
+                                .then((value) {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (builder) => PasswordPage(
+                                        requestId: widget.requestId,
+                                        phone: widget.phone,
+                                      )));
                             }).catchError((error) {
                               showCommonDialog(
                                   context: context,
@@ -190,29 +200,44 @@ class _OtpPageState extends State<OtpPage> {
                       const SizedBox(
                         height: kMarginMedium3,
                       ),
+
+                      ///send again button
                       Consumer<OtpBloc>(
                         builder: (context, bloc, child) => GestureDetector(
-                          onTap: () {
-                            bloc
-                                .requestOtp(widget.phone ?? "",widget.referralCode ?? "")
-                                .then((value) {})
-                                .catchError((error) {
-                              showCommonDialog(
-                                  context: context,
-                                  dialogWidget: ErrorDialogView(
-                                      errorMessage: error.toString()));
-                            });
-                          },
+                          onTap: bloc.isOtpExpired == false
+                              ? null
+                              : () {
+                                  bloc
+                                      .requestOtp(widget.phone ?? "",
+                                          widget.referralCode ?? "")
+                                      .then((value) {
+                                    bloc.startCountdown();
+                                  }).catchError((error) {
+                                    showCommonDialog(
+                                        context: context,
+                                        dialogWidget: ErrorDialogView(
+                                            errorMessage: error.toString()));
+                                  });
+                                },
                           child: Container(
                             height: 40,
                             width: double.infinity,
                             decoration: BoxDecoration(
-                                border: Border.all(color: kPrimaryColor),
+                                color: bloc.isOtpExpired == false
+                                    ? Colors.grey
+                                    : Colors.transparent,
+                                border: Border.all(
+                                    color: bloc.isOtpExpired == false
+                                        ? Colors.transparent
+                                        : kPrimaryColor),
                                 borderRadius: BorderRadius.circular(4)),
-                            child: const Center(
+                            child: Center(
                               child: Text(
                                 'Send Again',
-                                style: TextStyle(color: kPrimaryColor),
+                                style: TextStyle(
+                                    color: bloc.isOtpExpired == false
+                                        ? Colors.white
+                                        : kPrimaryColor),
                               ),
                             ),
                           ),

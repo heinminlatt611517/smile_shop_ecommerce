@@ -10,6 +10,7 @@ import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/utils/images.dart';
 import 'package:smile_shop/widgets/common_button_view.dart';
+import 'package:smile_shop/widgets/custom_app_bar_view.dart';
 import 'package:smile_shop/widgets/dynamic_drop_down_widget.dart';
 import 'package:smile_shop/widgets/textfiled_with_label_input_view.dart';
 
@@ -27,12 +28,7 @@ class AddNewAddressPage extends StatelessWidget {
       create: (context) => AddNewAddressBloc(),
       child: Scaffold(
         backgroundColor: kBackgroundColor,
-        appBar: AppBar(
-          backgroundColor: kBackgroundColor,
-          surfaceTintColor: kBackgroundColor,
-          centerTitle: true,
-          title: const Text('Add New Address'),
-        ),
+        appBar:const CustomAppBarView(title: 'Add New Address'),
         body: Selector<AddNewAddressBloc,bool>(
             selector: (context, bloc) => bloc.isLoading,
             builder: (context, isLoading, child) =>

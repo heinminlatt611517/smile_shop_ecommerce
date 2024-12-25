@@ -9,6 +9,7 @@ import 'package:smile_shop/pages/order_successful_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/widgets/common_button_view.dart';
+import 'package:smile_shop/widgets/custom_app_bar_view.dart';
 
 import '../widgets/common_dialog.dart';
 import '../widgets/error_dialog_view.dart';
@@ -31,12 +32,7 @@ class PaymentMethodPage extends StatelessWidget {
       create: (context) => PaymentBloc(productList ?? []),
       child: Scaffold(
         backgroundColor: kBackgroundColor,
-        appBar: AppBar(
-          backgroundColor: kBackgroundColor,
-          surfaceTintColor: kBackgroundColor,
-          centerTitle: true,
-          title: const Text('Payment Method'),
-        ),
+        appBar:const CustomAppBarView(title: 'Payment Method'),
         body: Selector<PaymentBloc, bool>(
           selector: (context, bloc) => bloc.isLoading,
           builder: (BuildContext context, isLoading, Widget? child) => Stack(

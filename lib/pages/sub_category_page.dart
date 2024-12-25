@@ -7,6 +7,7 @@ import 'package:smile_shop/data/vos/sub_category_vo.dart';
 import 'package:smile_shop/pages/product_category_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
+import 'package:smile_shop/widgets/custom_app_bar_view.dart';
 import 'package:smile_shop/widgets/loading_view.dart';
 import 'package:smile_shop/widgets/subcategory_vertical_icon_with_label_view.dart';
 import '../data/dummy_data/trending_products_dummy_data.dart';
@@ -26,31 +27,7 @@ class SubCategoryPage extends StatelessWidget {
       create: (context) => SubCategoryBloc(categoryVO?.id ?? 0),
       child: Scaffold(
           backgroundColor: kBackgroundColor,
-          appBar: AppBar(
-            centerTitle: true,
-            automaticallyImplyLeading: false,
-            leadingWidth: 40,
-            leading: InkWell(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: Padding(
-                padding: const EdgeInsets.only(left: kMarginMedium2),
-                child: Image.asset(
-                  kBackIcon,
-                  fit: BoxFit.contain,
-                  height: 20,
-                  width: 20,
-                ),
-              ),
-            ),
-            backgroundColor: Colors.white,
-            title: Text(
-              categoryVO?.name ?? "",
-              style: const TextStyle(
-                  fontSize: kTextRegular2x, fontWeight: FontWeight.bold),
-            ),
-          ),
+          appBar: CustomAppBarView(title: categoryVO?.name ?? "",),
           body: Selector<SubCategoryBloc, List<SubcategoryVO>>(
               selector: (context, bloc) => bloc.subCategories,
               builder: (context, subCategories, child) {
@@ -105,7 +82,7 @@ class SubCategoryView extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const ProductCategoryPage(),
+                builder: (context) => ProductCategoryPage(categoryName: subCategories[index].name,),
               ),
             );
           },
@@ -118,8 +95,7 @@ class SubCategoryView extends StatelessWidget {
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 4,
           mainAxisSpacing: 10.0,
-          crossAxisSpacing: 10.0,
-          childAspectRatio: 2 / 1.8),
+          crossAxisSpacing: 10.0,),
     );
   }
 }

@@ -26,7 +26,7 @@ class CategoryVerticalIconWithLabelView extends StatelessWidget {
                   decoration: BoxDecoration(color: kSecondaryColor,borderRadius: BorderRadius.circular(kMarginMedium)),
                   child:  Padding(
                     padding:const EdgeInsets.all(8.0),
-                    child: CachedNetworkImageView(imageHeight: 20, imageWidth: 02, imageUrl: categoryVO?.image ?? errorImageUrl)
+                    child: CachedNetworkImageView(imageHeight: 20, imageWidth: 20, imageUrl: categoryVO?.image ?? errorImageUrl)
                   ))),
           const SizedBox(height: 4,),
           Text(
