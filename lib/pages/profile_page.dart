@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smile_shop/pages/edit_profile_page.dart';
 import 'package:smile_shop/pages/login_page.dart';
 import 'package:smile_shop/pages/my_order_page.dart';
+import 'package:smile_shop/pages/referral_code_page.dart';
 import 'package:smile_shop/pages/smile_point_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
@@ -185,7 +186,12 @@ class _ProfilePageState extends State<ProfilePage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildProfileItem(context, title: 'Referal Code'),
+                InkWell(
+                  onTap: (){
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (_) => const ReferralCodePage()));
+                  },
+                    child: _buildProfileItem(context, title: 'Referal Code')),
                 _buildProfileItem(context, title: 'About Us'),
                 _buildProfileItem(context, title: 'Contact Us'),
                 SizedBox(

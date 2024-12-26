@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:smile_shop/blocs/payment_bloc.dart';
+import 'package:smile_shop/data/vos/order_variant_vo.dart';
 import 'package:smile_shop/data/vos/payment_vo.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
 import 'package:smile_shop/list_items/payment_method_list_item_view.dart';
@@ -92,17 +93,14 @@ class PaymentMethodPage extends StatelessWidget {
                           labelColor: Colors.white,
                           bgColor: kPrimaryColor,
                           onTapButton: () {
-                            var variantList = [
-                              {
-                                "variant_product_id": 1,
-                                "product_id": 1,
-                                "variant_attribute_value_id": 1,
-                                "qty": 2
-                              }
-                            ];
+                            List<OrderVariantVO> orderVariants = [];
+                            for (var product in productList ?? []) {
+                              var subOrderVariantVo = OrderVariantVO(qty: product.qtyCount,colorName: product.colorName);
+                              orderVariants.add(subOrderVariantVo);
+                            }
                             bloc
                                 .onTapCheckout(
-                                    18, productSubTotalPrice ?? 0, variantList)
+                                     productSubTotalPrice ?? 0, orderVariants)
                                 .then((value) {
                               if (isFromCartPage == true) {
                                 bloc.clearAddToCartProductByProductIdFromDatabase();

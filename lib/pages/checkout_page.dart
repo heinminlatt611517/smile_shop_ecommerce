@@ -29,7 +29,7 @@ class CheckoutPage extends StatelessWidget {
       create: (context) => CheckOutBloc(productList ?? []),
       child: Scaffold(
         backgroundColor: kBackgroundColor,
-        appBar:  CustomAppBarView(title: 'Check Out'),
+        appBar:const  CustomAppBarView(title: 'Check Out'),
         body: Selector<CheckOutBloc, List<AddressVO>>(
           selector: (context, bloc) => bloc.addressList,
           builder: (context, addressList, child) => SingleChildScrollView(

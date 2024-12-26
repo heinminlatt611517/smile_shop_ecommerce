@@ -315,13 +315,12 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   }
 
   @override
-  Future<void> postOrder(String token, String acceptLanguage, int productId,
+  Future<void> postOrder(String token, String acceptLanguage,
       int subTotal, String paymentType, List itemList, String appType) {
     return mApi
         .postOrder(
             "Bearer $token",
             acceptLanguage,
-            productId,
             subTotal,
             paymentType,
             '[{"variant_product_id" : 1,"product_id":1, "variant_attribute_value_id" : 1 , "qty" : 2}]',

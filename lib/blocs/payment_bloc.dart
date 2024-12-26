@@ -36,10 +36,10 @@ class PaymentBloc extends ChangeNotifier {
 
   ///check out
   Future<void> onTapCheckout(
-      int productId, int subTotal, List variantVOList) {
+       int subTotal, List variantVOList) {
     _showLoading();
     return _smileShopModel
-        .postOrder(authToken, kAcceptLanguageEn, productId, subTotal,
+        .postOrder(authToken, kAcceptLanguageEn, subTotal,
             selectedPaymentType, variantVOList, 'app')
         .whenComplete(() {
       _hideLoading();

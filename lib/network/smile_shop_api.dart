@@ -178,7 +178,6 @@ abstract class SmileShopApi {
   Future<void> postOrder(
     @Header(kHeaderAuthorization) String token,
     @Header(kHeaderAcceptLanguage) String acceptLanguage,
-    @Field(kFieldProductId) int productId,
     @Field(kFieldSubTotal) int subTotal,
     @Field(kFieldPaymentType) String paymentType,
     @Field(kFieldItems) String itemList,

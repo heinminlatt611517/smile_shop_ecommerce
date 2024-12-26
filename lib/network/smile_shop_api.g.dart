@@ -921,7 +921,6 @@ class _SmileShopApi implements SmileShopApi {
   Future<void> postOrder(
     String token,
     String acceptLanguage,
-    int productId,
     int subTotal,
     String paymentType,
     String itemList,
@@ -935,7 +934,6 @@ class _SmileShopApi implements SmileShopApi {
     };
     _headers.removeWhere((k, v) => v == null);
     final _data = {
-      'product_id': productId,
       'subtotal': subTotal,
       'payment_type': paymentType,
       'items': itemList,

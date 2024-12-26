@@ -176,8 +176,8 @@ class SmileShopModelImpl extends SmileShopModel {
   }
 
   @override
-  Future<void> postOrder(String token, String acceptLanguage, int productId, int subTotal, String paymentType, List itemList,String appType) {
-    return mDataAgent.postOrder(token, acceptLanguage, productId, subTotal, paymentType, itemList,appType);
+  Future<void> postOrder(String token, String acceptLanguage, int subTotal, String paymentType, List itemList,String appType) {
+    return mDataAgent.postOrder(token, acceptLanguage, subTotal, paymentType, itemList,appType);
   }
 
   @override
