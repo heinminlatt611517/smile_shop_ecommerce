@@ -274,4 +274,20 @@ class SmileShopModelImpl extends SmileShopModel {
     _productDao.deleteSearchProduct(productId);
   }
 
+  @override
+  Future<List<ProductVO>> searchProductsByPrice(String token, String acceptLanguage, String endUserId, int pageNo, int price, String operator) {
+   return mDataAgent.searchProductsByPrice(token, acceptLanguage, endUserId, pageNo, price, operator);
+  }
+
+  @override
+  Future<List<ProductVO>> searchProductsBySubCategoryId(String token, String acceptLanguage, String endUserId, int pageNo, int subCategoryId) {
+    return mDataAgent.searchProductsBySubCategoryId(token, acceptLanguage, endUserId, pageNo, subCategoryId);
+  }
+
+  @override
+  Future<List<ProductVO>> searchProductsCategoryId(String token, String acceptLanguage, String endUserId, int pageNo, int categoryId
+      ) {
+    return mDataAgent.searchProductsCategoryId(token, acceptLanguage, endUserId, pageNo, categoryId);
+  }
+
 }

@@ -55,6 +55,9 @@ abstract class SmileShopModel {
   Future<List<ProductVO>> searchProductsByRating(String token,
       String acceptLanguage, String endUserId, int pageNo, double rating);
 
+  Future<List<ProductVO>> searchProductsByPrice(String token,
+      String acceptLanguage, String endUserId, int pageNo, int price,String operator);
+
   Future addNewAddress(
       String accessToken, String acceptLanguage, AddressRequest addressRequest);
 
@@ -104,6 +107,11 @@ abstract class SmileShopModel {
       String appType);
 
   Future<List<PaymentVO>> payments(String token, String acceptLanguage);
+  Future<List<ProductVO>> searchProductsCategoryId(String token,
+      String acceptLanguage, String endUserId, int pageNo, int categoryId);
+
+  Future<List<ProductVO>> searchProductsBySubCategoryId(String token,
+      String acceptLanguage, String endUserId, int pageNo, int subCategoryId);
 
   ///for cart list
   List<ProductVO> firstTimeGetProductFromDatabase();

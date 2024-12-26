@@ -3,6 +3,7 @@ import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:smile_shop/blocs/sub_category_bloc.dart';
 import 'package:smile_shop/data/vos/category_vo.dart';
+import 'package:smile_shop/data/vos/product_vo.dart';
 import 'package:smile_shop/data/vos/sub_category_vo.dart';
 import 'package:smile_shop/pages/product_category_page.dart';
 import 'package:smile_shop/utils/colors.dart';
@@ -10,11 +11,7 @@ import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/widgets/custom_app_bar_view.dart';
 import 'package:smile_shop/widgets/loading_view.dart';
 import 'package:smile_shop/widgets/subcategory_vertical_icon_with_label_view.dart';
-import '../data/dummy_data/trending_products_dummy_data.dart';
-import '../data/vos/product_response_data_vo.dart';
 import '../list_items/trending_product_list_item_view.dart';
-import '../network/api_constants.dart';
-import '../utils/images.dart';
 
 class SubCategoryPage extends StatelessWidget {
   final CategoryVO? categoryVO;
@@ -82,7 +79,7 @@ class SubCategoryView extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => ProductCategoryPage(categoryName: subCategories[index].name,),
+                builder: (context) => ProductCategoryPage(categoryName: subCategories[index].name,subCategoryId: subCategories[index].id,),
               ),
             );
           },
@@ -106,10 +103,10 @@ class ProductsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Selector<SubCategoryBloc, ProductResponseDataVO?>(
-        selector: (context, bloc) => bloc.productResponseDataVO,
-        builder: (context, productResponse, child) {
-          return productResponse == null
+    return Selector<SubCategoryBloc, List<ProductVO>>(
+        selector: (context, bloc) => bloc.products,
+        builder: (context, products, child) {
+          return products.isEmpty
               ? const Center(
             child: CircularProgressIndicator(),
           )
@@ -119,10 +116,10 @@ class ProductsView extends StatelessWidget {
             physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
               return TrendingProductListItemView(
-                productVO: productResponse.products?[index],
+                productVO: products[index],
               );
             },
-            itemCount: productResponse.products?.length,
+            itemCount: products.length,
             gridDelegate:
             const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,

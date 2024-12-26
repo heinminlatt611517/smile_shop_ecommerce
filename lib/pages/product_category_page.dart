@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smile_shop/blocs/product_category_bloc.dart';
+import 'package:smile_shop/data/vos/product_vo.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/widgets/custom_app_bar_view.dart';
@@ -11,12 +12,13 @@ import '../utils/strings.dart';
 
 class ProductCategoryPage extends StatelessWidget {
   final String? categoryName;
-  const ProductCategoryPage({super.key,required this.categoryName});
+  final int? subCategoryId;
+  const ProductCategoryPage({super.key,required this.categoryName,required this.subCategoryId});
 
   @override
   Widget build(BuildContext context) {
     return  ChangeNotifierProvider(
-      create: (context)=>ProductCategoryBloc(),
+      create: (context)=>ProductCategoryBloc(subCategoryId ?? 0),
       child:   Scaffold(
         backgroundColor: kBackgroundColor,
         appBar: CustomAppBarView(title: categoryName),
@@ -106,10 +108,10 @@ class ProductsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-   return Selector<ProductCategoryBloc, ProductResponseDataVO?>(
-        selector: (context, bloc) => bloc.productResponseDataVO,
-        builder: (context, productResponse, child) {
-          return productResponse == null
+   return Selector<ProductCategoryBloc, List<ProductVO>>(
+        selector: (context, bloc) => bloc.products,
+        builder: (context, products, child) {
+          return products.isEmpty
               ? const Center(
             child: CircularProgressIndicator(),
           )
@@ -119,10 +121,10 @@ class ProductsView extends StatelessWidget {
             physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
               return TrendingProductListItemView(
-                productVO: productResponse.products?[index],
+                productVO: products[index],
               );
             },
-            itemCount: productResponse.products?.length,
+            itemCount: products.length,
             gridDelegate:
             const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,

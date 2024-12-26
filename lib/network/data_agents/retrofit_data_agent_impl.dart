@@ -173,6 +173,25 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   }
 
   @override
+  Future<List<ProductVO>> searchProductsByPrice(
+      String token,
+      String acceptLanguage,
+      String endUserId,
+      int pageNo,
+      int price,
+      String operator) {
+    return mApi
+        .searchProductsByPrice(
+        token, acceptLanguage, int.parse(endUserId), pageNo, price,operator)
+        .asStream()
+        .map((response) => response.data?.products ?? [])
+        .first
+        .catchError((error) {
+      throw _createException(error);
+    });
+  }
+
+  @override
   Future setPassword(SetPasswordRequest setPasswordRequest) {
     return mApi
         .setPassword(setPasswordRequest)
@@ -346,6 +365,32 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
         .orders(token, acceptLanguage)
         .asStream()
         .map((response) => response.data ?? [])
+        .first
+        .catchError((error) {
+      throw _createException(error);
+    });
+  }
+
+  @override
+  Future<List<ProductVO>> searchProductsBySubCategoryId(String token, String acceptLanguage, String endUserId, int pageNo, int subCategoryId) {
+    return mApi
+        .searchProductsBySubCategoryId(
+        token, acceptLanguage, int.parse(endUserId), pageNo,subCategoryId)
+        .asStream()
+        .map((response) => response.data?.products ?? [])
+        .first
+        .catchError((error) {
+      throw _createException(error);
+    });
+  }
+
+  @override
+  Future<List<ProductVO>> searchProductsCategoryId(String token, String acceptLanguage, String endUserId, int pageNo, int categoryId) {
+    return mApi
+        .searchProductsByCategoryId(
+        token, acceptLanguage, int.parse(endUserId), pageNo,categoryId)
+        .asStream()
+        .map((response) => response.data?.products ?? [])
         .first
         .catchError((error) {
       throw _createException(error);

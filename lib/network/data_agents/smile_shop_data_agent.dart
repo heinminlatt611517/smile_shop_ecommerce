@@ -48,8 +48,17 @@ abstract class SmileShopDataAgent {
   Future<List<ProductVO>> searchProductsByName(String token,
       String acceptLanguage, String endUserId, int pageNo, String name);
 
+  Future<List<ProductVO>> searchProductsCategoryId(String token,
+      String acceptLanguage, String endUserId, int pageNo, int categoryId);
+
+  Future<List<ProductVO>> searchProductsBySubCategoryId(String token,
+      String acceptLanguage, String endUserId, int pageNo, int subCategoryId);
+
   Future<List<ProductVO>> searchProductsByRating(String token,
       String acceptLanguage, String endUserId, int pageNo, double rating);
+
+  Future<List<ProductVO>> searchProductsByPrice(String token,
+      String acceptLanguage, String endUserId, int pageNo, int price,String operator);
 
   Future addNewAddress(String accessToken, String acceptLanguage,
       AddressRequest addressRequest);

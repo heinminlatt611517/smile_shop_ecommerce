@@ -49,11 +49,13 @@ abstract class SmileShopApi {
 
   @GET(kEndPointBanners)
   Future<BannerResponse> banners(
-      @Header(kHeaderAcceptLanguage) String acceptLanguage,
-      );
+    @Header(kHeaderAcceptLanguage) String acceptLanguage,
+  );
 
   @GET(kEndPointCategories)
-  Future<CategoryResponse> categories(@Query(kParamType) String name,);
+  Future<CategoryResponse> categories(
+    @Query(kParamType) String name,
+  );
 
   @POST(kEndPointProducts)
   Future<ProductResponse> products(
@@ -101,6 +103,34 @@ abstract class SmileShopApi {
     @Query(kParamRating) double rating,
   );
 
+  @POST(kEndPointSearchProducts)
+  Future<ProductResponse> searchProductsByCategoryId(
+      @Header(kHeaderAuthorization) String token,
+      @Header(kHeaderAcceptLanguage) String acceptLanguage,
+      @Field(kFieldEndUserId) int endUserId,
+      @Field(kFieldPage) int page,
+      @Query(kParamCategoryId) int categoryID,
+      );
+
+  @POST(kEndPointSearchProducts)
+  Future<ProductResponse> searchProductsBySubCategoryId(
+      @Header(kHeaderAuthorization) String token,
+      @Header(kHeaderAcceptLanguage) String acceptLanguage,
+      @Field(kFieldEndUserId) int endUserId,
+      @Field(kFieldPage) int page,
+      @Query(kParamSubCategoryId) int subcategoryID,
+      );
+
+  @POST(kEndPointSearchProducts)
+  Future<ProductResponse> searchProductsByPrice(
+    @Header(kHeaderAuthorization) String token,
+    @Header(kHeaderAcceptLanguage) String acceptLanguage,
+    @Field(kFieldEndUserId) int endUserId,
+    @Field(kFieldPage) int page,
+    @Query(kParamPrice) int price,
+    @Query(kParamOperator) String operator,
+  );
+
   @POST(kEndPointAddNewAddress)
   Future<void> addNewAddress(
       @Header(kHeaderAuthorization) String token,
@@ -123,56 +153,54 @@ abstract class SmileShopApi {
 
   @GET("$kEndPointDeleteAddress/{address_id}")
   Future<TownshipResponse> deleteAddress(
-      @Header(kHeaderAuthorization) String token,
-      @Path("address_id") int addressId,
-      );
+    @Header(kHeaderAuthorization) String token,
+    @Path("address_id") int addressId,
+  );
 
   @POST("$kEndPointEditAddress/{address_id}")
   Future<TownshipResponse> editAddress(
       @Header(kHeaderAuthorization) String token,
       @Path("address_id") int addressId,
-      @Body() AddressRequest addressRequest
-      );
+      @Body() AddressRequest addressRequest);
 
   @GET(kEndPointAddressCategory)
   Future<AddressCategoriesResponse> addressCategories(
-      @Header(kHeaderAuthorization) String token,
-      );
+    @Header(kHeaderAuthorization) String token,
+  );
 
   @POST(kEndPointSubCategoryByCategory)
   Future<SubCategoryResponse> subCategoryByCategory(
       @Header(kHeaderAuthorization) String token,
       @Header(kHeaderAcceptLanguage) String acceptLanguage,
-      @Body() SubCategoryRequest subCategoryRequest
-      );
+      @Body() SubCategoryRequest subCategoryRequest);
 
   @POST(kEndPointOrder)
   Future<void> postOrder(
-      @Header(kHeaderAuthorization) String token,
-      @Header(kHeaderAcceptLanguage) String acceptLanguage,
-      @Field(kFieldProductId) int productId,
-      @Field(kFieldSubTotal) int subTotal,
-      @Field(kFieldPaymentType) String paymentType,
-      @Field(kFieldItems) String itemList,
-      @Field(kFieldAppType) String appType,
-      );
+    @Header(kHeaderAuthorization) String token,
+    @Header(kHeaderAcceptLanguage) String acceptLanguage,
+    @Field(kFieldProductId) int productId,
+    @Field(kFieldSubTotal) int subTotal,
+    @Field(kFieldPaymentType) String paymentType,
+    @Field(kFieldItems) String itemList,
+    @Field(kFieldAppType) String appType,
+  );
 
   @GET(kEndPointPayments)
   Future<PaymentResponse> payments(
-      @Header(kHeaderAuthorization) String token,
-      @Header(kHeaderAcceptLanguage) String acceptLanguage,
-      );
+    @Header(kHeaderAuthorization) String token,
+    @Header(kHeaderAcceptLanguage) String acceptLanguage,
+  );
 
   @GET(kEndPointOrderList)
   Future<OrderResponse> orders(
-      @Header(kHeaderAuthorization) String token,
-      @Header(kHeaderAcceptLanguage) String acceptLanguage,
-      );
+    @Header(kHeaderAuthorization) String token,
+    @Header(kHeaderAcceptLanguage) String acceptLanguage,
+  );
 
   @POST("$kEndPointOrderDetails/{order_id}")
   Future<OrderDetailsResponse> orderDetails(
-      @Header(kHeaderAuthorization) String token,
-      @Header(kHeaderAcceptLanguage) String acceptLanguage,
-      @Path("order_id") int addressId,
-      );
+    @Header(kHeaderAuthorization) String token,
+    @Header(kHeaderAcceptLanguage) String acceptLanguage,
+    @Path("order_id") int addressId,
+  );
 }

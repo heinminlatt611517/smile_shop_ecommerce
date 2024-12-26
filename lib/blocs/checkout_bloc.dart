@@ -15,7 +15,7 @@ class CheckOutBloc extends ChangeNotifier {
   StreamSubscription? _productListSubscription;
   int? totalProductPrice;
   int? totalSummaryProductPrice;
-  int deliveryFeePrice = 3500;
+  int deliveryFeePrice = 0;
   List<int> subTotalPrice = [];
   List<AddressVO> addressList = [];
   bool isDisposed = false;

@@ -117,10 +117,18 @@ class SearchProductBloc extends ChangeNotifier {
     });
   }
 
-  void onTapPrice(){
-    isShowPriceView = !isShowPriceView;
-    isShowRatingView = false;
-    _notifySafely();
+  void onTapPrice(int price){
+    _smileShopModel
+        .searchProductsByPrice( authToken, kAcceptLanguageEn, endUserId,1,price,"")
+        .whenComplete(() => _hideLoading())
+        .then((searchResults) {
+      products = searchResults;
+      if(searchResults.isEmpty){
+        isScreenLaunch = false;
+        products = [];
+      }
+      _notifySafely();
+    });
   }
 
   bool isChangeBackground(){

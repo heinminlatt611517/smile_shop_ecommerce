@@ -367,7 +367,9 @@ class RatingsView extends StatelessWidget {
               Consumer<SearchProductBloc>(
                 builder: (context, bloc, child) => InkWell(
                   onTap: () {
-                    bloc.onTapPrice();
+                    showPriceBottomSheet(context, onTapItem: (value){
+                      //bloc.onTapPrice();
+                    });
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -391,46 +393,6 @@ class RatingsView extends StatelessWidget {
           const SizedBox(
             height: kMarginMedium2,
           ),
-
-          ///price grid
-          Selector<SearchProductBloc, bool>(
-            selector: (context, bloc) => bloc.isShowPriceView,
-            builder: (context, isShowPriceView, child) => Visibility(
-              visible: isShowPriceView,
-              child: GridView.builder(
-                padding: EdgeInsets.zero,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return InkWell(
-                    onTap: () {},
-                    child: Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(kMarginMedium),
-                          color: Colors.black.withOpacity(0.1)),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Flexible(
-                              child: Text(
-                            priceDummyData[index],
-                            style: const TextStyle(fontSize: kTextSmall),
-                          ))
-                        ],
-                      ),
-                    ),
-                  );
-                },
-                itemCount: priceDummyData.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    mainAxisSpacing: 10.0,
-                    crossAxisSpacing: 10.0,
-                    childAspectRatio: 3 / 0.8),
-              ),
-            ),
-          )
         ],
       ),
     );
@@ -500,6 +462,73 @@ void showRatingBottomSheet(BuildContext context,
                   mainAxisSpacing: 10.0,
                   crossAxisSpacing: 10.0,
                   childAspectRatio: 3 / 1.4),
+            ),
+          ],
+        ),
+      );
+    },
+  );
+}
+
+///price bottom sheet
+void showPriceBottomSheet(BuildContext context,
+    {required Function(String value) onTapItem}) {
+  showModalBottomSheet(
+    context: context,
+    builder: (context) {
+      ///price grid
+      return Container(
+        height: 160,
+        decoration: const BoxDecoration(
+            color: kBackgroundColor,
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(kMarginMedium2),
+                topRight: Radius.circular(kMarginMedium2))),
+        padding: const EdgeInsets.all(kMarginMedium2),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+              'Price',
+            ),
+            const SizedBox(
+              height: kMarginMedium2,
+            ),
+            GridView.builder(
+              padding: EdgeInsets.zero,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (context, index) {
+                return InkWell(
+                  onTap: () {
+                    onTapItem(priceDummyData[index]);
+                    Navigator.pop(context);
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(kMarginMedium),
+                        color: Colors.black.withOpacity(0.1)),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Flexible(
+                            child: Text(
+                              priceDummyData[index],
+                              style: const TextStyle(fontSize: kTextSmall),
+                            ))
+                      ],
+                    ),
+                  ),
+                );
+              },
+              itemCount: priceDummyData.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  mainAxisSpacing: 10.0,
+                  crossAxisSpacing: 10.0,
+                  childAspectRatio: 3 / 0.8),
             ),
           ],
         ),
