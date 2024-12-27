@@ -10,3 +10,4 @@ const kBackIcon = 'assets/images/back_icon.png';
 const kBackSvgIcon = 'assets/images/back_img.svg';
 const kMapImg = 'assets/images/map.png';
 const kCoinIcon = 'assets/images/coin.png';
+const kCampaignBackgroundImage = 'assets/images/campaign_background.png';

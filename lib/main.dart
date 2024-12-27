@@ -13,6 +13,7 @@ import 'package:smile_shop/data/vos/search_product_vo.dart';
 import 'package:smile_shop/data/vos/size_vo.dart';
 import 'package:smile_shop/data/vos/user_vo.dart';
 import 'package:smile_shop/data/vos/variant_vo.dart';
+import 'package:smile_shop/pages/campaign_page.dart';
 import 'package:smile_shop/pages/splash_page.dart';
 import 'package:smile_shop/persistence/hive_constants.dart';
 import 'package:smile_shop/utils/fonts.dart';
@@ -61,7 +62,7 @@ class SmileShopApp extends StatelessWidget {
               primary: const Color.fromRGBO(255, 255, 255, 1.0)),
           useMaterial3: true,
           fontFamily: kInter),
-      home: const SplashPage(),
+      home: const CampaignPage(),
     );
   }
 }
