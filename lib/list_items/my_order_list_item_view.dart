@@ -5,8 +5,10 @@ import '../utils/dimens.dart';
 import '../widgets/cached_network_image_view.dart';
 
 class MyOrderListItemView extends StatelessWidget {
-  const MyOrderListItemView({super.key, required this.isRefundView});
+  const MyOrderListItemView({super.key, required this.isRefundView,this.onTapRefund,this.onTapReview});
   final bool isRefundView;
+  final Function()? onTapRefund;
+  final Function()? onTapReview;
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +96,43 @@ class MyOrderListItemView extends StatelessWidget {
                       height: 15,
                     ),
                     isRefundView == true
-                        ? const SizedBox.shrink()
+                        ? Row(
+                      children: [
+                        const Spacer(),
+                        Container(
+                          height: 26,
+                          width: 57,
+                          decoration: BoxDecoration(
+                              border:
+                              Border.all(color: kFillingFastColor),
+                              borderRadius: BorderRadius.circular(5)),
+                          child: const Center(
+                            child: Text(
+                              'Refund',
+                              style: TextStyle(fontSize: kTextSmall),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 15,
+                        ),
+                        Container(
+                          height: 26,
+                          width: 68,
+                          decoration: BoxDecoration(
+                              color: kFillingFastColor,
+                              borderRadius: BorderRadius.circular(5)),
+                          child: const Center(
+                            child: Text(
+                              'Review',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: kTextSmall),
+                            ),
+                          ),
+                        )
+                      ],
+                    )
                         : Row(
                             children: [
                               const Spacer(),

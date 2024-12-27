@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smile_shop/pages/edit_profile_page.dart';
 import 'package:smile_shop/pages/login_page.dart';
 import 'package:smile_shop/pages/my_order_page.dart';
+import 'package:smile_shop/pages/packages_page.dart';
 import 'package:smile_shop/pages/referral_code_page.dart';
 import 'package:smile_shop/pages/smile_point_page.dart';
 import 'package:smile_shop/utils/colors.dart';
@@ -165,7 +166,12 @@ class _ProfilePageState extends State<ProfilePage> {
                     },
                     child:
                         _buildProfileItem(context, title: 'Promotion Point')),
-                _buildProfileItem(context, title: 'Package'),
+                GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => const PackagePage()));
+                    },
+                    child: _buildProfileItem(context, title: 'Package')),
               ],
             ),
             const SizedBox(

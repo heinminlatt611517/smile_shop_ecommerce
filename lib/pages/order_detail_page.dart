@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smile_shop/list_items/my_order_list_item_view.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
+import 'package:smile_shop/widgets/delivery_stepper_view.dart';
 
 class OrderDetailPage extends StatelessWidget {
   const OrderDetailPage({super.key});
@@ -16,21 +17,21 @@ class OrderDetailPage extends StatelessWidget {
         toolbarHeight: 60,
         title: const Text('Order Detail'),
       ),
-      body: const Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      body:  Padding(
+        padding:const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 'Your order is shipping.',
                 style: TextStyle(fontSize: kTextRegular),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
 
-              Padding(
+             const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
                   children: [
@@ -48,11 +49,11 @@ class OrderDetailPage extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
 
-              Padding(
+              const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
                   children: [
@@ -95,20 +96,30 @@ class OrderDetailPage extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
               MyOrderListItemView(
                 isRefundView: true,
+                onTapRefund: (){},
+                onTapReview: (){},
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
 
               ///todo
               ///stepper
+              const Text(
+                'Your Order Tracking',
+                style: TextStyle(fontSize: kTextRegular2x),
+              ),
+              const SizedBox(
+                height: 14,
+              ),
+              const DeliveryStepperView(),
 
-              SizedBox(
+              const SizedBox(
                 height: 50,
               ),
               //button
