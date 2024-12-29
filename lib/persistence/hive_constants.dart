@@ -34,3 +34,4 @@ const kAdapterInventoryVO = "InventoryVOAdapter";
 const kBoxLoginResponse = "kBoxLoginResponse";
 const kBoxSearchProduct = "kBoxSearchProduct";
 const kBoxProduct = "kBoxProduct";
+const kBoxFavouriteProduct = "kBoxFavouriteProduct";

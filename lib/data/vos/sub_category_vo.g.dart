@@ -18,7 +18,7 @@ class SubcategoryVOAdapter extends TypeAdapter<SubcategoryVO> {
     };
     return SubcategoryVO(
       id: fields[0] as int?,
-      categoryId: fields[1] as String?,
+      categoryId: fields[1] as int?,
       name: fields[2] as String?,
       image: fields[3] as String?,
       category: fields[4] as CategoryVO?,
@@ -59,7 +59,7 @@ class SubcategoryVOAdapter extends TypeAdapter<SubcategoryVO> {
 SubcategoryVO _$SubcategoryVOFromJson(Map<String, dynamic> json) =>
     SubcategoryVO(
       id: (json['id'] as num?)?.toInt(),
-      categoryId: json['category_id'] as String?,
+      categoryId: (json['category_id'] as num?)?.toInt(),
       name: json['name'] as String?,
       image: json['image'] as String?,
       category: json['category'] == null

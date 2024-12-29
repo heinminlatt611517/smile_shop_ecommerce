@@ -16,3 +16,6 @@ const kSpecialDelivery = 'Special Delivery';
 
 ///hive
 const kLoginData = "LoginData";
+
+///get storage key
+const kBoxKeyReferralCode = "Referral Code";

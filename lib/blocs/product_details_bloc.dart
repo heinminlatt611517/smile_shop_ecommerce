@@ -57,6 +57,14 @@ class ProductDetailsBloc extends ChangeNotifier {
     _notifySafely();
   }
 
+  void onTapFavourite(ProductVO? product,BuildContext context){
+    _smileShopModel.saveFavouriteProductToHive(
+        product?.copyWith(isFavourite: true,image: product.images?.first,) ??
+            ProductVO());
+
+    showSnackBar(context, '${product?.name} added to favourite successfully!',Colors.green);
+  }
+
   void showSnackBar(BuildContext context, String description,Color snackBarColor) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

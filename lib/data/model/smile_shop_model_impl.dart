@@ -23,6 +23,7 @@ import 'package:smile_shop/network/responses/address_response.dart';
 import 'package:smile_shop/network/responses/login_response.dart';
 import 'package:smile_shop/network/responses/otp_response.dart';
 import 'package:smile_shop/network/responses/profile_response.dart';
+import 'package:smile_shop/persistence/favourite_product_dao.dart';
 import 'package:smile_shop/persistence/product_dao.dart';
 import 'package:smile_shop/persistence/search_product_dao.dart';
 
@@ -48,6 +49,7 @@ class SmileShopModelImpl extends SmileShopModel {
   final LoginDataDao _loginDataDao = LoginDataDao();
   final SearchProductDao _searchProductDao = SearchProductDao();
   final ProductDao _productDao = ProductDao();
+  final FavouriteProductDao _favouriteProductDao = FavouriteProductDao();
 
   @override
   Future<LoginResponse> login(LoginRequest loginRequest) {
@@ -242,6 +244,11 @@ class SmileShopModelImpl extends SmileShopModel {
     return mDataAgent.orderList(token, acceptLanguage);
   }
 
+  @override
+  Future<List<OrderVO>> getOrderListByOrderType(String token, String acceptLanguage, String orderType) {
+    return mDataAgent.getOrderListByOrderType(token, acceptLanguage, orderType);
+  }
+
   ///get add to cart product list from database
   @override
   List<ProductVO> firstTimeGetProductFromDatabase() {
@@ -302,6 +309,31 @@ class SmileShopModelImpl extends SmileShopModel {
   @override
   Future<ProfileResponse> updateProfile(String token, String acceptLanguage, String name, File? image) {
     return mDataAgent.updateProfile(token, acceptLanguage, name, image);
+  }
+
+  @override
+  Future<ProfileResponse> updateProfileName(String token, String acceptLanguage, String name) {
+    return mDataAgent.updateProfileName(token, acceptLanguage, name);
+  }
+
+  @override
+  void deleteFavouriteProductById(int productId) {
+     _favouriteProductDao.deleteFavouriteProductByProductId(productId);
+  }
+
+  @override
+  List<ProductVO> firstTimeGetFavouriteProductFromDatabase() {
+   return _favouriteProductDao.getFavouriteProducts();
+  }
+
+  @override
+  Stream<List<ProductVO>> getFavouriteProductFromDatabase() {
+    return _favouriteProductDao.watchFavouriteProductBox().map((_) => _favouriteProductDao.getFavouriteProducts());
+  }
+
+  @override
+  void saveFavouriteProductToHive(ProductVO product) {
+    _favouriteProductDao.saveFavouriteProduct(product);
   }
 
 }

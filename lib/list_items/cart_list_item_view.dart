@@ -116,7 +116,7 @@ class CartListItemView extends StatelessWidget {
                               const SizedBox(
                                 width: kMargin30,
                               ),
-                              const PromotionPointView()
+                              PromotionPointView(point: productVO?.variantVO?.first.promotionPoint ?? 0,)
                             ],
                           ),
                           isCheckout == true

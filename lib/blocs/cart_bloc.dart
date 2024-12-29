@@ -21,11 +21,11 @@ class CartBloc extends ChangeNotifier {
     ///first time get products from database
     firstTimeGetProductsFromDatabase();
 
-    ///get books from database
+    ///get product from database
     _productListSubscription =
-        _smileShopModel.getProductFromDatabase().listen((books) {
-          debugPrint("ProductLength:::${books.length}");
-          productList = books;
+        _smileShopModel.getProductFromDatabase().listen((products) {
+          debugPrint("ProductLength:::${products.length}");
+          productList = products;
           notifyListeners();
         });
 

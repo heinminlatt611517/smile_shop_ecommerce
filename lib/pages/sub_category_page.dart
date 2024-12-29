@@ -117,6 +117,11 @@ class ProductsView extends StatelessWidget {
             itemBuilder: (context, index) {
               return TrendingProductListItemView(
                 productVO: products[index],
+                onTapFavourite: (product){
+                  var bloc = Provider.of<SubCategoryBloc>(context,
+                      listen: false);
+                  bloc.onTapFavourite(product, context);
+                },
               );
             },
             itemCount: products.length,

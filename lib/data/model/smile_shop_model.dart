@@ -123,8 +123,16 @@ abstract class SmileShopModel {
   Stream<List<ProductVO>> getProductFromDatabase();
   ProductVO? getProductByIdFromDatabase(int id);
 
+  ///for favourite product
+  List<ProductVO> firstTimeGetFavouriteProductFromDatabase();
+  void saveFavouriteProductToHive(ProductVO product);
+  void deleteFavouriteProductById(int productId);
+  Stream<List<ProductVO>> getFavouriteProductFromDatabase();
+
   Future<List<OrderVO>> orderList(String token,String acceptLanguage);
+  Future<List<OrderVO>> getOrderListByOrderType(String token,String acceptLanguage,String orderType);
   Future<OrderVO> orderDetails(String token,String acceptLanguage,int orderId);
   Future<ProfileVO> userProfile(String token,String acceptLanguage);
   Future<ProfileResponse> updateProfile(String token,String acceptLanguage,String name,File? image);
+  Future<ProfileResponse> updateProfileName(String token,String acceptLanguage,String name);
 }

@@ -352,7 +352,7 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   Future<OrderVO> orderDetails(
       String token, String acceptLanguage, int orderId) {
     return mApi
-        .orderDetails(token, acceptLanguage, orderId)
+        .orderDetails('Bearer $token', acceptLanguage, orderId)
         .asStream()
         .map((response) => response.data ?? OrderVO())
         .first
@@ -364,9 +364,24 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   @override
   Future<List<OrderVO>> orderList(String token, String acceptLanguage) {
     return mApi
-        .orders(token, acceptLanguage)
+        .orders("Bearer $token", acceptLanguage)
         .asStream()
         .map((response) => response.data ?? [])
+        .first
+        .catchError((error) {
+      throw _createException(error);
+    });
+  }
+
+  @override
+  Future<List<OrderVO>> getOrderListByOrderType(
+      String token, String acceptLanguage, String orderType) {
+    return mApi
+        .ordersByOrderType('Bearer $token', acceptLanguage, orderType)
+        .asStream()
+        .map((response) {
+      return response.data ?? [];
+    })
         .first
         .catchError((error) {
       throw _createException(error);
@@ -416,8 +431,37 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   }
 
   @override
-  Future<ProfileResponse> updateProfile(String token, String acceptLanguage, String name, File? image) {
-    return mApi.updateProfile('Bearer $token', acceptLanguage, name, image);
+  Future<ProfileResponse> updateProfile(
+      String token, String acceptLanguage, String name, File? image) {
+    return mApi
+        .updateProfile('Bearer $token', acceptLanguage, name, image!)
+        .asStream()
+        .map((response) {
+          return response;
+        })
+        .first
+        .catchError((error) {
+          throw _createException(error);
+        });
+  }
+
+  @override
+  Future<ProfileResponse> updateProfileName(
+      String token, String acceptLanguage, String name) {
+    return mApi
+        .updateProfileName(
+          'Bearer $token',
+          acceptLanguage,
+          name,
+        )
+        .asStream()
+        .map((response) {
+          return response;
+        })
+        .first
+        .catchError((error) {
+          throw _createException(error);
+        });
   }
 }
 

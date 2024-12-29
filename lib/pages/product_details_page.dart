@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
-import 'package:smile_shop/blocs/cart_bloc.dart';
 import 'package:smile_shop/blocs/product_details_bloc.dart';
 import 'package:smile_shop/blocs/product_details_bottom_sheet_bloc.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
@@ -13,7 +12,6 @@ import 'package:smile_shop/widgets/promotion_point_view.dart';
 import 'package:smile_shop/widgets/vertical_icon_with_label_view.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-import '../data/dummy_data/banner_section_dummy_data.dart';
 import '../utils/dimens.dart';
 import '../utils/images.dart';
 import '../widgets/cached_network_image_view.dart';
@@ -165,7 +163,11 @@ class _ProductDetailsPageState extends State<ProductDetailsPage>
                                   icon: Icons.shopping_cart_outlined,
                                   label: "Cart"),
                               VerticalIconWithLabelView(
-                                  onTap: () {},
+                                  onTap: () {
+                                    var bloc = Provider.of<ProductDetailsBloc>(context,
+                                        listen: false);
+                                    bloc.onTapFavourite(product, context);
+                                  },
                                   icon: Icons.favorite_outline,
                                   label: "Favourite"),
 
@@ -446,7 +448,6 @@ class CategoryAndReturnPointView extends StatelessWidget {
                     fontSize: kTextRegular, fontWeight: FontWeight.normal),
               ),
               const Spacer(),
-              const PromotionPointView()
             ],
           ),
         ),
@@ -482,15 +483,15 @@ class CategoryAndReturnPointView extends StatelessWidget {
               vertical: kMarginMedium, horizontal: kMarginMedium),
           padding: const EdgeInsets.symmetric(
               vertical: kMarginMedium, horizontal: kMarginMedium),
-          child: const Row(
+          child: Row(
             children: [
-              Text(
+              const Text(
                 'Return Points',
                 style: TextStyle(
                     fontSize: kTextRegular2x, fontWeight: FontWeight.bold),
               ),
-              Spacer(),
-              PromotionPointView(),
+              const Spacer(),
+              PromotionPointView(point: productVO?.variantVO?.first.redeemPoint  ?? 0,),
             ],
           ),
         ),
@@ -578,7 +579,7 @@ void showBuyNowBottomSheet(BuildContext context, List<VariantVO>? variantVO,
                               const SizedBox(
                                 width: kMargin30,
                               ),
-                              const PromotionPointView()
+                               PromotionPointView(point: variantVO?.first.promotionPoint ?? 0,)
                             ],
                           ),
                         ],

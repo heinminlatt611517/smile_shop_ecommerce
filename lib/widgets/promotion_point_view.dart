@@ -5,7 +5,8 @@ import '../utils/colors.dart';
 import '../utils/dimens.dart';
 
 class PromotionPointView extends StatelessWidget {
-  const PromotionPointView({super.key});
+  final int? point;
+  const PromotionPointView({super.key,this.point});
 
   @override
   Widget build(BuildContext context) {
@@ -17,9 +18,9 @@ class PromotionPointView extends StatelessWidget {
           height: 14,
           width: 14,
         ),
-        const Text(
-          '50 pt',
-          style: TextStyle(
+         Text(
+          '$point pt',
+          style:const TextStyle(
               fontSize: kTextSmall,
               fontWeight: FontWeight.bold,
               color: kSecondaryColor),

@@ -38,4 +38,22 @@ class SubCategoryBloc extends ChangeNotifier {
       notifyListeners();
     });
   }
+
+  void onTapFavourite(ProductVO? product,BuildContext context){
+    _smileShopModel.saveFavouriteProductToHive(
+        product?.copyWith(isFavourite: true) ??
+            ProductVO());
+
+    showSnackBar(context, '${product?.name} added to favourite successfully!',Colors.green);
+  }
+
+  void showSnackBar(BuildContext context, String description,Color snackBarColor) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(description),
+        backgroundColor: snackBarColor,
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
 }

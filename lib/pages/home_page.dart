@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:smile_shop/blocs/home_bloc.dart';
 import 'package:smile_shop/data/vos/banner_vo.dart';
 import 'package:smile_shop/data/vos/category_vo.dart';
-import 'package:smile_shop/data/vos/product_response_data_vo.dart';
+import 'package:smile_shop/data/vos/product_vo.dart';
 import 'package:smile_shop/list_items/trending_product_list_item_view.dart';
 import 'package:smile_shop/network/api_constants.dart';
 import 'package:smile_shop/pages/search_product_page.dart';
@@ -18,54 +18,93 @@ import '../widgets/category_vertical_icon_with_label_view.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
-
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => HomeBloc(),
-      child: Scaffold(
+      child:const Scaffold(
         backgroundColor: kBackgroundColor,
-        body: CustomScrollView(
-          slivers: [
-            ///spacer
-            const SliverToBoxAdapter(
-                child: SizedBox(
-              height: kMarginXXLarge,
-            )),
-
-            ///search view
-            const SliverToBoxAdapter(
-              child: Padding(
-                padding: EdgeInsets.all(kMarginLarge),
-                child: SearchView(),
-              ),
-            ),
-
-            ///Banner view
-            SliverToBoxAdapter(
-              child: BannerSectionView(),
-            ),
-
-            ///Campaign ,Daily check in and User Level view
-            const SliverToBoxAdapter(
-              child: CampaignDailyCheckInUserLevelView(),
-            ),
-
-            ///Categories View
-            const SliverToBoxAdapter(
-              child: CategoriesView(),
-            ),
-
-            ///trending products view
-            const SliverToBoxAdapter(
-              child: TrendingProductsView(),
-            )
-          ],
-        ),
+        body: HomeContentView()
       ),
     );
   }
 }
+
+///home content view
+class HomeContentView extends StatefulWidget {
+  const HomeContentView({super.key});
+
+  @override
+  State<HomeContentView> createState() => _HomeContentViewState();
+}
+
+class _HomeContentViewState extends State<HomeContentView> {
+
+  var scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    scrollController.addListener(() {
+      if (scrollController.position.pixels ==
+          scrollController.position.maxScrollExtent) {
+        var bloc = Provider.of<HomeBloc>(context,
+            listen: false);
+        bloc.getProducts();
+        debugPrint("OnListEndReach");
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomScrollView(
+      controller: scrollController,
+      slivers: [
+        ///spacer
+        const SliverToBoxAdapter(
+            child: SizedBox(
+              height: kMarginXXLarge,
+            )),
+
+        ///search view
+        const SliverToBoxAdapter(
+          child: Padding(
+            padding: EdgeInsets.all(kMarginLarge),
+            child: SearchView(),
+          ),
+        ),
+
+        ///Banner view
+        SliverToBoxAdapter(
+          child: BannerSectionView(),
+        ),
+
+        ///Campaign ,Daily check in and User Level view
+        const SliverToBoxAdapter(
+          child: CampaignDailyCheckInUserLevelView(),
+        ),
+
+        ///Categories View
+        const SliverToBoxAdapter(
+          child: CategoriesView(),
+        ),
+
+        ///trending products view
+        const SliverToBoxAdapter(
+          child: TrendingProductsView(),
+        )
+      ],
+    );
+  }
+}
+
 
 ///Search View
 class SearchView extends StatelessWidget {
@@ -416,7 +455,6 @@ class BannerSectionView extends StatelessWidget {
 ///Trending Products View
 class TrendingProductsView extends StatelessWidget {
   const TrendingProductsView({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -432,30 +470,50 @@ class TrendingProductsView extends StatelessWidget {
           const SizedBox(
             height: 10,
           ),
-          Selector<HomeBloc, ProductResponseDataVO?>(
-              selector: (context, bloc) => bloc.productResponseDataVO,
-              builder: (context, productResponse, child) {
-                return productResponse == null
+          Selector<HomeBloc, List<ProductVO>>(
+              selector: (context, bloc) => bloc.productList,
+              builder: (context, products, child) {
+                return products.isEmpty
                     ? const Center(
                         child: CircularProgressIndicator(),
                       )
-                    : GridView.builder(
-                        shrinkWrap: true,
-                        padding: EdgeInsets.zero,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          return TrendingProductListItemView(
-                            productVO: productResponse.products?[index],
-                          );
-                        },
-                        itemCount: productResponse.products?.length,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                mainAxisSpacing: 14.0,
-                                crossAxisSpacing: 10.0,
-                                childAspectRatio: 2 / 2.7),
-                      );
+                    : Selector<HomeBloc, bool>(
+                  selector: (context, bloc) => bloc.isLoading,
+                  builder: (context, isLoading, child) {
+                    return Column(
+                      children: [
+                        GridView.builder(
+                          shrinkWrap: true,
+                          padding: EdgeInsets.zero,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            return TrendingProductListItemView(
+                              productVO: products[index],
+                              onTapFavourite: (product){
+                                var bloc = Provider.of<HomeBloc>(context,
+                                    listen: false);
+                                bloc.onTapFavourite(product, context);
+                              },
+                            );
+                          },
+                          itemCount: products.length,
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            mainAxisSpacing: 14.0,
+                            crossAxisSpacing: 10.0,
+                            childAspectRatio: 2 / 2.7,
+                          ),
+                        ),
+                        const SizedBox(height: 30,),
+                        Visibility(
+                            visible : isLoading,
+                            child: const Center(child: CircularProgressIndicator(color: kPrimaryColor,),)),
+                        const SizedBox(height: 40,)
+                      ],
+                    );
+                  },
+                )
+                ;
               }),
         ],
       ),

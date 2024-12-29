@@ -93,7 +93,9 @@ abstract class SmileShopDataAgent {
   Future<List<PaymentVO>> payments(String token, String acceptLanguage);
 
   Future<List<OrderVO>> orderList(String token,String acceptLanguage);
+  Future<List<OrderVO>> getOrderListByOrderType(String token,String acceptLanguage,String orderType);
   Future<OrderVO> orderDetails(String token,String acceptLanguage,int orderId);
   Future<ProfileVO> userProfile(String token,String acceptLanguage);
   Future<ProfileResponse> updateProfile(String token,String acceptLanguage,String name,File? image);
+  Future<ProfileResponse> updateProfileName(String token,String acceptLanguage,String name);
 }

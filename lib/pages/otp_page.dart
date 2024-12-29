@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
@@ -6,6 +7,7 @@ import 'package:smile_shop/blocs/otp_bloc.dart';
 import 'package:smile_shop/pages/password_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
+import 'package:smile_shop/utils/strings.dart';
 
 import '../widgets/common_dialog.dart';
 import '../widgets/error_dialog_view.dart';
@@ -170,6 +172,11 @@ class _OtpPageState extends State<OtpPage> {
                             bloc
                                 .onTapVerifyOtp(widget.requestId ?? "")
                                 .then((value) {
+                                  ///save referralCode to get storage
+                              final box = GetStorage();
+                              box.write(kBoxKeyReferralCode, widget.referralCode);
+
+                              ///navigate to password page
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (builder) => PasswordPage(
                                         requestId: widget.requestId,

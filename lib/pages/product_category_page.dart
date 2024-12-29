@@ -5,9 +5,7 @@ import 'package:smile_shop/data/vos/product_vo.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/widgets/custom_app_bar_view.dart';
-import '../data/vos/product_response_data_vo.dart';
 import '../list_items/trending_product_list_item_view.dart';
-import '../utils/images.dart';
 import '../utils/strings.dart';
 
 class ProductCategoryPage extends StatelessWidget {
@@ -122,6 +120,11 @@ class ProductsView extends StatelessWidget {
             itemBuilder: (context, index) {
               return TrendingProductListItemView(
                 productVO: products[index],
+                onTapFavourite: (product){
+                  var bloc = Provider.of<ProductCategoryBloc>(context,
+                      listen: false);
+                  bloc.onTapFavourite(product, context);
+                },
               );
             },
             itemCount: products.length,

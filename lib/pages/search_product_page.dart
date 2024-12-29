@@ -164,6 +164,11 @@ class SearchProductPage extends StatelessWidget {
                                     itemBuilder: (context, index) {
                                       return TrendingProductListItemView(
                                         productVO: products[index],
+                                        onTapFavourite: (product){
+                                          var bloc = Provider.of<SearchProductBloc>(context,
+                                              listen: false);
+                                          bloc.onTapFavourite(product, context);
+                                        },
                                       );
                                     },
                                     itemCount: products.length,

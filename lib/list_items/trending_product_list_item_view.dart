@@ -10,8 +10,9 @@ import '../utils/dimens.dart';
 class TrendingProductListItemView extends StatelessWidget {
   final ProductVO? productVO;
   final String? imageUrl;
+  final Function(ProductVO? productVO) onTapFavourite;
 
-  const TrendingProductListItemView({super.key,this.productVO,this.imageUrl});
+  const TrendingProductListItemView({super.key,this.productVO,this.imageUrl,required this.onTapFavourite});
 
   @override
   Widget build(BuildContext context) {
@@ -30,10 +31,22 @@ class TrendingProductListItemView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: CachedNetworkImageView(
-                  imageHeight: 120, imageWidth: double.infinity, imageUrl: productVO?.image ?? errorImageUrl),
+            Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: CachedNetworkImageView(
+                      imageHeight: 120, imageWidth: double.infinity, imageUrl: productVO?.image ?? errorImageUrl),
+                ),
+                 Positioned(
+                    top: 10,
+                    right: 20,
+                    child: InkWell(
+                        onTap: (){
+                          onTapFavourite(productVO);
+                        },
+                        child:const Icon(Icons.favorite_outline,color: kSecondaryColor,)))
+              ],
             ),
             const SizedBox(height: 10,),
              Text(

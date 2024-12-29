@@ -205,7 +205,14 @@ abstract class SmileShopApi {
     @Header(kHeaderAcceptLanguage) String acceptLanguage,
   );
 
-  @POST("$kEndPointOrderDetails/{order_id}")
+  @GET(kEndPointOrderList)
+  Future<OrderResponse> ordersByOrderType(
+      @Header(kHeaderAuthorization) String token,
+      @Header(kHeaderAcceptLanguage) String acceptLanguage,
+      @Query(kParamOrderType) String orderType,
+      );
+
+  @GET("$kEndPointOrderDetails/{order_id}")
   Future<OrderDetailsResponse> orderDetails(
     @Header(kHeaderAuthorization) String token,
     @Header(kHeaderAcceptLanguage) String acceptLanguage,
@@ -217,8 +224,15 @@ abstract class SmileShopApi {
   Future<ProfileResponse> updateProfile(
       @Header(kHeaderAuthorization) String token,
       @Header(kHeaderAcceptLanguage) String acceptLanguage,
+      @Part() String name,
+      @Part() File image
+      );
+
+  @POST(kEndPointUpdateProfile)
+  Future<ProfileResponse> updateProfileName(
+      @Header(kHeaderAuthorization) String token,
+      @Header(kHeaderAcceptLanguage) String acceptLanguage,
       @Field(kFieldName) String name,
-      @Part(name: kFieldImage) File? image
       );
 
 }

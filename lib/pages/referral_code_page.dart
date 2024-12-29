@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:smile_shop/list_items/my_order_list_item_view.dart';
-import 'package:smile_shop/pages/refund_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/utils/images.dart';
+import 'package:smile_shop/utils/strings.dart';
 import 'package:smile_shop/widgets/common_button_view.dart';
-import 'package:smile_shop/widgets/custom_app_bar_view.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ReferralCodePage extends StatelessWidget {
   const ReferralCodePage({super.key});
@@ -70,7 +70,7 @@ class ReferralCodePage extends StatelessWidget {
 
                  const SizedBox(height: kMarginMedium2,),
 
-                 const Text('7788999',style: TextStyle(fontSize: 32,color: kPrimaryColor,fontWeight: FontWeight.bold),),
+                 Text(GetStorage().read(kBoxKeyReferralCode) ?? "",style:const TextStyle(fontSize: 32,color: kPrimaryColor,fontWeight: FontWeight.bold),),
 
                  const SizedBox(height: kMarginMedium2,),
 
@@ -79,7 +79,7 @@ class ReferralCodePage extends StatelessWidget {
                  const SizedBox(height: kMarginMedium2,),
 
                  QrImageView(
-                   data: 'https://smile.saxdihtan.asia/signup?referral_code=1234',
+                   data: 'https://smile.saxdihtan.asia/signup?referral_code=${GetStorage().read(kBoxKeyReferralCode) ?? ""}',
                    version: QrVersions.auto,
                    size: 220.0,
                  ),
@@ -88,7 +88,9 @@ class ReferralCodePage extends StatelessWidget {
                  
                  SizedBox(
                    width: 260,
-                     child: CommonButtonView(label: 'Share Referral Code', labelColor: Colors.white, bgColor: kPrimaryColor, onTapButton: (){})),
+                     child: CommonButtonView(label: 'Share Referral Code', labelColor: Colors.white, bgColor: kPrimaryColor, onTapButton: (){
+                       launchURL("https://smile.saxdihtan.asia/signup?referral_code=${GetStorage().read(kBoxKeyReferralCode) ?? ""}");
+                     })),
 
                  const SizedBox(height: kMarginXXLarge,),
 
@@ -98,5 +100,17 @@ class ReferralCodePage extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+void launchURL(String url) async {
+  try {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  } catch (e) {
+    print('Error launching URL: $e');
   }
 }

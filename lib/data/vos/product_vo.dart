@@ -83,6 +83,14 @@ class ProductVO {
   @HiveField(17)
   String? colorName;
 
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @HiveField(18)
+  bool? isFavourite;
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @HiveField(19)
+  bool? isAddedToCartProduct;
+
   ProductVO(
       {this.id,
       this.name,
@@ -101,7 +109,9 @@ class ProductVO {
       this.qtyCount,
       this.isChecked = false,
       this.totalPrice,
-      this.colorName});
+      this.colorName,
+      this.isFavourite = false,
+     });
 
   factory ProductVO.fromJson(Map<String, dynamic> json) =>
       _$ProductVOFromJson(json);
@@ -127,7 +137,8 @@ class ProductVO {
     int? qtyCount,
     bool? isChecked,
     int? totalPrice,
-    String? colorName
+    String? colorName,
+    bool? isFavourite,
   }) {
     return ProductVO(
       id: id ?? this.id,
@@ -148,6 +159,7 @@ class ProductVO {
       isChecked: isChecked ?? this.isChecked,
       totalPrice: totalPrice ?? this.totalPrice,
       colorName: colorName ?? this.colorName,
+      isFavourite: isFavourite ?? this.isFavourite,
     );
   }
 }

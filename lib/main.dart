@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
 import 'package:smile_shop/blocs/my_address_bloc.dart';
@@ -21,6 +22,7 @@ import 'data/vos/sub_category_vo.dart';
 
 void main() async {
   await Hive.initFlutter();
+  await GetStorage.init();
 
   ///register hive adapter
   Hive.registerAdapter(LoginResponseAdapter());
@@ -41,6 +43,7 @@ void main() async {
   await Hive.openBox<LoginDataVO>(kBoxLoginResponse);
   await Hive.openBox<SearchProductVO>(kBoxSearchProduct);
   await Hive.openBox<ProductVO>(kBoxProduct);
+  await Hive.openBox<ProductVO>(kBoxFavouriteProduct);
 
   runApp(MultiProvider(
       providers: [ChangeNotifierProvider(

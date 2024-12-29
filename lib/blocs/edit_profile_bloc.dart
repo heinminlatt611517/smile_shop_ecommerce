@@ -16,10 +16,13 @@ class EditProfileBloc extends ChangeNotifier {
   bool isDisposed = false;
   var authToken = "";
   ProfileVO? profileVO;
+  var updateName = "";
+  final nameController = TextEditingController();
 
   EditProfileBloc(this.profileVO) {
     authToken =
         _smileShopModel.getLoginResponseFromDatabase()?.accessToken ?? "";
+    nameController.text = profileVO?.name ?? '';
   }
 
   uploadImage() async {
@@ -27,15 +30,25 @@ class EditProfileBloc extends ChangeNotifier {
       final ImagePicker picker = ImagePicker();
       var pickFile =
           await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
-      imgFile = File(pickFile?.path ?? '');
-      updateProfile(File(pickFile?.path ?? ''));
+      if(pickFile != null){
+        imgFile = File(pickFile.path ?? '');
+        updateProfile(File(pickFile.path ?? ''));
+      }
     } catch (e) {
       ///
     }
   }
 
+  void getProfile(){
+    _showLoading();
+    _smileShopModel.userProfile(authToken, kAcceptLanguageEn).then((response){
+      profileVO = response;
+      nameController.text = profileVO?.name ?? '';
+      _notifySafely();
+    }).whenComplete(()=> _hideLoading());
+  }
+
   Future updateProfile(File imageFilePath) {
-    debugPrint("call update file>>>>>$imageFilePath");
     _showLoading();
     return _smileShopModel
         .updateProfile(authToken, kAcceptLanguageEn,profileVO?.name ?? "", imageFilePath)
@@ -44,13 +57,18 @@ class EditProfileBloc extends ChangeNotifier {
     });
   }
 
-  Future<ProfileResponse> onTapConfirm({required String name}) {
+  Future<ProfileResponse> onTapConfirm() {
     _showLoading();
     return _smileShopModel
-        .updateProfile(authToken, kAcceptLanguageEn, name, File(profileVO?.profileImage ?? ""))
+        .updateProfileName(authToken, kAcceptLanguageEn, updateName)
         .whenComplete(() {
-      _hideLoading();
+      getProfile();
     });
+  }
+
+  void onChangedName(String name){
+    updateName = name;
+    _notifySafely();
   }
 
   void _showLoading() {

@@ -61,6 +61,11 @@ const String kFieldLoginPassword = "login_password";
 const String kFieldPaymentPassword = "payment_password";
 const String kFieldAppType= "app_type";
 const String kFieldImage = 'image';
+const String kParamOrderType = "order_type";
+const String kTypeToShip = "to_ship";
+const String kTypeToPay = "to_pay";
+const String kTypeToReceive = "to_recieve";
+const String kTypeToReview = "to_review";
 
 
 ///Constant Values

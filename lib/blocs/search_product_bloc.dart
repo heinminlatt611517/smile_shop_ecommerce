@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
@@ -133,6 +134,24 @@ class SearchProductBloc extends ChangeNotifier {
 
   bool isChangeBackground(){
     return isShowRatingView == true || isShowPriceView == true ? true : false;
+  }
+
+  void onTapFavourite(ProductVO? product,BuildContext context){
+    _smileShopModel.saveFavouriteProductToHive(
+        product?.copyWith(isFavourite: true) ??
+            ProductVO());
+
+    showSnackBar(context, '${product?.name} added to favourite successfully!',Colors.green);
+  }
+
+  void showSnackBar(BuildContext context, String description,Color snackBarColor) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(description),
+        backgroundColor: snackBarColor,
+        duration: const Duration(seconds: 2),
+      ),
+    );
   }
 
   void _hideLoading() {

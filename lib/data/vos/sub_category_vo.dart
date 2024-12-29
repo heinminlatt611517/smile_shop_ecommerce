@@ -15,7 +15,7 @@ class SubcategoryVO {
 
   @JsonKey(name: "category_id")
   @HiveField(1)
-  final String? categoryId;
+  final int? categoryId;
 
   @JsonKey(name: "name")
   @HiveField(2)
