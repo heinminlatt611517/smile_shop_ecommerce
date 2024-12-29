@@ -60,6 +60,7 @@ const String kFieldPage = "page";
 const String kFieldLoginPassword = "login_password";
 const String kFieldPaymentPassword = "payment_password";
 const String kFieldAppType= "app_type";
+const String kFieldImage = 'image';
 
 
 ///Constant Values
@@ -69,6 +70,7 @@ const String kOtpValue = "123456";
 const kAcceptLanguageMM = "my-MM";
 const kAcceptLanguageEn = "en";
 const kAcceptLanguageCh = "ch";
+
 
 
 const errorImageUrl = "https://i0.wp.com/www.bishoprook.com/wp-content/uploads/2021/05/placeholder-image-gray-16x9-1.png?ssl=1";

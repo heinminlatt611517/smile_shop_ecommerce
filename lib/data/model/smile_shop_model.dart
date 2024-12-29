@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:smile_shop/data/vos/banner_vo.dart';
 import 'package:smile_shop/data/vos/category_vo.dart';
 import 'package:smile_shop/data/vos/login_data_vo.dart';
@@ -7,6 +9,7 @@ import 'package:smile_shop/data/vos/township_data_vo.dart';
 import 'package:smile_shop/network/requests/otp_request.dart';
 import 'package:smile_shop/network/requests/set_password_request.dart';
 import 'package:smile_shop/network/responses/otp_response.dart';
+import 'package:smile_shop/network/responses/profile_response.dart';
 
 import '../../network/requests/address_request.dart';
 import '../../network/requests/login_request.dart';
@@ -18,6 +21,7 @@ import '../vos/brand_and_category_vo.dart';
 import '../vos/order_vo.dart';
 import '../vos/payment_vo.dart';
 import '../vos/product_response_data_vo.dart';
+import '../vos/profile_vo.dart';
 import '../vos/state_vo.dart';
 import '../vos/sub_category_vo.dart';
 
@@ -121,4 +125,6 @@ abstract class SmileShopModel {
 
   Future<List<OrderVO>> orderList(String token,String acceptLanguage);
   Future<OrderVO> orderDetails(String token,String acceptLanguage,int orderId);
+  Future<ProfileVO> userProfile(String token,String acceptLanguage);
+  Future<ProfileResponse> updateProfile(String token,String acceptLanguage,String name,File? image);
 }

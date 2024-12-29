@@ -20,6 +20,7 @@ class HomeBloc extends ChangeNotifier {
     var authToken = _smileShopModel.getLoginResponseFromDatabase()?.refreshToken ?? "";
     var endUserId = _smileShopModel.getLoginResponseFromDatabase()?.data?.id.toString() ?? "";
 
+
     ///get banner list
     _smileShopModel.banners(kAcceptLanguageEn).then((bannerResponse){
       banners = bannerResponse;

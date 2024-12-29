@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:smile_shop/data/vos/order_vo.dart';
 import 'package:smile_shop/data/vos/payment_vo.dart';
 import 'package:smile_shop/data/vos/product_response_data_vo.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
+import 'package:smile_shop/data/vos/profile_vo.dart';
 import 'package:smile_shop/data/vos/state_vo.dart';
 import 'package:smile_shop/data/vos/sub_category_vo.dart';
 import 'package:smile_shop/data/vos/township_data_vo.dart';
@@ -22,6 +24,7 @@ import 'package:smile_shop/network/requests/sub_category_request.dart';
 import 'package:smile_shop/network/responses/address_response.dart';
 import 'package:smile_shop/network/responses/login_response.dart';
 import 'package:smile_shop/network/responses/otp_response.dart';
+import 'package:smile_shop/network/responses/profile_response.dart';
 import 'package:smile_shop/network/smile_shop_api.dart';
 
 import '../../data/vos/error_vo.dart';
@@ -181,8 +184,8 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
       int price,
       String operator) {
     return mApi
-        .searchProductsByPrice(
-        token, acceptLanguage, int.parse(endUserId), pageNo, price,operator)
+        .searchProductsByPrice(token, acceptLanguage, int.parse(endUserId),
+            pageNo, price, operator)
         .asStream()
         .map((response) => response.data?.products ?? [])
         .first
@@ -315,8 +318,8 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   }
 
   @override
-  Future<void> postOrder(String token, String acceptLanguage,
-      int subTotal, String paymentType, List itemList, String appType) {
+  Future<void> postOrder(String token, String acceptLanguage, int subTotal,
+      String paymentType, List itemList, String appType) {
     return mApi
         .postOrder(
             "Bearer $token",
@@ -371,10 +374,11 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   }
 
   @override
-  Future<List<ProductVO>> searchProductsBySubCategoryId(String token, String acceptLanguage, String endUserId, int pageNo, int subCategoryId) {
+  Future<List<ProductVO>> searchProductsBySubCategoryId(String token,
+      String acceptLanguage, String endUserId, int pageNo, int subCategoryId) {
     return mApi
         .searchProductsBySubCategoryId(
-        token, acceptLanguage, int.parse(endUserId), pageNo,subCategoryId)
+            token, acceptLanguage, int.parse(endUserId), pageNo, subCategoryId)
         .asStream()
         .map((response) => response.data?.products ?? [])
         .first
@@ -384,16 +388,36 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   }
 
   @override
-  Future<List<ProductVO>> searchProductsCategoryId(String token, String acceptLanguage, String endUserId, int pageNo, int categoryId) {
+  Future<List<ProductVO>> searchProductsCategoryId(String token,
+      String acceptLanguage, String endUserId, int pageNo, int categoryId) {
     return mApi
         .searchProductsByCategoryId(
-        token, acceptLanguage, int.parse(endUserId), pageNo,categoryId)
+            token, acceptLanguage, int.parse(endUserId), pageNo, categoryId)
         .asStream()
         .map((response) => response.data?.products ?? [])
         .first
         .catchError((error) {
       throw _createException(error);
     });
+  }
+
+  @override
+  Future<ProfileVO> userProfile(String token, String acceptLanguage) {
+    return mApi
+        .profile('Bearer $token', acceptLanguage)
+        .asStream()
+        .map((response) {
+          return response.data ?? ProfileVO();
+        })
+        .first
+        .catchError((error) {
+          throw _createException(error);
+        });
+  }
+
+  @override
+  Future<ProfileResponse> updateProfile(String token, String acceptLanguage, String name, File? image) {
+    return mApi.updateProfile('Bearer $token', acceptLanguage, name, image);
   }
 }
 

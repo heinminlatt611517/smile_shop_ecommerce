@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:smile_shop/data/model/smile_shop_model.dart';
 import 'package:smile_shop/data/vos/banner_vo.dart';
@@ -7,6 +9,7 @@ import 'package:smile_shop/data/vos/login_data_vo.dart';
 import 'package:smile_shop/data/vos/order_vo.dart';
 import 'package:smile_shop/data/vos/payment_vo.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
+import 'package:smile_shop/data/vos/profile_vo.dart';
 import 'package:smile_shop/data/vos/search_product_vo.dart';
 import 'package:smile_shop/data/vos/state_vo.dart';
 import 'package:smile_shop/data/vos/sub_category_vo.dart';
@@ -19,6 +22,7 @@ import 'package:smile_shop/network/requests/sub_category_request.dart';
 import 'package:smile_shop/network/responses/address_response.dart';
 import 'package:smile_shop/network/responses/login_response.dart';
 import 'package:smile_shop/network/responses/otp_response.dart';
+import 'package:smile_shop/network/responses/profile_response.dart';
 import 'package:smile_shop/persistence/product_dao.dart';
 import 'package:smile_shop/persistence/search_product_dao.dart';
 
@@ -288,6 +292,16 @@ class SmileShopModelImpl extends SmileShopModel {
   Future<List<ProductVO>> searchProductsCategoryId(String token, String acceptLanguage, String endUserId, int pageNo, int categoryId
       ) {
     return mDataAgent.searchProductsCategoryId(token, acceptLanguage, endUserId, pageNo, categoryId);
+  }
+
+  @override
+  Future<ProfileVO> userProfile(String token, String acceptLanguage) {
+    return mDataAgent.userProfile(token, acceptLanguage);
+  }
+
+  @override
+  Future<ProfileResponse> updateProfile(String token, String acceptLanguage, String name, File? image) {
+    return mDataAgent.updateProfile(token, acceptLanguage, name, image);
   }
 
 }

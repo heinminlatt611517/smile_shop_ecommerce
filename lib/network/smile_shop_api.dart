@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:retrofit/error_logger.dart';
 import 'package:retrofit/http.dart';
@@ -18,6 +20,7 @@ import 'package:smile_shop/network/responses/otp_response.dart';
 import 'package:smile_shop/network/responses/payment_response.dart';
 import 'package:smile_shop/network/responses/product_details_response.dart';
 import 'package:smile_shop/network/responses/product_response.dart';
+import 'package:smile_shop/network/responses/profile_response.dart';
 import 'package:smile_shop/network/responses/state_response.dart';
 import 'package:smile_shop/network/responses/sub_category_response.dart';
 import 'package:smile_shop/network/responses/township_response.dart';
@@ -190,6 +193,12 @@ abstract class SmileShopApi {
     @Header(kHeaderAcceptLanguage) String acceptLanguage,
   );
 
+  @GET(kEndPointProfile)
+  Future<ProfileResponse> profile(
+      @Header(kHeaderAuthorization) String token,
+      @Header(kHeaderAcceptLanguage) String acceptLanguage,
+      );
+
   @GET(kEndPointOrderList)
   Future<OrderResponse> orders(
     @Header(kHeaderAuthorization) String token,
@@ -202,4 +211,14 @@ abstract class SmileShopApi {
     @Header(kHeaderAcceptLanguage) String acceptLanguage,
     @Path("order_id") int addressId,
   );
+
+  @MultiPart()
+  @POST(kEndPointUpdateProfile)
+  Future<ProfileResponse> updateProfile(
+      @Header(kHeaderAuthorization) String token,
+      @Header(kHeaderAcceptLanguage) String acceptLanguage,
+      @Field(kFieldName) String name,
+      @Part(name: kFieldImage) File? image
+      );
+
 }

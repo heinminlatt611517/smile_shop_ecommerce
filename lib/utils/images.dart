@@ -13,3 +13,4 @@ const kCoinIcon = 'assets/images/coin.png';
 const kBoxIcon = 'assets/images/box.png';
 const kCarIcon = 'assets/images/car.png';
 const kTransitIcon = 'assets/images/transit.png';
+const kCampaignBackgroundImage = 'assets/images/campaign_background.png';

@@ -1,160 +1,217 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:loading_indicator/loading_indicator.dart';
+import 'package:provider/provider.dart';
+import 'package:smile_shop/blocs/edit_profile_bloc.dart';
+import 'package:smile_shop/data/vos/profile_vo.dart';
 import 'package:smile_shop/utils/colors.dart';
 
 import '../utils/dimens.dart';
 import '../widgets/cached_network_image_view.dart';
+import '../widgets/loading_view.dart';
 
-class EditProfilePage extends StatelessWidget {
-  const EditProfilePage({super.key});
+class EditProfilePage extends StatefulWidget {
+  const EditProfilePage({super.key, this.userVo});
+  final ProfileVO? userVo;
 
   @override
+  State<EditProfilePage> createState() => _EditProfilePageState();
+}
+
+class _EditProfilePageState extends State<EditProfilePage> {
+  final _nameController = TextEditingController();
+
+  @override
+  void initState() {
+    _nameController.text = widget.userVo?.name ?? '';
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      backgroundColor: kBackgroundColor,
-      appBar: AppBar(
-        automaticallyImplyLeading: true,
-        toolbarHeight: 70,
-        backgroundColor: Colors.transparent,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Column(
-          children: [
-            Column(
-              children: [
-                const SizedBox(height: 60,),
-                Container(
-                  height: 60,
-                  width: 60,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black),
-                    shape: BoxShape.circle,
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(30),
-                    child: const CachedNetworkImageView(
-                        imageHeight: 60,
-                        imageWidth: 60,
-                        imageUrl:
-                            'https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8aW1hZ2V8ZW58MHx8MHx8fDA%3D'),
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  height: 18,
-                  width: 96,
-                  decoration: BoxDecoration(
-                      color: kPrimaryColor.withOpacity(0.5),
-                      borderRadius: BorderRadius.circular(5)),
-                  child: const Center(
-                    child: Text(
-                      'Change photo',
-                      style: TextStyle(fontSize: kTextSmall),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 30,),
-            GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: () {
-                showModalBottomSheet(
-                    context: context, builder: (_) => nameModalSheet(context));
-              },
-              child: const Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Name'),
-                        Row(
-                          children: [
-                            Text('Jonny'),
-                            SizedBox(
-                              width: 10,
+    return ChangeNotifierProvider(
+      create: (_)=> EditProfileBloc(widget.userVo),
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        backgroundColor: kBackgroundColor,
+        appBar: AppBar(
+          automaticallyImplyLeading: true,
+          toolbarHeight: 70,
+          backgroundColor: Colors.transparent,
+        ),
+        body: Selector<EditProfileBloc,bool>(
+            selector: (context, bloc) => bloc.isLoading,
+            builder: (context, isLoading, child) =>
+           Stack(
+             children: [
+               ///body
+               Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Selector<EditProfileBloc,File?>(
+                  selector: (_,bloc)=> bloc.imgFile,
+                  builder: (_,imgFile,child) =>
+                   Column(
+                    children: [
+                      Column(
+                        children: [
+                          const SizedBox(height: 60,),
+                          Container(
+                            height: 60,
+                            width: 60,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.black),
+                              shape: BoxShape.circle,
                             ),
-                            Icon(Icons.chevron_right)
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                  Divider()
-                ],
-              ),
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            const Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Phone number'),
-                      Row(
-                        children: [
-                          Text('099999999999'),
-                          SizedBox(
-                            width: 10,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(30),
+                              child: imgFile == null ? CachedNetworkImageView(
+                                  imageHeight: 60,
+                                  imageWidth: 60,
+                                  imageUrl:
+                                      widget.userVo?.profileImage ?? '') : Image.file(imgFile),
+                            ),
                           ),
-                          Icon(Icons.chevron_right)
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Consumer<EditProfileBloc>(
+                            builder: (_,bloc,child) =>
+                             InkWell(
+                               onTap: () => bloc.uploadImage(),
+                               child: Container(
+                                height: 18,
+                                width: 96,
+                                decoration: BoxDecoration(
+                                    color: kPrimaryColor.withOpacity(0.5),
+                                    borderRadius: BorderRadius.circular(5)),
+                                child: const Center(
+                                  child: Text(
+                                    'Change photo',
+                                    style: TextStyle(fontSize: kTextSmall),
+                                  ),
+                                ),
+                                                     ),
+                             ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 30,),
+                      Consumer<EditProfileBloc>(
+                        builder: (context,bloc,child) =>
+                         GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () {
+                            showModalBottomSheet(
+                                context: context, builder: (_) => nameModalSheet(context,_nameController,bloc));
+                          },
+                          child:  Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 20),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text('Name'),
+                                    Row(
+                                      children: [
+                                        Text(widget.userVo?.name ?? ''),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                       const Icon(Icons.chevron_right)
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                              const Divider()
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text('Phone number'),
+                                Row(
+                                  children: [
+                                    Text(widget.userVo?.phone ?? ''),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    const Icon(Icons.chevron_right)
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                          const Divider()
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      const Column(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text('Change password'),
+                                Row(
+                                  children: [
+                                    Text(''),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Icon(Icons.chevron_right)
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                          Divider()
                         ],
                       )
                     ],
                   ),
                 ),
-                Divider()
-              ],
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            const Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Change password'),
-                      Row(
-                        children: [
-                          Text(''),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Icon(Icons.chevron_right)
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-                Divider()
-              ],
-            )
-          ],
+                         ),
+
+               ///loading view
+               if (isLoading)
+                 Container(
+                   color: Colors.black12,
+                   child: const Center(
+                     child: LoadingView(
+                       indicatorColor: kPrimaryColor,
+                       indicator: Indicator.ballSpinFadeLoader,
+                     ),
+                   ),
+                 ),
+             ],
+           ),
         ),
       ),
     );
   }
 }
 
-Widget nameModalSheet(BuildContext context) {
+Widget nameModalSheet(BuildContext context,TextEditingController controller,EditProfileBloc bloc) {
   return Container(
-    height: 204,
     margin: const EdgeInsets.symmetric(horizontal: 16),
     width: double.infinity,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -187,9 +244,10 @@ Widget nameModalSheet(BuildContext context) {
         Container(
             margin: const EdgeInsets.symmetric(horizontal: 10),
             height: 40,
-            child: const TextField(
-              style: TextStyle(fontSize: kTextRegular),
-              decoration: InputDecoration(
+            child:  TextField(
+              controller: controller,
+              style: const TextStyle(fontSize: kTextRegular),
+              decoration: const InputDecoration(
                   hintText: 'Enter your name',
                   hintStyle: TextStyle(fontSize: kTextRegular),
                   contentPadding: EdgeInsets.only(left: 20)),
@@ -197,22 +255,25 @@ Widget nameModalSheet(BuildContext context) {
         const SizedBox(
           height: 30,
         ),
-        GestureDetector(
-          onTap: () {},
-          child: Container(
-            margin: const EdgeInsets.only(left: 16, right: 16),
-            height: 40,
-            width: double.infinity,
-            decoration: BoxDecoration(
-                color: kPrimaryColor, borderRadius: BorderRadius.circular(4)),
-            child: const Center(
-              child: Text(
-                'Confirm',
-                style: TextStyle(color: kBackgroundColor),
-              ),
-            ),
-          ),
-        ),
+        bloc.isLoading == true ? const Center(child: CircularProgressIndicator(color: Colors.amber,),) : GestureDetector(
+         onTap: () {
+           bloc.onTapConfirm(name: controller.text.trim()).then((response){
+           });
+         },
+         child: Container(
+           margin: const EdgeInsets.only(left: 16, right: 16),
+           height: 40,
+           width: double.infinity,
+           decoration: BoxDecoration(
+               color: kPrimaryColor, borderRadius: BorderRadius.circular(4)),
+           child: const Center(
+             child: Text(
+               'Confirm',
+               style: TextStyle(color: kBackgroundColor),
+             ),
+           ),
+         ),
+                  ),
       ],
     ),
   );
