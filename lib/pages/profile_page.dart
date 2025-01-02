@@ -1,8 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:smile_shop/blocs/profile_bloc.dart';
 import 'package:smile_shop/data/vos/profile_vo.dart';
+import 'package:smile_shop/network/api_constants.dart';
 import 'package:smile_shop/pages/edit_profile_page.dart';
 import 'package:smile_shop/pages/login_page.dart';
 import 'package:smile_shop/pages/my_favourite_page.dart';
@@ -53,21 +55,14 @@ class _ProfilePageState extends State<ProfilePage> {
                    Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Container(
-                        height: 60,
-                        width: 60,
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.black),
-                          shape: BoxShape.circle,
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(30),
-                          child: CachedNetworkImageView(
-                              imageHeight: 60,
-                              imageWidth: 60,
-                              imageUrl:
-                                  user?.profileImage ?? ''),
-                        ),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(30),
+                        child: CachedNetworkImage(
+                            height: 60,
+                            width: 60,
+                            fit: BoxFit.cover,
+                            imageUrl: user?.profileImage ??
+                                errorImageUrl),
                       ),
                       const SizedBox(
                         height: 10,

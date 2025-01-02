@@ -1,30 +1,26 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:smile_shop/blocs/edit_profile_bloc.dart';
 import 'package:smile_shop/data/vos/profile_vo.dart';
+import 'package:smile_shop/network/api_constants.dart';
 import 'package:smile_shop/utils/colors.dart';
 
 import '../utils/dimens.dart';
-import '../widgets/cached_network_image_view.dart';
 import '../widgets/loading_view.dart';
 
-class EditProfilePage extends StatefulWidget {
+class EditProfilePage extends StatelessWidget {
   const EditProfilePage({super.key, this.userVo});
 
   final ProfileVO? userVo;
 
   @override
-  State<EditProfilePage> createState() => _EditProfilePageState();
-}
-
-class _EditProfilePageState extends State<EditProfilePage> {
-  @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => EditProfileBloc(widget.userVo),
+      create: (_) => EditProfileBloc(userVo),
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         extendBodyBehindAppBar: true,
@@ -55,24 +51,25 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           const SizedBox(
                             height: 60,
                           ),
-                          Container(
-                            height: 60,
-                            width: 60,
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.black),
-                              shape: BoxShape.circle,
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(30),
-                              child: imgFile == null
-                                  ? CachedNetworkImageView(
-                                      imageHeight: 60,
-                                      imageWidth: 60,
-                                      imageUrl:
-                                          widget.userVo?.profileImage ?? '')
-                                  : Image.file(imgFile,fit: BoxFit.cover,),
-                            ),
-                          ),
+                          imgFile == null
+                              ? ClipRRect(
+                                  borderRadius: BorderRadius.circular(30),
+                                  child: CachedNetworkImage(
+                                      height: 60,
+                                      width: 60,
+                                      fit: BoxFit.cover,
+                                      imageUrl: userVo?.profileImage ??
+                                          errorImageUrl),
+                                )
+                              : ClipRRect(
+                            borderRadius: BorderRadius.circular(30),
+                                child: Image.file(
+                                  height: 60,
+                                  width: 60,
+                                    imgFile,
+                                    fit: BoxFit.cover,
+                                  ),
+                              ),
                           const SizedBox(
                             height: 10,
                           ),
@@ -127,8 +124,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                     Row(
                                       children: [
                                         Consumer<EditProfileBloc>(
-                                            builder: (context,bloc,child) =>
-                                             Text(bloc.profileVO?.name ?? '')),
+                                            builder: (context, bloc, child) =>
+                                                Text(bloc.profileVO?.name ??
+                                                    '')),
                                         const SizedBox(
                                           width: 10,
                                         ),
@@ -156,7 +154,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                 const Text('Phone number'),
                                 Row(
                                   children: [
-                                    Text(widget.userVo?.phone ?? ''),
+                                    Text(userVo?.phone ?? ''),
                                     const SizedBox(
                                       width: 10,
                                     ),
@@ -262,21 +260,21 @@ class _EditProfilePageState extends State<EditProfilePage> {
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 10),
             height: 40,
-            child:  TextField(
+            child: TextField(
               controller: bloc.nameController,
               cursorColor: kPrimaryColor,
-              style:const TextStyle(fontSize: kTextRegular),
-              onChanged: (value){
+              style: const TextStyle(fontSize: kTextRegular),
+              onChanged: (value) {
                 bloc.onChangedName(value);
               },
-              decoration:const InputDecoration(
+              decoration: const InputDecoration(
                 hintText: 'Enter your name',
                 hintStyle: TextStyle(fontSize: kTextRegular),
                 contentPadding: EdgeInsets.only(left: 20),
-                enabledBorder:  UnderlineInputBorder(
+                enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: kPrimaryColor),
                 ),
-                focusedBorder:  UnderlineInputBorder(
+                focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: kPrimaryColor),
                 ),
               ),
@@ -289,10 +287,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               : GestureDetector(
                   onTap: () {
                     Navigator.pop(context);
-                    bloc
-                        .onTapConfirm()
-                        .then((response) {
-                    });
+                    bloc.onTapConfirm().then((response) {});
                   },
                   child: Container(
                     margin: const EdgeInsets.only(left: 16, right: 16),
