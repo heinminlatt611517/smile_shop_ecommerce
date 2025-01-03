@@ -36,12 +36,12 @@ class ProductDetailsBloc extends ChangeNotifier {
           _smileShopModel.getProductByIdFromDatabase(productVO?.id ?? 0);
       if (oldProduct == null) {
         _smileShopModel.saveProductToHive(
-            productVO?.copyWith(totalPrice: productVO?.price, qtyCount: 1,colorName: selectedColorName) ??
+            productVO?.copyWith(totalPrice: productVO?.variantVO?.first.price, qtyCount: 1,colorName: selectedColorName) ??
                 ProductVO());
 
         showSnackBar(context, '${productVO?.name} added to cart successfully!',Colors.green);
       } else {
-        int initialPrice = oldProduct.price!;
+        int initialPrice = oldProduct.variantVO?.first.price ?? 0;
         var newProductVO = oldProduct.copyWith(qtyCount: oldProduct.qtyCount!+1);
         var updatedTotalPrice = newProductVO.qtyCount! * (initialPrice);
         _smileShopModel.saveProductToHive(newProductVO.copyWith(totalPrice: updatedTotalPrice,colorName: selectedColorName));

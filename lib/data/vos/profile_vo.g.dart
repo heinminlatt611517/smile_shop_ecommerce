@@ -34,7 +34,7 @@ ProfileVO _$ProfileVOFromJson(Map<String, dynamic> json) => ProfileVO(
       isLimit: (json['is_limit'] as num?)?.toInt(),
       profileName: json['profile_name'] as String?,
       profile: json['profile'] as String?,
-      inviteCode: json['invite_code'] as String?,
+      inviteCode: (json['invite_code'] as num?)?.toInt(),
       isHead: (json['is_head'] as num?)?.toInt(),
       createdAt: json['created_at'] as String?,
       updatedAt: json['updated_at'] as String?,

@@ -21,7 +21,7 @@ class InventoryVO {
 
   @JsonKey(name: 'quantity')
   @HiveField(3)
-  final String? quantity;
+  final int? quantity;
 
   @JsonKey(name: 'created_at')
   @HiveField(4)

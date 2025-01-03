@@ -72,7 +72,7 @@ class _MyOrderPageState extends State<MyOrderPage>
                         bloc.getOrdersByType(kTypeToReceive);
                       }
                       if (index == 4) {
-                        bloc.getOrdersByType(kTypeToReceive);
+                        bloc.getOrdersByType(kTypeToReview);
                       }
                     },
                     tabs: myOrderTabBarDummyData.map((value) {
@@ -128,7 +128,8 @@ class _MyOrderPageState extends State<MyOrderPage>
                 Navigator.of(context).push(
                     MaterialPageRoute(builder: (_) => const OrderDetailPage()));
               },
-              child: const MyOrderListItemView(
+              child:  MyOrderListItemView(
+                orderVO: orderList[index],
                 isRefundView: false,
               ),
             );

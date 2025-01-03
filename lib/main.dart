@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -10,6 +11,7 @@ import 'package:smile_shop/data/vos/extended_price_vo.dart';
 import 'package:smile_shop/data/vos/image_vo.dart';
 import 'package:smile_shop/data/vos/inventory_vo.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
+import 'package:smile_shop/data/vos/refer_code_vo.dart';
 import 'package:smile_shop/data/vos/search_product_vo.dart';
 import 'package:smile_shop/data/vos/size_vo.dart';
 import 'package:smile_shop/data/vos/user_vo.dart';
@@ -21,6 +23,8 @@ import 'data/vos/login_data_vo.dart';
 import 'data/vos/sub_category_vo.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   await Hive.initFlutter();
   await GetStorage.init();
 
@@ -38,6 +42,7 @@ void main() async {
   Hive.registerAdapter(SubcategoryVOAdapter());
   Hive.registerAdapter(CategoryVOAdapter());
   Hive.registerAdapter(VariantVOAdapter());
+  Hive.registerAdapter(ReferVOAdapter());
 
   ///open hive
   await Hive.openBox<LoginDataVO>(kBoxLoginResponse);

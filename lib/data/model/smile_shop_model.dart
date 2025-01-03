@@ -10,13 +10,20 @@ import 'package:smile_shop/network/requests/otp_request.dart';
 import 'package:smile_shop/network/requests/set_password_request.dart';
 import 'package:smile_shop/network/responses/otp_response.dart';
 import 'package:smile_shop/network/responses/profile_response.dart';
+import 'package:smile_shop/network/responses/set_password_response.dart';
+import 'package:smile_shop/network/responses/success_payment_response.dart';
 
 import '../../network/requests/address_request.dart';
+import '../../network/requests/check_wallet_amount_request.dart';
+import '../../network/requests/check_wallet_password_request.dart';
 import '../../network/requests/login_request.dart';
 import '../../network/requests/otp_verify_request.dart';
+import '../../network/requests/set_wallet_password_request.dart';
 import '../../network/requests/sub_category_request.dart';
+import '../../network/requests/wallet_transition_request.dart';
 import '../../network/responses/address_response.dart';
 import '../../network/responses/login_response.dart';
+import '../../network/responses/success_network_response.dart';
 import '../vos/brand_and_category_vo.dart';
 import '../vos/order_vo.dart';
 import '../vos/payment_vo.dart';
@@ -24,6 +31,8 @@ import '../vos/product_response_data_vo.dart';
 import '../vos/profile_vo.dart';
 import '../vos/state_vo.dart';
 import '../vos/sub_category_vo.dart';
+import '../vos/wallet_transaction_vo.dart';
+import '../vos/wallet_vo.dart';
 
 abstract class SmileShopModel {
   Future<LoginResponse> login(LoginRequest loginRequest);
@@ -43,7 +52,7 @@ abstract class SmileShopModel {
 
   Future verifyOtp(OtpVerifyRequest otpVerifyRequest);
 
-  Future setPassword(SetPasswordRequest setPasswordRequest);
+  Future<SetPasswordResponse> setPassword(SetPasswordRequest setPasswordRequest);
 
   Future<OtpResponse> requestOtp(OtpRequest otpRequest);
 
@@ -102,14 +111,15 @@ abstract class SmileShopModel {
 
   void addSingleSearchProductToDatabase(SearchProductVO searchProductVO);
 
-  Future<void> postOrder(String token,
+  Future<SuccessPaymentResponse> postOrder(String token,
       String acceptLanguage,
       int subTotal,
       String paymentType,
-      List itemList,
-      String appType);
+      String itemList,
+      String appType,
+      String paymentData,int usedPoint);
 
-  Future<List<PaymentVO>> payments(String token, String acceptLanguage);
+  Future<List<PaymentVO>> payments(String token, String acceptLanguage,String action);
   Future<List<ProductVO>> searchProductsCategoryId(String token,
       String acceptLanguage, String endUserId, int pageNo, int categoryId);
 
@@ -135,4 +145,21 @@ abstract class SmileShopModel {
   Future<ProfileVO> userProfile(String token,String acceptLanguage);
   Future<ProfileResponse> updateProfile(String token,String acceptLanguage,String name,File? image);
   Future<ProfileResponse> updateProfileName(String token,String acceptLanguage,String name);
+
+  Future<WalletVO> getWallet(String token,String acceptLanguage);
+
+  Future checkWalletAmount(String token, String acceptLanguage,
+      CheckWalletAmountRequest checkWalletAmountRequest);
+
+  Future checkWalletPassword(String token, String acceptLanguage,
+      CheckWalletPasswordRequest checkWalletPasswordRequest);
+
+  Future<SuccessNetworkResponse> setWalletPassword(String token, String acceptLanguage,
+      SetWalletPasswordRequest setWalletPasswordRequest);
+
+  Future<SuccessPaymentResponse> rechargeWallet(String token, String acceptLanguage,
+      int total,String paymentType,String appType,String paymentData );
+
+  Future<List<WalletTransactionVO>> getWalletTransactions(
+      String token, String acceptLanguage, WalletTransitionRequest walletTransactionRequest);
 }

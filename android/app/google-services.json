@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1064039747805",
+    "project_id": "smile-chat-e4dd0",
+    "storage_bucket": "smile-chat-e4dd0.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1064039747805:android:64eefa0e6880e9e1c34b34",
+        "android_client_info": {
+          "package_name": "com.example.smile_shop"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD248VH1i-CPSMKm8ic8-wzw5JuMMJSQCQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1064039747805:android:43f15b70e5d1a70cc34b34",
+        "android_client_info": {
+          "package_name": "com.smile_shop.ecommerce"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD248VH1i-CPSMKm8ic8-wzw5JuMMJSQCQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

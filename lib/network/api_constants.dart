@@ -1,6 +1,5 @@
 ///Base Url
-const String kBaseUrl = "http://152.42.236.92";
-
+const String kBaseUrl = "https://backend.saxdihtan.asia";
 ///End
 const String kEndPointLogin = "/api/auth/login";
 const String kEndPointRegister = "/api/register";
@@ -30,6 +29,13 @@ const String kEndPointOrder  = '/api/order';
 const String kEndPointOrderList  = '/api/profile/orders';
 const String kEndPointOrderDetails  = '/api/profile/order/detail';
 const String kEndPointPayments  = '/api/payments';
+const String kEndPointWallet  = '/api/wallet';
+const String kEndPointWalletTransitionLogs  = '/api/wallet/histories';
+const String kEndPointCheckWalletAmount  = '/api/wallet/check-wallet-amount';
+const String kEndPointCheckWalletPassword  = '/api/wallet/check-password';
+const String kEndPointSetWalletPassword  = '/api/wallet/set-password';
+const String kEndPointRechargeWallet  = '/api/wallet/recharge';
+
 
 ///Parameters
 const String kParamApiKey = "api_key";
@@ -64,8 +70,16 @@ const String kFieldImage = 'image';
 const String kParamOrderType = "order_type";
 const String kTypeToShip = "to_ship";
 const String kTypeToPay = "to_pay";
-const String kTypeToReceive = "to_recieve";
+const String kTypeToReceive = "to_receive";
 const String kTypeToReview = "to_review";
+const String kLogTypeIncome = "income";
+const String kLogTypeOutCome = "outcome";
+const String kFieldTotal = "total";
+const String kFieldPaymentData = "payment_data";
+const String kFieldUsedPoint = "used_point";
+const String kParamAction = "action";
+const String kParamOrder = "order";
+const String kParamWalletRecharge = "wallet_recharge";
 
 
 ///Constant Values

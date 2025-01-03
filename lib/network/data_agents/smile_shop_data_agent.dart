@@ -11,12 +11,21 @@ import 'package:smile_shop/data/vos/profile_vo.dart';
 import 'package:smile_shop/data/vos/state_vo.dart';
 import 'package:smile_shop/data/vos/sub_category_vo.dart';
 import 'package:smile_shop/data/vos/township_data_vo.dart';
+import 'package:smile_shop/data/vos/wallet_transaction_vo.dart';
+import 'package:smile_shop/data/vos/wallet_vo.dart';
 import 'package:smile_shop/network/requests/address_request.dart';
+import 'package:smile_shop/network/requests/check_wallet_amount_request.dart';
+import 'package:smile_shop/network/requests/check_wallet_password_request.dart';
 import 'package:smile_shop/network/requests/otp_request.dart';
+import 'package:smile_shop/network/requests/set_wallet_password_request.dart';
 import 'package:smile_shop/network/requests/sub_category_request.dart';
+import 'package:smile_shop/network/requests/wallet_transition_request.dart';
 import 'package:smile_shop/network/responses/address_response.dart';
 import 'package:smile_shop/network/responses/otp_response.dart';
 import 'package:smile_shop/network/responses/profile_response.dart';
+import 'package:smile_shop/network/responses/set_password_response.dart';
+import 'package:smile_shop/network/responses/success_network_response.dart';
+import 'package:smile_shop/network/responses/success_payment_response.dart';
 
 import '../requests/login_request.dart';
 import '../requests/otp_verify_request.dart';
@@ -33,21 +42,24 @@ abstract class SmileShopDataAgent {
 
   Future<List<CategoryVO>> categories(String type);
 
-  Future<ProductResponseDataVO> products(String token, String acceptLanguage,
-      int endUserId, int page);
+  Future<ProductResponseDataVO> products(
+      String token, String acceptLanguage, int endUserId, int page);
 
-  Future<ProductVO> getProductDetails(String endUserId, String productId,
-      String acceptLanguage, String token);
+  Future<ProductVO> getProductDetails(
+      String endUserId, String productId, String acceptLanguage, String token);
 
   Future verifyOtp(OtpVerifyRequest otpVerifyRequest);
 
-  Future setPassword(SetPasswordRequest setPasswordRequest);
+  Future<SetPasswordResponse> setPassword(
+      SetPasswordRequest setPasswordRequest);
 
   Future<OtpResponse> requestOtp(OtpRequest otpRequest);
 
-  Future<BrandAndCategoryVO> getBrandsAndCategories(String token,
-      String acceptLanguage,
-      String endUserId,);
+  Future<BrandAndCategoryVO> getBrandsAndCategories(
+    String token,
+    String acceptLanguage,
+    String endUserId,
+  );
 
   Future<List<ProductVO>> searchProductsByName(String token,
       String acceptLanguage, String endUserId, int pageNo, String name);
@@ -61,11 +73,16 @@ abstract class SmileShopDataAgent {
   Future<List<ProductVO>> searchProductsByRating(String token,
       String acceptLanguage, String endUserId, int pageNo, double rating);
 
-  Future<List<ProductVO>> searchProductsByPrice(String token,
-      String acceptLanguage, String endUserId, int pageNo, int price,String operator);
+  Future<List<ProductVO>> searchProductsByPrice(
+      String token,
+      String acceptLanguage,
+      String endUserId,
+      int pageNo,
+      int price,
+      String operator);
 
-  Future addNewAddress(String accessToken, String acceptLanguage,
-      AddressRequest addressRequest);
+  Future addNewAddress(
+      String accessToken, String acceptLanguage, AddressRequest addressRequest);
 
   Future<List<StateVO>> states();
 
@@ -75,27 +92,49 @@ abstract class SmileShopDataAgent {
 
   Future deleteAddress(String accessToken, int addressId);
 
-  Future editAddress(String accessToken, int addressId,
-      AddressRequest addressRequest);
+  Future editAddress(
+      String accessToken, int addressId, AddressRequest addressRequest);
 
   Future<List<CategoryVO>> addressCategories(String accessToken);
 
   Future<List<SubcategoryVO>> subCategoryByCategory(String token,
       String acceptLanguage, SubCategoryRequest subCategoryRequest);
 
-  Future<void> postOrder(String token,
-      String acceptLanguage,
-      int subTotal,
-      String paymentType,
-      List itemList,
-      String appType);
+  Future<SuccessPaymentResponse> postOrder(String token, String acceptLanguage, int subTotal,
+      String paymentType, String itemList, String appType,String paymentData,int usedPoint);
 
-  Future<List<PaymentVO>> payments(String token, String acceptLanguage);
+  Future<List<PaymentVO>> payments(String token, String acceptLanguage,String action);
 
-  Future<List<OrderVO>> orderList(String token,String acceptLanguage);
-  Future<List<OrderVO>> getOrderListByOrderType(String token,String acceptLanguage,String orderType);
-  Future<OrderVO> orderDetails(String token,String acceptLanguage,int orderId);
-  Future<ProfileVO> userProfile(String token,String acceptLanguage);
-  Future<ProfileResponse> updateProfile(String token,String acceptLanguage,String name,File? image);
-  Future<ProfileResponse> updateProfileName(String token,String acceptLanguage,String name);
+  Future<List<OrderVO>> orderList(String token, String acceptLanguage);
+
+  Future<List<OrderVO>> getOrderListByOrderType(
+      String token, String acceptLanguage, String orderType);
+
+  Future<OrderVO> orderDetails(
+      String token, String acceptLanguage, int orderId);
+
+  Future<ProfileVO> userProfile(String token, String acceptLanguage);
+
+  Future<ProfileResponse> updateProfile(
+      String token, String acceptLanguage, String name, File? image);
+
+  Future<ProfileResponse> updateProfileName(
+      String token, String acceptLanguage, String name);
+
+  Future<WalletVO> getWallet(String token, String acceptLanguage);
+
+  Future checkWalletAmount(String token, String acceptLanguage,
+      CheckWalletAmountRequest checkWalletAmountRequest);
+
+  Future checkWalletPassword(String token, String acceptLanguage,
+      CheckWalletPasswordRequest checkWalletPasswordRequest);
+
+  Future<SuccessNetworkResponse> setWalletPassword(String token, String acceptLanguage,
+      SetWalletPasswordRequest setWalletPasswordRequest);
+
+  Future<SuccessPaymentResponse> rechargeWallet(String token, String acceptLanguage,
+      int total,String paymentType,String appType,String paymentData );
+
+  Future<List<WalletTransactionVO>> getWalletTransactions(
+      String token, String acceptLanguage, WalletTransitionRequest walletTransactionRequest);
 }

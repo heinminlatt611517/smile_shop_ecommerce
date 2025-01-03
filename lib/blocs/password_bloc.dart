@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:smile_shop/data/model/smile_shop_model.dart';
 import 'package:smile_shop/data/model/smile_shop_model_impl.dart';
 import 'package:smile_shop/network/requests/set_password_request.dart';
+import 'package:smile_shop/network/responses/set_password_response.dart';
 
 class PasswordBloc extends ChangeNotifier {
   /// State
@@ -24,7 +25,7 @@ class PasswordBloc extends ChangeNotifier {
   }
 
   ///on tap confirm
-  Future onTapConfirm(String requestId,String phone) {
+  Future<SetPasswordResponse> onTapConfirm(String requestId,String phone) {
     var setPasswordRequest = SetPasswordRequest(requestId, password, confirmPassword, phone);
     _showLoading();
     return _smileShopModel

@@ -12,7 +12,6 @@ import 'package:smile_shop/widgets/common_button_view.dart';
 import 'package:smile_shop/widgets/custom_app_bar_view.dart';
 
 import '../data/vos/product_vo.dart';
-import '../utils/images.dart';
 import '../widgets/cached_network_image_view.dart';
 import 'payment_method_page.dart';
 
@@ -147,7 +146,7 @@ class _BuildAddressView extends StatelessWidget {
                       child: Text(
                     addressList?.isNotEmpty ?? true
                         ? '${addressList?.first.townshipVO?.name ?? ""},${addressList?.first.stateVO?.name ?? ""}'
-                        : 'No3 Baho Road..',
+                        : '',
                     overflow: TextOverflow.ellipsis,
                   )),
                   const SizedBox(

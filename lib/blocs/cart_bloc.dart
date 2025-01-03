@@ -61,7 +61,7 @@ class CartBloc extends ChangeNotifier {
   }
 
   void onTapIncreaseQty(ProductVO productVO){
-    int initialPrice = productVO.price!;
+    int initialPrice = productVO.variantVO?.first.price ?? 0;
     var newProductVO = productVO.copyWith(qtyCount: productVO.qtyCount!+1);
     var updatedTotalPrice = newProductVO.qtyCount! * (initialPrice);
     _smileShopModel.saveProductToHive(newProductVO.copyWith(totalPrice: updatedTotalPrice));
@@ -71,7 +71,7 @@ class CartBloc extends ChangeNotifier {
 
   void onTapDecreaseQty(ProductVO productVO){
     if (productVO.qtyCount! >= 0){
-      int initialQtyPrice = productVO.price!;
+      int initialQtyPrice = productVO.variantVO?.first.price ?? 0;
       var newProductVO = productVO.copyWith(qtyCount: productVO.qtyCount! - 1);
       var updatedTotalPrice = newProductVO.qtyCount! * (initialQtyPrice);
       _smileShopModel.saveProductToHive(newProductVO.copyWith(totalPrice: updatedTotalPrice));

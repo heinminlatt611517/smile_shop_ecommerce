@@ -12,6 +12,7 @@ const kHiveTypeSizeVO = 9;
 const kHiveTypeImageVO = 10;
 const kHiveTypeExtendedPriceVO = 11;
 const kHiveInventoryVO = 12;
+const kHiveReferVO = 13;
 
 
 /// Adapters
@@ -28,6 +29,7 @@ const kAdapterSizeVO = "SizeVOAdapter";
 const kAdapterImageVO = "ImageVOAdapter";
 const kAdapterExtendedVO = "ExtendedPriceVOAdapter";
 const kAdapterInventoryVO = "InventoryVOAdapter";
+const kAdapterReferVO = "ReferVOAdapter";
 
 
 ///Box Name

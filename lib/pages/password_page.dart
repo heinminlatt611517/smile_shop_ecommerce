@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:smile_shop/blocs/password_bloc.dart';
+import 'package:smile_shop/pages/login_page.dart';
 import 'package:smile_shop/pages/main_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
@@ -40,82 +41,84 @@ class _PasswordPageState extends State<PasswordPage> {
                SafeArea(
                   child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 116,),
-                    SizedBox(
-                      height: 100,
-                      width: 100,
-                      child: Image.asset(
-                        kAppLogoImage,
-                        fit: BoxFit.cover,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 116,),
+                      SizedBox(
+                        height: 100,
+                        width: 100,
+                        child: Image.asset(
+                          kAppLogoImage,
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 58,
-                    ),
-                    const SizedBox(
-                      height: kMargin30,
-                    ),
-                    ///set your password view
-                    Consumer<PasswordBloc>(
-                      builder: (context,bloc,child) =>
-                          InputViewLockIcon(
-                              hintLabel: 'Set your password',
-                              onChangeValue: (value){
-                                bloc.onPasswordChanged(value);
-                              }),
-                    ),
-                    const SizedBox(
-                      height: kMargin34,
-                    ),
+                      const SizedBox(
+                        height: 58,
+                      ),
+                      const SizedBox(
+                        height: kMargin30,
+                      ),
+                      ///set your password view
+                      Consumer<PasswordBloc>(
+                        builder: (context,bloc,child) =>
+                            InputViewLockIcon(
+                                hintLabel: 'Set your password',
+                                onChangeValue: (value){
+                                  bloc.onPasswordChanged(value);
+                                }),
+                      ),
+                      const SizedBox(
+                        height: kMargin34,
+                      ),
 
-                    ///retype your password view
-                    Consumer<PasswordBloc>(
-                      builder: (context,bloc,child) =>
-                          InputViewLockIcon(
-                              hintLabel: 'Retype your password',
-                              onChangeValue: (value){
-                                bloc.onConfirmPasswordChanged(value);
-                              }),
-                    ),
-                    const SizedBox(
-                      height: kMargin34,
-                    ),
+                      ///retype your password view
+                      Consumer<PasswordBloc>(
+                        builder: (context,bloc,child) =>
+                            InputViewLockIcon(
+                                hintLabel: 'Retype your password',
+                                onChangeValue: (value){
+                                  bloc.onConfirmPasswordChanged(value);
+                                }),
+                      ),
+                      const SizedBox(
+                        height: kMargin34,
+                      ),
 
-                    ///confirm button
-                    GestureDetector(
-                      onTap: () {
-                        var bloc =
-                        Provider.of<PasswordBloc>(context, listen: false);
+                      ///confirm button
+                      GestureDetector(
+                        onTap: () {
+                          var bloc =
+                          Provider.of<PasswordBloc>(context, listen: false);
 
-                        bloc.onTapConfirm(widget.requestId??"", widget.phone??"").then((value) {
-                          if (value.status == 1) {
-                            Navigator.of(context).pushAndRemoveUntil(
-                                MaterialPageRoute(builder: (builder) => const MainPage()),(Route<dynamic> route) => false);
-                          }
-                        }).catchError((error) {
-                          showCommonDialog(
-                              context: context,
-                              dialogWidget: ErrorDialogView(
-                                  errorMessage: error.toString()));
-                        });
-                      },
-                      child: Container(
-                        height: 40,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            color: kPrimaryColor,
-                            borderRadius: BorderRadius.circular(4)),
-                        child: const Center(
-                          child: Text(
-                            'Confirm',
-                            style: TextStyle(color: kBackgroundColor),
+                          bloc.onTapConfirm(widget.requestId??"", widget.phone??"").then((value) {
+                            if (value.statusCode == 200) {
+                              Navigator.of(context).pushAndRemoveUntil(
+                                  MaterialPageRoute(builder: (builder) => const LoginPage()),(Route<dynamic> route) => false);
+                            }
+                          }).catchError((error) {
+                            showCommonDialog(
+                                context: context,
+                                dialogWidget: ErrorDialogView(
+                                    errorMessage: error.toString()));
+                          });
+                        },
+                        child: Container(
+                          height: 40,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                              color: kPrimaryColor,
+                              borderRadius: BorderRadius.circular(4)),
+                          child: const Center(
+                            child: Text(
+                              'Confirm',
+                              style: TextStyle(color: kBackgroundColor),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
                          )),
 

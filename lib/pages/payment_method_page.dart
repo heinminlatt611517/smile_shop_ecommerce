@@ -33,35 +33,73 @@ class PaymentMethodPage extends StatelessWidget {
       create: (context) => PaymentBloc(productList ?? []),
       child: Scaffold(
         backgroundColor: kBackgroundColor,
-        appBar:const CustomAppBarView(title: 'Payment Method'),
+        appBar: const CustomAppBarView(title: 'Payment Method'),
         body: Selector<PaymentBloc, bool>(
           selector: (context, bloc) => bloc.isLoading,
           builder: (BuildContext context, isLoading, Widget? child) => Stack(
             children: [
               ///body view
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Choose type of payment.',
-                      style: TextStyle(fontSize: kTextRegular2x),
-                    ),
-                    const SizedBox(
-                      height: kMargin30,
-                    ),
-                    Selector<PaymentBloc, List<PaymentVO>>(
-                      selector: (context, bloc) => bloc.payments,
-                      builder: (context, paymentMethods, child) =>
-                          MediaQuery.removePadding(
-                              context: context,
-                              removeBottom: true,
-                              removeTop: true,
-                              child: Consumer<PaymentBloc>(
-                                builder: (context, bloc, child) =>
-                                    ListView.builder(
+              Consumer<PaymentBloc>(
+                builder: (context, bloc, child) => Form(
+                  key: bloc.formKey,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 16),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Choose type of payment.',
+                            style: TextStyle(fontSize: kTextRegular2x),
+                          ),
+                          const SizedBox(
+                            height: kMarginMedium2,
+                          ),
+
+                          ///password input view
+                          Consumer<PaymentBloc>(
+                            builder: (context, bloc, child) => Visibility(
+                              visible: bloc.showEnterAmountTextFiled,
+                              child: TextFormField(
+                                controller: bloc.amountTextController,
+                                cursorColor: Colors.black,
+                                decoration: const InputDecoration(
+                                    filled: true,
+                                    fillColor: Colors.white,
+                                    border: InputBorder.none,
+                                    contentPadding:
+                                        EdgeInsets.symmetric(horizontal: 21),
+                                    hintText: 'Please enter amount',
+                                    hintStyle: TextStyle(color: Colors.grey)),
+                                onChanged: (v) {
+                                  bloc.onChangedAmount(v);
+                                },
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter an amount';
+                                  }
+                                  if (double.tryParse(value) == null) {
+                                    return 'Please enter a valid number';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: kMargin30,
+                          ),
+                          Selector<PaymentBloc, List<PaymentVO>>(
+                            selector: (context, bloc) => bloc.payments,
+                            builder: (context, paymentMethods, child) =>
+                                MediaQuery.removePadding(
+                                    context: context,
+                                    removeBottom: true,
+                                    removeTop: true,
+                                    child: Consumer<PaymentBloc>(
+                                      builder: (context, bloc, child) =>
+                                          ListView.builder(
                                         physics:
                                             const NeverScrollableScrollPhysics(),
                                         itemCount: paymentMethods.length,
@@ -80,43 +118,60 @@ class PaymentMethodPage extends StatelessWidget {
                                                   paymentMethods[index].code ??
                                                       "");
                                             },
+                                            onTapSubPayment: (subPaymentIndex) {
+                                              bloc.onSelectSubPayment(
+                                                  index, subPaymentIndex);
+                                            },
+                                            isSelectedSubPayment:
+                                                (subPaymentIndex) {
+                                              return bloc.isSelectedSubPayment(
+                                                  index, subPaymentIndex);
+                                            },
                                           );
-                                        }),
-                              )),
+                                        },
+                                      ),
+                                    )),
+                          ),
+                          const SizedBox(
+                            height: kMargin80,
+                          ),
+                          Consumer<PaymentBloc>(
+                            builder: (context, bloc, child) => CommonButtonView(
+                                label: 'Check Out',
+                                labelColor: Colors.white,
+                                bgColor: kPrimaryColor,
+                                onTapButton: () {
+                                  if (bloc.formKey.currentState!.validate()) {
+                                    List<OrderVariantVO> orderVariants = [];
+                                    for (var product in productList ?? []) {
+                                      var subOrderVariantVo = OrderVariantVO(
+                                          qty: product.qtyCount,
+                                          colorName: product.colorName,
+                                          variantAttributeValueId: 1,
+                                          variantProductId:
+                                              product.variantVO.first.id,
+                                          productId: product.id);
+                                      orderVariants.add(subOrderVariantVo);
+                                    }
+                                    if (bloc.paymentData.isEmpty) {
+                                      showCommonDialog(
+                                          context: context,
+                                          dialogWidget: const ErrorDialogView(
+                                              errorMessage:
+                                                  'Please select payment'));
+                                    } else {
+                                      bloc
+                                          .onTapCheckout(
+                                              productSubTotalPrice ?? 0,
+                                              orderVariants,context,isFromCartPage);
+                                    }
+                                  }
+                                }),
+                          ),
+                        ],
+                      ),
                     ),
-                    const SizedBox(
-                      height: kMargin80,
-                    ),
-                    Consumer<PaymentBloc>(
-                      builder: (context, bloc, child) => CommonButtonView(
-                          label: 'Check Out',
-                          labelColor: Colors.white,
-                          bgColor: kPrimaryColor,
-                          onTapButton: () {
-                            List<OrderVariantVO> orderVariants = [];
-                            for (var product in productList ?? []) {
-                              var subOrderVariantVo = OrderVariantVO(qty: product.qtyCount,colorName: product.colorName);
-                              orderVariants.add(subOrderVariantVo);
-                            }
-                            bloc
-                                .onTapCheckout(
-                                     productSubTotalPrice ?? 0, orderVariants)
-                                .then((value) {
-                              if (isFromCartPage == true) {
-                                bloc.clearAddToCartProductByProductIdFromDatabase();
-                              }
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (builder) =>
-                                      const OrderSuccessfulPage()));
-                            }).catchError((error) {
-                              showCommonDialog(
-                                  context: context,
-                                  dialogWidget: ErrorDialogView(
-                                      errorMessage: error.toString()));
-                            });
-                          }),
-                    ),
-                  ],
+                  ),
                 ),
               ),
 

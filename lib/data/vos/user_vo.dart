@@ -1,5 +1,6 @@
 import 'package:hive_flutter/adapters.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:smile_shop/data/vos/refer_code_vo.dart';
 import 'package:smile_shop/persistence/hive_constants.dart';
 part 'user_vo.g.dart';
 
@@ -116,7 +117,7 @@ class UserVO {
 
   @JsonKey(name: 'invite_code')
   @HiveField(27)
-  final String? inviteCode;
+  final int? inviteCode;
 
   @JsonKey(name: 'created_at')
   @HiveField(28)
@@ -137,6 +138,10 @@ class UserVO {
   @JsonKey(name: 'profile_image')
   @HiveField(32)
   final String? profileImage;
+
+  @JsonKey(name: 'refer_code')
+  @HiveField(33)
+  final ReferCodeVO? referCodeVO;
 
   UserVO({
     this.id,
@@ -172,6 +177,7 @@ class UserVO {
     this.freeze,
     this.userPhoto,
     this.profileImage,
+    this.referCodeVO
   });
 
   factory UserVO.fromJson(Map<String, dynamic> json) =>

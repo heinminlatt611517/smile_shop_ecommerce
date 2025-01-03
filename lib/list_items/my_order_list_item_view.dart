@@ -1,19 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:smile_shop/data/vos/order_vo.dart';
+import 'package:smile_shop/network/api_constants.dart';
 
 import '../utils/colors.dart';
 import '../utils/dimens.dart';
 import '../widgets/cached_network_image_view.dart';
 
 class MyOrderListItemView extends StatelessWidget {
-  const MyOrderListItemView({super.key, required this.isRefundView,this.onTapRefund,this.onTapReview});
+  const MyOrderListItemView(
+      {super.key,
+      required this.isRefundView,
+      this.onTapRefund,
+      this.onTapReview,
+      this.orderVO});
+
   final bool isRefundView;
   final Function()? onTapRefund;
   final Function()? onTapReview;
+  final OrderVO? orderVO;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric( horizontal: isRefundView ? 0 : 16, vertical: 13),
+      margin:
+          EdgeInsets.symmetric(horizontal: isRefundView ? 0 : 16, vertical: 13),
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
       decoration: BoxDecoration(
           color: Colors.white, borderRadius: BorderRadius.circular(20)),
@@ -22,12 +32,12 @@ class MyOrderListItemView extends StatelessWidget {
         children: [
           isRefundView == true
               ? const SizedBox.shrink()
-              : const Row(
+              : Row(
                   children: [
-                    Spacer(),
+                    const Spacer(),
                     Text(
-                      'To Pay',
-                      style: TextStyle(color: kFillingFastColor),
+                      orderVO?.paymentStatus ?? "",
+                      style: const TextStyle(color: kFillingFastColor),
                     ),
                   ],
                 ),
@@ -39,11 +49,12 @@ class MyOrderListItemView extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: const CachedNetworkImageView(
-                    imageHeight: 80,
-                    imageWidth: 80,
-                    imageUrl:
-                        'https://media.istockphoto.com/id/1311107708/photo/focused-cute-stylish-african-american-female-student-with-afro-dreadlocks-studying-remotely.jpg?s=612x612&w=0&k=20&c=OwxBza5YzLWkE_2abTKqLLW4hwhmM2PW9BotzOMMS5w='),
+                child: CachedNetworkImageView(
+                  imageHeight: 80,
+                  imageWidth: 80,
+                  imageUrl: orderVO?.orderProducts?.first.product?.image ??
+                      errorImageUrl,
+                ),
               ),
               const SizedBox(
                 width: kMarginMedium3,
@@ -52,43 +63,43 @@ class MyOrderListItemView extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Product Name',
+                    Text(
+                      orderVO?.orderProducts?.first.product?.name ?? '',
                       overflow: TextOverflow.ellipsis,
                       softWrap: true,
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontSize: kTextRegular2x,
                           fontWeight: FontWeight.w600),
                     ),
                     const SizedBox(
                       height: kMargin10,
                     ),
-                    const Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
                           overflow: TextOverflow.ellipsis,
-                          'Ks 100000.00',
-                          style: TextStyle(fontSize: kTextRegular2x),
+                          'Ks ${orderVO?.orderProducts?.first.price ?? ''}',
+                          style: const TextStyle(fontSize: kTextRegular2x),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: kMargin30,
                         ),
                         Text(
-                          'Qty: 1',
-                          style: TextStyle(fontSize: kTextSmall),
+                          'Qty: ${orderVO?.orderProducts?.first.qty ?? ''}',
+                          style: const TextStyle(fontSize: kTextSmall),
                         )
                       ],
                     ),
                     const SizedBox(
                       height: kMargin10,
                     ),
-                    const Row(
+                    Row(
                       children: [
-                        Spacer(),
+                        const Spacer(),
                         Text(
-                          'Total(1 item): Ks 3,500',
-                          style: TextStyle(fontSize: kTextSmall),
+                          'Total(${orderVO?.orderProducts?.first.qty ?? ''} item): Ks ${orderVO?.orderProducts?.first.subtotal ?? ''}',
+                          style: const TextStyle(fontSize: kTextSmall),
                         ),
                       ],
                     ),
@@ -97,42 +108,42 @@ class MyOrderListItemView extends StatelessWidget {
                     ),
                     isRefundView == true
                         ? Row(
-                      children: [
-                        const Spacer(),
-                        Container(
-                          height: 26,
-                          width: 57,
-                          decoration: BoxDecoration(
-                              border:
-                              Border.all(color: kFillingFastColor),
-                              borderRadius: BorderRadius.circular(5)),
-                          child: const Center(
-                            child: Text(
-                              'Refund',
-                              style: TextStyle(fontSize: kTextSmall),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 15,
-                        ),
-                        Container(
-                          height: 26,
-                          width: 68,
-                          decoration: BoxDecoration(
-                              color: kFillingFastColor,
-                              borderRadius: BorderRadius.circular(5)),
-                          child: const Center(
-                            child: Text(
-                              'Review',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: kTextSmall),
-                            ),
-                          ),
-                        )
-                      ],
-                    )
+                            children: [
+                              const Spacer(),
+                              Container(
+                                height: 26,
+                                width: 57,
+                                decoration: BoxDecoration(
+                                    border:
+                                        Border.all(color: kFillingFastColor),
+                                    borderRadius: BorderRadius.circular(5)),
+                                child: const Center(
+                                  child: Text(
+                                    'Refund',
+                                    style: TextStyle(fontSize: kTextSmall),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 15,
+                              ),
+                              Container(
+                                height: 26,
+                                width: 68,
+                                decoration: BoxDecoration(
+                                    color: kFillingFastColor,
+                                    borderRadius: BorderRadius.circular(5)),
+                                child: const Center(
+                                  child: Text(
+                                    'Review',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: kTextSmall),
+                                  ),
+                                ),
+                              )
+                            ],
+                          )
                         : Row(
                             children: [
                               const Spacer(),
@@ -179,10 +190,4 @@ class MyOrderListItemView extends StatelessWidget {
       ),
     );
   }
-
 }
-
-
-
-
-

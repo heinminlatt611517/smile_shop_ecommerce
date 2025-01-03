@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smile_shop/data/model/smile_shop_model.dart';
 import 'package:smile_shop/data/model/smile_shop_model_impl.dart';
 import 'package:smile_shop/data/vos/order_vo.dart';
-import 'package:smile_shop/data/vos/product_vo.dart';
-import 'package:smile_shop/data/vos/sub_category_vo.dart';
 import 'package:smile_shop/network/api_constants.dart';
-import 'package:smile_shop/network/requests/sub_category_request.dart';
 
 class OrderBloc extends ChangeNotifier {
   final SmileShopModel _smileShopModel = SmileShopModelImpl();

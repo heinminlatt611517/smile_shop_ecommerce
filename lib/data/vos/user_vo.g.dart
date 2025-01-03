@@ -44,19 +44,20 @@ class UserVOAdapter extends TypeAdapter<UserVO> {
       isLimit: fields[24] as int?,
       profileName: fields[25] as String?,
       profile: fields[26] as String?,
-      inviteCode: fields[27] as String?,
+      inviteCode: fields[27] as int?,
       createdAt: fields[28] as String?,
       updatedAt: fields[29] as String?,
       freeze: fields[30] as int?,
       userPhoto: fields[31] as String?,
       profileImage: fields[32] as String?,
+      referCodeVO: fields[33] as ReferCodeVO?,
     );
   }
 
   @override
   void write(BinaryWriter writer, UserVO obj) {
     writer
-      ..writeByte(33)
+      ..writeByte(34)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -122,7 +123,9 @@ class UserVOAdapter extends TypeAdapter<UserVO> {
       ..writeByte(31)
       ..write(obj.userPhoto)
       ..writeByte(32)
-      ..write(obj.profileImage);
+      ..write(obj.profileImage)
+      ..writeByte(33)
+      ..write(obj.referCodeVO);
   }
 
   @override
@@ -168,12 +171,15 @@ UserVO _$UserVOFromJson(Map<String, dynamic> json) => UserVO(
       isLimit: (json['is_limit'] as num?)?.toInt(),
       profileName: json['profile_name'] as String?,
       profile: json['profile'] as String?,
-      inviteCode: json['invite_code'] as String?,
+      inviteCode: (json['invite_code'] as num?)?.toInt(),
       createdAt: json['created_at'] as String?,
       updatedAt: json['updated_at'] as String?,
       freeze: (json['freeze'] as num?)?.toInt(),
       userPhoto: json['user_photo'] as String?,
       profileImage: json['profile_image'] as String?,
+      referCodeVO: json['refer_code'] == null
+          ? null
+          : ReferCodeVO.fromJson(json['refer_code'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$UserVOToJson(UserVO instance) => <String, dynamic>{
@@ -210,4 +216,5 @@ Map<String, dynamic> _$UserVOToJson(UserVO instance) => <String, dynamic>{
       'freeze': instance.freeze,
       'user_photo': instance.userPhoto,
       'profile_image': instance.profileImage,
+      'refer_code': instance.referCodeVO,
     };

@@ -1,11 +1,22 @@
-import 'package:smile_shop/data/model/smile_shop_model.dart';
-import 'package:smile_shop/data/model/smile_shop_model_impl.dart';
-import 'package:smile_shop/data/vos/payment_vo.dart';
-import 'package:smile_shop/data/vos/product_vo.dart';
-import 'package:smile_shop/network/api_constants.dart';
-import 'package:flutter/material.dart';
+import 'dart:convert';
 
-import '../data/vos/variant_vo.dart';
+import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:smile_shop/utils/strings.dart';
+import 'package:smile_shop/widgets/qr_dialog_view.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../data/model/smile_shop_model.dart';
+import '../data/model/smile_shop_model_impl.dart';
+import '../data/vos/order_variant_vo.dart';
+import '../data/vos/payment_vo.dart';
+import '../data/vos/product_vo.dart';
+import '../network/api_constants.dart';
+import '../network/requests/check_wallet_amount_request.dart';
+import '../network/requests/check_wallet_password_request.dart';
+import '../pages/order_successful_page.dart';
+import '../widgets/common_dialog.dart';
+import '../widgets/error_dialog_view.dart';
 
 class PaymentBloc extends ChangeNotifier {
   final SmileShopModel _smileShopModel = SmileShopModelImpl();
@@ -17,7 +28,15 @@ class PaymentBloc extends ChangeNotifier {
   List<PaymentVO> payments = [];
   List<ProductVO> products = [];
   int? selectedIndex;
+  int? selectedSubPaymentIndex;
+  int currentSubPaymentIndex = 0;
   var selectedPaymentType = "";
+  bool showEnterAmountTextFiled = false;
+  Map<int, int> selectedSubPaymentIndices = {};
+  var amount = "";
+  var amountTextController = TextEditingController();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  Map<String, String> paymentData = {};
 
   PaymentBloc(this.products) {
     authToken =
@@ -25,9 +44,9 @@ class PaymentBloc extends ChangeNotifier {
 
     debugPrint(authToken);
 
-    ///get payment menthod list
+    ///get payment method list
     _smileShopModel
-        .payments(authToken, kAcceptLanguageEn)
+        .payments(authToken, kAcceptLanguageEn, kParamOrder)
         .then((paymentListResponse) {
       payments = paymentListResponse;
       _notifySafely();
@@ -35,20 +54,111 @@ class PaymentBloc extends ChangeNotifier {
   }
 
   ///check out
-  Future<void> onTapCheckout(
-       int subTotal, List variantVOList) {
+  Future<void> onTapCheckout(int subTotal, List<OrderVariantVO> variantVOList,
+      BuildContext context, bool? isFromCartPage) async {
     _showLoading();
-    return _smileShopModel
-        .postOrder(authToken, kAcceptLanguageEn, subTotal,
-            selectedPaymentType, variantVOList, 'app')
-        .whenComplete(() {
+
+    List<Map<String, dynamic>> itemList =
+        variantVOList.map((item) => item.toJson()).toList();
+    String itemListJson = jsonEncode(itemList);
+
+    try {
+      if (selectedIndex == 0) {
+        var checkWalletAmountRequest =
+            CheckWalletAmountRequest(int.parse(amount));
+        var checkWalletPasswordRequest = CheckWalletPasswordRequest(
+            GetStorage().read(kBoxKeyWalletPassword));
+
+        await _smileShopModel.checkWalletAmount(
+            authToken, kAcceptLanguageEn, checkWalletAmountRequest);
+
+        await _smileShopModel.checkWalletPassword(
+            authToken, kAcceptLanguageEn, checkWalletPasswordRequest);
+      }
+
+      await _smileShopModel
+          .postOrder(
+        authToken,
+        kAcceptLanguageEn,
+        subTotal,
+        selectedPaymentType,
+        itemListJson,
+        'app',
+        jsonEncode(paymentData),
+        0,
+      )
+          .then((response) {
+        if (isFromCartPage == true) {
+          clearAddToCartProductByProductIdFromDatabase();
+          if (response.data?.responseType == 'url') {
+            launchUrl(Uri.parse(response.data?.response)).then((val) {
+              showLoadingAndNavigate(context);
+            });
+          } else if (response.data?.responseType == 'qr') {
+            showCommonDialog(
+                    context: context,
+                    dialogWidget:
+                        QrDialogView(qrCodeString: response.data?.response))
+                .then((val) {
+              showLoadingAndNavigate(context);
+            });
+          } else if (response.data?.responseType == 'pin') {
+            showLoadingAndNavigate(context);
+          } else {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (builder) => const OrderSuccessfulPage()));
+          }
+        }
+      });
+    } catch (error) {
+      showCommonDialog(
+          context: context,
+          dialogWidget: ErrorDialogView(errorMessage: error.toString()));
+    } finally {
       _hideLoading();
-    } );
+    }
   }
 
-  void onSelectPayment(int index,String paymentType) {
+  void onChangedAmount(String value) {
+    amount = value;
+    _notifySafely();
+  }
+
+  void showLoadingAndNavigate(BuildContext context) async {
+    _showLoading();
+    await Future.delayed(const Duration(minutes: 1));
+    _hideLoading();
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const OrderSuccessfulPage(),
+      ),
+    );
+  }
+
+  void onSelectPayment(int index, String paymentType) {
+    if (selectedIndex != index) {
+      if (selectedIndex != -1) {
+        selectedSubPaymentIndices[selectedIndex ?? 0] = -1;
+      }
+    }
+
     selectedIndex = isSelected(index) ? -1 : index;
+
+    if (payments[index].name == 'Dinger') {
+      onSelectSubPayment(index, 0);
+    } else {
+      selectedSubPaymentIndices[index] = -1;
+      paymentData = {
+        "code": payments[index].code ?? "",
+        "method": payments[index].method ?? "",
+      };
+      _notifySafely();
+    }
+
     selectedPaymentType = paymentType;
+
+    showEnterAmountTextFiled = index == 0;
+
     notifyListeners();
   }
 
@@ -56,9 +166,41 @@ class PaymentBloc extends ChangeNotifier {
     return index == selectedIndex;
   }
 
-  void clearAddToCartProductByProductIdFromDatabase(){
-    for(var product in products){
+  bool isSelectedSubPayment(int paymentIndex, int subPaymentIndex) {
+    return selectedSubPaymentIndices[paymentIndex] == subPaymentIndex;
+  }
+
+  void onSelectSubPayment(int paymentIndex, int subPaymentIndex) {
+    paymentData = {
+      "code": "${payments[paymentIndex].subPaymentVO?[subPaymentIndex].code}",
+      "method":
+          "${payments[paymentIndex].subPaymentVO?[subPaymentIndex].method}"
+    };
+
+    if (selectedSubPaymentIndices[paymentIndex] == subPaymentIndex) {
+      selectedSubPaymentIndices[paymentIndex] = -1;
+    } else {
+      selectedSubPaymentIndices[paymentIndex] = subPaymentIndex;
+    }
+
+    notifyListeners();
+  }
+
+  void clearAddToCartProductByProductIdFromDatabase() {
+    for (var product in products) {
       _smileShopModel.clearSaveAddToCartProductByProductId(product.id ?? 0);
+    }
+  }
+
+  void launchURL(String url) async {
+    try {
+      if (await canLaunch(url)) {
+        await launch(url);
+      } else {
+        throw 'Could not launch $url';
+      }
+    } catch (e) {
+      print('Error launching URL: $e');
     }
   }
 

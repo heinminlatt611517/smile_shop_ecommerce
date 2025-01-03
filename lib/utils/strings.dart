@@ -19,3 +19,4 @@ const kLoginData = "LoginData";
 
 ///get storage key
 const kBoxKeyReferralCode = "Referral Code";
+const kBoxKeyWalletPassword = "Wallet Password";

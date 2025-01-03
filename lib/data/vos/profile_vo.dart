@@ -87,7 +87,7 @@ class ProfileVO {
   final String? profile;
 
   @JsonKey(name: 'invite_code')
-  final String? inviteCode;
+  final int? inviteCode;
 
   @JsonKey(name: 'is_head')
   final int? isHead;

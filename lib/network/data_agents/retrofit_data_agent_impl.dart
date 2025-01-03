@@ -14,17 +14,26 @@ import 'package:smile_shop/data/vos/profile_vo.dart';
 import 'package:smile_shop/data/vos/state_vo.dart';
 import 'package:smile_shop/data/vos/sub_category_vo.dart';
 import 'package:smile_shop/data/vos/township_data_vo.dart';
+import 'package:smile_shop/data/vos/wallet_transaction_vo.dart';
+import 'package:smile_shop/data/vos/wallet_vo.dart';
 import 'package:smile_shop/network/data_agents/smile_shop_data_agent.dart';
 import 'package:smile_shop/network/requests/address_request.dart';
+import 'package:smile_shop/network/requests/check_wallet_amount_request.dart';
+import 'package:smile_shop/network/requests/check_wallet_password_request.dart';
 import 'package:smile_shop/network/requests/login_request.dart';
 import 'package:smile_shop/network/requests/otp_request.dart';
 import 'package:smile_shop/network/requests/otp_verify_request.dart';
 import 'package:smile_shop/network/requests/set_password_request.dart';
+import 'package:smile_shop/network/requests/set_wallet_password_request.dart';
 import 'package:smile_shop/network/requests/sub_category_request.dart';
+import 'package:smile_shop/network/requests/wallet_transition_request.dart';
 import 'package:smile_shop/network/responses/address_response.dart';
 import 'package:smile_shop/network/responses/login_response.dart';
 import 'package:smile_shop/network/responses/otp_response.dart';
 import 'package:smile_shop/network/responses/profile_response.dart';
+import 'package:smile_shop/network/responses/set_password_response.dart';
+import 'package:smile_shop/network/responses/success_network_response.dart';
+import 'package:smile_shop/network/responses/success_payment_response.dart';
 import 'package:smile_shop/network/smile_shop_api.dart';
 
 import '../../data/vos/error_vo.dart';
@@ -195,7 +204,8 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   }
 
   @override
-  Future setPassword(SetPasswordRequest setPasswordRequest) {
+  Future<SetPasswordResponse> setPassword(
+      SetPasswordRequest setPasswordRequest) {
     return mApi
         .setPassword(setPasswordRequest)
         .asStream()
@@ -318,28 +328,9 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   }
 
   @override
-  Future<void> postOrder(String token, String acceptLanguage, int subTotal,
-      String paymentType, List itemList, String appType) {
+  Future<List<PaymentVO>> payments(String token, String acceptLanguage,String action) {
     return mApi
-        .postOrder(
-            "Bearer $token",
-            acceptLanguage,
-            subTotal,
-            paymentType,
-            '[{"variant_product_id" : 1,"product_id":1, "variant_attribute_value_id" : 1 , "qty" : 2}]',
-            appType)
-        .asStream()
-        .map((response) => response)
-        .first
-        .catchError((error) {
-      throw _createException(error);
-    });
-  }
-
-  @override
-  Future<List<PaymentVO>> payments(String token, String acceptLanguage) {
-    return mApi
-        .payments(token, acceptLanguage)
+        .payments(token, acceptLanguage,action)
         .asStream()
         .map((response) => response.data ?? [])
         .first
@@ -380,12 +371,12 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
         .ordersByOrderType('Bearer $token', acceptLanguage, orderType)
         .asStream()
         .map((response) {
-      return response.data ?? [];
-    })
+          return response.data ?? [];
+        })
         .first
         .catchError((error) {
-      throw _createException(error);
-    });
+          throw _createException(error);
+        });
   }
 
   @override
@@ -462,6 +453,119 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
         .catchError((error) {
           throw _createException(error);
         });
+  }
+
+  @override
+  Future<WalletVO> getWallet(String token, String acceptLanguage) {
+    return mApi
+        .getWallet('Bearer $token', acceptLanguage)
+        .asStream()
+        .map((response) {
+          return response.data ?? WalletVO();
+        })
+        .first
+        .catchError((error) {
+          throw _createException(error);
+        });
+  }
+
+  @override
+  Future checkWalletAmount(String token, String acceptLanguage,
+      CheckWalletAmountRequest checkWalletAmountRequest) {
+    return mApi
+        .checkWalletAmount(
+            'Bearer $token', acceptLanguage, checkWalletAmountRequest)
+        .asStream()
+        .map((response) {
+          return response;
+        })
+        .first
+        .catchError((error) {
+          throw _createException(error);
+        });
+  }
+
+  @override
+  Future checkWalletPassword(String token, String acceptLanguage,
+      CheckWalletPasswordRequest checkWalletPasswordRequest) {
+    return mApi
+        .checkWalletPassword(
+            'Bearer $token', acceptLanguage, checkWalletPasswordRequest)
+        .asStream()
+        .map((response) {
+          return response;
+        })
+        .first
+        .catchError((error) {
+          throw _createException(error);
+        });
+  }
+
+  @override
+  Future<SuccessNetworkResponse> setWalletPassword(
+      String token,
+      String acceptLanguage,
+      SetWalletPasswordRequest setWalletPasswordRequest) {
+    return mApi
+        .setWalletPassword(
+            'Bearer $token', acceptLanguage, setWalletPasswordRequest)
+        .asStream()
+        .map((response) {
+          return response;
+        })
+        .first
+        .catchError((error) {
+          throw _createException(error);
+        });
+  }
+
+
+  @override
+  Future<SuccessPaymentResponse> postOrder(String token, String acceptLanguage, int subTotal, String paymentType, String itemList, String appType, String paymentData, int usedPoint) {
+    return mApi
+        .postOrder(
+        "Bearer $token",
+        acceptLanguage,
+        subTotal,
+        paymentType,
+        itemList,
+        appType,paymentData,usedPoint)
+        .asStream()
+        .map((response) => response)
+        .first
+        .catchError((error) {
+      throw _createException(error);
+    });
+  }
+
+  @override
+  Future<List<WalletTransactionVO>> getWalletTransactions(String token, String acceptLanguage, WalletTransitionRequest walletTransactionRequest) {
+    return mApi
+        .getWalletTransitionLogs(
+        'Bearer $token', acceptLanguage,walletTransactionRequest)
+        .asStream()
+        .map((response) {
+      return response.data?.walletTransactions ?? [];
+    })
+        .first
+        .catchError((error) {
+      throw _createException(error);
+    });
+  }
+
+  @override
+  Future<SuccessPaymentResponse> rechargeWallet(String token, String acceptLanguage, int total, String paymentType, String appType, String paymentData) {
+    return mApi
+        .rechargeWallet(
+        'Bearer $token', acceptLanguage,total,paymentType,appType,paymentData)
+        .asStream()
+        .map((response) {
+      return response;
+    })
+        .first
+        .catchError((error) {
+      throw _createException(error);
+    });
   }
 }
 

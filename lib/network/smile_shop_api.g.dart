@@ -14,7 +14,7 @@ class _SmileShopApi implements SmileShopApi {
     this.baseUrl,
     this.errorLogger,
   }) {
-    baseUrl ??= 'http://152.42.236.92';
+    baseUrl ??= 'https://backend.saxdihtan.asia';
   }
 
   final Dio _dio;
@@ -58,14 +58,14 @@ class _SmileShopApi implements SmileShopApi {
   }
 
   @override
-  Future<LoginResponse> setPassword(
+  Future<SetPasswordResponse> setPassword(
       SetPasswordRequest setPasswordRequest) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(setPasswordRequest.toJson());
-    final _options = _setStreamType<LoginResponse>(Options(
+    final _options = _setStreamType<SetPasswordResponse>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -82,9 +82,9 @@ class _SmileShopApi implements SmileShopApi {
           baseUrl,
         )));
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late LoginResponse _value;
+    late SetPasswordResponse _value;
     try {
-      _value = LoginResponse.fromJson(_result.data!);
+      _value = SetPasswordResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;
@@ -918,13 +918,15 @@ class _SmileShopApi implements SmileShopApi {
   }
 
   @override
-  Future<void> postOrder(
+  Future<SuccessPaymentResponse> postOrder(
     String token,
     String acceptLanguage,
     int subTotal,
     String paymentType,
     String itemList,
     String appType,
+    String paymentData,
+    int usedPoint,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -938,8 +940,10 @@ class _SmileShopApi implements SmileShopApi {
       'payment_type': paymentType,
       'items': itemList,
       'app_type': appType,
+      'payment_data': paymentData,
+      'used_point': usedPoint,
     };
-    final _options = _setStreamType<void>(Options(
+    final _options = _setStreamType<SuccessPaymentResponse>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -955,16 +959,25 @@ class _SmileShopApi implements SmileShopApi {
           _dio.options.baseUrl,
           baseUrl,
         )));
-    await _dio.fetch<void>(_options);
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late SuccessPaymentResponse _value;
+    try {
+      _value = SuccessPaymentResponse.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
   }
 
   @override
   Future<PaymentResponse> payments(
     String token,
     String acceptLanguage,
+    String action,
   ) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'action': action};
     final _headers = <String, dynamic>{
       r'Authorization': token,
       r'Accept-Language': acceptLanguage,
@@ -1248,6 +1261,251 @@ class _SmileShopApi implements SmileShopApi {
     late ProfileResponse _value;
     try {
       _value = ProfileResponse.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<WalletResponse> getWallet(
+    String token,
+    String acceptLanguage,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{
+      r'Authorization': token,
+      r'Accept-Language': acceptLanguage,
+    };
+    _headers.removeWhere((k, v) => v == null);
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<WalletResponse>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/api/wallet',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late WalletResponse _value;
+    try {
+      _value = WalletResponse.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<WalletTransactionResponse> getWalletTransitionLogs(
+    String token,
+    String acceptLanguage,
+    WalletTransitionRequest walletTransitionRequest,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{
+      r'Authorization': token,
+      r'Accept-Language': acceptLanguage,
+    };
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(walletTransitionRequest.toJson());
+    final _options = _setStreamType<WalletTransactionResponse>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/api/wallet/histories',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late WalletTransactionResponse _value;
+    try {
+      _value = WalletTransactionResponse.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<dynamic> checkWalletAmount(
+    String token,
+    String acceptLanguage,
+    CheckWalletAmountRequest checkWalletRequest,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{
+      r'Authorization': token,
+      r'Accept-Language': acceptLanguage,
+    };
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(checkWalletRequest.toJson());
+    final _options = _setStreamType<dynamic>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/api/wallet/check-wallet-amount',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch(_options);
+    final _value = _result.data;
+    return _value;
+  }
+
+  @override
+  Future<dynamic> checkWalletPassword(
+    String token,
+    String acceptLanguage,
+    CheckWalletPasswordRequest checkWalletPassword,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{
+      r'Authorization': token,
+      r'Accept-Language': acceptLanguage,
+    };
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(checkWalletPassword.toJson());
+    final _options = _setStreamType<dynamic>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/api/wallet/check-password',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch(_options);
+    final _value = _result.data;
+    return _value;
+  }
+
+  @override
+  Future<SuccessNetworkResponse> setWalletPassword(
+    String token,
+    String acceptLanguage,
+    SetWalletPasswordRequest setWalletRequest,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{
+      r'Authorization': token,
+      r'Accept-Language': acceptLanguage,
+    };
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(setWalletRequest.toJson());
+    final _options = _setStreamType<SuccessNetworkResponse>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/api/wallet/set-password',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late SuccessNetworkResponse _value;
+    try {
+      _value = SuccessNetworkResponse.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<SuccessPaymentResponse> rechargeWallet(
+    String token,
+    String acceptLanguage,
+    int total,
+    String paymentType,
+    String appType,
+    String paymentData,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{
+      r'Authorization': token,
+      r'Accept-Language': acceptLanguage,
+    };
+    _headers.removeWhere((k, v) => v == null);
+    final _data = {
+      'total': total,
+      'payment_type': paymentType,
+      'app_type': appType,
+      'payment_data': paymentData,
+    };
+    final _options = _setStreamType<SuccessPaymentResponse>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/api/wallet/recharge',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late SuccessPaymentResponse _value;
+    try {
+      _value = SuccessPaymentResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;

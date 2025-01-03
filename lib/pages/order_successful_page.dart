@@ -19,8 +19,9 @@ class OrderSuccessfulPage extends StatelessWidget {
           children: [
             Image.asset(
               kThankImage,
-              width: 194,
-              height: 194,
+              width: 120,
+              height: 120,
+              fit: BoxFit.cover,
             ),
             const SizedBox(
               height: 20,

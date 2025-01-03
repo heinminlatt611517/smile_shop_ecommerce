@@ -11,6 +11,10 @@ PaymentVO _$PaymentVOFromJson(Map<String, dynamic> json) => PaymentVO(
       image: json['image'] as String?,
       show: json['show'] as bool?,
       code: json['code'] as String?,
+      method: json['method'] as String?,
+      subPaymentVO: (json['list'] as List<dynamic>?)
+          ?.map((e) => SubPaymentVO.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$PaymentVOToJson(PaymentVO instance) => <String, dynamic>{
@@ -18,4 +22,6 @@ Map<String, dynamic> _$PaymentVOToJson(PaymentVO instance) => <String, dynamic>{
       'image': instance.image,
       'show': instance.show,
       'code': instance.code,
+      'method': instance.method,
+      'list': instance.subPaymentVO,
     };

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:smile_shop/data/model/smile_shop_model.dart';
 import 'package:smile_shop/data/vos/banner_vo.dart';
 import 'package:smile_shop/data/vos/brand_and_category_vo.dart';
@@ -14,18 +15,28 @@ import 'package:smile_shop/data/vos/search_product_vo.dart';
 import 'package:smile_shop/data/vos/state_vo.dart';
 import 'package:smile_shop/data/vos/sub_category_vo.dart';
 import 'package:smile_shop/data/vos/township_data_vo.dart';
+import 'package:smile_shop/data/vos/wallet_transaction_vo.dart';
+import 'package:smile_shop/data/vos/wallet_vo.dart';
 import 'package:smile_shop/network/requests/address_request.dart';
+import 'package:smile_shop/network/requests/check_wallet_amount_request.dart';
+import 'package:smile_shop/network/requests/check_wallet_password_request.dart';
 import 'package:smile_shop/network/requests/login_request.dart';
 import 'package:smile_shop/network/requests/otp_request.dart';
 import 'package:smile_shop/network/requests/set_password_request.dart';
+import 'package:smile_shop/network/requests/set_wallet_password_request.dart';
 import 'package:smile_shop/network/requests/sub_category_request.dart';
+import 'package:smile_shop/network/requests/wallet_transition_request.dart';
 import 'package:smile_shop/network/responses/address_response.dart';
 import 'package:smile_shop/network/responses/login_response.dart';
 import 'package:smile_shop/network/responses/otp_response.dart';
 import 'package:smile_shop/network/responses/profile_response.dart';
+import 'package:smile_shop/network/responses/set_password_response.dart';
+import 'package:smile_shop/network/responses/success_network_response.dart';
+import 'package:smile_shop/network/responses/success_payment_response.dart';
 import 'package:smile_shop/persistence/favourite_product_dao.dart';
 import 'package:smile_shop/persistence/product_dao.dart';
 import 'package:smile_shop/persistence/search_product_dao.dart';
+import 'package:smile_shop/utils/strings.dart';
 
 import '../../network/data_agents/retrofit_data_agent_impl.dart';
 import '../../network/data_agents/smile_shop_data_agent.dart';
@@ -65,6 +76,8 @@ class SmileShopModelImpl extends SmileShopModel {
           accessToken: response.data?.accessToken);
 
       ///save login data to hive
+      await GetStorage()
+          .write(kBoxKeyReferralCode, loginResponse.data?.referCodeVO?.code);
       await _loginDataDao.saveLoginData(loginResponse);
       return response;
     });
@@ -120,8 +133,13 @@ class SmileShopModelImpl extends SmileShopModel {
   }
 
   @override
-  Future setPassword(SetPasswordRequest setPasswordRequest) {
-    return mDataAgent.setPassword(setPasswordRequest);
+  Future<SetPasswordResponse> setPassword(
+      SetPasswordRequest setPasswordRequest) {
+    return mDataAgent.setPassword(setPasswordRequest).then((response) async {
+      await GetStorage()
+          .write(kBoxKeyReferralCode, response.data?.referCodeVO?.code);
+      return response;
+    });
   }
 
   @override
@@ -182,13 +200,23 @@ class SmileShopModelImpl extends SmileShopModel {
   }
 
   @override
-  Future<void> postOrder(String token, String acceptLanguage, int subTotal, String paymentType, List itemList,String appType) {
-    return mDataAgent.postOrder(token, acceptLanguage, subTotal, paymentType, itemList,appType);
+  Future<SuccessPaymentResponse> postOrder(
+      String token,
+      String acceptLanguage,
+      int subTotal,
+      String paymentType,
+      String itemList,
+      String appType,
+      String paymentData,
+      int usedPoint) {
+    return mDataAgent.postOrder(token, acceptLanguage, subTotal, paymentType,
+        itemList, appType, paymentData, usedPoint);
   }
 
   @override
-  Future<List<PaymentVO>> payments(String token, String acceptLanguage) {
-   return mDataAgent.payments(token, acceptLanguage);
+  Future<List<PaymentVO>> payments(
+      String token, String acceptLanguage, String action) {
+    return mDataAgent.payments(token, acceptLanguage, action);
   }
 
   ///get data from hive database
@@ -235,8 +263,9 @@ class SmileShopModelImpl extends SmileShopModel {
   }
 
   @override
-  Future<OrderVO> orderDetails(String token, String acceptLanguage, int orderId) {
-   return mDataAgent.orderDetails(token, acceptLanguage, orderId);
+  Future<OrderVO> orderDetails(
+      String token, String acceptLanguage, int orderId) {
+    return mDataAgent.orderDetails(token, acceptLanguage, orderId);
   }
 
   @override
@@ -245,8 +274,42 @@ class SmileShopModelImpl extends SmileShopModel {
   }
 
   @override
-  Future<List<OrderVO>> getOrderListByOrderType(String token, String acceptLanguage, String orderType) {
+  Future<List<OrderVO>> getOrderListByOrderType(
+      String token, String acceptLanguage, String orderType) {
     return mDataAgent.getOrderListByOrderType(token, acceptLanguage, orderType);
+  }
+
+  @override
+  Future<WalletVO> getWallet(String token, String acceptLanguage) {
+    return mDataAgent.getWallet(token, acceptLanguage);
+  }
+
+  @override
+  Future checkWalletAmount(String token, String acceptLanguage,
+      CheckWalletAmountRequest checkWalletAmountRequest) {
+    return mDataAgent.checkWalletAmount(
+        token, acceptLanguage, checkWalletAmountRequest);
+  }
+
+  @override
+  Future checkWalletPassword(String token, String acceptLanguage,
+      CheckWalletPasswordRequest checkWalletPasswordRequest) {
+    return mDataAgent.checkWalletPassword(
+        token, acceptLanguage, checkWalletPasswordRequest);
+  }
+
+  @override
+  Future<SuccessNetworkResponse> setWalletPassword(
+      String token,
+      String acceptLanguage,
+      SetWalletPasswordRequest setWalletPasswordRequest) {
+    return mDataAgent
+        .setWalletPassword(token, acceptLanguage, setWalletPasswordRequest)
+        .then((response) async {
+      await GetStorage()
+          .write(kBoxKeyWalletPassword,setWalletPasswordRequest.passwordConfirmation);
+      return response;
+    });
   }
 
   ///get add to cart product list from database
@@ -272,7 +335,7 @@ class SmileShopModelImpl extends SmileShopModel {
 
   @override
   ProductVO? getProductByIdFromDatabase(int id) {
-   return _productDao.getProductById(id);
+    return _productDao.getProductById(id);
   }
 
   @override
@@ -286,19 +349,29 @@ class SmileShopModelImpl extends SmileShopModel {
   }
 
   @override
-  Future<List<ProductVO>> searchProductsByPrice(String token, String acceptLanguage, String endUserId, int pageNo, int price, String operator) {
-   return mDataAgent.searchProductsByPrice(token, acceptLanguage, endUserId, pageNo, price, operator);
+  Future<List<ProductVO>> searchProductsByPrice(
+      String token,
+      String acceptLanguage,
+      String endUserId,
+      int pageNo,
+      int price,
+      String operator) {
+    return mDataAgent.searchProductsByPrice(
+        token, acceptLanguage, endUserId, pageNo, price, operator);
   }
 
   @override
-  Future<List<ProductVO>> searchProductsBySubCategoryId(String token, String acceptLanguage, String endUserId, int pageNo, int subCategoryId) {
-    return mDataAgent.searchProductsBySubCategoryId(token, acceptLanguage, endUserId, pageNo, subCategoryId);
+  Future<List<ProductVO>> searchProductsBySubCategoryId(String token,
+      String acceptLanguage, String endUserId, int pageNo, int subCategoryId) {
+    return mDataAgent.searchProductsBySubCategoryId(
+        token, acceptLanguage, endUserId, pageNo, subCategoryId);
   }
 
   @override
-  Future<List<ProductVO>> searchProductsCategoryId(String token, String acceptLanguage, String endUserId, int pageNo, int categoryId
-      ) {
-    return mDataAgent.searchProductsCategoryId(token, acceptLanguage, endUserId, pageNo, categoryId);
+  Future<List<ProductVO>> searchProductsCategoryId(String token,
+      String acceptLanguage, String endUserId, int pageNo, int categoryId) {
+    return mDataAgent.searchProductsCategoryId(
+        token, acceptLanguage, endUserId, pageNo, categoryId);
   }
 
   @override
@@ -307,28 +380,32 @@ class SmileShopModelImpl extends SmileShopModel {
   }
 
   @override
-  Future<ProfileResponse> updateProfile(String token, String acceptLanguage, String name, File? image) {
+  Future<ProfileResponse> updateProfile(
+      String token, String acceptLanguage, String name, File? image) {
     return mDataAgent.updateProfile(token, acceptLanguage, name, image);
   }
 
   @override
-  Future<ProfileResponse> updateProfileName(String token, String acceptLanguage, String name) {
+  Future<ProfileResponse> updateProfileName(
+      String token, String acceptLanguage, String name) {
     return mDataAgent.updateProfileName(token, acceptLanguage, name);
   }
 
   @override
   void deleteFavouriteProductById(int productId) {
-     _favouriteProductDao.deleteFavouriteProductByProductId(productId);
+    _favouriteProductDao.deleteFavouriteProductByProductId(productId);
   }
 
   @override
   List<ProductVO> firstTimeGetFavouriteProductFromDatabase() {
-   return _favouriteProductDao.getFavouriteProducts();
+    return _favouriteProductDao.getFavouriteProducts();
   }
 
   @override
   Stream<List<ProductVO>> getFavouriteProductFromDatabase() {
-    return _favouriteProductDao.watchFavouriteProductBox().map((_) => _favouriteProductDao.getFavouriteProducts());
+    return _favouriteProductDao
+        .watchFavouriteProductBox()
+        .map((_) => _favouriteProductDao.getFavouriteProducts());
   }
 
   @override
@@ -336,4 +413,20 @@ class SmileShopModelImpl extends SmileShopModel {
     _favouriteProductDao.saveFavouriteProduct(product);
   }
 
+  @override
+  Future<SuccessPaymentResponse> rechargeWallet(
+      String token,
+      String acceptLanguage,
+      int total,
+      String paymentType,
+      String appType,
+      String paymentData) {
+    return mDataAgent.rechargeWallet(
+        token, acceptLanguage, total, paymentType, appType, paymentData);
+  }
+
+  @override
+  Future<List<WalletTransactionVO>> getWalletTransactions(String token, String acceptLanguage, WalletTransitionRequest walletTransactionRequest) {
+    return mDataAgent.getWalletTransactions(token, acceptLanguage, walletTransactionRequest);
+  }
 }

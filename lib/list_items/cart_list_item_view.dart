@@ -110,7 +110,7 @@ class CartListItemView extends StatelessWidget {
                             children: [
                               Text(
                                 overflow: TextOverflow.ellipsis,
-                                productVO?.totalPrice.toString() == "0" ? 'Ks ${productVO?.price.toString()}' : 'Ks ${productVO?.totalPrice.toString()}',
+                                productVO?.totalPrice.toString() == "0" ? 'Ks ${productVO?.variantVO?.first.price.toString()}' : 'Ks ${productVO?.totalPrice.toString()}',
                                 style:const TextStyle(fontSize: kTextRegular2x),
                               ),
                               const SizedBox(
