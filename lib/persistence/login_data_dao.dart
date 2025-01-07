@@ -29,7 +29,7 @@ class LoginDataDao {
   }
 
   ///clear login user data from hive
-  void clearUserData() {
+  void clearLoginData() {
     getLoginDataBox().clear();
   }
 

@@ -12,7 +12,7 @@ ProfileResponse _$ProfileResponseFromJson(Map<String, dynamic> json) =>
       message: json['message'] as String?,
       data: json['data'] == null
           ? null
-          : ProfileVO.fromJson(json['data'] as Map<String, dynamic>),
+          : UserVO.fromJson(json['data'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$ProfileResponseToJson(ProfileResponse instance) =>

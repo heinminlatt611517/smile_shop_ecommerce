@@ -4,17 +4,18 @@ import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:smile_shop/blocs/profile_bloc.dart';
 import 'package:smile_shop/data/vos/profile_vo.dart';
+import 'package:smile_shop/data/vos/user_vo.dart';
 import 'package:smile_shop/network/api_constants.dart';
 import 'package:smile_shop/pages/edit_profile_page.dart';
 import 'package:smile_shop/pages/login_page.dart';
 import 'package:smile_shop/pages/my_favourite_page.dart';
 import 'package:smile_shop/pages/my_order_page.dart';
+import 'package:smile_shop/pages/my_team_page.dart';
 import 'package:smile_shop/pages/packages_page.dart';
 import 'package:smile_shop/pages/referral_code_page.dart';
 import 'package:smile_shop/pages/smile_point_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
-import 'package:smile_shop/widgets/cached_network_image_view.dart';
 
 import '../data/model/smile_shop_model.dart';
 import '../data/model/smile_shop_model_impl.dart';
@@ -49,7 +50,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 elevation: 0,
                 backgroundColor: kSecondaryColor,
                 automaticallyImplyLeading: false,
-                title: Selector<ProfileBloc,ProfileVO?>(
+                title: Selector<ProfileBloc,UserVO?>(
                   selector: (context,bloc)=> bloc.userProfile,
                   builder: (_,user,child) =>
                    Column(
@@ -136,25 +137,25 @@ class _ProfilePageState extends State<ProfilePage> {
                         GestureDetector(
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (_) => const MyOrderPage()));
+                                  builder: (_) => const MyOrderPage(tabIndex: 1,)));
                             },
                             child: _buildProfileItem(context, title: 'To Pay')),
                         GestureDetector(
                           onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (_) => const MyOrderPage()));
+                                  builder: (_) => const MyOrderPage(tabIndex: 2,)));
                             },
                           child: _buildProfileItem(context, title: 'To Ship')),
                         GestureDetector(
                           onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (_) => const MyOrderPage()));
+                                  builder: (_) => const MyOrderPage(tabIndex: 3,)));
                             },
                           child: _buildProfileItem(context, title: 'To Receive')),
                         GestureDetector(
                           onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (_) => const MyOrderPage()));
+                                  builder: (_) => const MyOrderPage(tabIndex: 4,)));
                             },
                           child: _buildProfileItem(context, title: 'To Review')),
                       ],
@@ -206,7 +207,12 @@ class _ProfilePageState extends State<ProfilePage> {
                             },
                             child: _buildProfileItem(context, title: 'My Favourite')),
                         _buildProfileItem(context, title: 'Language'),
-                        _buildProfileItem(context, title: 'My Team'),
+                        GestureDetector(
+                            onTap: (){
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (_) => const MyTeamPage()));
+                            },
+                            child: _buildProfileItem(context, title: 'My Team')),
                         _buildProfileItem(context, title: 'Address'),
                       ],
                     ),

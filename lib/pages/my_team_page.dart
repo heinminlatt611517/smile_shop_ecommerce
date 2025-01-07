@@ -28,7 +28,7 @@ class MyTeamPage extends StatelessWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(horizontal: kMarginMedium2,),
                 decoration: BoxDecoration(
-                    color: Colors.amber,
+                    color: kSecondaryColor,
                     borderRadius: BorderRadius.circular(kMargin10)),
                 child: Row(children: [
                   Container(height: 60,width: 60,decoration: BoxDecoration(shape: BoxShape.circle,border: Border.all(color: Colors.black,width: 2))

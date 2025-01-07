@@ -6,7 +6,7 @@ import 'package:smile_shop/network/api_constants.dart';
 import '../data/model/smile_shop_model.dart';
 import '../data/model/smile_shop_model_impl.dart';
 
-class ProfileBloc extends ChangeNotifier {
+class MyTeamBloc extends ChangeNotifier {
   final SmileShopModel _smileShopModel = SmileShopModelImpl();
 
   ///states
@@ -14,8 +14,9 @@ class ProfileBloc extends ChangeNotifier {
   bool isLoading = false;
   bool isDisposed = false;
   var authToken = "";
-  ProfileBloc(){
+  MyTeamBloc(){
      authToken = _smileShopModel.getLoginResponseFromDatabase()?.accessToken ?? "";
+
      getProfile();
   }
 

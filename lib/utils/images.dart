@@ -15,3 +15,5 @@ const kCarIcon = 'assets/images/car.png';
 const kTransitIcon = 'assets/images/transit.png';
 const kCampaignBackgroundImage = 'assets/images/campaign_background.png';
 const kRechargeSuccessImage = 'assets/images/recharge_success_icon.png';
+const kDailyCheckInImage = 'assets/images/daily_checkin.png';
+const kDailyCheckInCalendarImage = 'assets/images/daily_checkin_calendar.png';

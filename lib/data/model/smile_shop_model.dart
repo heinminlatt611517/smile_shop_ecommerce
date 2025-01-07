@@ -14,6 +14,7 @@ import 'package:smile_shop/network/responses/set_password_response.dart';
 import 'package:smile_shop/network/responses/success_payment_response.dart';
 
 import '../../network/requests/address_request.dart';
+import '../../network/requests/checkIn_request.dart';
 import '../../network/requests/check_wallet_amount_request.dart';
 import '../../network/requests/check_wallet_password_request.dart';
 import '../../network/requests/login_request.dart';
@@ -25,12 +26,14 @@ import '../../network/responses/address_response.dart';
 import '../../network/responses/login_response.dart';
 import '../../network/responses/success_network_response.dart';
 import '../vos/brand_and_category_vo.dart';
+import '../vos/checkIn_vo.dart';
 import '../vos/order_vo.dart';
 import '../vos/payment_vo.dart';
 import '../vos/product_response_data_vo.dart';
 import '../vos/profile_vo.dart';
 import '../vos/state_vo.dart';
 import '../vos/sub_category_vo.dart';
+import '../vos/user_vo.dart';
 import '../vos/wallet_transaction_vo.dart';
 import '../vos/wallet_vo.dart';
 
@@ -93,6 +96,8 @@ abstract class SmileShopModel {
   ///get data from database
   LoginDataVO? getLoginResponseFromDatabase();
 
+  UserVO? getUserDataFromDatabase();
+
   Stream<List<SearchProductVO>> getSearchProductFromDatabase();
 
   List<SearchProductVO> getFirstTimeSearchProductFromDatabase();
@@ -141,8 +146,8 @@ abstract class SmileShopModel {
 
   Future<List<OrderVO>> orderList(String token,String acceptLanguage);
   Future<List<OrderVO>> getOrderListByOrderType(String token,String acceptLanguage,String orderType);
-  Future<OrderVO> orderDetails(String token,String acceptLanguage,int orderId);
-  Future<ProfileVO> userProfile(String token,String acceptLanguage);
+  Future<OrderVO> orderDetails(String token,String acceptLanguage,String orderId);
+  Future<UserVO> userProfile(String token,String acceptLanguage);
   Future<ProfileResponse> updateProfile(String token,String acceptLanguage,String name,File? image);
   Future<ProfileResponse> updateProfileName(String token,String acceptLanguage,String name);
 
@@ -162,4 +167,10 @@ abstract class SmileShopModel {
 
   Future<List<WalletTransactionVO>> getWalletTransactions(
       String token, String acceptLanguage, WalletTransitionRequest walletTransactionRequest);
+
+  Future<CheckInVO> getUserCheckIn(
+      String token, String acceptLanguage);
+
+  Future<SuccessNetworkResponse> postUserCheckIn(
+      String token, String acceptLanguage, CheckInRequest checkInRequest);
 }

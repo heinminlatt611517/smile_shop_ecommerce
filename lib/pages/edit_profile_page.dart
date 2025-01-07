@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:smile_shop/blocs/edit_profile_bloc.dart';
-import 'package:smile_shop/data/vos/profile_vo.dart';
+import 'package:smile_shop/data/vos/user_vo.dart';
 import 'package:smile_shop/network/api_constants.dart';
 import 'package:smile_shop/utils/colors.dart';
 
@@ -15,7 +15,7 @@ import '../widgets/loading_view.dart';
 class EditProfilePage extends StatelessWidget {
   const EditProfilePage({super.key, this.userVo});
 
-  final ProfileVO? userVo;
+  final UserVO? userVo;
 
   @override
   Widget build(BuildContext context) {

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:smile_shop/data/vos/profile_vo.dart';
+import 'package:smile_shop/data/vos/user_vo.dart';
 import 'package:smile_shop/network/api_constants.dart';
 import 'package:smile_shop/network/responses/profile_response.dart';
 
@@ -15,7 +16,7 @@ class EditProfileBloc extends ChangeNotifier {
   bool isLoading = false;
   bool isDisposed = false;
   var authToken = "";
-  ProfileVO? profileVO;
+  UserVO? profileVO;
   var updateName = "";
   final nameController = TextEditingController();
 

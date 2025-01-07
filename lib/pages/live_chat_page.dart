@@ -1,8 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:provider/provider.dart';
+import 'package:smile_shop/data/vos/user_vo.dart';
+import 'package:smile_shop/network/api_constants.dart';
+import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/extensions.dart';
+import 'package:smile_shop/utils/strings.dart';
 import 'package:voice_message_package/voice_message_package.dart';
 
 import '../blocs/chat_bloc.dart';
@@ -11,19 +16,19 @@ import '../data/vos/message_vo.dart';
 import '../network/firebase_api.dart';
 
 class LiveChatPage extends StatelessWidget {
-  final String? ticketId;
-  const LiveChatPage({super.key,this.ticketId});
+  const LiveChatPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => ChatBloc(ticketId ?? ""),
+      create: (context) => ChatBloc(GetStorage().read(kBoxKeyFirebaseUserId)),
       child: Consumer<ChatBloc>(
         builder: (context, bloc, child) => Scaffold(
+          backgroundColor: kBackgroundColor,
           appBar: AppBar(
+            backgroundColor: Colors.white,
             centerTitle: true,
             title: const Text("Chat"),
-            forceMaterialTransparency: true,
             scrolledUnderElevation: 0,
           ),
           body: Stack(
@@ -34,13 +39,13 @@ class LiveChatPage extends StatelessWidget {
                     child: ListView.separated(
                       reverse: true,
                       padding: const EdgeInsets.symmetric(horizontal: 16),
-                      itemCount: bloc.ticket?.messages?.length ?? 0,
+                      itemCount: bloc.chatVO?.messages?.length ?? 0,
                       separatorBuilder: (context, index) => const SizedBox(
                         height: 8,
                       ),
                       itemBuilder: (context, index) {
-                        int reversedIndex = (bloc.ticket?.messages?.length ?? 0) - 1 - index;
-                        MessageVo message = bloc.ticket!.messages?[reversedIndex] ?? MessageVo();
+                        int reversedIndex = (bloc.chatVO?.messages?.length ?? 0) - 1 - index;
+                        MessageVo message = bloc.chatVO!.messages?[reversedIndex] ?? MessageVo();
                         return ChatBubble(
                           messageVo: message,
                         );
@@ -165,10 +170,10 @@ class ChatBubble extends StatelessWidget {
                       circlesColor: Colors.white,
                       activeSliderColor: Colors.white,
                       innerPadding: 0,
-                      circlesTextStyle:const TextStyle(color: Colors.black),
-                      playIcon:const Icon(Icons.play_arrow, color: Color(0xffFF8800)),
-                      pauseIcon:const Icon(Icons.pause, color: Color(0xffFF8800)),
-                      playPauseButtonLoadingColor:const Color(0xffFF8800),
+                      circlesTextStyle: TextStyle(color: Colors.black),
+                      playIcon: Icon(Icons.play_arrow, color: Color(0xffFF8800)),
+                      pauseIcon: Icon(Icons.pause, color: Color(0xffFF8800)),
+                      playPauseButtonLoadingColor: Color(0xffFF8800),
                     ),
                   ],
                 ),
@@ -267,9 +272,13 @@ class ChatBubble extends StatelessWidget {
         ),
         if (isSender) const SizedBox(width: 8),
         if (isSender)
-          const CircleAvatar(
-            radius: 16,
-            backgroundImage: NetworkImage("https://via.placeholder.com/150"), // Dummy profile image
+          Selector<ChatBloc,UserVO?>(
+            selector: (context,bloc)=>bloc.userVO,
+            builder: (context,userVO,child)=>
+              CircleAvatar(
+              radius: 16,
+              backgroundImage: NetworkImage(userVO?.profileImage ?? errorImageUrl), // Dummy profile image
+            ),
           ),
       ],
     );

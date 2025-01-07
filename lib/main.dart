@@ -49,6 +49,7 @@ void main() async {
   await Hive.openBox<SearchProductVO>(kBoxSearchProduct);
   await Hive.openBox<ProductVO>(kBoxProduct);
   await Hive.openBox<ProductVO>(kBoxFavouriteProduct);
+  await Hive.openBox<UserVO>(kBoxUser);
 
   runApp(MultiProvider(
       providers: [ChangeNotifierProvider(

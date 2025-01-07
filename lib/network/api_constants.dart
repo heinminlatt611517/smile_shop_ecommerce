@@ -35,6 +35,8 @@ const String kEndPointCheckWalletAmount  = '/api/wallet/check-wallet-amount';
 const String kEndPointCheckWalletPassword  = '/api/wallet/check-password';
 const String kEndPointSetWalletPassword  = '/api/wallet/set-password';
 const String kEndPointRechargeWallet  = '/api/wallet/recharge';
+const String kEndPointGetUserCheckIn  = '/api/user-checkin';
+const String kEndPointPostUserCheckIn  = '/api/checkin';
 
 
 ///Parameters

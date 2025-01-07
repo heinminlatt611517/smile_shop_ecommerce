@@ -4,6 +4,8 @@ import 'package:smile_shop/data/model/smile_shop_model_impl.dart';
 import 'package:smile_shop/network/requests/set_password_request.dart';
 import 'package:smile_shop/network/responses/set_password_response.dart';
 
+import '../network/firebase_api.dart';
+
 class PasswordBloc extends ChangeNotifier {
   /// State
   bool isLoading = false;
@@ -15,6 +17,7 @@ class PasswordBloc extends ChangeNotifier {
   var endUserId = "";
   var password = "";
   var confirmPassword = "";
+  final FirebaseApi _api = FirebaseApi();
 
   PasswordBloc() {
     authToken =
@@ -25,22 +28,28 @@ class PasswordBloc extends ChangeNotifier {
   }
 
   ///on tap confirm
-  Future<SetPasswordResponse> onTapConfirm(String requestId,String phone) {
-    var setPasswordRequest = SetPasswordRequest(requestId, password, confirmPassword, phone);
+  Future<SetPasswordResponse> onTapConfirm(String requestId, String phone) {
+    var setPasswordRequest =
+        SetPasswordRequest(requestId, password, confirmPassword, phone);
     _showLoading();
     return _smileShopModel
         .setPassword(setPasswordRequest)
         .whenComplete(() => _hideLoading());
   }
 
+  void crateFirebaseChatUser(
+      {required int id}) async {
+    await _api.createChats(id.toString());
+  }
+
   void onPasswordChanged(String newPassword) {
     password = newPassword;
-    notifyListeners();
+    _notifySafely();
   }
 
   void onConfirmPasswordChanged(String newConfirmPassword) {
     confirmPassword = newConfirmPassword;
-    notifyListeners();
+    _notifySafely();
   }
 
   void _showLoading() {

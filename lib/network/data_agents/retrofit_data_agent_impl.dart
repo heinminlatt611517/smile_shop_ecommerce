@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:smile_shop/data/vos/banner_vo.dart';
 import 'package:smile_shop/data/vos/brand_and_category_vo.dart';
 import 'package:smile_shop/data/vos/category_vo.dart';
+import 'package:smile_shop/data/vos/checkIn_vo.dart';
 import 'package:smile_shop/data/vos/order_vo.dart';
 import 'package:smile_shop/data/vos/payment_vo.dart';
 import 'package:smile_shop/data/vos/product_response_data_vo.dart';
@@ -14,10 +15,12 @@ import 'package:smile_shop/data/vos/profile_vo.dart';
 import 'package:smile_shop/data/vos/state_vo.dart';
 import 'package:smile_shop/data/vos/sub_category_vo.dart';
 import 'package:smile_shop/data/vos/township_data_vo.dart';
+import 'package:smile_shop/data/vos/user_vo.dart';
 import 'package:smile_shop/data/vos/wallet_transaction_vo.dart';
 import 'package:smile_shop/data/vos/wallet_vo.dart';
 import 'package:smile_shop/network/data_agents/smile_shop_data_agent.dart';
 import 'package:smile_shop/network/requests/address_request.dart';
+import 'package:smile_shop/network/requests/checkIn_request.dart';
 import 'package:smile_shop/network/requests/check_wallet_amount_request.dart';
 import 'package:smile_shop/network/requests/check_wallet_password_request.dart';
 import 'package:smile_shop/network/requests/login_request.dart';
@@ -341,7 +344,7 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
 
   @override
   Future<OrderVO> orderDetails(
-      String token, String acceptLanguage, int orderId) {
+      String token, String acceptLanguage, String orderId) {
     return mApi
         .orderDetails('Bearer $token', acceptLanguage, orderId)
         .asStream()
@@ -408,12 +411,12 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   }
 
   @override
-  Future<ProfileVO> userProfile(String token, String acceptLanguage) {
+  Future<UserVO> userProfile(String token, String acceptLanguage) {
     return mApi
         .profile('Bearer $token', acceptLanguage)
         .asStream()
         .map((response) {
-          return response.data ?? ProfileVO();
+          return response.data ?? UserVO();
         })
         .first
         .catchError((error) {
@@ -558,6 +561,36 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
     return mApi
         .rechargeWallet(
         'Bearer $token', acceptLanguage,total,paymentType,appType,paymentData)
+        .asStream()
+        .map((response) {
+      return response;
+    })
+        .first
+        .catchError((error) {
+      throw _createException(error);
+    });
+  }
+
+  @override
+  Future<CheckInVO> getUserCheckIn(String token, String acceptLanguage) {
+    return mApi
+        .getUserCheckIn(
+        'Bearer $token', acceptLanguage)
+        .asStream()
+        .map((response) {
+      return response.checkInVO ?? CheckInVO();
+    })
+        .first
+        .catchError((error) {
+      throw _createException(error);
+    });
+  }
+
+  @override
+  Future<SuccessNetworkResponse> postUserCheckIn(String token, String acceptLanguage, CheckInRequest checkInRequest) {
+    return mApi
+        .postUserCheck(
+        'Bearer $token', acceptLanguage,checkInRequest)
         .asStream()
         .map((response) {
       return response;

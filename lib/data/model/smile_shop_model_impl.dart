@@ -6,18 +6,20 @@ import 'package:smile_shop/data/model/smile_shop_model.dart';
 import 'package:smile_shop/data/vos/banner_vo.dart';
 import 'package:smile_shop/data/vos/brand_and_category_vo.dart';
 import 'package:smile_shop/data/vos/category_vo.dart';
+import 'package:smile_shop/data/vos/checkIn_vo.dart';
 import 'package:smile_shop/data/vos/login_data_vo.dart';
 import 'package:smile_shop/data/vos/order_vo.dart';
 import 'package:smile_shop/data/vos/payment_vo.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
-import 'package:smile_shop/data/vos/profile_vo.dart';
 import 'package:smile_shop/data/vos/search_product_vo.dart';
 import 'package:smile_shop/data/vos/state_vo.dart';
 import 'package:smile_shop/data/vos/sub_category_vo.dart';
 import 'package:smile_shop/data/vos/township_data_vo.dart';
+import 'package:smile_shop/data/vos/user_vo.dart';
 import 'package:smile_shop/data/vos/wallet_transaction_vo.dart';
 import 'package:smile_shop/data/vos/wallet_vo.dart';
 import 'package:smile_shop/network/requests/address_request.dart';
+import 'package:smile_shop/network/requests/checkIn_request.dart';
 import 'package:smile_shop/network/requests/check_wallet_amount_request.dart';
 import 'package:smile_shop/network/requests/check_wallet_password_request.dart';
 import 'package:smile_shop/network/requests/login_request.dart';
@@ -36,6 +38,7 @@ import 'package:smile_shop/network/responses/success_payment_response.dart';
 import 'package:smile_shop/persistence/favourite_product_dao.dart';
 import 'package:smile_shop/persistence/product_dao.dart';
 import 'package:smile_shop/persistence/search_product_dao.dart';
+import 'package:smile_shop/persistence/user_data_dao.dart';
 import 'package:smile_shop/utils/strings.dart';
 
 import '../../network/data_agents/retrofit_data_agent_impl.dart';
@@ -58,6 +61,7 @@ class SmileShopModelImpl extends SmileShopModel {
 
   ///Dao
   final LoginDataDao _loginDataDao = LoginDataDao();
+  final UserDataDao _userDataDao= UserDataDao();
   final SearchProductDao _searchProductDao = SearchProductDao();
   final ProductDao _productDao = ProductDao();
   final FavouriteProductDao _favouriteProductDao = FavouriteProductDao();
@@ -79,6 +83,7 @@ class SmileShopModelImpl extends SmileShopModel {
       await GetStorage()
           .write(kBoxKeyReferralCode, loginResponse.data?.referCodeVO?.code);
       await _loginDataDao.saveLoginData(loginResponse);
+      await _userDataDao.saveUserData(loginResponse.data);
       return response;
     });
   }
@@ -138,6 +143,7 @@ class SmileShopModelImpl extends SmileShopModel {
     return mDataAgent.setPassword(setPasswordRequest).then((response) async {
       await GetStorage()
           .write(kBoxKeyReferralCode, response.data?.referCodeVO?.code);
+      await _userDataDao.saveUserData(response.data);
       return response;
     });
   }
@@ -259,12 +265,12 @@ class SmileShopModelImpl extends SmileShopModel {
 
   @override
   void clearSaveLoginData() {
-    _loginDataDao.clearUserData();
+    _loginDataDao.clearLoginData();
   }
 
   @override
   Future<OrderVO> orderDetails(
-      String token, String acceptLanguage, int orderId) {
+      String token, String acceptLanguage, String orderId) {
     return mDataAgent.orderDetails(token, acceptLanguage, orderId);
   }
 
@@ -375,8 +381,11 @@ class SmileShopModelImpl extends SmileShopModel {
   }
 
   @override
-  Future<ProfileVO> userProfile(String token, String acceptLanguage) {
-    return mDataAgent.userProfile(token, acceptLanguage);
+  Future<UserVO> userProfile(String token, String acceptLanguage) {
+    return mDataAgent.userProfile(token, acceptLanguage).then((response)async{
+      await _userDataDao.saveUserData(response);
+      return response;
+    });
   }
 
   @override
@@ -428,5 +437,20 @@ class SmileShopModelImpl extends SmileShopModel {
   @override
   Future<List<WalletTransactionVO>> getWalletTransactions(String token, String acceptLanguage, WalletTransitionRequest walletTransactionRequest) {
     return mDataAgent.getWalletTransactions(token, acceptLanguage, walletTransactionRequest);
+  }
+
+  @override
+  Future<CheckInVO> getUserCheckIn(String token, String acceptLanguage) {
+    return mDataAgent.getUserCheckIn(token, acceptLanguage);
+  }
+
+  @override
+  Future<SuccessNetworkResponse> postUserCheckIn(String token, String acceptLanguage, CheckInRequest checkInRequest) {
+    return mDataAgent.postUserCheckIn(token, acceptLanguage, checkInRequest);
+  }
+
+  @override
+  UserVO? getUserDataFromDatabase() {
+   return _userDataDao.getUserData();
   }
 }

@@ -6,6 +6,7 @@ import 'package:smile_shop/data/vos/category_vo.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
 import 'package:smile_shop/list_items/trending_product_list_item_view.dart';
 import 'package:smile_shop/network/api_constants.dart';
+import 'package:smile_shop/pages/daily_checkin_page.dart';
 import 'package:smile_shop/pages/search_product_page.dart';
 import 'package:smile_shop/pages/sub_category_page.dart';
 import 'package:smile_shop/utils/colors.dart';
@@ -183,165 +184,168 @@ class CampaignDailyCheckInUserLevelView extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(
           top: kMarginMedium2, left: kMarginMedium2, right: kMarginMedium2),
-      child: Row(
-        children: [
-          ///daily check in and user level view
-          SizedBox(
-            height: 155,
-            child: Column(
-              children: [
-                ///Daily check in view
-                Container(
-                  padding: const EdgeInsets.all(kMarginMedium2),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(kMarginMedium),
-                      gradient: const LinearGradient(
-                          begin: Alignment.centerLeft,
-                          end: Alignment.centerRight,
-                          colors: [
-                            Color(0xFFFDCC03),
-                            Color(0xFFF5F5F5),
-                          ])),
-                  child: Row(
-                    children: [
-                      const Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            kDailyCheckInLabel,
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: kTextRegular2x,
-                                color: Colors.black),
-                          ),
-                          Text(
-                            kToClaimPointDailyLabel,
-                            style: TextStyle(
-                                fontWeight: FontWeight.normal,
-                                fontSize: kTextSmall,
-                                color: Colors.grey),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        width: kMarginMedium,
-                      ),
-                      Container(
-                          padding: const EdgeInsets.all(kMarginMedium),
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius:
-                                  BorderRadius.circular(kMarginMedium)),
-                          child: const Icon(
-                            Icons.shop,
-                            color: kPrimaryColor,
-                          ))
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-
-                ///User Level view
-                Container(
-                  padding: const EdgeInsets.all(kMarginMedium2),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(kMarginMedium),
-                      gradient: const LinearGradient(
-                          begin: Alignment.centerLeft,
-                          end: Alignment.centerRight,
-                          colors: [
-                            kPrimaryColor,
-                            Color(0xFFF5F5F5),
-                          ])),
-                  child: Row(
-                    children: [
-                      const Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            kUserLevelLabel,
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: kTextRegular2x,
-                                color: Colors.black),
-                          ),
-                          Text(
-                            kToClaimPointDailyLabel,
-                            style: TextStyle(
-                                fontWeight: FontWeight.normal,
-                                fontSize: kTextSmall,
-                                color: Colors.grey),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        width: kMarginMedium,
-                      ),
-                      Container(
-                          padding: const EdgeInsets.all(kMarginMedium),
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius:
-                                  BorderRadius.circular(kMarginMedium)),
-                          child: const Icon(
-                            Icons.shop,
-                            color: kPrimaryColor,
-                          ))
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
-
-          ///Campaign view
-          Expanded(
-            child: Container(
-              height: 150,
-              padding: const EdgeInsets.only(left: kMarginMedium2),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(kMarginMedium),
-                  gradient: const LinearGradient(
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                      colors: [
-                        Color(0xFFFDCC03),
-                        Color(0xFFF5F5F5),
-                      ])),
+      child: InkWell(
+        onTap: ()=> Navigator.of(context).push(MaterialPageRoute(builder: (_)=> const DailyCheckInPage())),
+        child: Row(
+          children: [
+            ///daily check in and user level view
+            SizedBox(
+              height: 155,
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  ///Daily check in view
                   Container(
-                      alignment: Alignment.centerRight,
-                      padding: const EdgeInsets.all(kMarginMedium),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(kMarginMedium)),
-                      child: const Icon(
-                        Icons.shop,
-                        color: kPrimaryColor,
-                        size: 40,
-                      )),
-                  const Text(
-                    kCampaignLabel,
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: kTextRegular2x,
-                        color: Colors.black),
+                    padding: const EdgeInsets.all(kMarginMedium2),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(kMarginMedium),
+                        gradient: const LinearGradient(
+                            begin: Alignment.centerLeft,
+                            end: Alignment.centerRight,
+                            colors: [
+                              Color(0xFFFDCC03),
+                              Color(0xFFF5F5F5),
+                            ])),
+                    child: Row(
+                      children: [
+                        const Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              kDailyCheckInLabel,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: kTextRegular2x,
+                                  color: Colors.black),
+                            ),
+                            Text(
+                              kToClaimPointDailyLabel,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: kTextSmall,
+                                  color: Colors.grey),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          width: kMarginMedium,
+                        ),
+                        Container(
+                            padding: const EdgeInsets.all(kMarginMedium),
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius:
+                                    BorderRadius.circular(kMarginMedium)),
+                            child: const Icon(
+                              Icons.shop,
+                              color: kPrimaryColor,
+                            ))
+                      ],
+                    ),
                   ),
-                  const Text(
-                    kLetPracticeAndEnjoyLabel,
-                    style: TextStyle(
-                        fontWeight: FontWeight.normal,
-                        fontSize: kTextSmall,
-                        color: Colors.grey),
+                  const SizedBox(
+                    height: 10,
                   ),
+        
+                  ///User Level view
+                  Container(
+                    padding: const EdgeInsets.all(kMarginMedium2),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(kMarginMedium),
+                        gradient: const LinearGradient(
+                            begin: Alignment.centerLeft,
+                            end: Alignment.centerRight,
+                            colors: [
+                              kPrimaryColor,
+                              Color(0xFFF5F5F5),
+                            ])),
+                    child: Row(
+                      children: [
+                        const Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              kUserLevelLabel,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: kTextRegular2x,
+                                  color: Colors.black),
+                            ),
+                            Text(
+                              kToClaimPointDailyLabel,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: kTextSmall,
+                                  color: Colors.grey),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          width: kMarginMedium,
+                        ),
+                        Container(
+                            padding: const EdgeInsets.all(kMarginMedium),
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius:
+                                    BorderRadius.circular(kMarginMedium)),
+                            child: const Icon(
+                              Icons.shop,
+                              color: kPrimaryColor,
+                            ))
+                      ],
+                    ),
+                  )
                 ],
               ),
             ),
-          ),
-        ],
+        
+            ///Campaign view
+            Expanded(
+              child: Container(
+                height: 150,
+                padding: const EdgeInsets.only(left: kMarginMedium2),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(kMarginMedium),
+                    gradient: const LinearGradient(
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                        colors: [
+                          Color(0xFFFDCC03),
+                          Color(0xFFF5F5F5),
+                        ])),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                        alignment: Alignment.centerRight,
+                        padding: const EdgeInsets.all(kMarginMedium),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(kMarginMedium)),
+                        child: const Icon(
+                          Icons.shop,
+                          color: kPrimaryColor,
+                          size: 40,
+                        )),
+                    const Text(
+                      kCampaignLabel,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: kTextRegular2x,
+                          color: Colors.black),
+                    ),
+                    const Text(
+                      kLetPracticeAndEnjoyLabel,
+                      style: TextStyle(
+                          fontWeight: FontWeight.normal,
+                          fontSize: kTextSmall,
+                          color: Colors.grey),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

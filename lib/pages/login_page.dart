@@ -81,12 +81,11 @@ class _LoginPageState extends State<LoginPage> {
 
                       ///password input view
                       Consumer<LogInBloc>(
-                        builder: (context,bloc,child) =>
-                         InputViewLockIcon(
-                             hintLabel: 'Type your password',
-                             onChangeValue: (value){
-                           bloc.onPasswordChanged(value);
-                        }),
+                        builder: (context, bloc, child) => InputViewLockIcon(
+                            hintLabel: 'Type your password',
+                            onChangeValue: (value) {
+                              bloc.onPasswordChanged(value);
+                            }),
                       ),
 
                       const SizedBox(
@@ -117,8 +116,14 @@ class _LoginPageState extends State<LoginPage> {
 
                           bloc.onTapSign().then((value) {
                             if (value.statusCode == 200) {
+                              bloc.crateFirebaseChatUser(
+                                  id: value.data?.data?.id ?? 0,
+                                  name: value.data?.data?.name ?? "",
+                                  phone: value.data?.data?.phone ?? "");
                               Navigator.of(context).pushAndRemoveUntil(
-                                  MaterialPageRoute(builder: (builder) => const MainPage()),(Route<dynamic> route) => false);
+                                  MaterialPageRoute(
+                                      builder: (builder) => const MainPage()),
+                                  (Route<dynamic> route) => false);
                             }
                           }).catchError((error) {
                             showCommonDialog(

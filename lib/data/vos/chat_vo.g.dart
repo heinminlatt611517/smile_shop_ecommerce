@@ -1,13 +1,14 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'ticket_vo.dart';
+part of 'chat_vo.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-TicketVo _$TicketVoFromJson(Map<String, dynamic> json) => TicketVo(
-      ticketId: json['ticketId'] as String?,
+ChatVo _$ChatVoFromJson(Map<String, dynamic> json) => ChatVo(
+      chatId: json['chatId'] as String?,
+      userId: json['userId'] as String?,
       title: json['title'] as String?,
       description: json['description'] as String?,
       status: json['status'] as String?,
@@ -19,8 +20,9 @@ TicketVo _$TicketVoFromJson(Map<String, dynamic> json) => TicketVo(
         ?.map((e) => MessageVo.fromJson(e as Map<String, dynamic>))
         .toList();
 
-Map<String, dynamic> _$TicketVoToJson(TicketVo instance) => <String, dynamic>{
-      'ticketId': instance.ticketId,
+Map<String, dynamic> _$ChatVoToJson(ChatVo instance) => <String, dynamic>{
+      'chatId': instance.chatId,
+      'userId': instance.userId,
       'title': instance.title,
       'description': instance.description,
       'status': instance.status,

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:smile_shop/data/vos/banner_vo.dart';
 import 'package:smile_shop/data/vos/brand_and_category_vo.dart';
 import 'package:smile_shop/data/vos/category_vo.dart';
+import 'package:smile_shop/data/vos/checkIn_vo.dart';
 import 'package:smile_shop/data/vos/order_vo.dart';
 import 'package:smile_shop/data/vos/payment_vo.dart';
 import 'package:smile_shop/data/vos/product_response_data_vo.dart';
@@ -11,9 +12,11 @@ import 'package:smile_shop/data/vos/profile_vo.dart';
 import 'package:smile_shop/data/vos/state_vo.dart';
 import 'package:smile_shop/data/vos/sub_category_vo.dart';
 import 'package:smile_shop/data/vos/township_data_vo.dart';
+import 'package:smile_shop/data/vos/user_vo.dart';
 import 'package:smile_shop/data/vos/wallet_transaction_vo.dart';
 import 'package:smile_shop/data/vos/wallet_vo.dart';
 import 'package:smile_shop/network/requests/address_request.dart';
+import 'package:smile_shop/network/requests/checkIn_request.dart';
 import 'package:smile_shop/network/requests/check_wallet_amount_request.dart';
 import 'package:smile_shop/network/requests/check_wallet_password_request.dart';
 import 'package:smile_shop/network/requests/otp_request.dart';
@@ -111,9 +114,9 @@ abstract class SmileShopDataAgent {
       String token, String acceptLanguage, String orderType);
 
   Future<OrderVO> orderDetails(
-      String token, String acceptLanguage, int orderId);
+      String token, String acceptLanguage, String orderId);
 
-  Future<ProfileVO> userProfile(String token, String acceptLanguage);
+  Future<UserVO> userProfile(String token, String acceptLanguage);
 
   Future<ProfileResponse> updateProfile(
       String token, String acceptLanguage, String name, File? image);
@@ -137,4 +140,10 @@ abstract class SmileShopDataAgent {
 
   Future<List<WalletTransactionVO>> getWalletTransactions(
       String token, String acceptLanguage, WalletTransitionRequest walletTransactionRequest);
+
+  Future<CheckInVO> getUserCheckIn(
+      String token, String acceptLanguage);
+
+  Future<SuccessNetworkResponse> postUserCheckIn(
+      String token, String acceptLanguage, CheckInRequest checkInRequest);
 }

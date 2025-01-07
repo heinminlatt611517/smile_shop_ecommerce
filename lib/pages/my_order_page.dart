@@ -13,7 +13,9 @@ import 'package:smile_shop/utils/extensions.dart';
 import '../widgets/loading_view.dart';
 
 class MyOrderPage extends StatefulWidget {
-  const MyOrderPage({super.key});
+  const MyOrderPage({super.key, this.tabIndex});
+
+  final int? tabIndex;
 
   @override
   State<MyOrderPage> createState() => _MyOrderPageState();
@@ -27,6 +29,7 @@ class _MyOrderPageState extends State<MyOrderPage>
   void initState() {
     super.initState();
     _tabController = TabController(length: 5, vsync: this);
+    _tabController.animateTo(widget.tabIndex ?? 0);
   }
 
   @override
@@ -38,7 +41,7 @@ class _MyOrderPageState extends State<MyOrderPage>
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => OrderBloc(),
+      create: (context) => OrderBloc(widget.tabIndex ?? 0),
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -118,22 +121,29 @@ class _MyOrderPageState extends State<MyOrderPage>
   }
 
   Widget _myOrderView(List<OrderVO> orderList) {
-    return Container(
-      color: kBackgroundColor,
-      child: ListView.builder(
-          itemCount: orderList.length,
-          itemBuilder: (context, index) {
-            return GestureDetector(
-              onTap: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => const OrderDetailPage()));
-              },
-              child:  MyOrderListItemView(
-                orderVO: orderList[index],
-                isRefundView: false,
-              ),
-            );
-          }),
+    return Selector<OrderBloc, bool>(
+      selector: (_, bloc) => bloc.isLoading,
+       builder: (_, isLoading, child) =>
+
+           Container(
+              color: kBackgroundColor,
+              child: ListView.builder(
+                  itemCount: orderList.length,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (_) => OrderDetailPage(
+                                  orderNumber: orderList[index].orderNo ?? '',
+                                )));
+                      },
+                      child: MyOrderListItemView(
+                        orderVO: orderList[index],
+                        isRefundView: false,
+                      ),
+                    );
+                  }),
+            ),
     );
   }
 }

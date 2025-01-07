@@ -16,7 +16,9 @@ const kSpecialDelivery = 'Special Delivery';
 
 ///hive
 const kLoginData = "LoginData";
+const kUserData = "UserData";
 
 ///get storage key
 const kBoxKeyReferralCode = "Referral Code";
 const kBoxKeyWalletPassword = "Wallet Password";
+const kBoxKeyFirebaseUserId = "FirebaseUserId";

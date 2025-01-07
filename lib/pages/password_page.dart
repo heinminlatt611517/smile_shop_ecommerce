@@ -93,6 +93,7 @@ class _PasswordPageState extends State<PasswordPage> {
 
                           bloc.onTapConfirm(widget.requestId??"", widget.phone??"").then((value) {
                             if (value.statusCode == 200) {
+                              bloc.crateFirebaseChatUser(id: value.data?.id ?? 0);
                               Navigator.of(context).pushAndRemoveUntil(
                                   MaterialPageRoute(builder: (builder) => const LoginPage()),(Route<dynamic> route) => false);
                             }

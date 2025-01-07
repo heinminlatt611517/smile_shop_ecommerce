@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:retrofit/error_logger.dart';
 import 'package:retrofit/http.dart';
 import 'package:smile_shop/network/requests/address_request.dart';
+import 'package:smile_shop/network/requests/checkIn_request.dart';
 import 'package:smile_shop/network/requests/check_wallet_amount_request.dart';
 import 'package:smile_shop/network/requests/check_wallet_password_request.dart';
 import 'package:smile_shop/network/requests/login_request.dart';
@@ -17,6 +18,7 @@ import 'package:smile_shop/network/responses/address_response.dart';
 import 'package:smile_shop/network/responses/banner_response.dart';
 import 'package:smile_shop/network/responses/brands_and_categories_response.dart';
 import 'package:smile_shop/network/responses/category_response.dart';
+import 'package:smile_shop/network/responses/checkIn_response.dart';
 import 'package:smile_shop/network/responses/login_response.dart';
 import 'package:smile_shop/network/responses/order_details_response.dart';
 import 'package:smile_shop/network/responses/order_response.dart';
@@ -228,7 +230,7 @@ abstract class SmileShopApi {
   Future<OrderDetailsResponse> orderDetails(
     @Header(kHeaderAuthorization) String token,
     @Header(kHeaderAcceptLanguage) String acceptLanguage,
-    @Path("order_id") int addressId,
+    @Path("order_id") String addressId,
   );
 
   @MultiPart()
@@ -285,4 +287,17 @@ abstract class SmileShopApi {
     @Field(kFieldAppType) String appType,
     @Field(kFieldPaymentData) String paymentData,
   );
+
+  @GET(kEndPointGetUserCheckIn)
+  Future<CheckInResponse> getUserCheckIn(
+      @Header(kHeaderAuthorization) String token,
+      @Header(kHeaderAcceptLanguage) String acceptLanguage,
+      );
+
+  @POST(kEndPointPostUserCheckIn)
+  Future<SuccessNetworkResponse> postUserCheck(
+      @Header(kHeaderAuthorization) String token,
+      @Header(kHeaderAcceptLanguage) String acceptLanguage,
+      @Body() CheckInRequest checkInRequest);
+
 }

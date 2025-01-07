@@ -12,14 +12,26 @@ class OrderBloc extends ChangeNotifier {
   var isLoading = false;
   var isDisposed = false;
   var authToken = "";
-
-  OrderBloc() {
+  int index = 0;
+  OrderBloc(this.index) {
     ///get data from database
     authToken =
         _smileShopModel.getLoginResponseFromDatabase()?.accessToken ?? "";
 
     ///get order list
-    getAllOrder();
+    //getAllOrder();
+
+    ///get order by type
+    switch (index) {
+      case 1:
+        getOrdersByType(kTypeToPay);
+      case 2:
+        getOrdersByType(kTypeToShip);
+      case 3:
+        getOrdersByType(kTypeToReceive);
+      case 4:
+        getOrdersByType(kTypeToReview);
+    }
   }
 
   void getAllOrder(){
@@ -32,12 +44,13 @@ class OrderBloc extends ChangeNotifier {
   }
 
   void getOrdersByType(String type) {
+    _showLoading();
     _smileShopModel
         .getOrderListByOrderType(authToken, kAcceptLanguageEn, type)
         .then((orderResponse) {
       orders = orderResponse;
       notifyListeners();
-    });
+    }).whenComplete(()=> _hideLoading());
   }
 
   void _showLoading() {
