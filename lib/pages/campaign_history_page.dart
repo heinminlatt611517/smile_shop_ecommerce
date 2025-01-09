@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:smile_shop/list_items/campaign_history_list_item.dart';
-import 'package:smile_shop/pages/campaign_description_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/widgets/custom_app_bar_view.dart';
+
+import 'campaign_details_page.dart';
 
 class CampaignHistoryPage extends StatelessWidget {
   const CampaignHistoryPage ({super.key});
@@ -17,7 +18,7 @@ class CampaignHistoryPage extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: kMarginMedium2),
           itemCount: 3,itemBuilder: (context,index){
         return InkWell(
-          onTap: ()=> Navigator.of(context).push(MaterialPageRoute(builder: (_)=> const CampaignDescriptionPage())),
+          onTap: ()=> Navigator.of(context).push(MaterialPageRoute(builder: (_)=> const CampaignDetailsPage())),
             child: const CampaignHistoryListItem());
       }),
     );

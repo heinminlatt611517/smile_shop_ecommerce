@@ -5,13 +5,14 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:smile_shop/data/vos/banner_vo.dart';
 import 'package:smile_shop/data/vos/brand_and_category_vo.dart';
+import 'package:smile_shop/data/vos/campaign_participant_vo.dart';
+import 'package:smile_shop/data/vos/campaign_vo.dart';
 import 'package:smile_shop/data/vos/category_vo.dart';
 import 'package:smile_shop/data/vos/checkIn_vo.dart';
 import 'package:smile_shop/data/vos/order_vo.dart';
 import 'package:smile_shop/data/vos/payment_vo.dart';
 import 'package:smile_shop/data/vos/product_response_data_vo.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
-import 'package:smile_shop/data/vos/profile_vo.dart';
 import 'package:smile_shop/data/vos/state_vo.dart';
 import 'package:smile_shop/data/vos/sub_category_vo.dart';
 import 'package:smile_shop/data/vos/township_data_vo.dart';
@@ -20,10 +21,14 @@ import 'package:smile_shop/data/vos/wallet_transaction_vo.dart';
 import 'package:smile_shop/data/vos/wallet_vo.dart';
 import 'package:smile_shop/network/data_agents/smile_shop_data_agent.dart';
 import 'package:smile_shop/network/requests/address_request.dart';
+import 'package:smile_shop/network/requests/campaign_detail_request.dart';
+import 'package:smile_shop/network/requests/campaign_join_request.dart';
 import 'package:smile_shop/network/requests/checkIn_request.dart';
 import 'package:smile_shop/network/requests/check_wallet_amount_request.dart';
 import 'package:smile_shop/network/requests/check_wallet_password_request.dart';
+import 'package:smile_shop/network/requests/dealer_login_request.dart';
 import 'package:smile_shop/network/requests/login_request.dart';
+import 'package:smile_shop/network/requests/order_cancel_request.dart';
 import 'package:smile_shop/network/requests/otp_request.dart';
 import 'package:smile_shop/network/requests/otp_verify_request.dart';
 import 'package:smile_shop/network/requests/set_password_request.dart';
@@ -63,6 +68,18 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   Future<LoginResponse> login(LoginRequest loginRequest) {
     return mApi
         .login(loginRequest)
+        .asStream()
+        .map((response) => response)
+        .first
+        .catchError((error) {
+      throw _createException(error);
+    });
+  }
+
+  @override
+  Future<LoginResponse> dealerLogin(DealerLoginRequest loginRequest) {
+    return mApi
+        .dealerLogin(loginRequest)
         .asStream()
         .map((response) => response)
         .first
@@ -331,9 +348,10 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   }
 
   @override
-  Future<List<PaymentVO>> payments(String token, String acceptLanguage,String action) {
+  Future<List<PaymentVO>> payments(
+      String token, String acceptLanguage, String action) {
     return mApi
-        .payments(token, acceptLanguage,action)
+        .payments('Bearer $token', acceptLanguage, action)
         .asStream()
         .map((response) => response.data ?? [])
         .first
@@ -402,6 +420,27 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
     return mApi
         .searchProductsByCategoryId(
             token, acceptLanguage, int.parse(endUserId), pageNo, categoryId)
+        .asStream()
+        .map((response) => response.data?.products ?? [])
+        .first
+        .catchError((error) {
+      throw _createException(error);
+    });
+  }
+
+  @override
+  Future<List<ProductVO>> searchProductsWithDynamicParam(
+      String token,
+      String acceptLanguage,
+      String endUserId,
+      int pageNo,
+      String? name,
+      double? rating,
+      int? minRange,
+      int? maxRange) {
+    return mApi
+        .searchWithDynamic(token, acceptLanguage, int.parse(endUserId), pageNo,
+            name, rating, minRange, maxRange)
         .asStream()
         .map((response) => response.data?.products ?? [])
         .first
@@ -522,17 +561,19 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
         });
   }
 
-
   @override
-  Future<SuccessPaymentResponse> postOrder(String token, String acceptLanguage, int subTotal, String paymentType, String itemList, String appType, String paymentData, int usedPoint) {
+  Future<SuccessPaymentResponse> postOrder(
+      String token,
+      String acceptLanguage,
+      int subTotal,
+      String paymentType,
+      String itemList,
+      String appType,
+      String paymentData,
+      int usedPoint) {
     return mApi
-        .postOrder(
-        "Bearer $token",
-        acceptLanguage,
-        subTotal,
-        paymentType,
-        itemList,
-        appType,paymentData,usedPoint)
+        .postOrder("Bearer $token", acceptLanguage, subTotal, paymentType,
+            itemList, appType, paymentData, usedPoint)
         .asStream()
         .map((response) => response)
         .first
@@ -542,44 +583,77 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   }
 
   @override
-  Future<List<WalletTransactionVO>> getWalletTransactions(String token, String acceptLanguage, WalletTransitionRequest walletTransactionRequest) {
+  Future<List<WalletTransactionVO>> getWalletTransactions(String token,
+      String acceptLanguage, WalletTransitionRequest walletTransactionRequest) {
     return mApi
         .getWalletTransitionLogs(
-        'Bearer $token', acceptLanguage,walletTransactionRequest)
+            'Bearer $token', acceptLanguage, walletTransactionRequest)
         .asStream()
         .map((response) {
-      return response.data?.walletTransactions ?? [];
-    })
+          return response.data?.walletTransactions ?? [];
+        })
         .first
         .catchError((error) {
-      throw _createException(error);
-    });
+          throw _createException(error);
+        });
   }
 
   @override
-  Future<SuccessPaymentResponse> rechargeWallet(String token, String acceptLanguage, int total, String paymentType, String appType, String paymentData) {
+  Future<SuccessPaymentResponse> rechargeWallet(
+      String token,
+      String acceptLanguage,
+      int total,
+      String paymentType,
+      String appType,
+      String paymentData) {
     return mApi
-        .rechargeWallet(
-        'Bearer $token', acceptLanguage,total,paymentType,appType,paymentData)
+        .rechargeWallet('Bearer $token', acceptLanguage, total, paymentType,
+            appType, paymentData)
         .asStream()
         .map((response) {
-      return response;
-    })
+          return response;
+        })
         .first
         .catchError((error) {
-      throw _createException(error);
-    });
+          throw _createException(error);
+        });
   }
 
   @override
   Future<CheckInVO> getUserCheckIn(String token, String acceptLanguage) {
     return mApi
-        .getUserCheckIn(
-        'Bearer $token', acceptLanguage)
+        .getUserCheckIn('Bearer $token', acceptLanguage)
         .asStream()
         .map((response) {
-      return response.checkInVO ?? CheckInVO();
-    })
+          return response.checkInVO ?? CheckInVO();
+        })
+        .first
+        .catchError((error) {
+          throw _createException(error);
+        });
+  }
+
+  @override
+  Future<SuccessNetworkResponse> postUserCheckIn(
+      String token, String acceptLanguage, CheckInRequest checkInRequest) {
+    return mApi
+        .postUserCheck('Bearer $token', acceptLanguage, checkInRequest)
+        .asStream()
+        .map((response) {
+          return response;
+        })
+        .first
+        .catchError((error) {
+          throw _createException(error);
+        });
+  }
+
+  @override
+  Future<List<CampaignVo>> getCampaign(String token, String acceptLanguage) {
+    return mApi
+        .getCampaign(acceptLanguage, 'Bearer $token')
+        .asStream()
+        .map((response) => response.data ?? [])
         .first
         .catchError((error) {
       throw _createException(error);
@@ -587,18 +661,78 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   }
 
   @override
-  Future<SuccessNetworkResponse> postUserCheckIn(String token, String acceptLanguage, CheckInRequest checkInRequest) {
+  Future<CampaignVo> getCampaignDetail(
+      String token, String acceptLanguage, CampaignDetailRequest request) {
     return mApi
-        .postUserCheck(
-        'Bearer $token', acceptLanguage,checkInRequest)
+        .getCampaignDetail(acceptLanguage, 'Bearer $token', request)
         .asStream()
-        .map((response) {
-      return response;
-    })
+        .map((response) => response.data as CampaignVo)
         .first
         .catchError((error) {
       throw _createException(error);
     });
+  }
+
+  @override
+  Future<void> joinCampaign(
+      String token, String acceptLanguage, CampaignJoinRequest request) {
+    return mApi
+        .joinCampaign(acceptLanguage, 'Bearer $token', request)
+        .asStream()
+        .map((response) => response)
+        .first
+        .catchError((error) {
+      throw _createException(error);
+    });
+  }
+
+  @override
+  Future<List<CampaignParticipantVo>> getCampaignParticipants(
+      String token, String acceptLanguage, CampaignDetailRequest request) {
+    return mApi
+        .getCampaignParticipants(acceptLanguage, 'Bearer $token', request)
+        .asStream()
+        .map((response) => response.data ?? [])
+        .first
+        .catchError((error) {
+      throw _createException(error);
+    });
+  }
+
+  @override
+  Future<SuccessNetworkResponse> cancelOrder(
+      String token, String acceptLanguage, OrderCancelRequest request) {
+    return mApi
+        .orderCancel('Bearer $token', acceptLanguage, request)
+        .asStream()
+        .map((response) {
+          return response;
+        })
+        .first
+        .catchError((error) {
+          throw _createException(error);
+        });
+  }
+
+  @override
+  Future<SuccessPaymentResponse> makePayment(
+      String token,
+      String acceptLanguage,
+      String paymentType,
+      String paymentData,
+      String orderNo,
+      String appType) {
+    return mApi
+        .makePayment('Bearer $token', acceptLanguage, paymentType, paymentData,
+            orderNo, appType)
+        .asStream()
+        .map((response) {
+          return response;
+        })
+        .first
+        .catchError((error) {
+          throw _createException(error);
+        });
   }
 }
 

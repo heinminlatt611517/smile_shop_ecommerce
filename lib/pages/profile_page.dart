@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:smile_shop/blocs/profile_bloc.dart';
-import 'package:smile_shop/data/vos/profile_vo.dart';
 import 'package:smile_shop/data/vos/user_vo.dart';
 import 'package:smile_shop/network/api_constants.dart';
 import 'package:smile_shop/pages/edit_profile_page.dart';
 import 'package:smile_shop/pages/login_page.dart';
+import 'package:smile_shop/pages/my_address_page.dart';
 import 'package:smile_shop/pages/my_favourite_page.dart';
 import 'package:smile_shop/pages/my_order_page.dart';
 import 'package:smile_shop/pages/my_team_page.dart';
@@ -16,6 +16,7 @@ import 'package:smile_shop/pages/referral_code_page.dart';
 import 'package:smile_shop/pages/smile_point_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
+import 'package:smile_shop/utils/images.dart';
 
 import '../data/model/smile_shop_model.dart';
 import '../data/model/smile_shop_model_impl.dart';
@@ -139,25 +140,25 @@ class _ProfilePageState extends State<ProfilePage> {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (_) => const MyOrderPage(tabIndex: 1,)));
                             },
-                            child: _buildProfileItem(context, title: 'To Pay')),
+                            child: _buildProfileItem(context, title: 'To Pay',assetImagePath: kToPayIcon)),
                         GestureDetector(
                           onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (_) => const MyOrderPage(tabIndex: 2,)));
                             },
-                          child: _buildProfileItem(context, title: 'To Ship')),
+                          child: _buildProfileItem(context, title: 'To Ship',assetImagePath: kToShipIcon)),
                         GestureDetector(
                           onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (_) => const MyOrderPage(tabIndex: 3,)));
                             },
-                          child: _buildProfileItem(context, title: 'To Receive')),
+                          child: _buildProfileItem(context, title: 'To Receive',assetImagePath: kCarIcon)),
                         GestureDetector(
                           onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (_) => const MyOrderPage(tabIndex: 4,)));
                             },
-                          child: _buildProfileItem(context, title: 'To Review')),
+                          child: _buildProfileItem(context, title: 'To Review',assetImagePath: kToReviewIcon)),
                       ],
                     ),
                     const SizedBox(
@@ -172,26 +173,26 @@ class _ProfilePageState extends State<ProfilePage> {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (_) => const ProductRefundPage()));
                             },
-                          child: _buildProfileItem(context, title: 'Refund')),
+                          child: _buildProfileItem(context, title: 'Refund',assetImagePath: kRefundIcon)),
                         GestureDetector(
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (_) => const SmilePointPage()));
                             },
-                            child: _buildProfileItem(context, title: 'Smile Wallet')),
+                            child: _buildProfileItem(context, title: 'Smile Wallet',assetImagePath: kSmileIcon)),
                         GestureDetector(
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (_) => const PromotionPointPage()));
                             },
                             child:
-                                _buildProfileItem(context, title: 'Promotion Point')),
+                                _buildProfileItem(context, title: 'Promotion Point',assetImagePath: kPointIcon)),
                         GestureDetector(
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (_) => const PackagePage()));
                             },
-                            child: _buildProfileItem(context, title: 'Package')),
+                            child: _buildProfileItem(context, title: 'Package',assetImagePath: kPackageIcon)),
                       ],
                     ),
                     const SizedBox(
@@ -205,15 +206,20 @@ class _ProfilePageState extends State<ProfilePage> {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (_) => const MyFavouritePage()));
                             },
-                            child: _buildProfileItem(context, title: 'My Favourite')),
-                        _buildProfileItem(context, title: 'Language'),
+                            child: _buildProfileItem(context, title: 'My Favourite',assetImagePath: kFavouriteIcon)),
+                        _buildProfileItem(context, title: 'Language',assetImagePath: kLanguageIcon),
                         GestureDetector(
                             onTap: (){
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (_) => const MyTeamPage()));
                             },
-                            child: _buildProfileItem(context, title: 'My Team')),
-                        _buildProfileItem(context, title: 'Address'),
+                            child: _buildProfileItem(context, title: 'My Team',assetImagePath: kMyTeamIcon)),
+                        GestureDetector(
+                          onTap: (){
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (_) => const MyAddressPage()));
+                          },
+                            child: _buildProfileItem(context, title: 'Address',assetImagePath: kAddressIcon)),
                       ],
                     ),
                     const SizedBox(
@@ -227,9 +233,9 @@ class _ProfilePageState extends State<ProfilePage> {
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (_) => const ReferralCodePage()));
                           },
-                            child: _buildProfileItem(context, title: 'Referal Code')),
-                        _buildProfileItem(context, title: 'About Us'),
-                        _buildProfileItem(context, title: 'Contact Us'),
+                            child: _buildProfileItem(context, title: 'Referal Code',assetImagePath: kReferralIcon)),
+                        _buildProfileItem(context, title: 'About Us',assetImagePath: kAboutUsIcon),
+                        _buildProfileItem(context, title: 'Contact Us',assetImagePath: kContactUsIcon),
                         SizedBox(
                           width: MediaQuery.of(context).size.width * 0.2,
                         ),
@@ -304,15 +310,12 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 }
 
-Widget _buildProfileItem(BuildContext context, {required String title}) {
+Widget _buildProfileItem(BuildContext context, {required String title,required String assetImagePath}) {
   return SizedBox(
     width: MediaQuery.of(context).size.width * 0.20,
     child: Column(
       children: [
-        const Icon(
-          Icons.payment,
-          color: kPrimaryColor,
-        ),
+        Image.asset(assetImagePath,width: 20,height: 20,fit: BoxFit.cover,color: kPrimaryColor,),
         const SizedBox(
           height: 7,
         ),

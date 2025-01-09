@@ -4,10 +4,13 @@ import 'package:dio/dio.dart';
 import 'package:retrofit/error_logger.dart';
 import 'package:retrofit/http.dart';
 import 'package:smile_shop/network/requests/address_request.dart';
+import 'package:smile_shop/network/requests/campaign_join_request.dart';
 import 'package:smile_shop/network/requests/checkIn_request.dart';
 import 'package:smile_shop/network/requests/check_wallet_amount_request.dart';
 import 'package:smile_shop/network/requests/check_wallet_password_request.dart';
+import 'package:smile_shop/network/requests/dealer_login_request.dart';
 import 'package:smile_shop/network/requests/login_request.dart';
+import 'package:smile_shop/network/requests/order_cancel_request.dart';
 import 'package:smile_shop/network/requests/otp_request.dart';
 import 'package:smile_shop/network/requests/set_password_request.dart';
 import 'package:smile_shop/network/requests/set_wallet_password_request.dart';
@@ -17,6 +20,9 @@ import 'package:smile_shop/network/responses/address_categories_response.dart';
 import 'package:smile_shop/network/responses/address_response.dart';
 import 'package:smile_shop/network/responses/banner_response.dart';
 import 'package:smile_shop/network/responses/brands_and_categories_response.dart';
+import 'package:smile_shop/network/responses/campaign_detail_response.dart';
+import 'package:smile_shop/network/responses/campaign_participant_response.dart';
+import 'package:smile_shop/network/responses/campaign_response.dart';
 import 'package:smile_shop/network/responses/category_response.dart';
 import 'package:smile_shop/network/responses/checkIn_response.dart';
 import 'package:smile_shop/network/responses/login_response.dart';
@@ -37,6 +43,7 @@ import 'package:smile_shop/network/responses/wallet_response.dart';
 import 'package:smile_shop/network/responses/wallet_transaction_response.dart';
 
 import 'api_constants.dart';
+import 'requests/campaign_detail_request.dart';
 import 'requests/otp_verify_request.dart';
 
 part 'smile_shop_api.g.dart';
@@ -47,6 +54,9 @@ abstract class SmileShopApi {
 
   @POST(kEndPointLogin)
   Future<LoginResponse> login(@Body() LoginRequest loginRequest);
+
+  @POST(kEndPointLogin)
+  Future<LoginResponse> dealerLogin(@Body() DealerLoginRequest loginRequest);
 
   @POST(kEndPointSetPassword)
   Future<SetPasswordResponse> setPassword(
@@ -127,6 +137,18 @@ abstract class SmileShopApi {
   );
 
   @POST(kEndPointSearchProducts)
+  Future<ProductResponse> searchWithDynamic(
+    @Header(kHeaderAuthorization) String token,
+    @Header(kHeaderAcceptLanguage) String acceptLanguage,
+    @Field(kFieldEndUserId) int endUserId,
+    @Field(kFieldPage) int page,
+    @Query(kParamName) String? name,
+    @Query(kParamRating) double? rating,
+    @Query(kParamMinPrice) int? minPrice,
+    @Query(kParamMaxPrice) int? maxPrice,
+  );
+
+  @POST(kEndPointSearchProducts)
   Future<ProductResponse> searchProductsBySubCategoryId(
     @Header(kHeaderAuthorization) String token,
     @Header(kHeaderAcceptLanguage) String acceptLanguage,
@@ -200,11 +222,21 @@ abstract class SmileShopApi {
     @Field(kFieldUsedPoint) int usedPoint,
   );
 
+  @POST(kEndPointMakePayment)
+  Future<SuccessPaymentResponse> makePayment(
+      @Header(kHeaderAuthorization) String token,
+      @Header(kHeaderAcceptLanguage) String acceptLanguage,
+      @Field(kFieldPaymentType) String paymentType,
+      @Field(kFieldPaymentData) String paymentData,
+      @Field(kFieldOrderNo) String orderNo,
+      @Field(kFieldAppType) String appType,
+      );
+
   @GET(kEndPointPayments)
   Future<PaymentResponse> payments(
     @Header(kHeaderAuthorization) String token,
     @Header(kHeaderAcceptLanguage) String acceptLanguage,
-      @Query(kParamAction) String action,
+    @Query(kParamAction) String action,
   );
 
   @GET(kEndPointProfile)
@@ -290,9 +322,9 @@ abstract class SmileShopApi {
 
   @GET(kEndPointGetUserCheckIn)
   Future<CheckInResponse> getUserCheckIn(
-      @Header(kHeaderAuthorization) String token,
-      @Header(kHeaderAcceptLanguage) String acceptLanguage,
-      );
+    @Header(kHeaderAuthorization) String token,
+    @Header(kHeaderAcceptLanguage) String acceptLanguage,
+  );
 
   @POST(kEndPointPostUserCheckIn)
   Future<SuccessNetworkResponse> postUserCheck(
@@ -300,4 +332,33 @@ abstract class SmileShopApi {
       @Header(kHeaderAcceptLanguage) String acceptLanguage,
       @Body() CheckInRequest checkInRequest);
 
+  @GET(kEndPointCampaign)
+  Future<CampaignResponse> getCampaign(
+      @Header(kHeaderAcceptLanguage) String acceptLanguage,
+    @Header(kHeaderAuthorization) String token,
+  );
+
+  @POST(kEndPointCampaignDetail)
+  Future<CampaignDetailResponse> getCampaignDetail(
+      @Header(kHeaderAcceptLanguage) String acceptLanguage,
+      @Header(kHeaderAuthorization) String token,
+      @Body() CampaignDetailRequest request);
+
+  @POST(kEndPointCampaignJoin)
+  Future<void> joinCampaign(
+      @Header(kHeaderAcceptLanguage) String acceptLanguage,
+      @Header(kHeaderAuthorization) String token,
+      @Body() CampaignJoinRequest request);
+
+  @POST(kEndPointCampaignParticipant)
+  Future<CampaignParticipantResponse> getCampaignParticipants(
+      @Header(kHeaderAcceptLanguage) String acceptLanguage,
+      @Header(kHeaderAuthorization) String token,
+      @Body() CampaignDetailRequest request);
+
+  @POST(kEndPointOrderCancel)
+  Future<SuccessNetworkResponse> orderCancel(
+      @Header(kHeaderAcceptLanguage) String acceptLanguage,
+      @Header(kHeaderAuthorization) String token,
+      @Body() OrderCancelRequest request);
 }

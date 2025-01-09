@@ -13,36 +13,39 @@ Widget normalPhoneTextField(
     builder: (_, setstate) => Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          margin: const EdgeInsets.only(
-            right: 15,
+        Visibility(
+          visible: false,
+          child: Container(
+            margin: const EdgeInsets.only(
+              right: 15,
+            ),
+            alignment: Alignment.center,
+            height: 56,
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(color: Colors.white),
+                ),
+            child: DropdownButton(
+                dropdownColor: Colors.black,
+                underline: const SizedBox.shrink(),
+                hint: Text(
+                  phoneCode,
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleSmall!
+                      .copyWith(color: Colors.black),
+                ),
+                items: countries
+                    .map((e) => DropdownMenuItem(
+                        value: e,
+                        child: Text(
+                          "${e.name} ${e.code}",
+                          style: const TextStyle(color: Colors.white),
+                        )))
+                    .toList(),
+                onChanged: onChanged),
           ),
-          alignment: Alignment.center,
-          height: 56,
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: Colors.white),
-              ),
-          child: DropdownButton(
-              dropdownColor: Colors.black,
-              underline: const SizedBox.shrink(),
-              hint: Text(
-                phoneCode,
-                style: Theme.of(context)
-                    .textTheme
-                    .titleSmall!
-                    .copyWith(color: Colors.black),
-              ),
-              items: countries
-                  .map((e) => DropdownMenuItem(
-                      value: e,
-                      child: Text(
-                        "${e.name} ${e.code}",
-                        style: const TextStyle(color: Colors.white),
-                      )))
-                  .toList(),
-              onChanged: onChanged),
         ),
         Expanded(
           child: TextFormField(

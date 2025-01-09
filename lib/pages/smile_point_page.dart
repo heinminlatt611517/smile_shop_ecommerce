@@ -24,6 +24,38 @@ class SmilePointPage extends StatelessWidget {
           backgroundColor: kSecondaryColor,
           surfaceTintColor: kSecondaryColor,
           title: const Text('Smile Point'),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: kMarginMedium),
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: IntrinsicWidth(
+                  child: InkWell(
+                    onTap:(){
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (builder) =>const WalletPasswordPage()));
+                    },
+                    child: Container(
+                      padding:const EdgeInsets.symmetric(vertical: kMarginSmall,horizontal: kMarginMedium),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(kMarginMedium),
+                          border: Border.all(
+                            color: Colors.white,
+                          )),
+                      child: const Center(
+                        child: Column(
+                          children: [
+                            Icon(Icons.lock),
+                            Text('Password',style: TextStyle(fontSize: kTextSmall),),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
         body: Column(
          children: [
@@ -82,8 +114,6 @@ class SmilePointPage extends StatelessWidget {
                    ),
                    InkWell(
                      onTap: (){
-                       Navigator.of(context).push(MaterialPageRoute(
-                           builder: (builder) =>const WalletPasswordPage()));
                      },
                      child: Container(
                        width: MediaQuery.of(context).size.width - 60,

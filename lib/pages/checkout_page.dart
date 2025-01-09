@@ -1,9 +1,11 @@
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:smile_shop/blocs/checkout_bloc.dart';
 import 'package:smile_shop/data/vos/address_vo.dart';
 import 'package:smile_shop/list_items/cart_list_item_view.dart';
+import 'package:smile_shop/network/api_constants.dart';
 import 'package:smile_shop/pages/my_address_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
@@ -28,7 +30,7 @@ class CheckoutPage extends StatelessWidget {
       create: (context) => CheckOutBloc(productList ?? []),
       child: Scaffold(
         backgroundColor: kBackgroundColor,
-        appBar:const  CustomAppBarView(title: 'Check Out'),
+        appBar: const CustomAppBarView(title: 'Check Out'),
         body: Selector<CheckOutBloc, List<AddressVO>>(
           selector: (context, bloc) => bloc.addressList,
           builder: (context, addressList, child) => SingleChildScrollView(
@@ -65,7 +67,12 @@ class CheckoutPage extends StatelessWidget {
                 ),
 
                 ///promotion point view
-                const _BuildPromotionPointView(),
+                Consumer<CheckOutBloc>(
+                  builder: (context, bloc, child) => _BuildPromotionPointView(
+                    productVO: productList?.first,
+                    bloc: bloc,
+                  ),
+                ),
                 const SizedBox(
                   height: 20,
                 ),
@@ -89,6 +96,9 @@ class CheckoutPage extends StatelessWidget {
                         productSubTotalPrice: bloc.totalSummaryProductPrice,
                         isFromCartPage: isFromCartPage,
                         productList: productList,
+                        promotionPoint: bloc.isSelectedUsePromotion == true
+                            ? GetStorage().read(kBoxKeyPromotionPoint)
+                            : 0, isFromMyOrderPage: false,
                       )));
             },
             child: Container(
@@ -254,7 +264,7 @@ class _BuildOrderSummaryView extends StatelessWidget {
           ),
           const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text('Delivery'), Text('Ks 3500')],
+            children: [Text('Delivery'), Text('Ks 0')],
           ),
           const SizedBox(
             height: 20,
@@ -280,7 +290,10 @@ class _BuildOrderSummaryView extends StatelessWidget {
 
 ///promotion point view
 class _BuildPromotionPointView extends StatelessWidget {
-  const _BuildPromotionPointView();
+  final ProductVO? productVO;
+  final CheckOutBloc bloc;
+
+  const _BuildPromotionPointView({required this.productVO, required this.bloc});
 
   @override
   Widget build(BuildContext context) {
@@ -288,7 +301,11 @@ class _BuildPromotionPointView extends StatelessWidget {
       onTap: () {
         showModalBottomSheet(
             context: context,
-            builder: (builder) => promotionPointModalSheet(context));
+            builder: (builder) => promotionPointModalSheet(
+                  context,
+                  productVO,
+                  bloc,
+                ));
       },
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -298,10 +315,10 @@ class _BuildPromotionPointView extends StatelessWidget {
         decoration: BoxDecoration(
             border: Border.all(color: kFillingFastColor),
             borderRadius: BorderRadius.circular(10)),
-        child: const Row(
+        child: Row(
           children: [
-            Text('Promotion Points'),
-            SizedBox(
+            const Text('Promotion Points'),
+            const SizedBox(
               width: 50,
             ),
             Expanded(
@@ -310,13 +327,13 @@ class _BuildPromotionPointView extends StatelessWidget {
                 children: [
                   Flexible(
                       child: Text(
-                    '-700',
-                    style: TextStyle(color: kFillingFastColor),
+                    GetStorage().read(kBoxKeyPromotionPoint) ?? "0",
+                    style: const TextStyle(color: kFillingFastColor),
                   )),
-                  SizedBox(
+                  const SizedBox(
                     width: 20,
                   ),
-                  Icon(Icons.chevron_right)
+                  const Icon(Icons.chevron_right)
                 ],
               ),
             )
@@ -424,7 +441,11 @@ Widget deliveryOptionModalSheet(BuildContext context, CheckOutBloc bloc) {
 }
 
 ///promotion point bottom sheet
-Widget promotionPointModalSheet(BuildContext context) {
+Widget promotionPointModalSheet(
+  BuildContext context,
+  ProductVO? productVO,
+  CheckOutBloc bloc,
+) {
   return Container(
     decoration: const BoxDecoration(
       color: kBackgroundColor,
@@ -435,132 +456,147 @@ Widget promotionPointModalSheet(BuildContext context) {
     ),
     width: double.infinity,
     child: Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        const SizedBox(
-          height: 20,
-        ),
+        const SizedBox(height: 20),
         const Text(
           'Promotion Point',
           style: TextStyle(fontSize: kTextRegular2x),
         ),
-        const SizedBox(
-          height: 20,
-        ),
+        const SizedBox(height: 20),
         Container(
           width: double.infinity,
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             children: [
-              ///user promotion view
+              /// User Promotion View
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                    color: Colors.grey.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(kMarginMedium)),
+                  color: Colors.grey.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(kMarginMedium),
+                ),
                 child: Column(
                   children: [
-                    const Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Use Promotion'),
+                        const Text('Use Promotion'),
                         Row(
                           children: [
                             Text(
-                              'use 7000 Points',
-                              style: TextStyle(color: kSecondaryColor),
+                              'Use ${GetStorage().read(kBoxKeyPromotionPoint) ?? "0"} Points',
+                              style: const TextStyle(color: kSecondaryColor),
                             ),
-                            SizedBox(
-                              width: 10,
+                            const SizedBox(width: 10),
+                            InkWell(
+                              onTap: () {
+                                bloc.onTapUsePromotion();
+                                Navigator.pop(context);
+                              },
+                              child: bloc.isSelectedUsePromotion
+                                  ? const Icon(
+                                      Icons.circle,
+                                      color: kSecondaryColor,
+                                    )
+                                  : const Icon(
+                                      Icons.circle_outlined,
+                                      color: kSecondaryColor,
+                                    ),
                             ),
-                            Icon(
-                              Icons.circle_outlined,
-                              color: kSecondaryColor,
-                            )
                           ],
                         ),
                       ],
                     ),
-                    const SizedBox(
-                      height: 20,
-                    ),
+                    const SizedBox(height: 20),
                     Row(
                       children: [
                         ClipRRect(
                           borderRadius: BorderRadius.circular(10),
-                          child: const CachedNetworkImageView(
-                              imageHeight: 80,
-                              imageWidth: 80,
-                              imageUrl:
-                                  'https://media.istockphoto.com/id/1311107708/photo/focused-cute-stylish-african-american-female-student-with-afro-dreadlocks-studying-remotely.jpg?s=612x612&w=0&k=20&c=OwxBza5YzLWkE_2abTKqLLW4hwhmM2PW9BotzOMMS5w='),
+                          child: CachedNetworkImageView(
+                            imageHeight: 80,
+                            imageWidth: 80,
+                            imageUrl: productVO?.images?.first ?? errorImageUrl,
+                          ),
                         ),
-                        const SizedBox(
-                          width: kMargin25,
-                        ),
-                        const Expanded(
-                            child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Product Name',
-                              overflow: TextOverflow.ellipsis,
-                              softWrap: true,
-                              style: TextStyle(
+                        const SizedBox(width: kMargin25),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                productVO?.name ?? "",
+                                overflow: TextOverflow.ellipsis,
+                                softWrap: true,
+                                style: const TextStyle(
                                   fontSize: kTextRegular2x,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                            SizedBox(
-                              height: kMargin12,
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  'Ks 350000',
-                                  style: TextStyle(
-                                      decoration: TextDecoration.lineThrough),
+                                  fontWeight: FontWeight.w600,
                                 ),
-                                SizedBox(
-                                  width: 20,
-                                ),
-                                Text('Ks 28000',
-                                    style: TextStyle(
-                                        color: kSecondaryColor,
-                                        fontSize: kTextSmall))
-                              ],
-                            )
-                          ],
-                        ))
+                              ),
+                              const SizedBox(height: kMargin12),
+                              Row(
+                                children: [
+                                  Text(
+                                    'Ks ${productVO?.price}',
+                                    style: const TextStyle(
+                                      decoration: TextDecoration.lineThrough,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 20),
+                                  Text(
+                                    'Ks ${productVO?.price}',
+                                    style: const TextStyle(
+                                      color: kSecondaryColor,
+                                      fontSize: kTextSmall,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ],
                 ),
               ),
-              const SizedBox(
-                height: kMargin45,
-              ),
-              const Row(
+              const SizedBox(height: kMargin45),
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('No Use'),
-                  Icon(
-                    Icons.circle_outlined,
-                    color: kSecondaryColor,
+                  const Text('No Use'),
+                  InkWell(
+                    onTap: () {
+                      bloc.onTapUsePromotion();
+                      Navigator.pop(context);
+                    },
+                    child: bloc.isSelectedNoPromotion
+                        ? const Icon(
+                            Icons.circle,
+                            color: kSecondaryColor,
+                          )
+                        : const Icon(
+                            Icons.circle_outlined,
+                            color: kSecondaryColor,
+                          ),
                   ),
                 ],
               ),
             ],
           ),
         ),
-        const SizedBox(
-          height: 20,
-        ),
-        Padding(
-          padding: const EdgeInsets.all(kMarginMedium2),
-          child: CommonButtonView(
-              label: 'Okay',
-              labelColor: Colors.white,
-              bgColor: kPrimaryColor,
-              onTapButton: () {}),
-        )
+        const SizedBox(height: 40),
+        // Padding(
+        //   padding: const EdgeInsets.all(kMarginMedium2),
+        //   child: CommonButtonView(
+        //     label: 'Okay',
+        //     labelColor: Colors.white,
+        //     bgColor: kPrimaryColor,
+        //     onTapButton: () {
+        //       Navigator.pop(context);
+        //     },
+        //   ),
+        // ),
       ],
     ),
   );

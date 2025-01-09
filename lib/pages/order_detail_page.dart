@@ -9,7 +9,8 @@ import 'package:smile_shop/widgets/delivery_stepper_view.dart';
 import 'package:smile_shop/widgets/loading_view.dart';
 
 class OrderDetailPage extends StatelessWidget {
-  const OrderDetailPage({super.key, required this.orderNumber});
+  const OrderDetailPage({super.key, required this.orderNumber,required this.orderStatus});
+  final String orderStatus;
   final String orderNumber;
 
   @override
@@ -32,28 +33,63 @@ class OrderDetailPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Your order is shipping.',
-                    style: TextStyle(fontSize: kTextRegular),
+                  Visibility(
+                    visible: orderStatus == "delivered",
+                    child: const Text(
+                      'Your order is completed.',
+                      style: TextStyle(fontSize: kTextRegular),
+                    ),
                   ),
+                  Visibility(
+                    visible: orderStatus == "cancel",
+                    child: const Text(
+                      'Your order is canceled.',
+                      style: TextStyle(fontSize: kTextRegular),
+                    ),
+                  ),
+                  Visibility(
+                    visible: orderStatus == "paid",
+                    child: const Text(
+                      'Your order is shipping.',
+                      style: TextStyle(fontSize: kTextRegular),
+                    ),
+                  ),
+
                   const SizedBox(
                     height: 30,
                   ),
 
-                 const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
+                  Padding(
+                    padding:const EdgeInsets.symmetric(horizontal: 20),
                     child: Row(
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.car_rental_outlined,
                           color: kFillingFastColor,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 24,
                         ),
-                        Text(
-                          'Your order is on the way.',
-                          style: TextStyle(fontSize: kTextRegular),
+                        Visibility(
+                          visible: orderStatus == "paid",
+                          child: const Text(
+                            'Your order is on the way.',
+                            style: TextStyle(fontSize: kTextRegular),
+                          ),
+                        ),
+                        Visibility(
+                          visible: orderStatus == "cancel",
+                          child: const Text(
+                            'Your order is canceled.',
+                            style: TextStyle(fontSize: kTextRegular),
+                          ),
+                        ),
+                        Visibility(
+                          visible: orderStatus == "delivered",
+                          child:const Text(
+                            'Your order has been delivered on.',
+                            style: TextStyle(fontSize: kTextRegular),
+                          ),
                         ),
                       ],
                     ),
@@ -120,14 +156,19 @@ class OrderDetailPage extends StatelessWidget {
 
                   ///todo
                   ///stepper
-                  const Text(
-                    'Your Order Tracking',
-                    style: TextStyle(fontSize: kTextRegular2x),
+                  Visibility(
+                    visible: orderStatus == "ongoing" || orderStatus == "paid",
+                    child: const Text(
+                      'Your Order Tracking',
+                      style: TextStyle(fontSize: kTextRegular2x),
+                    ),
                   ),
                   const SizedBox(
                     height: 14,
                   ),
-                  const DeliveryStepperView(),
+                  Visibility(
+                      visible: orderStatus == "ongoing" || orderStatus == "paid",
+                      child: const DeliveryStepperView()),
 
                   const SizedBox(
                     height: 50,

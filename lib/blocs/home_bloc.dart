@@ -7,6 +7,8 @@ import 'package:smile_shop/data/vos/category_vo.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
 import 'package:smile_shop/network/api_constants.dart';
 
+import '../data/vos/user_vo.dart';
+
 class HomeBloc extends ChangeNotifier {
   final SmileShopModel _smileShopModel = SmileShopModelImpl();
 
@@ -17,16 +19,26 @@ class HomeBloc extends ChangeNotifier {
   int productPage = 1;
   var authToken = "";
   var endUserId = "";
+  var accessToken = "";
   bool isLoading = false;
   bool isDisposed = false;
+  UserVO? userProfile;
 
   HomeBloc() {
     ///get data from database
     authToken =
         _smileShopModel.getLoginResponseFromDatabase()?.refreshToken ?? "";
+    accessToken =
+        _smileShopModel.getLoginResponseFromDatabase()?.accessToken ?? "";
     endUserId =
         _smileShopModel.getLoginResponseFromDatabase()?.data?.id.toString() ??
             "";
+
+    ///get user profile data
+      _smileShopModel.userProfile(accessToken, kAcceptLanguageEn).then((response){
+        userProfile = response;
+        _notifySafely();
+      });
 
     ///get banner list
     _smileShopModel.banners(kAcceptLanguageEn).then((bannerResponse) {
@@ -56,6 +68,7 @@ class HomeBloc extends ChangeNotifier {
       brandAndCategoryVO = brandsAndCategoriesResponse;
       _notifySafely();
     });
+
   }
 
   void getProducts() {

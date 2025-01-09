@@ -103,7 +103,6 @@ class EditProfilePage extends StatelessWidget {
                             showModalBottomSheet(
                                 context: context,
                                 isScrollControlled: true,
-                                // only work on showModalBottomSheet function
                                 builder: (context) => Padding(
                                       padding:
                                           MediaQuery.of(context).viewInsets,

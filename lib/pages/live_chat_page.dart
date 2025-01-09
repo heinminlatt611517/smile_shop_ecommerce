@@ -170,9 +170,9 @@ class ChatBubble extends StatelessWidget {
                       circlesColor: Colors.white,
                       activeSliderColor: Colors.white,
                       innerPadding: 0,
-                      circlesTextStyle: TextStyle(color: Colors.black),
-                      playIcon: Icon(Icons.play_arrow, color: Color(0xffFF8800)),
-                      pauseIcon: Icon(Icons.pause, color: Color(0xffFF8800)),
+                      circlesTextStyle:const TextStyle(color: Colors.black),
+                      playIcon:const Icon(Icons.play_arrow, color: Color(0xffFF8800)),
+                      pauseIcon:const Icon(Icons.pause, color: Color(0xffFF8800)),
                       playPauseButtonLoadingColor: Color(0xffFF8800),
                     ),
                   ],
@@ -192,9 +192,13 @@ class ChatBubble extends StatelessWidget {
           ),
           if (isSender) const SizedBox(width: 8),
           if (isSender)
-            const CircleAvatar(
-              radius: 16,
-              backgroundImage: NetworkImage("https://via.placeholder.com/150"), // Dummy profile image
+            Selector<ChatBloc,UserVO?>(
+              selector: (context,bloc)=>bloc.userVO,
+              builder: (context,userVO,child)=>
+                  CircleAvatar(
+                    radius: 16,
+                    backgroundImage: NetworkImage(userVO?.profileImage ?? errorImageUrl), // Dummy profile image
+                  ),
             ),
         ],
       );
@@ -229,7 +233,7 @@ class ChatBubble extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: isSender ? CrossAxisAlignment.end : CrossAxisAlignment.start,
                 children: [
-                  // Message text
+                  /// Message text
                   if (messageVo.message != null)
                     Text(
                       messageVo.message!,
@@ -238,13 +242,15 @@ class ChatBubble extends StatelessWidget {
                       ),
                     ),
 
-                  // Image (if available)
+                  /// Image (if available)
                   if (messageVo.attachmentUrl != null && messageVo.messageType == MessageType.image.name)
                     Padding(
                       padding: const EdgeInsets.only(top: 8),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         child: Image.network(
+                          height: 100,
+                          width: 140,
                           messageVo.attachmentUrl!,
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) => const Icon(

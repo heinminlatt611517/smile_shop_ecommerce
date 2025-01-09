@@ -1,75 +1,112 @@
 import 'package:flutter/material.dart';
+import 'package:loading_indicator/loading_indicator.dart';
+import 'package:provider/provider.dart';
+import 'package:smile_shop/blocs/campaign_bloc.dart';
 import 'package:smile_shop/list_items/campaign_list_item.dart';
+import 'package:smile_shop/pages/campaign_history_page.dart';
 import 'package:smile_shop/pages/campaign_notification_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/utils/images.dart';
+import 'package:smile_shop/widgets/loading_view.dart';
+
+import 'campaign_details_page.dart';
 
 class CampaignPage extends StatelessWidget {
   const CampaignPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        scrolledUnderElevation: 0,
-        forceMaterialTransparency: true,
-        toolbarHeight: 180,
-        flexibleSpace: Stack(
-          alignment: Alignment.bottomCenter,
-          fit: StackFit.passthrough,
-          children: [
-            Image.asset(
-              kCampaignBackgroundImage,
-              fit: BoxFit.cover,
-            ),
-            Positioned(
-                top: kMargin34 + 10,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: kMargin25),
-                  width: MediaQuery.of(context).size.width,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Image.asset(kBackIcon),
-                      const Row(
-                        children: [
-                          Icon(Icons.notifications),
-                          SizedBox(
-                            width: kMarginMedium2,
-                          ),
-                          Icon(Icons.timelapse)
-                        ],
-                      ),
-                    ],
-                  ),
-                )),
-           const Positioned(
-              bottom: kMargin34 + 15,
-              child:  Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text('CAMPAIGN',style: TextStyle(fontSize: kTextRegular32,fontWeight: FontWeight.w600),),
-                  Text('Enjoy the moment',style: TextStyle(fontSize: kTextRegular),),
-                ],
+    return ChangeNotifierProvider(
+      create: (_)=> CampaignBloc(),
+      child: Scaffold(
+        appBar: AppBar(
+          scrolledUnderElevation: 0,
+          forceMaterialTransparency: true,
+          automaticallyImplyLeading: false,
+          toolbarHeight: 180,
+          flexibleSpace: Stack(
+            alignment: Alignment.bottomCenter,
+            fit: StackFit.passthrough,
+            children: [
+              Image.asset(
+                kCampaignBackgroundImage,
+                fit: BoxFit.cover,
               ),
-            ),
-          ],
+              Positioned(
+                  top: kMargin34 + 20,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: kMargin25),
+                    width: MediaQuery.of(context).size.width,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        InkWell(
+                            onTap: ()=> Navigator.of(context).pop(),
+                            child: Image.asset(kBackIcon)),
+                         Row(
+                          children: [
+                            InkWell(
+                              onTap:(){
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const CampaignNotificationPage(),),
+
+                                );
+                              },
+                                child:const Icon(Icons.notifications,color: kPrimaryColor,)),
+                            const SizedBox(
+                              width: kMarginMedium2,
+                            ),
+                            InkWell(
+                                onTap: (){
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const CampaignHistoryPage()),
+                                  );
+                                },
+                                child: const Icon(Icons.history,color: kPrimaryColor,))
+                          ],
+                        ),
+                      ],
+                    ),
+                  )),
+             const Positioned(
+                bottom: kMargin34 + 15,
+                child:  Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('CAMPAIGN',style: TextStyle(fontSize: 36,fontWeight: FontWeight.w600),),
+                    Text('Enjoy the moment',style: TextStyle(fontSize: kTextRegular),),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        body: Selector<CampaignBloc,bool?>(
+          selector: (context,bloc) => bloc.isLoading,
+           builder: (_,loading,child) => loading == true ? const LoadingView(indicator: Indicator.ballSpinFadeLoader, indicatorColor: kPrimaryColor) :
+           Consumer<CampaignBloc>(
+            builder: (context,bloc,child) =>
+             SizedBox(child: Stack(children: [
+              Image.asset(kCampaignBackgroundImage,fit: BoxFit.fill,),
+              Container(decoration:const BoxDecoration(
+                color: kBackgroundColor,
+                  borderRadius: BorderRadius.only(topRight: Radius.circular(kMarginMedium3),topLeft: Radius.circular(kMarginMedium3))),
+                child: ListView.builder(itemCount: bloc.campaignLists.length,itemBuilder: (context,index){
+                  return InkWell(
+                    onTap: ()=> Navigator.of(context).push(MaterialPageRoute(
+                        builder: (builder) => CampaignDetailsPage(campaignId: bloc.campaignLists[index].id,))),
+                      child: CampaignListItem(campaignData: bloc.campaignLists[index],));
+                }),
+              )
+            ],),),
+          ),
         ),
       ),
-      body: SizedBox(child: Stack(children: [
-        Image.asset(kCampaignBackgroundImage,fit: BoxFit.fill,),
-        Container(decoration:const BoxDecoration(
-          color: kBackgroundColor,
-            borderRadius: BorderRadius.only(topRight: Radius.circular(kMarginMedium3),topLeft: Radius.circular(kMarginMedium3))),
-          child: ListView.builder(itemCount: 5,itemBuilder: (context,index){
-            return InkWell(
-              onTap: ()=> Navigator.of(context).push(MaterialPageRoute(
-                  builder: (builder) => const CampaignNotificationPage())),
-                child: const CampaignListItem());
-          }),
-        )
-      ],),),
     );
   }
 }

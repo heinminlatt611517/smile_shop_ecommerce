@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:smile_shop/blocs/home_bloc.dart';
 import 'package:smile_shop/data/vos/banner_vo.dart';
@@ -6,6 +8,7 @@ import 'package:smile_shop/data/vos/category_vo.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
 import 'package:smile_shop/list_items/trending_product_list_item_view.dart';
 import 'package:smile_shop/network/api_constants.dart';
+import 'package:smile_shop/pages/campaign_page.dart';
 import 'package:smile_shop/pages/daily_checkin_page.dart';
 import 'package:smile_shop/pages/search_product_page.dart';
 import 'package:smile_shop/pages/sub_category_page.dart';
@@ -88,8 +91,10 @@ class _HomeContentViewState extends State<HomeContentView> {
         ),
 
         ///Campaign ,Daily check in and User Level view
-        const SliverToBoxAdapter(
-          child: CampaignDailyCheckInUserLevelView(),
+         SliverToBoxAdapter(
+          child: Visibility(
+               visible: GetStorage().read(kBoxKeyLoginUserType) == kTypeEndUser,
+              child:const CampaignDailyCheckInUserLevelView()),
         ),
 
         ///Categories View
@@ -159,16 +164,17 @@ class SearchView extends StatelessWidget {
         const SizedBox(
           width: kMarginMedium2,
         ),
-        Container(
-          height: 48,
-          width: 48,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(color: kPrimaryColor, width: 1),
-          ),
-          child: const Center(
-            child: Icon(Icons.account_circle_sharp),
-          ),
+        Consumer<HomeBloc>(
+          builder: (context,bloc,child)=>
+              ClipRRect(
+                borderRadius: BorderRadius.circular(25),
+                child: CachedNetworkImage(
+                    height: 50,
+                    width: 50,
+                    fit: BoxFit.cover,
+                    imageUrl: bloc.userProfile?.profileImage ??
+                        errorImageUrl),
+              ),
         )
       ],
     );
@@ -184,17 +190,17 @@ class CampaignDailyCheckInUserLevelView extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(
           top: kMarginMedium2, left: kMarginMedium2, right: kMarginMedium2),
-      child: InkWell(
-        onTap: ()=> Navigator.of(context).push(MaterialPageRoute(builder: (_)=> const DailyCheckInPage())),
-        child: Row(
-          children: [
-            ///daily check in and user level view
-            SizedBox(
-              height: 155,
-              child: Column(
-                children: [
-                  ///Daily check in view
-                  Container(
+      child: Row(
+        children: [
+          ///daily check in and user level view
+          SizedBox(
+            height: 155,
+            child: Column(
+              children: [
+                ///Daily check in view
+                InkWell(
+                  onTap: ()=> Navigator.of(context).push(MaterialPageRoute(builder: (_)=> const DailyCheckInPage())),
+                  child: Container(
                     padding: const EdgeInsets.all(kMarginMedium2),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(kMarginMedium),
@@ -242,65 +248,75 @@ class CampaignDailyCheckInUserLevelView extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(
-                    height: 10,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+
+                ///User Level view
+                Container(
+                  padding: const EdgeInsets.all(kMarginMedium2),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(kMarginMedium),
+                      gradient: const LinearGradient(
+                          begin: Alignment.centerLeft,
+                          end: Alignment.centerRight,
+                          colors: [
+                            kPrimaryColor,
+                            Color(0xFFF5F5F5),
+                          ])),
+                  child: Row(
+                    children: [
+                      const Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            kUserLevelLabel,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: kTextRegular2x,
+                                color: Colors.black),
+                          ),
+                          Text(
+                            kToClaimPointDailyLabel,
+                            style: TextStyle(
+                                fontWeight: FontWeight.normal,
+                                fontSize: kTextSmall,
+                                color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        width: kMarginMedium,
+                      ),
+                      Container(
+                          padding: const EdgeInsets.all(kMarginMedium),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius:
+                                  BorderRadius.circular(kMarginMedium)),
+                          child: const Icon(
+                            Icons.shop,
+                            color: kPrimaryColor,
+                          ))
+                    ],
                   ),
-        
-                  ///User Level view
-                  Container(
-                    padding: const EdgeInsets.all(kMarginMedium2),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(kMarginMedium),
-                        gradient: const LinearGradient(
-                            begin: Alignment.centerLeft,
-                            end: Alignment.centerRight,
-                            colors: [
-                              kPrimaryColor,
-                              Color(0xFFF5F5F5),
-                            ])),
-                    child: Row(
-                      children: [
-                        const Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              kUserLevelLabel,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: kTextRegular2x,
-                                  color: Colors.black),
-                            ),
-                            Text(
-                              kToClaimPointDailyLabel,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.normal,
-                                  fontSize: kTextSmall,
-                                  color: Colors.grey),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          width: kMarginMedium,
-                        ),
-                        Container(
-                            padding: const EdgeInsets.all(kMarginMedium),
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius:
-                                    BorderRadius.circular(kMarginMedium)),
-                            child: const Icon(
-                              Icons.shop,
-                              color: kPrimaryColor,
-                            ))
-                      ],
-                    ),
-                  )
-                ],
-              ),
+                )
+              ],
             ),
-        
-            ///Campaign view
-            Expanded(
+          ),
+
+          ///Campaign view
+          Expanded(
+            child: InkWell(
+              onTap:(){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>const  CampaignPage(),
+                  ),
+                );
+              },
               child: Container(
                 height: 150,
                 padding: const EdgeInsets.only(left: kMarginMedium2),
@@ -344,8 +360,8 @@ class CampaignDailyCheckInUserLevelView extends StatelessWidget {
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -434,22 +450,25 @@ class BannerSectionView extends StatelessWidget {
           ),
 
           ///Dots indicator
-          SmoothPageIndicator(
-            controller: _bannerPageController,
-            count: banners.length,
-            axisDirection: Axis.horizontal,
-            effect: const SlideEffect(
-              dotHeight: kMarginMedium,
-              dotWidth: kMarginMedium,
-              dotColor: kInactiveColor,
-              activeDotColor: kPrimaryColor,
-            ),
-            onDotClicked: (index) {
-              _bannerPageController.animateToPage(index,
-                  curve: Curves.easeOut,
-                  duration: const Duration(milliseconds: 500));
-            },
-          )
+      if (banners.isNotEmpty)
+      SmoothPageIndicator(
+        controller: _bannerPageController,
+        count: banners.length,
+        axisDirection: Axis.horizontal,
+        effect: const SlideEffect(
+          dotHeight: kMarginMedium,
+          dotWidth: kMarginMedium,
+          dotColor: kInactiveColor,
+          activeDotColor: kPrimaryColor,
+        ),
+        onDotClicked: (index) {
+          _bannerPageController.animateToPage(
+            index,
+            curve: Curves.easeOut,
+            duration: const Duration(milliseconds: 500),
+          );
+        },
+      )
         ],
       ),
     );

@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:smile_shop/data/model/smile_shop_model.dart';
 import 'package:smile_shop/data/model/smile_shop_model_impl.dart';
+import 'package:smile_shop/network/api_constants.dart';
+import 'package:smile_shop/network/requests/dealer_login_request.dart';
 
 import '../network/firebase_api.dart';
 import '../network/requests/login_request.dart';
@@ -10,6 +12,7 @@ class LogInBloc extends ChangeNotifier {
   /// State
   bool isLoading = false;
   String phone = "";
+  String email = "";
   String password = "";
   bool isShowPassword = true;
   bool isDisposed = false;
@@ -20,10 +23,19 @@ class LogInBloc extends ChangeNotifier {
 
   ///sign in
   Future<LoginResponse> onTapSign() {
-    var loginRequest = LoginRequest(phone, "enduser", password);
+    var loginRequest = LoginRequest(phone, kTypeEndUser, password);
     _showLoading();
     return _smileShopModel
         .login(loginRequest)
+        .whenComplete(() => _hideLoading());
+  }
+
+  ///sign in
+  Future<LoginResponse> onTapDealerSign() {
+    var loginRequest = DealerLoginRequest(email, kTypeDealer, password);
+    _showLoading();
+    return _smileShopModel
+        .dealerLogin(loginRequest)
         .whenComplete(() => _hideLoading());
   }
 
@@ -42,6 +54,11 @@ class LogInBloc extends ChangeNotifier {
   void onPasswordChanged(String password) {
     this.password = password;
   }
+
+  void onChangedEmail(String newValue){
+    email = newValue;
+    _notifySafely();
+}
 
   void _showLoading() {
     isLoading = true;

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:smile_shop/list_items/campaign_history_list_item.dart';
 import 'package:smile_shop/list_items/my_team_list_item.dart';
-import 'package:smile_shop/pages/campaign_description_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/widgets/cached_network_image_view.dart';
 import 'package:smile_shop/widgets/custom_app_bar_view.dart';
+
+import 'campaign_details_page.dart';
 
 class MyTeamPage extends StatelessWidget {
   const MyTeamPage({super.key});
@@ -56,7 +57,7 @@ class MyTeamPage extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return InkWell(
                         onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                            builder: (_) => const CampaignDescriptionPage())),
+                            builder: (_) => const CampaignDetailsPage())),
                         child: const MyTeamListItem());
                   }),
             ],

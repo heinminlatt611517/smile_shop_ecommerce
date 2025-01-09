@@ -22,3 +22,5 @@ const kUserData = "UserData";
 const kBoxKeyReferralCode = "Referral Code";
 const kBoxKeyWalletPassword = "Wallet Password";
 const kBoxKeyFirebaseUserId = "FirebaseUserId";
+const kBoxKeyLoginUserType = "LoginUserType";
+const kBoxKeyPromotionPoint= "PromotionPoint";

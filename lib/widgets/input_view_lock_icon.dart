@@ -5,7 +5,8 @@ import '../utils/dimens.dart';
 class InputViewLockIcon extends StatelessWidget {
   final Function(String) onChangeValue;
   final String hintLabel;
-  const InputViewLockIcon({super.key,required this.onChangeValue,required this.hintLabel});
+  final bool? isMailIcon;
+  const InputViewLockIcon({super.key,required this.onChangeValue,required this.hintLabel,this.isMailIcon});
 
   @override
   Widget build(BuildContext context) {
@@ -18,10 +19,14 @@ class InputViewLockIcon extends StatelessWidget {
             Container(
               color : Colors.white,
               margin:
-              const EdgeInsets.only(left: kMarginMedium2),
+               const EdgeInsets.only(left: kMarginMedium2),
               child: Row(
                 children: [
-                  const Icon(
+                  isMailIcon == true ? const Icon(
+                    Icons.mail,
+                    color: Colors.grey,
+                    size: 20,
+                  ) : const Icon(
                     Icons.lock_outline,
                     color: Colors.grey,
                     size: 20,

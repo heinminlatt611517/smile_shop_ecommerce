@@ -22,6 +22,9 @@ class CheckOutBloc extends ChangeNotifier {
   bool isSelectedStandardDelivery = true;
   bool isSelectedSpecialDelivery = false;
 
+  bool isSelectedUsePromotion = true;
+  bool isSelectedNoPromotion = false;
+
   CheckOutBloc(List<ProductVO> productList) {
     if (productList.isNotEmpty) {
       calculateTotalProductPrice(productList);
@@ -65,6 +68,12 @@ class CheckOutBloc extends ChangeNotifier {
   void onTapAddStandardDelivery() {
     isSelectedStandardDelivery = !isSelectedStandardDelivery;
     isSelectedSpecialDelivery = !isSelectedSpecialDelivery;
+    notifyListeners();
+  }
+
+  void onTapUsePromotion(){
+    isSelectedNoPromotion = !isSelectedNoPromotion;
+    isSelectedUsePromotion = !isSelectedUsePromotion;
     notifyListeners();
   }
 

@@ -2,13 +2,14 @@ import 'dart:io';
 
 import 'package:smile_shop/data/vos/banner_vo.dart';
 import 'package:smile_shop/data/vos/brand_and_category_vo.dart';
+import 'package:smile_shop/data/vos/campaign_participant_vo.dart';
+import 'package:smile_shop/data/vos/campaign_vo.dart';
 import 'package:smile_shop/data/vos/category_vo.dart';
 import 'package:smile_shop/data/vos/checkIn_vo.dart';
 import 'package:smile_shop/data/vos/order_vo.dart';
 import 'package:smile_shop/data/vos/payment_vo.dart';
 import 'package:smile_shop/data/vos/product_response_data_vo.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
-import 'package:smile_shop/data/vos/profile_vo.dart';
 import 'package:smile_shop/data/vos/state_vo.dart';
 import 'package:smile_shop/data/vos/sub_category_vo.dart';
 import 'package:smile_shop/data/vos/township_data_vo.dart';
@@ -16,9 +17,13 @@ import 'package:smile_shop/data/vos/user_vo.dart';
 import 'package:smile_shop/data/vos/wallet_transaction_vo.dart';
 import 'package:smile_shop/data/vos/wallet_vo.dart';
 import 'package:smile_shop/network/requests/address_request.dart';
+import 'package:smile_shop/network/requests/campaign_detail_request.dart';
+import 'package:smile_shop/network/requests/campaign_join_request.dart';
 import 'package:smile_shop/network/requests/checkIn_request.dart';
 import 'package:smile_shop/network/requests/check_wallet_amount_request.dart';
 import 'package:smile_shop/network/requests/check_wallet_password_request.dart';
+import 'package:smile_shop/network/requests/dealer_login_request.dart';
+import 'package:smile_shop/network/requests/order_cancel_request.dart';
 import 'package:smile_shop/network/requests/otp_request.dart';
 import 'package:smile_shop/network/requests/set_wallet_password_request.dart';
 import 'package:smile_shop/network/requests/sub_category_request.dart';
@@ -37,6 +42,8 @@ import '../responses/login_response.dart';
 
 abstract class SmileShopDataAgent {
   Future<LoginResponse> login(LoginRequest loginRequest);
+
+  Future<LoginResponse> dealerLogin(DealerLoginRequest loginRequest);
 
   Future register(String invitationCode, String name, String phone,
       String loginPassword, String paymentPassword);
@@ -84,6 +91,16 @@ abstract class SmileShopDataAgent {
       int price,
       String operator);
 
+  Future<List<ProductVO>> searchProductsWithDynamicParam(
+      String token,
+      String acceptLanguage,
+      String endUserId,
+      int pageNo,
+      String? name,
+      double? rating,
+      int? minRange,
+      int? maxRange);
+
   Future addNewAddress(
       String accessToken, String acceptLanguage, AddressRequest addressRequest);
 
@@ -105,6 +122,9 @@ abstract class SmileShopDataAgent {
 
   Future<SuccessPaymentResponse> postOrder(String token, String acceptLanguage, int subTotal,
       String paymentType, String itemList, String appType,String paymentData,int usedPoint);
+
+  Future<SuccessPaymentResponse> makePayment(String token, String acceptLanguage,
+      String paymentType,String paymentData,String orderNo,String appType);
 
   Future<List<PaymentVO>> payments(String token, String acceptLanguage,String action);
 
@@ -146,4 +166,18 @@ abstract class SmileShopDataAgent {
 
   Future<SuccessNetworkResponse> postUserCheckIn(
       String token, String acceptLanguage, CheckInRequest checkInRequest);
+
+  Future<List<CampaignVo>> getCampaign(
+      String token,String acceptLanguage);
+  Future<CampaignVo> getCampaignDetail(
+      String token,String acceptLanguage,CampaignDetailRequest request);
+
+  Future<void> joinCampaign(
+      String token,String acceptLanguage,CampaignJoinRequest request);
+
+  Future<List<CampaignParticipantVo>> getCampaignParticipants(
+      String token,String acceptLanguage,CampaignDetailRequest request);
+
+  Future<SuccessNetworkResponse> cancelOrder(
+      String token, String acceptLanguage, OrderCancelRequest request);
 }

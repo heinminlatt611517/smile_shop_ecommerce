@@ -54,8 +54,12 @@ class PaymentBloc extends ChangeNotifier {
   }
 
   ///check out
-  Future<void> onTapCheckout(int subTotal, List<OrderVariantVO> variantVOList,
-      BuildContext context, bool? isFromCartPage) async {
+  Future<void> onTapCheckout(
+      int promotionPoint,
+      int subTotal,
+      List<OrderVariantVO> variantVOList,
+      BuildContext context,
+      bool? isFromCartPage) async {
     _showLoading();
 
     List<Map<String, dynamic>> itemList =
@@ -85,11 +89,13 @@ class PaymentBloc extends ChangeNotifier {
         itemListJson,
         'app',
         jsonEncode(paymentData),
-        0,
+        promotionPoint,
       )
           .then((response) {
-        if (isFromCartPage == true) {
-          clearAddToCartProductByProductIdFromDatabase();
+
+            if(isFromCartPage == true){
+              clearAddToCartProductByProductIdFromDatabase();
+            }
           if (response.data?.responseType == 'url') {
             launchUrl(Uri.parse(response.data?.response)).then((val) {
               showLoadingAndNavigate(context);
@@ -108,6 +114,56 @@ class PaymentBloc extends ChangeNotifier {
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (builder) => const OrderSuccessfulPage()));
           }
+
+      });
+    } catch (error) {
+      showCommonDialog(
+          context: context,
+          dialogWidget: ErrorDialogView(errorMessage: error.toString()));
+    } finally {
+      _hideLoading();
+    }
+  }
+
+  ///for order product
+  void makePayment(String orderNumber, BuildContext context) async {
+    _showLoading();
+
+    try {
+      if (selectedIndex == 0) {
+        var checkWalletAmountRequest =
+            CheckWalletAmountRequest(int.parse(amount));
+        var checkWalletPasswordRequest = CheckWalletPasswordRequest(
+            GetStorage().read(kBoxKeyWalletPassword));
+
+        await _smileShopModel.checkWalletAmount(
+            authToken, kAcceptLanguageEn, checkWalletAmountRequest);
+
+        await _smileShopModel.checkWalletPassword(
+            authToken, kAcceptLanguageEn, checkWalletPasswordRequest);
+      }
+
+      await _smileShopModel
+          .makePayment(authToken, kAcceptLanguageEn, selectedPaymentType,
+              jsonEncode(paymentData), orderNumber, 'app')
+          .then((response) {
+        if (response.data?.responseType == 'url') {
+          launchUrl(Uri.parse(response.data?.response)).then((val) {
+            showLoadingAndNavigate(context);
+          });
+        } else if (response.data?.responseType == 'qr') {
+          showCommonDialog(
+                  context: context,
+                  dialogWidget:
+                      QrDialogView(qrCodeString: response.data?.response))
+              .then((val) {
+            showLoadingAndNavigate(context);
+          });
+        } else if (response.data?.responseType == 'pin') {
+          showLoadingAndNavigate(context);
+        } else {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (builder) => const OrderSuccessfulPage()));
         }
       });
     } catch (error) {
@@ -126,7 +182,7 @@ class PaymentBloc extends ChangeNotifier {
 
   void showLoadingAndNavigate(BuildContext context) async {
     _showLoading();
-    await Future.delayed(const Duration(minutes: 1));
+    await Future.delayed(const Duration(seconds: 20));
     _hideLoading();
     Navigator.of(context).push(
       MaterialPageRoute(

@@ -7,6 +7,7 @@ import 'package:smile_shop/data/vos/order_vo.dart';
 import 'package:smile_shop/list_items/my_order_list_item_view.dart';
 import 'package:smile_shop/network/api_constants.dart';
 import 'package:smile_shop/pages/order_detail_page.dart';
+import 'package:smile_shop/pages/payment_method_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/extensions.dart';
 
@@ -54,9 +55,10 @@ class _MyOrderPageState extends State<MyOrderPage>
               child: Consumer<OrderBloc>(
                 builder: (context, bloc, child) => TabBar(
                     labelColor: kFillingFastColor,
+                    physics: const NeverScrollableScrollPhysics(),
                     dividerColor: Colors.transparent,
                     indicatorColor: kFillingFastColor,
-                    isScrollable: true,
+                    isScrollable: false,
                     labelPadding: const EdgeInsets.all(13),
                     indicatorPadding: const EdgeInsets.only(bottom: 5),
                     tabAlignment: TabAlignment.center,
@@ -93,13 +95,16 @@ class _MyOrderPageState extends State<MyOrderPage>
                     ? const Center(
                         child: Text(''),
                       )
-                    : TabBarView(controller: _tabController, children: [
-                        _myOrderView(orders),
-                        _myOrderView(orders),
-                        _myOrderView(orders),
-                        _myOrderView(orders),
-                        _myOrderView(orders),
-                      ]),
+                    : TabBarView(
+                        physics: const NeverScrollableScrollPhysics(),
+                        controller: _tabController,
+                        children: [
+                            _myOrderView(orders),
+                            _myOrderView(orders),
+                            _myOrderView(orders),
+                            _myOrderView(orders),
+                            _myOrderView(orders),
+                          ]),
               ),
 
               ///loading view
@@ -123,27 +128,39 @@ class _MyOrderPageState extends State<MyOrderPage>
   Widget _myOrderView(List<OrderVO> orderList) {
     return Selector<OrderBloc, bool>(
       selector: (_, bloc) => bloc.isLoading,
-       builder: (_, isLoading, child) =>
-
-           Container(
-              color: kBackgroundColor,
-              child: ListView.builder(
-                  itemCount: orderList.length,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (_) => OrderDetailPage(
-                                  orderNumber: orderList[index].orderNo ?? '',
-                                )));
-                      },
-                      child: MyOrderListItemView(
-                        orderVO: orderList[index],
-                        isRefundView: false,
-                      ),
-                    );
-                  }),
-            ),
+      builder: (_, isLoading, child) => Container(
+        color: kBackgroundColor,
+        child: ListView.builder(
+            itemCount: orderList.length,
+            itemBuilder: (context, index) {
+              return GestureDetector(
+                onTap: () {
+                  if (orderList[index].paymentStatus != "not_pay") {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (_) => OrderDetailPage(
+                              orderStatus: orderList[index].paymentStatus ?? "",
+                              orderNumber: orderList[index].orderNo ?? '',
+                            )));
+                  }
+                },
+                child: MyOrderListItemView(
+                  orderVO: orderList[index],
+                  isRefundView: false,
+                  onTapPayment: (orderId) {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (builder) =>  PaymentMethodPage(
+                              isFromMyOrderPage: true,
+                              orderNumber: orderList[index].orderNo ?? '',
+                            )));
+                  },
+                  onTapCancel: (String orderId) {
+                    var bloc = context.read<OrderBloc>();
+                    bloc.onTapCancelOrder(orderId);
+                  },
+                ),
+              );
+            }),
+      ),
     );
   }
 }

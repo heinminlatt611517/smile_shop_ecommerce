@@ -5,6 +5,8 @@ import 'package:get_storage/get_storage.dart';
 import 'package:smile_shop/data/model/smile_shop_model.dart';
 import 'package:smile_shop/data/vos/banner_vo.dart';
 import 'package:smile_shop/data/vos/brand_and_category_vo.dart';
+import 'package:smile_shop/data/vos/campaign_participant_vo.dart';
+import 'package:smile_shop/data/vos/campaign_vo.dart';
 import 'package:smile_shop/data/vos/category_vo.dart';
 import 'package:smile_shop/data/vos/checkIn_vo.dart';
 import 'package:smile_shop/data/vos/login_data_vo.dart';
@@ -19,10 +21,14 @@ import 'package:smile_shop/data/vos/user_vo.dart';
 import 'package:smile_shop/data/vos/wallet_transaction_vo.dart';
 import 'package:smile_shop/data/vos/wallet_vo.dart';
 import 'package:smile_shop/network/requests/address_request.dart';
+import 'package:smile_shop/network/requests/campaign_detail_request.dart';
+import 'package:smile_shop/network/requests/campaign_join_request.dart';
 import 'package:smile_shop/network/requests/checkIn_request.dart';
 import 'package:smile_shop/network/requests/check_wallet_amount_request.dart';
 import 'package:smile_shop/network/requests/check_wallet_password_request.dart';
+import 'package:smile_shop/network/requests/dealer_login_request.dart';
 import 'package:smile_shop/network/requests/login_request.dart';
+import 'package:smile_shop/network/requests/order_cancel_request.dart';
 import 'package:smile_shop/network/requests/otp_request.dart';
 import 'package:smile_shop/network/requests/set_password_request.dart';
 import 'package:smile_shop/network/requests/set_wallet_password_request.dart';
@@ -69,6 +75,28 @@ class SmileShopModelImpl extends SmileShopModel {
   @override
   Future<LoginResponse> login(LoginRequest loginRequest) {
     return mDataAgent.login(loginRequest).then((response) async {
+      debugPrint("UserDataVO>>>>${response.data?.data?.id}");
+
+      var loginResponse = LoginDataVO(
+          status: response.data?.status,
+          message: response.data?.message,
+          data: response.data?.data,
+          refreshToken: response.data?.refreshToken,
+          expire: response.data?.expire,
+          accessToken: response.data?.accessToken);
+
+      ///save login data to hive
+      await GetStorage()
+          .write(kBoxKeyReferralCode, loginResponse.data?.referCodeVO?.code);
+      await _loginDataDao.saveLoginData(loginResponse);
+      await _userDataDao.saveUserData(loginResponse.data);
+      return response;
+    });
+  }
+
+  @override
+  Future<LoginResponse> dealerLogin(DealerLoginRequest loginRequest) {
+    return mDataAgent.dealerLogin(loginRequest).then((response) async {
       debugPrint("UserDataVO>>>>${response.data?.data?.id}");
 
       var loginResponse = LoginDataVO(
@@ -453,4 +481,40 @@ class SmileShopModelImpl extends SmileShopModel {
   UserVO? getUserDataFromDatabase() {
    return _userDataDao.getUserData();
   }
+
+  @override
+  Future<List<CampaignVo>> getCampaign(String token, String acceptLanguage) {
+    return mDataAgent.getCampaign(token, acceptLanguage);
+  }
+
+  @override
+  Future<CampaignVo> getCampaignDetail(String token, String acceptLanguage, CampaignDetailRequest request) {
+    return mDataAgent.getCampaignDetail(token, acceptLanguage, request);
+  }
+
+  @override
+  Future<void> joinCampaign(String token, String acceptLanguage, CampaignJoinRequest request) {
+    return mDataAgent.joinCampaign(token, acceptLanguage, request);
+  }
+
+  @override
+  Future<List<CampaignParticipantVo>> getCampaignParticipants(String token, String acceptLanguage, CampaignDetailRequest request) {
+    return mDataAgent.getCampaignParticipants(token, acceptLanguage, request);
+  }
+
+  @override
+  Future<SuccessNetworkResponse> cancelOrder(String token, String acceptLanguage, OrderCancelRequest request) {
+    return mDataAgent.cancelOrder(token, acceptLanguage, request);
+  }
+
+  @override
+  Future<List<ProductVO>> searchProductsWithDynamicParam(String token, String acceptLanguage, String endUserId, int pageNo, String? name, double? rating, int? minRange, int? maxRange) {
+   return mDataAgent.searchProductsWithDynamicParam(token, acceptLanguage, endUserId, pageNo, name, rating, minRange, maxRange);
+  }
+
+  @override
+  Future<SuccessPaymentResponse> makePayment(String token, String acceptLanguage, String paymentType, String paymentData, String orderNo, String appType) {
+   return mDataAgent.makePayment(token, acceptLanguage, paymentType, paymentData, orderNo, appType);
+  }
+
 }

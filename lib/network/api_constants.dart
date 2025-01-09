@@ -37,6 +37,12 @@ const String kEndPointSetWalletPassword  = '/api/wallet/set-password';
 const String kEndPointRechargeWallet  = '/api/wallet/recharge';
 const String kEndPointGetUserCheckIn  = '/api/user-checkin';
 const String kEndPointPostUserCheckIn  = '/api/checkin';
+const String kEndPointCampaign = '/api/campaign';
+const String kEndPointCampaignDetail = '/api/campaign/detail';
+const String kEndPointCampaignJoin = '/api/campaign/join';
+const String kEndPointCampaignParticipant = '/api/campaign/participants';
+const String kEndPointOrderCancel = '/api/order-cancel';
+const String kEndPointMakePayment = '/api/make-payment';
 
 
 ///Parameters
@@ -82,6 +88,9 @@ const String kFieldUsedPoint = "used_point";
 const String kParamAction = "action";
 const String kParamOrder = "order";
 const String kParamWalletRecharge = "wallet_recharge";
+const String kParamMinPrice = "min_price";
+const String kParamMaxPrice = "max_price";
+const String kFieldOrderNo = "order_no";
 
 
 ///Constant Values
@@ -91,6 +100,8 @@ const String kOtpValue = "123456";
 const kAcceptLanguageMM = "my-MM";
 const kAcceptLanguageEn = "en";
 const kAcceptLanguageCh = "ch";
+const kTypeDealer = "dealer";
+const kTypeEndUser = "enduser";
 
 
 

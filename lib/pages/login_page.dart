@@ -1,13 +1,17 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:smile_shop/blocs/login_bloc.dart';
+import 'package:smile_shop/network/api_constants.dart';
+import 'package:smile_shop/pages/dealer_login_page.dart';
 import 'package:smile_shop/pages/main_page.dart';
 import 'package:smile_shop/pages/sign_up_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/utils/images.dart';
+import 'package:smile_shop/utils/strings.dart';
 import 'package:smile_shop/widgets/common_dialog.dart';
 import 'package:smile_shop/widgets/error_dialog_view.dart';
 import 'package:smile_shop/widgets/input_view_lock_icon.dart';
@@ -44,7 +48,39 @@ class _LoginPageState extends State<LoginPage> {
                   child: Column(
                     children: [
                       const SizedBox(
-                        height: 116,
+                        height: 20,
+                      ),
+                      ///dealer
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: IntrinsicWidth(
+                          child: InkWell(
+                            onTap:(){
+                              Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                      builder: (builder) => const DealerLoginPage()));
+                            },
+                            child: Container(
+                              padding:const EdgeInsets.symmetric(vertical: kMarginSmall,horizontal: kMarginMedium),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(kMarginMedium),
+                                  border: Border.all(
+                                    color: Colors.black,
+                                  )),
+                              child: const Center(
+                                child: Column(
+                                  children: [
+                                    Icon(Icons.face),
+                                    Text('Dealer',style: TextStyle(fontSize: kTextSmall),),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 50,
                       ),
                       SizedBox(
                         height: 100,
@@ -116,6 +152,8 @@ class _LoginPageState extends State<LoginPage> {
 
                           bloc.onTapSign().then((value) {
                             if (value.statusCode == 200) {
+                              GetStorage().write(kBoxKeyLoginUserType, kTypeEndUser);
+                              GetStorage().write(kBoxKeyPromotionPoint, value.data?.data?.promotionPoints ?? 0);
                               bloc.crateFirebaseChatUser(
                                   id: value.data?.data?.id ?? 0,
                                   name: value.data?.data?.name ?? "",

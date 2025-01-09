@@ -20,12 +20,16 @@ class PaymentMethodPage extends StatelessWidget {
   final int? productSubTotalPrice;
   final bool? isFromCartPage;
   final List<ProductVO>? productList;
+  final int? promotionPoint;
+  final bool? isFromMyOrderPage;
+  final String? orderNumber;
 
   const PaymentMethodPage(
       {super.key,
-      required this.productSubTotalPrice,
-      required this.isFromCartPage,
-      required this.productList});
+       this.productSubTotalPrice,
+       this.isFromCartPage,
+       this.productList,this.promotionPoint,
+       this.isFromMyOrderPage,this.orderNumber});
 
   @override
   Widget build(BuildContext context) {
@@ -141,29 +145,47 @@ class PaymentMethodPage extends StatelessWidget {
                                 labelColor: Colors.white,
                                 bgColor: kPrimaryColor,
                                 onTapButton: () {
-                                  if (bloc.formKey.currentState!.validate()) {
-                                    List<OrderVariantVO> orderVariants = [];
-                                    for (var product in productList ?? []) {
-                                      var subOrderVariantVo = OrderVariantVO(
-                                          qty: product.qtyCount,
-                                          colorName: product.colorName,
-                                          variantAttributeValueId: 1,
-                                          variantProductId:
-                                              product.variantVO.first.id,
-                                          productId: product.id);
-                                      orderVariants.add(subOrderVariantVo);
+                                  ///for make payment api
+                                  if(isFromMyOrderPage == true){
+                                    if (bloc.formKey.currentState!.validate()) {
+                                      if (bloc.paymentData.isEmpty) {
+                                        showCommonDialog(
+                                            context: context,
+                                            dialogWidget: const ErrorDialogView(
+                                                errorMessage:
+                                                'Please select payment'));
+                                      } else {
+                                        bloc.makePayment(orderNumber ?? "", context);
+                                      }
                                     }
-                                    if (bloc.paymentData.isEmpty) {
-                                      showCommonDialog(
-                                          context: context,
-                                          dialogWidget: const ErrorDialogView(
-                                              errorMessage:
-                                                  'Please select payment'));
-                                    } else {
-                                      bloc
-                                          .onTapCheckout(
-                                              productSubTotalPrice ?? 0,
-                                              orderVariants,context,isFromCartPage);
+                                  }
+                                  ///for post order api
+                                  else{
+                                    if (bloc.formKey.currentState!.validate()) {
+                                      List<OrderVariantVO> orderVariants = [];
+                                      for (var product in productList ?? []) {
+                                        var subOrderVariantVo = OrderVariantVO(
+                                            qty: product.qtyCount,
+                                            colorName: product.colorName,
+                                            variantAttributeValueId: 1,
+                                            variantProductId:
+                                            product.variantVO.first.id,
+                                            productId: product.id);
+                                        orderVariants.add(subOrderVariantVo);
+                                      }
+                                      if (bloc.paymentData.isEmpty) {
+                                        showCommonDialog(
+                                            context: context,
+                                            dialogWidget: const ErrorDialogView(
+                                                errorMessage:
+                                                'Please select payment'));
+                                      } else {
+                                        bloc
+                                            .onTapCheckout(
+                                            promotionPoint ?? 0,
+                                            productSubTotalPrice ?? 0,
+                                            orderVariants,context,isFromCartPage);
+                                      }
                                     }
                                   }
                                 }),

@@ -51,12 +51,13 @@ void main() async {
   await Hive.openBox<ProductVO>(kBoxFavouriteProduct);
   await Hive.openBox<UserVO>(kBoxUser);
 
-  runApp(MultiProvider(
-      providers: [ChangeNotifierProvider(
-        create: (_) => MyAddressBloc(),
-      ),],
-      child: const SmileShopApp()));
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(
+      create: (_) => MyAddressBloc(),
+    ),
+  ], child: const SmileShopApp()));
 }
+
 class SmileShopApp extends StatelessWidget {
   const SmileShopApp({super.key});
 

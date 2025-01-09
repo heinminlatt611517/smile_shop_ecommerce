@@ -1,11 +1,13 @@
 import 'dart:io';
 
 import 'package:smile_shop/data/vos/banner_vo.dart';
+import 'package:smile_shop/data/vos/campaign_vo.dart';
 import 'package:smile_shop/data/vos/category_vo.dart';
 import 'package:smile_shop/data/vos/login_data_vo.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
 import 'package:smile_shop/data/vos/search_product_vo.dart';
 import 'package:smile_shop/data/vos/township_data_vo.dart';
+import 'package:smile_shop/network/requests/dealer_login_request.dart';
 import 'package:smile_shop/network/requests/otp_request.dart';
 import 'package:smile_shop/network/requests/set_password_request.dart';
 import 'package:smile_shop/network/responses/otp_response.dart';
@@ -14,10 +16,13 @@ import 'package:smile_shop/network/responses/set_password_response.dart';
 import 'package:smile_shop/network/responses/success_payment_response.dart';
 
 import '../../network/requests/address_request.dart';
+import '../../network/requests/campaign_detail_request.dart';
+import '../../network/requests/campaign_join_request.dart';
 import '../../network/requests/checkIn_request.dart';
 import '../../network/requests/check_wallet_amount_request.dart';
 import '../../network/requests/check_wallet_password_request.dart';
 import '../../network/requests/login_request.dart';
+import '../../network/requests/order_cancel_request.dart';
 import '../../network/requests/otp_verify_request.dart';
 import '../../network/requests/set_wallet_password_request.dart';
 import '../../network/requests/sub_category_request.dart';
@@ -26,11 +31,11 @@ import '../../network/responses/address_response.dart';
 import '../../network/responses/login_response.dart';
 import '../../network/responses/success_network_response.dart';
 import '../vos/brand_and_category_vo.dart';
+import '../vos/campaign_participant_vo.dart';
 import '../vos/checkIn_vo.dart';
 import '../vos/order_vo.dart';
 import '../vos/payment_vo.dart';
 import '../vos/product_response_data_vo.dart';
-import '../vos/profile_vo.dart';
 import '../vos/state_vo.dart';
 import '../vos/sub_category_vo.dart';
 import '../vos/user_vo.dart';
@@ -39,6 +44,8 @@ import '../vos/wallet_vo.dart';
 
 abstract class SmileShopModel {
   Future<LoginResponse> login(LoginRequest loginRequest);
+
+  Future<LoginResponse> dealerLogin(DealerLoginRequest loginRequest);
 
   Future register(String invitationCode, String name, String phone,
       String loginPassword, String paymentPassword);
@@ -73,6 +80,16 @@ abstract class SmileShopModel {
 
   Future<List<ProductVO>> searchProductsByPrice(String token,
       String acceptLanguage, String endUserId, int pageNo, int price,String operator);
+
+  Future<List<ProductVO>> searchProductsWithDynamicParam(
+      String token,
+      String acceptLanguage,
+      String endUserId,
+      int pageNo,
+      String? name,
+      double? rating,
+      int? minRange,
+      int? maxRange);
 
   Future addNewAddress(
       String accessToken, String acceptLanguage, AddressRequest addressRequest);
@@ -173,4 +190,22 @@ abstract class SmileShopModel {
 
   Future<SuccessNetworkResponse> postUserCheckIn(
       String token, String acceptLanguage, CheckInRequest checkInRequest);
+
+  Future<List<CampaignVo>> getCampaign(
+      String token,String acceptLanguage);
+
+  Future<CampaignVo> getCampaignDetail(
+      String token,String acceptLanguage,CampaignDetailRequest request);
+
+  Future<void> joinCampaign(
+      String token,String acceptLanguage,CampaignJoinRequest request);
+
+  Future<List<CampaignParticipantVo>> getCampaignParticipants(
+      String token,String acceptLanguage,CampaignDetailRequest request);
+
+  Future<SuccessNetworkResponse> cancelOrder(
+      String token, String acceptLanguage, OrderCancelRequest request);
+
+  Future<SuccessPaymentResponse> makePayment(String token, String acceptLanguage,
+      String paymentType,String paymentData,String orderNo,String appType);
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:smile_shop/data/vos/profile_vo.dart';
 import 'package:smile_shop/data/vos/user_vo.dart';
 import 'package:smile_shop/network/api_constants.dart';
 
@@ -27,7 +26,6 @@ class ProfileBloc extends ChangeNotifier {
     }).whenComplete(()=> _hideLoading());
   }
 
-
   void _showLoading() {
     isLoading = true;
     _notifySafely();
@@ -42,6 +40,12 @@ class ProfileBloc extends ChangeNotifier {
     if (!isDisposed) {
       notifyListeners();
     }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    isDisposed = true;
   }
 
 }

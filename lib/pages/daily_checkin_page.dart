@@ -27,7 +27,7 @@ class DailyCheckInPage extends StatelessWidget {
                 selector: (context, bloc) => bloc.checkInVO,
                 builder: (context, checkInVO, child) => checkInVO != null
                     ? Scaffold(
-                        backgroundColor: Colors.amberAccent,
+                        backgroundColor: const Color(0xffF7E1C5),
                         appBar: AppBar(
                           automaticallyImplyLeading: false,
                           toolbarHeight:

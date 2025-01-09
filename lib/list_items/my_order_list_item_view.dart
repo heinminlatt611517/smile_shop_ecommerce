@@ -12,11 +12,14 @@ class MyOrderListItemView extends StatelessWidget {
       required this.isRefundView,
       this.onTapRefund,
       this.onTapReview,
-      this.orderVO});
+      this.orderVO,
+      this.onTapCancel,this.onTapPayment});
 
   final bool isRefundView;
   final Function()? onTapRefund;
   final Function()? onTapReview;
+  final Function(int orderId)? onTapPayment;
+  final Function(String orderId)? onTapCancel;
   final OrderVO? orderVO;
 
   @override
@@ -30,17 +33,15 @@ class MyOrderListItemView extends StatelessWidget {
       width: double.infinity,
       child: Column(
         children: [
-          isRefundView == true
-              ? const SizedBox.shrink()
-              : Row(
-                  children: [
-                    const Spacer(),
-                    Text(
-                      orderVO?.paymentStatus ?? "",
-                      style: const TextStyle(color: kFillingFastColor),
-                    ),
-                  ],
-                ),
+          Row(
+            children: [
+              const Spacer(),
+              Text(
+                getStatusMessage(orderVO?.paymentStatus ?? ""),
+                style: const TextStyle(color: kFillingFastColor),
+              ),
+            ],
+          ),
           const SizedBox(
             height: 5,
           ),
@@ -106,81 +107,97 @@ class MyOrderListItemView extends StatelessWidget {
                     const SizedBox(
                       height: 15,
                     ),
-                    isRefundView == true
-                        ? Row(
-                            children: [
-                              const Spacer(),
-                              Container(
-                                height: 26,
-                                width: 57,
-                                decoration: BoxDecoration(
-                                    border:
-                                        Border.all(color: kFillingFastColor),
-                                    borderRadius: BorderRadius.circular(5)),
-                                child: const Center(
-                                  child: Text(
-                                    'Refund',
-                                    style: TextStyle(fontSize: kTextSmall),
-                                  ),
-                                ),
+                    Visibility(
+                      visible: orderVO?.paymentStatus == "ongoing",
+                      child: Row(
+                        children: [
+                          const Spacer(),
+                          Container(
+                            height: 26,
+                            width: 57,
+                            decoration: BoxDecoration(
+                                border: Border.all(color: kFillingFastColor),
+                                borderRadius: BorderRadius.circular(5)),
+                            child: const Center(
+                              child: Text(
+                                'Refund',
+                                style: TextStyle(fontSize: kTextSmall),
                               ),
-                              const SizedBox(
-                                width: 15,
-                              ),
-                              Container(
-                                height: 26,
-                                width: 68,
-                                decoration: BoxDecoration(
-                                    color: kFillingFastColor,
-                                    borderRadius: BorderRadius.circular(5)),
-                                child: const Center(
-                                  child: Text(
-                                    'Review',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: kTextSmall),
-                                  ),
-                                ),
-                              )
-                            ],
-                          )
-                        : Row(
-                            children: [
-                              const Spacer(),
-                              Container(
-                                height: 26,
-                                width: 57,
-                                decoration: BoxDecoration(
-                                    border:
-                                        Border.all(color: kFillingFastColor),
-                                    borderRadius: BorderRadius.circular(5)),
-                                child: const Center(
-                                  child: Text(
-                                    'Cancel',
-                                    style: TextStyle(fontSize: kTextSmall),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 15,
-                              ),
-                              Container(
-                                height: 26,
-                                width: 68,
-                                decoration: BoxDecoration(
-                                    color: kFillingFastColor,
-                                    borderRadius: BorderRadius.circular(5)),
-                                child: const Center(
-                                  child: Text(
-                                    'Payment',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: kTextSmall),
-                                  ),
-                                ),
-                              )
-                            ],
+                            ),
                           ),
+                          const SizedBox(
+                            width: 15,
+                          ),
+                          Visibility(
+                            visible: false,
+                            child: Container(
+                              height: 26,
+                              width: 68,
+                              decoration: BoxDecoration(
+                                  color: kFillingFastColor,
+                                  borderRadius: BorderRadius.circular(5)),
+                              child: const Center(
+                                child: Text(
+                                  'Review',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: kTextSmall),
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    Visibility(
+                      visible: orderVO?.paymentStatus != "paid" &&
+                          orderVO?.paymentStatus != 'cancel',
+                      child: Row(
+                        children: [
+                          const Spacer(),
+                          InkWell(
+                            onTap: () {
+                              onTapCancel!(orderVO?.orderNo.toString() ?? "");
+                            },
+                            child: Container(
+                              height: 26,
+                              width: 57,
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: kFillingFastColor),
+                                  borderRadius: BorderRadius.circular(5)),
+                              child: const Center(
+                                child: Text(
+                                  'Cancel',
+                                  style: TextStyle(fontSize: kTextSmall),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 15,
+                          ),
+                          InkWell(
+                            onTap:(){
+                              onTapPayment!(orderVO?.id ?? 0);
+                            },
+                            child: Container(
+                              height: 26,
+                              width: 68,
+                              decoration: BoxDecoration(
+                                  color: kFillingFastColor,
+                                  borderRadius: BorderRadius.circular(5)),
+                              child: const Center(
+                                child: Text(
+                                  'Payment',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: kTextSmall),
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               )
@@ -189,5 +206,22 @@ class MyOrderListItemView extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+String getStatusMessage(String status) {
+  switch (status) {
+    case 'not_pay':
+      return 'To Pay';
+    case 'paid':
+      return 'To Ship';
+    case 'ongoing':
+      return 'To Receive';
+    case 'delivered':
+      return 'Delivered';
+    case 'cancel':
+      return 'Cancel';
+    default:
+      return 'Unknown Status';
   }
 }

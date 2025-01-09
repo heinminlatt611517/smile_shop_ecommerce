@@ -6,6 +6,8 @@ import 'package:smile_shop/blocs/product_details_bottom_sheet_bloc.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
 import 'package:smile_shop/data/vos/variant_vo.dart';
 import 'package:smile_shop/network/api_constants.dart';
+import 'package:smile_shop/pages/cart_page.dart';
+import 'package:smile_shop/pages/live_chat_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/widgets/common_button_view.dart';
 import 'package:smile_shop/widgets/promotion_point_view.dart';
@@ -155,11 +157,23 @@ class _ProductDetailsPageState extends State<ProductDetailsPage>
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               VerticalIconWithLabelView(
-                                  onTap: () {},
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => const LiveChatPage()),
+                                    );
+                                  },
                                   icon: Icons.chat,
                                   label: "Live Chat"),
                               VerticalIconWithLabelView(
-                                  onTap: () {},
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => const CartPage()),
+                                    );
+                                  },
                                   icon: Icons.shopping_cart_outlined,
                                   label: "Cart"),
                               VerticalIconWithLabelView(
