@@ -7,7 +7,7 @@ import 'package:smile_shop/data/vos/product_vo.dart';
 import 'package:smile_shop/data/vos/variant_vo.dart';
 import 'package:smile_shop/network/api_constants.dart';
 import 'package:smile_shop/pages/cart_page.dart';
-import 'package:smile_shop/pages/live_chat_page.dart';
+import 'package:smile_shop/pages/ticket_screen.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/widgets/common_button_view.dart';
 import 'package:smile_shop/widgets/promotion_point_view.dart';
@@ -161,7 +161,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage>
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => const LiveChatPage()),
+                                          builder: (context) => const TicketScreen()),
                                     );
                                   },
                                   icon: Icons.chat,

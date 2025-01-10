@@ -4,6 +4,7 @@ import 'package:smile_shop/data/model/smile_shop_model_impl.dart';
 import 'package:smile_shop/network/requests/set_password_request.dart';
 import 'package:smile_shop/network/responses/set_password_response.dart';
 
+import '../data/vos/firebase_user_vo.dart';
 import '../network/firebase_api.dart';
 
 class PasswordBloc extends ChangeNotifier {
@@ -38,8 +39,12 @@ class PasswordBloc extends ChangeNotifier {
   }
 
   void crateFirebaseChatUser(
-      {required int id}) async {
-    await _api.createChats(id.toString());
+      {required int id,
+        required String name,
+        required String phone,
+      }) async {
+    var firebaseUser = FirebaseUserVo(id: id,name: name,phone: phone,role: 'user');
+    await _api.createUser(firebaseUser);
   }
 
   void onPasswordChanged(String newPassword) {

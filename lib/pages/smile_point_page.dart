@@ -167,27 +167,29 @@ class SmilePointPage extends StatelessWidget {
                     bloc.onChangedSegmentedControl(value ?? 0);
                   },
                 ),
-                Selector<SmileWalletBloc, List<WalletTransactionVO>>(
-                  selector: (context, bloc) => bloc.walletTransactions,
-                  builder: (context, walletTransactions, child) =>
-                      Selector<SmileWalletBloc, bool>(
-                        selector: (context, bloc) => bloc.isLoading,
-                        builder: (context, isLoading, child) => Stack(
-                          children: [
-                            bloc.selectedSegment == 0
-                                ? _buildIncomeAndOutcomePointListView(walletTransactions, 'Income Points')
-                                : _buildIncomeAndOutcomePointListView(walletTransactions, 'Outcome Points'),
-                            // Loading view
-                            if (isLoading)
-                              const Padding(
-                                padding: EdgeInsets.only(top: 20),
-                                child: Center(
-                                  child: CircularProgressIndicator(color: kPrimaryColor,)
+                Expanded(
+                  child: Selector<SmileWalletBloc, List<WalletTransactionVO>>(
+                    selector: (context, bloc) => bloc.walletTransactions,
+                    builder: (context, walletTransactions, child) =>
+                        Selector<SmileWalletBloc, bool>(
+                          selector: (context, bloc) => bloc.isLoading,
+                          builder: (context, isLoading, child) => Stack(
+                            children: [
+                              bloc.selectedSegment == 0
+                                  ? _buildIncomeAndOutcomePointListView(walletTransactions, 'Income Points')
+                                  : _buildIncomeAndOutcomePointListView(walletTransactions, 'Outcome Points'),
+                              // Loading view
+                              if (isLoading)
+                                const Padding(
+                                  padding: EdgeInsets.only(top: 20),
+                                  child: Center(
+                                    child: CircularProgressIndicator(color: kPrimaryColor,)
+                                  ),
                                 ),
-                              ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
+                  ),
                 ),
               ],
             ),

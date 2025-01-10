@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 import 'package:smile_shop/data/vos/campaign_participant_vo.dart';
-import 'package:smile_shop/data/vos/campaign_vo.dart';
 import 'package:smile_shop/network/api_constants.dart';
 
 import '../data/model/smile_shop_model.dart';

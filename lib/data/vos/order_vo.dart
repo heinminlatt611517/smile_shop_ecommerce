@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:smile_shop/data/vos/address_vo.dart';
 
 import 'order_product_vo.dart';
 
@@ -45,6 +46,9 @@ class OrderVO {
   @JsonKey(name: 'image')
   final String? image;
 
+  @JsonKey(name: 'address')
+  final AddressVO? addressVO;
+
   @JsonKey(name: 'order_products')
   final List<OrderProductVO>? orderProducts;
 
@@ -62,6 +66,7 @@ class OrderVO {
     this.createdAt,
     this.updatedAt,
     this.image,
+    this.addressVO,
     this.orderProducts,
   });
 

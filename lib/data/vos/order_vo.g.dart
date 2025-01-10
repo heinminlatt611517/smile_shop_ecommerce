@@ -20,6 +20,9 @@ OrderVO _$OrderVOFromJson(Map<String, dynamic> json) => OrderVO(
       createdAt: json['created_at'] as String?,
       updatedAt: json['updated_at'] as String?,
       image: json['image'] as String?,
+      addressVO: json['address'] == null
+          ? null
+          : AddressVO.fromJson(json['address'] as Map<String, dynamic>),
       orderProducts: (json['order_products'] as List<dynamic>?)
           ?.map((e) => OrderProductVO.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -39,5 +42,6 @@ Map<String, dynamic> _$OrderVOToJson(OrderVO instance) => <String, dynamic>{
       'created_at': instance.createdAt,
       'updated_at': instance.updatedAt,
       'image': instance.image,
+      'address': instance.addressVO,
       'order_products': instance.orderProducts,
     };

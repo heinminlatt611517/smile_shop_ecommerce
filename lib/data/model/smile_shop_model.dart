@@ -33,9 +33,13 @@ import '../../network/responses/success_network_response.dart';
 import '../vos/brand_and_category_vo.dart';
 import '../vos/campaign_participant_vo.dart';
 import '../vos/checkIn_vo.dart';
+import '../vos/my_team_vo.dart';
 import '../vos/order_vo.dart';
+import '../vos/package_vo.dart';
 import '../vos/payment_vo.dart';
 import '../vos/product_response_data_vo.dart';
+import '../vos/promotion_vo.dart';
+import '../vos/refund_vo.dart';
 import '../vos/state_vo.dart';
 import '../vos/sub_category_vo.dart';
 import '../vos/user_vo.dart';
@@ -208,4 +212,25 @@ abstract class SmileShopModel {
 
   Future<SuccessPaymentResponse> makePayment(String token, String acceptLanguage,
       String paymentType,String paymentData,String orderNo,String appType);
+
+  Future<SuccessNetworkResponse> postRefund(
+      String token, String acceptLanguage,int orderNo,int reasonId,File? image);
+
+  Future<List<RefundVO>> getRefunds(
+      String token, String acceptLanguage);
+
+  Future<List<RefundVO>> getRefundsByStatus(
+      String token, String acceptLanguage,int status);
+
+  Future<List<PromotionVO>> getPromotionLogsByStatus(
+      String token, String acceptLanguage,String status);
+
+  Future<List<MyTeamVO>> getMyTeams(
+      String token, String acceptLanguage);
+
+  Future<List<PackageVO>> getPackages(
+      String token, String acceptLanguage);
+
+  Future<PackageVO> getPackageDetails(
+      String token, String acceptLanguage,int id);
 }

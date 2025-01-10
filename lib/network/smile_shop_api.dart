@@ -26,13 +26,18 @@ import 'package:smile_shop/network/responses/campaign_response.dart';
 import 'package:smile_shop/network/responses/category_response.dart';
 import 'package:smile_shop/network/responses/checkIn_response.dart';
 import 'package:smile_shop/network/responses/login_response.dart';
+import 'package:smile_shop/network/responses/my_team_response.dart';
 import 'package:smile_shop/network/responses/order_details_response.dart';
 import 'package:smile_shop/network/responses/order_response.dart';
 import 'package:smile_shop/network/responses/otp_response.dart';
+import 'package:smile_shop/network/responses/package_details_response.dart';
+import 'package:smile_shop/network/responses/packages_response.dart';
 import 'package:smile_shop/network/responses/payment_response.dart';
 import 'package:smile_shop/network/responses/product_details_response.dart';
 import 'package:smile_shop/network/responses/product_response.dart';
 import 'package:smile_shop/network/responses/profile_response.dart';
+import 'package:smile_shop/network/responses/promotion_response.dart';
+import 'package:smile_shop/network/responses/refund_response.dart';
 import 'package:smile_shop/network/responses/set_password_response.dart';
 import 'package:smile_shop/network/responses/state_response.dart';
 import 'package:smile_shop/network/responses/sub_category_response.dart';
@@ -361,4 +366,52 @@ abstract class SmileShopApi {
       @Header(kHeaderAcceptLanguage) String acceptLanguage,
       @Header(kHeaderAuthorization) String token,
       @Body() OrderCancelRequest request);
+
+  @MultiPart()
+  @POST(kEndPointPostRefund)
+  Future<SuccessNetworkResponse> postRefund(
+      @Header(kHeaderAcceptLanguage) String acceptLanguage,
+      @Header(kHeaderAuthorization) String token,
+      @Part() int orderNo,
+      @Part() int reasonId,
+      @Part() File image);
+
+  @GET(kEndPointGetRefunds)
+  Future<RefundResponse> getRefunds(
+      @Header(kHeaderAcceptLanguage) String acceptLanguage,
+      @Header(kHeaderAuthorization) String token,
+      );
+
+  @GET(kEndPointGetRefunds)
+  Future<RefundResponse> getRefundsByStatus(
+      @Header(kHeaderAcceptLanguage) String acceptLanguage,
+      @Header(kHeaderAuthorization) String token,
+      @Query(kParamStatus) int status
+      );
+
+  @GET(kEndPointGetPromotionLogs)
+  Future<PromotionResponse> getPromotionLogByStatus(
+      @Header(kHeaderAcceptLanguage) String acceptLanguage,
+      @Header(kHeaderAuthorization) String token,
+      @Query(kParamLogType) String status
+      );
+
+  @GET(kEndPointGetMyTeams)
+  Future<MyTeamResponse> getMyTeams(
+      @Header(kHeaderAcceptLanguage) String acceptLanguage,
+      @Header(kHeaderAuthorization) String token,
+      );
+
+  @GET(kEndPointGetPackages)
+  Future<PackagesResponse> getPackages(
+      @Header(kHeaderAuthorization) String token,
+      @Header(kHeaderAcceptLanguage) String acceptLanguage,
+      );
+
+  @GET("$kEndPointGetPackages/{id}")
+  Future<PackageDetailsResponse> getPackageDetails(
+      @Header(kHeaderAuthorization) String token,
+      @Header(kHeaderAcceptLanguage) String acceptLanguage,
+      @Path("id") int id
+      );
 }

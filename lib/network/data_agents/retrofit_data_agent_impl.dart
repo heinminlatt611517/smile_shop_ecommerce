@@ -9,10 +9,14 @@ import 'package:smile_shop/data/vos/campaign_participant_vo.dart';
 import 'package:smile_shop/data/vos/campaign_vo.dart';
 import 'package:smile_shop/data/vos/category_vo.dart';
 import 'package:smile_shop/data/vos/checkIn_vo.dart';
+import 'package:smile_shop/data/vos/my_team_vo.dart';
 import 'package:smile_shop/data/vos/order_vo.dart';
+import 'package:smile_shop/data/vos/package_vo.dart';
 import 'package:smile_shop/data/vos/payment_vo.dart';
 import 'package:smile_shop/data/vos/product_response_data_vo.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
+import 'package:smile_shop/data/vos/promotion_vo.dart';
+import 'package:smile_shop/data/vos/refund_vo.dart';
 import 'package:smile_shop/data/vos/state_vo.dart';
 import 'package:smile_shop/data/vos/sub_category_vo.dart';
 import 'package:smile_shop/data/vos/township_data_vo.dart';
@@ -733,6 +737,105 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
         .catchError((error) {
           throw _createException(error);
         });
+  }
+
+  @override
+  Future<SuccessNetworkResponse> postRefund(String token, String acceptLanguage,
+      int orderNo, int reasonId, File? image) {
+    return mApi
+        .postRefund('Bearer $token', acceptLanguage, orderNo, reasonId, image!)
+        .asStream()
+        .map((response) {
+          return response;
+        })
+        .first
+        .catchError((error) {
+          throw _createException(error);
+        });
+  }
+
+  @override
+  Future<List<RefundVO>> getRefunds(String token, String acceptLanguage) {
+    return mApi
+        .getRefunds(acceptLanguage,'Bearer $token')
+        .asStream()
+        .map((response) {
+          return response.data ?? [];
+        })
+        .first
+        .catchError((error) {
+          throw _createException(error);
+        });
+  }
+
+  @override
+  Future<List<RefundVO>> getRefundsByStatus(String token, String acceptLanguage,int status) {
+    return mApi
+        .getRefundsByStatus(acceptLanguage,'Bearer $token',status)
+        .asStream()
+        .map((response) {
+      return response.data ?? [];
+    })
+        .first
+        .catchError((error) {
+      throw _createException(error);
+    });
+  }
+
+  @override
+  Future<List<PromotionVO>> getPromotionLogsByStatus(String token, String acceptLanguage, String status) {
+    return mApi
+        .getPromotionLogByStatus(acceptLanguage,'Bearer $token',status)
+        .asStream()
+        .map((response) {
+      return response.data ?? [];
+    })
+        .first
+        .catchError((error) {
+      throw _createException(error);
+    });
+  }
+
+  @override
+  Future<List<MyTeamVO>> getMyTeams(String token, String acceptLanguage) {
+    return mApi
+        .getMyTeams(acceptLanguage,'Bearer $token')
+        .asStream()
+        .map((response) {
+      return response.data ?? [];
+    })
+        .first
+        .catchError((error) {
+      throw _createException(error);
+    });
+  }
+
+  @override
+  Future<PackageVO> getPackageDetails(String token, String acceptLanguage, int id) {
+    return mApi
+        .getPackageDetails('Bearer $token',acceptLanguage,id)
+        .asStream()
+        .map((response) {
+      return response.data ?? PackageVO();
+    })
+        .first
+        .catchError((error) {
+      throw _createException(error);
+    });
+  }
+
+  @override
+  Future<List<PackageVO>> getPackages(String token, String acceptLanguage) {
+    return mApi
+        .getPackages('Bearer $token',acceptLanguage)
+        .asStream()
+        .map((response) {
+      return response.data ?? [];
+    })
+        .first
+        .catchError((error) {
+      throw _createException(error);
+    });
   }
 }
 

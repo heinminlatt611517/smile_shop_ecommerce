@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:provider/provider.dart';
+import 'package:smile_shop/blocs/live_chat_bloc.dart';
 import 'package:smile_shop/data/vos/user_vo.dart';
 import 'package:smile_shop/network/api_constants.dart';
 import 'package:smile_shop/utils/colors.dart';
@@ -10,7 +11,6 @@ import 'package:smile_shop/utils/extensions.dart';
 import 'package:smile_shop/utils/strings.dart';
 import 'package:voice_message_package/voice_message_package.dart';
 
-import '../blocs/chat_bloc.dart';
 import '../data/dummy_data/dummy_data.dart';
 import '../data/vos/message_vo.dart';
 import '../network/firebase_api.dart';
@@ -21,8 +21,8 @@ class LiveChatPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => ChatBloc(GetStorage().read(kBoxKeyFirebaseUserId)),
-      child: Consumer<ChatBloc>(
+      create: (context) => LiveChatBloc(GetStorage().read(kBoxKeyFirebaseUserId)),
+      child: Consumer<LiveChatBloc>(
         builder: (context, bloc, child) => Scaffold(
           backgroundColor: kBackgroundColor,
           appBar: AppBar(
@@ -54,7 +54,7 @@ class LiveChatPage extends StatelessWidget {
                   ),
                   ChatInputField(
                     onSend: () {
-                      bloc.sendMsg();
+                     // bloc.sendMsg();
                     },
                     imageFile: bloc.image,
                     audioFile: bloc.audio,
@@ -83,7 +83,7 @@ class LiveChatPage extends StatelessWidget {
                         const SizedBox(height: 16),
                         ElevatedButton(
                             onPressed: () {
-                              bloc.completeRecordingAudio();
+                              //bloc.completeRecordingAudio();
                             },
                             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
                             child: const Text(
@@ -192,7 +192,7 @@ class ChatBubble extends StatelessWidget {
           ),
           if (isSender) const SizedBox(width: 8),
           if (isSender)
-            Selector<ChatBloc,UserVO?>(
+            Selector<LiveChatBloc,UserVO?>(
               selector: (context,bloc)=>bloc.userVO,
               builder: (context,userVO,child)=>
                   CircleAvatar(
@@ -278,7 +278,7 @@ class ChatBubble extends StatelessWidget {
         ),
         if (isSender) const SizedBox(width: 8),
         if (isSender)
-          Selector<ChatBloc,UserVO?>(
+          Selector<LiveChatBloc,UserVO?>(
             selector: (context,bloc)=>bloc.userVO,
             builder: (context,userVO,child)=>
               CircleAvatar(

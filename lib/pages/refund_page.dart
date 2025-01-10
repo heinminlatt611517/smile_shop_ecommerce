@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:loading_indicator/loading_indicator.dart';
+import 'package:provider/provider.dart';
+import 'package:smile_shop/blocs/retund_bloc.dart';
+import 'package:smile_shop/data/vos/refund_vo.dart';
 import 'package:smile_shop/list_items/refund_list_item_view.dart';
 import 'package:smile_shop/utils/colors.dart';
+
+import '../widgets/loading_view.dart';
 
 class RefundPage extends StatefulWidget {
   const RefundPage({super.key});
@@ -16,7 +23,7 @@ class _RefundPageState extends State<RefundPage>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
   }
 
   @override
@@ -27,47 +34,94 @@ class _RefundPageState extends State<RefundPage>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
+    return ChangeNotifierProvider(
+      create: (context) => RefundBloc(),
+      child: Scaffold(
         backgroundColor: Colors.white,
-        centerTitle: true,
-        toolbarHeight: 60,
-        title: const Text('My Orders'),
-        bottom: PreferredSize(
-            preferredSize: const Size(double.infinity, 50),
-            child: TabBar(
-                labelColor: kFillingFastColor,
-                dividerColor: Colors.transparent,
-                indicatorColor: kFillingFastColor,
-                isScrollable: true,
-                labelPadding: const EdgeInsets.all(13),
-                indicatorPadding: const EdgeInsets.only(bottom: 5),
-                tabAlignment: TabAlignment.start,
-                controller: _tabController,
-                tabs: const [
-                  Text('All'),
-                  Text('Pending'),
-                  Text('Approved'),
-                  
-                ])),
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          centerTitle: true,
+          toolbarHeight: 60,
+          title: const Text('My Orders'),
+          bottom: PreferredSize(
+              preferredSize: const Size(double.infinity, 50),
+              child: Consumer<RefundBloc>(
+                builder: (context, bloc, child) => TabBar(
+                    labelColor: kFillingFastColor,
+                    dividerColor: Colors.transparent,
+                    indicatorColor: kFillingFastColor,
+                    isScrollable: true,
+                    labelPadding: const EdgeInsets.all(13),
+                    indicatorPadding: const EdgeInsets.only(bottom: 5),
+                    tabAlignment: TabAlignment.start,
+                    controller: _tabController,
+                    onTap: (index) {
+                      if (index == 0) {
+                        bloc.getRefundList();
+                      }
+                      if (index == 1) {
+                        ///pending
+                        bloc.getRefundListByStatus(0);
+                      }
+                      if (index == 2) {
+                        ///approved
+                        bloc.getRefundListByStatus(1);
+                      }
+                      if (index == 3) {
+                        ///rejected
+                        bloc.getRefundListByStatus(2);
+                      }
+                    },
+                    tabs: const [
+                      Text('All'),
+                      Text('Pending'),
+                      Text('Approved'),
+                      Text('Rejected'),
+                    ]),
+              )),
+        ),
+        body: Selector<RefundBloc, bool>(
+          selector: (context, bloc) => bloc.isLoading,
+          builder: (context, isLoading, child) =>
+              Stack(
+                children: [
+                  ///body view
+                  Selector<RefundBloc, List<RefundVO>>(
+                              selector: (context, bloc) => bloc.refundList,
+                              builder: (context, refunds, child) =>
+                    TabBarView(controller: _tabController, children: [
+                  _refundView(refundList: refunds),
+                  _refundView(refundList: refunds),
+                  _refundView(refundList: refunds),
+                  _refundView(refundList: refunds),
+                              ]),
+                            ),
+
+                  ///loading view
+                  if (isLoading)
+                    Container(
+                      color: Colors.black12,
+                      child: const Center(
+                        child: LoadingView(
+                          indicatorColor: kPrimaryColor,
+                          indicator: Indicator.ballSpinFadeLoader,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+        ),
       ),
-      body: TabBarView(controller: _tabController, children: [
-        _myOrderView(),
-        _myOrderView(),
-        _myOrderView(),
-       
-      ]),
     );
   }
 
-  Widget _myOrderView() {
+  Widget _refundView({required List<RefundVO> refundList}) {
     return Container(
       color: kBackgroundColor,
       child: ListView.builder(
-          itemCount: 5,
+          itemCount: refundList.length,
           itemBuilder: (context, index) {
-            return const RefundListItemView();
+            return RefundListItemView(refundVO: refundList[index],);
           }),
     );
   }

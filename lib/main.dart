@@ -71,6 +71,7 @@ class SmileShopApp extends StatelessWidget {
               primary: const Color.fromRGBO(255, 255, 255, 1.0)),
           useMaterial3: true,
           fontFamily: kInter),
+      themeMode: ThemeMode.light,
       home: const SplashPage(),
     );
   }

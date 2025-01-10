@@ -8,6 +8,7 @@ import 'package:smile_shop/list_items/my_order_list_item_view.dart';
 import 'package:smile_shop/network/api_constants.dart';
 import 'package:smile_shop/pages/order_detail_page.dart';
 import 'package:smile_shop/pages/payment_method_page.dart';
+import 'package:smile_shop/pages/product_refund_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/extensions.dart';
 
@@ -156,6 +157,10 @@ class _MyOrderPageState extends State<MyOrderPage>
                   onTapCancel: (String orderId) {
                     var bloc = context.read<OrderBloc>();
                     bloc.onTapCancelOrder(orderId);
+                  },
+                  onTapRefund: (orderNo){
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (builder) =>  ProductRefundPage(orderVO: orderNo,)));
                   },
                 ),
               );

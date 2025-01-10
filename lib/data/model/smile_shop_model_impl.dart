@@ -10,9 +10,13 @@ import 'package:smile_shop/data/vos/campaign_vo.dart';
 import 'package:smile_shop/data/vos/category_vo.dart';
 import 'package:smile_shop/data/vos/checkIn_vo.dart';
 import 'package:smile_shop/data/vos/login_data_vo.dart';
+import 'package:smile_shop/data/vos/my_team_vo.dart';
 import 'package:smile_shop/data/vos/order_vo.dart';
+import 'package:smile_shop/data/vos/package_vo.dart';
 import 'package:smile_shop/data/vos/payment_vo.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
+import 'package:smile_shop/data/vos/promotion_vo.dart';
+import 'package:smile_shop/data/vos/refund_vo.dart';
 import 'package:smile_shop/data/vos/search_product_vo.dart';
 import 'package:smile_shop/data/vos/state_vo.dart';
 import 'package:smile_shop/data/vos/sub_category_vo.dart';
@@ -515,6 +519,41 @@ class SmileShopModelImpl extends SmileShopModel {
   @override
   Future<SuccessPaymentResponse> makePayment(String token, String acceptLanguage, String paymentType, String paymentData, String orderNo, String appType) {
    return mDataAgent.makePayment(token, acceptLanguage, paymentType, paymentData, orderNo, appType);
+  }
+
+  @override
+  Future<SuccessNetworkResponse> postRefund(String token, String acceptLanguage, int orderNo, int reasonId, File? image) {
+    return mDataAgent.postRefund(token, acceptLanguage, orderNo, reasonId, image);
+  }
+
+  @override
+  Future<List<RefundVO>> getRefunds(String token, String acceptLanguage) {
+    return mDataAgent.getRefunds(token, acceptLanguage);
+  }
+
+  @override
+  Future<List<RefundVO>> getRefundsByStatus(String token, String acceptLanguage,int status) {
+    return mDataAgent.getRefundsByStatus(token, acceptLanguage,status);
+  }
+
+  @override
+  Future<List<PromotionVO>> getPromotionLogsByStatus(String token, String acceptLanguage, String status) {
+    return mDataAgent.getPromotionLogsByStatus(token, acceptLanguage, status);
+  }
+
+  @override
+  Future<List<MyTeamVO>> getMyTeams(String token, String acceptLanguage) {
+    return mDataAgent.getMyTeams(token, acceptLanguage);
+  }
+
+  @override
+  Future<PackageVO> getPackageDetails(String token, String acceptLanguage, int id) {
+    return mDataAgent.getPackageDetails(token, acceptLanguage, id);
+  }
+
+  @override
+  Future<List<PackageVO>> getPackages(String token, String acceptLanguage) {
+   return mDataAgent.getPackages(token, acceptLanguage);
   }
 
 }

@@ -16,8 +16,8 @@ class MyOrderListItemView extends StatelessWidget {
       this.onTapCancel,this.onTapPayment});
 
   final bool isRefundView;
-  final Function()? onTapRefund;
-  final Function()? onTapReview;
+  final Function(OrderVO? orderVo)? onTapRefund;
+  final Function(int orderId)? onTapReview;
   final Function(int orderId)? onTapPayment;
   final Function(String orderId)? onTapCancel;
   final OrderVO? orderVO;
@@ -112,16 +112,21 @@ class MyOrderListItemView extends StatelessWidget {
                       child: Row(
                         children: [
                           const Spacer(),
-                          Container(
-                            height: 26,
-                            width: 57,
-                            decoration: BoxDecoration(
-                                border: Border.all(color: kFillingFastColor),
-                                borderRadius: BorderRadius.circular(5)),
-                            child: const Center(
-                              child: Text(
-                                'Refund',
-                                style: TextStyle(fontSize: kTextSmall),
+                          InkWell(
+                            onTap: (){
+                              onTapRefund!(orderVO);
+                            },
+                            child: Container(
+                              height: 26,
+                              width: 57,
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: kFillingFastColor),
+                                  borderRadius: BorderRadius.circular(5)),
+                              child: const Center(
+                                child: Text(
+                                  'Refund',
+                                  style: TextStyle(fontSize: kTextSmall),
+                                ),
                               ),
                             ),
                           ),
@@ -178,7 +183,7 @@ class MyOrderListItemView extends StatelessWidget {
                           ),
                           InkWell(
                             onTap:(){
-                              onTapPayment!(orderVO?.id ?? 0);
+                              onTapPayment!(int.parse(orderVO?.orderNo.toString() ?? ""));
                             },
                             child: Container(
                               height: 26,

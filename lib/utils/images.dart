@@ -33,3 +33,7 @@ const kAboutUsIcon = 'assets/images/about_us_icon.png';
 const kContactUsIcon = 'assets/images/contact_us_icon.png';
 const kDeleteIcon = 'assets/images/delete_icon.png';
 const kFavouriteIcon = 'assets/images/favourite_icon.png';
+
+const kCampaignIcon = 'assets/images/campaign.png';
+const kDailyCheckInIcon = 'assets/images/daily_check_in.png';
+const kUserLevelIcon = 'assets/images/user_level.png';

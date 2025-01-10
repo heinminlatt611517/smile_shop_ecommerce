@@ -1,54 +1,43 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:record/record.dart';
-import 'package:smile_shop/data/vos/user_vo.dart';
 
 import '../data/model/smile_shop_model.dart';
 import '../data/model/smile_shop_model_impl.dart';
-import '../data/vos/chat_vo.dart';
+import '../data/vos/ticket_vo.dart';
+import '../data/vos/user_vo.dart';
 import '../network/firebase_api.dart';
 
 class ChatBloc extends ChangeNotifier {
   final SmileShopModel _smileShopModel = SmileShopModelImpl();
-
-  ///states
   bool isDisposed = false;
-  final String chatId;
-  ChatVo? chatVO;
-  UserVO? userVO;
+  final String ticketId;
+  TicketVo? ticket;
   final FirebaseApi _api = FirebaseApi();
   File? image;
   File? audio;
+  UserVO? userVO;
   TextEditingController msgController = TextEditingController();
   bool isRecording = false;
   final record = AudioRecorder();
 
-  ChatBloc(this.chatId) {
-    listenChat();
+  ChatBloc(this.ticketId) {
     userVO = _smileShopModel.getUserDataFromDatabase();
-    debugPrint("UsreImage>>>>>${userVO?.profileImage}");
-    safeNotifyListeners();
+    listenChat();
   }
 
   void sendMsg() async {
     if (audio != null) {
-      await _api.sendMessage(
-          chatId: chatId,
-          message: '',
-          messageType: MessageType.voice,
-          file: audio);
+      await _api.sendMessage(ticketId: ticketId, message: '', messageType: MessageType.voice, file: audio);
       audio = null;
       safeNotifyListeners();
     } else if (msgController.text.isNotEmpty || image != null) {
-      await _api.sendMessage(
-          chatId: chatId,
-          message: msgController.text,
-          messageType: image == null ? MessageType.text : MessageType.image,
-          file: image);
+      await _api.sendMessage(ticketId: ticketId, message: msgController.text, messageType: image == null ? MessageType.text : MessageType.image, file: image);
       msgController.clear();
       image = null;
       safeNotifyListeners();
@@ -56,9 +45,9 @@ class ChatBloc extends ChangeNotifier {
   }
 
   void listenChat() {
-    _api.getChatById(chatId).listen(
+    _api.getTicketById(ticketId).listen(
       (event) {
-        chatVO = event;
+        ticket = event;
         safeNotifyListeners();
       },
     );
@@ -66,8 +55,7 @@ class ChatBloc extends ChangeNotifier {
 
   void pickImage() async {
     ImagePicker picker = ImagePicker();
-    final XFile? imageFile =
-        await picker.pickImage(source: ImageSource.gallery);
+    final XFile? imageFile = await picker.pickImage(source: ImageSource.gallery);
     if (imageFile != null) {
       image = File(imageFile.path);
       safeNotifyListeners();
@@ -83,9 +71,7 @@ class ChatBloc extends ChangeNotifier {
           isRecording = true;
           var path = await getApplicationDocumentsDirectory();
           print("PATH: ${path.path}");
-          await record.start(const RecordConfig(encoder: AudioEncoder.wav),
-              path:
-                  '${path.path}/${DateTime.now().millisecondsSinceEpoch}.wav');
+          await record.start(const RecordConfig(encoder: AudioEncoder.wav), path: '${path.path}/${DateTime.now().millisecondsSinceEpoch}.wav');
 
           safeNotifyListeners();
         } catch (e) {
@@ -101,15 +87,6 @@ class ChatBloc extends ChangeNotifier {
         },
       );
     }
-  }
-
-  void onTapFloatingActionButton() async {
-    await _api.sendMessage(
-      senderId: "2",
-      chatId: chatId,
-      message: 'Hello From Admin',
-      messageType: image == null ? MessageType.text : MessageType.image,
-    );
   }
 
   void completeRecordingAudio() async {

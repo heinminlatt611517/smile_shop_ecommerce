@@ -13,6 +13,7 @@ import 'package:smile_shop/pages/my_order_page.dart';
 import 'package:smile_shop/pages/my_team_page.dart';
 import 'package:smile_shop/pages/packages_page.dart';
 import 'package:smile_shop/pages/referral_code_page.dart';
+import 'package:smile_shop/pages/refund_page.dart';
 import 'package:smile_shop/pages/smile_point_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
@@ -21,7 +22,6 @@ import 'package:smile_shop/utils/images.dart';
 import '../data/model/smile_shop_model.dart';
 import '../data/model/smile_shop_model_impl.dart';
 import '../widgets/loading_view.dart';
-import 'product_refund_page.dart';
 import 'promotion_point_page.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -171,7 +171,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         GestureDetector(
                           onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (_) => const ProductRefundPage()));
+                                  builder: (_) =>const RefundPage()));
                             },
                           child: _buildProfileItem(context, title: 'Refund',assetImagePath: kRefundIcon)),
                         GestureDetector(
@@ -233,7 +233,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (_) => const ReferralCodePage()));
                           },
-                            child: _buildProfileItem(context, title: 'Referal Code',assetImagePath: kReferralIcon)),
+                            child: _buildProfileItem(context, title: 'Referral Code',assetImagePath: kReferralIcon)),
                         _buildProfileItem(context, title: 'About Us',assetImagePath: kAboutUsIcon),
                         _buildProfileItem(context, title: 'Contact Us',assetImagePath: kContactUsIcon),
                         SizedBox(

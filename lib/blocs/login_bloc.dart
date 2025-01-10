@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:smile_shop/data/model/smile_shop_model.dart';
 import 'package:smile_shop/data/model/smile_shop_model_impl.dart';
+import 'package:smile_shop/data/vos/firebase_user_vo.dart';
 import 'package:smile_shop/network/api_constants.dart';
 import 'package:smile_shop/network/requests/dealer_login_request.dart';
 
@@ -43,8 +44,9 @@ class LogInBloc extends ChangeNotifier {
       {required int id,
       required String name,
       required String phone,
-      required}) async {
-    await _api.createChats(id.toString());
+      }) async {
+    var firebaseUser = FirebaseUserVo(id: id,name: name,phone: phone,role: 'user');
+    await _api.createUser(firebaseUser);
   }
 
   void onPhoneNumberChanged(String phone) {

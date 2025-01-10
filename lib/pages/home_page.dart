@@ -13,6 +13,7 @@ import 'package:smile_shop/pages/daily_checkin_page.dart';
 import 'package:smile_shop/pages/search_product_page.dart';
 import 'package:smile_shop/pages/sub_category_page.dart';
 import 'package:smile_shop/utils/colors.dart';
+import 'package:smile_shop/utils/images.dart';
 import 'package:smile_shop/utils/strings.dart';
 import 'package:smile_shop/widgets/cached_network_image_view.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -241,10 +242,7 @@ class CampaignDailyCheckInUserLevelView extends StatelessWidget {
                                 color: Colors.white,
                                 borderRadius:
                                     BorderRadius.circular(kMarginMedium)),
-                            child: const Icon(
-                              Icons.shop,
-                              color: kPrimaryColor,
-                            ))
+                            child: Image.asset(kDailyCheckInIcon,fit: BoxFit.cover,))
                       ],
                     ),
                   ),
@@ -295,10 +293,7 @@ class CampaignDailyCheckInUserLevelView extends StatelessWidget {
                               color: Colors.white,
                               borderRadius:
                                   BorderRadius.circular(kMarginMedium)),
-                          child: const Icon(
-                            Icons.shop,
-                            color: kPrimaryColor,
-                          ))
+                          child: Image.asset(kUserLevelIcon,fit: BoxFit.cover,))
                     ],
                   ),
                 )
@@ -336,12 +331,9 @@ class CampaignDailyCheckInUserLevelView extends StatelessWidget {
                         alignment: Alignment.centerRight,
                         padding: const EdgeInsets.all(kMarginMedium),
                         decoration: BoxDecoration(
+                            color: Colors.transparent,
                             borderRadius: BorderRadius.circular(kMarginMedium)),
-                        child: const Icon(
-                          Icons.shop,
-                          color: kPrimaryColor,
-                          size: 40,
-                        )),
+                        child:  Image.asset(kCampaignIcon,fit: BoxFit.cover,)),
                     const Text(
                       kCampaignLabel,
                       style: TextStyle(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smile_shop/pages/cart_page.dart';
 import 'package:smile_shop/pages/live_chat_page.dart';
 import 'package:smile_shop/pages/profile_page.dart';
+import 'package:smile_shop/pages/ticket_screen.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/utils/images.dart';
@@ -22,7 +23,7 @@ class _MainPageState extends State<MainPage> {
   List<Widget> screenWidgets = [
     const HomePage(),
     const CartPage(),
-    const LiveChatPage(),
+    const TicketScreen(),
     const ProfilePage()
   ];
 

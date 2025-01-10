@@ -1,40 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:smile_shop/data/vos/package_vo.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 
 class PackageListItemView extends StatelessWidget {
-  const PackageListItemView({super.key});
+  final PackageVO? packageVO;
+  const PackageListItemView({super.key, required this.packageVO});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin:const EdgeInsets.only(bottom: kMarginLarge),
+      margin: const EdgeInsets.only(bottom: kMarginLarge),
       padding: const EdgeInsets.symmetric(
           vertical: kMarginXLarge, horizontal: kMarginLarge),
       decoration: BoxDecoration(
           color: kBackgroundColor,
-          border: Border.all(width: 1,color: Colors.black),
+          border: Border.all(width: 1, color: Colors.black),
           borderRadius: BorderRadius.circular(kMarginMedium)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Diamond Plan',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+          Text(
+            packageVO?.name ?? "",
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
           ),
           const SizedBox(
             height: 15,
           ),
-          const Text(
-            'Ks 1,000,000',
-            style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600),
+          Text(
+            'Ks ${packageVO?.packagePrice}',
+            style: const TextStyle(fontSize: 32, fontWeight: FontWeight.w600),
           ),
           const SizedBox(
             height: 20,
           ),
           const Text(
             'Benefits',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal,color: Colors.grey),
+            style: TextStyle(
+                fontSize: 16, fontWeight: FontWeight.normal, color: Colors.grey),
           ),
           const SizedBox(
             height: 20,
@@ -56,12 +59,13 @@ class PackageListItemView extends StatelessWidget {
                     ),
                     Expanded(
                       child: Text(
-                        maxLines: null,
                         'It is a long established fact when looking at its layout.',
-                        style:
-                            TextStyle(fontSize: kTextSmall, color: Colors.grey),
+                        style: TextStyle(
+                            fontSize: kTextSmall, color: Colors.grey),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                    )
+                    ),
                   ],
                 );
               })

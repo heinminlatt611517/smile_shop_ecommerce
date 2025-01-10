@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:smile_shop/data/vos/refund_vo.dart';
+import 'package:smile_shop/network/api_constants.dart';
+import 'package:smile_shop/utils/extensions.dart';
 
 import '../utils/colors.dart';
 import '../utils/dimens.dart';
 import '../widgets/cached_network_image_view.dart';
 
 class RefundListItemView extends StatelessWidget {
+  final RefundVO? refundVO;
   const RefundListItemView({
     super.key,
+    required this.refundVO
   });
 
   @override
@@ -26,15 +31,18 @@ class RefundListItemView extends StatelessWidget {
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5),
                 border: Border.all(color: kFillingFastColor)),
-            child: const Center(
+            child:  Center(
               child: Row(
                 children: [
-                  Icon(Icons.payment,size: 20,),
-                  SizedBox(width: 10,),
+                  const Icon(Icons.payment,size: 20,),
+                  const SizedBox(width: 10,),
                   Expanded(
-                    child: Text(
-                      'Your payment has been done at Nov 30.',
-                      style: TextStyle(fontSize: kTextSmall),
+                    child: Visibility(
+                      visible: refundVO?.status == 'approved',
+                      child:const Text(
+                        'Your payment has been done at Nov 30.',
+                        style: TextStyle(fontSize: kTextSmall),
+                      ),
                     ),
                   )
                 ],
@@ -42,12 +50,12 @@ class RefundListItemView extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 7,),
-          const Row(
+           Row(
             children: [
-              Spacer(),
+              const Spacer(),
               Text(
-                'Pending',
-                style: TextStyle(color: kFillingFastColor),
+                refundVO?.status?.toCapitalized ?? "",
+                style:const TextStyle(color: kFillingFastColor),
               ),
             ],
           ),
@@ -59,28 +67,28 @@ class RefundListItemView extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: const CachedNetworkImageView(
+                child:  CachedNetworkImageView(
                     imageHeight: 80,
                     imageWidth: 80,
                     imageUrl:
-                        'https://media.istockphoto.com/id/1311107708/photo/focused-cute-stylish-african-american-female-student-with-afro-dreadlocks-studying-remotely.jpg?s=612x612&w=0&k=20&c=OwxBza5YzLWkE_2abTKqLLW4hwhmM2PW9BotzOMMS5w='),
+                        refundVO?.image ?? errorImageUrl),
               ),
               const SizedBox(
                 width: kMarginMedium3,
               ),
-              const Expanded(
+               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Product Name',
+                      refundVO?.name.toString() ?? "",
                       overflow: TextOverflow.ellipsis,
                       softWrap: true,
-                      style: TextStyle(
+                      style:const TextStyle(
                           fontSize: kTextRegular2x,
                           fontWeight: FontWeight.w600),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: kMargin10,
                     ),
                     Row(
@@ -88,27 +96,27 @@ class RefundListItemView extends StatelessWidget {
                       children: [
                         Text(
                           overflow: TextOverflow.ellipsis,
-                          'Ks 100000.00',
-                          style: TextStyle(fontSize: kTextRegular2x),
+                          'Ks ${refundVO?.total.toString() ?? ""}',
+                          style:const TextStyle(fontSize: kTextRegular2x),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: kMargin30,
                         ),
                         Text(
-                          'Qty: 1',
-                          style: TextStyle(fontSize: kTextSmall),
+                          'Qty: ${refundVO?.qty.toString() ?? ""}',
+                          style:const TextStyle(fontSize: kTextSmall),
                         )
                       ],
                     ),
                     const SizedBox(
                       height: kMargin10,
                     ),
-                    const Row(
+                     Row(
                       children: [
-                        Spacer(),
+                        const Spacer(),
                         Text(
-                          'Total(1 item): Ks 3,500',
-                          style: TextStyle(fontSize: kTextSmall),
+                          'Total(1 item): Ks ${refundVO?.total.toString() ?? ""}',
+                          style:const TextStyle(fontSize: kTextSmall),
                         ),
                       ],
                     ),

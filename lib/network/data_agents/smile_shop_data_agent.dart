@@ -6,10 +6,13 @@ import 'package:smile_shop/data/vos/campaign_participant_vo.dart';
 import 'package:smile_shop/data/vos/campaign_vo.dart';
 import 'package:smile_shop/data/vos/category_vo.dart';
 import 'package:smile_shop/data/vos/checkIn_vo.dart';
+import 'package:smile_shop/data/vos/my_team_vo.dart';
 import 'package:smile_shop/data/vos/order_vo.dart';
+import 'package:smile_shop/data/vos/package_vo.dart';
 import 'package:smile_shop/data/vos/payment_vo.dart';
 import 'package:smile_shop/data/vos/product_response_data_vo.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
+import 'package:smile_shop/data/vos/promotion_vo.dart';
 import 'package:smile_shop/data/vos/state_vo.dart';
 import 'package:smile_shop/data/vos/sub_category_vo.dart';
 import 'package:smile_shop/data/vos/township_data_vo.dart';
@@ -35,6 +38,7 @@ import 'package:smile_shop/network/responses/set_password_response.dart';
 import 'package:smile_shop/network/responses/success_network_response.dart';
 import 'package:smile_shop/network/responses/success_payment_response.dart';
 
+import '../../data/vos/refund_vo.dart';
 import '../requests/login_request.dart';
 import '../requests/otp_verify_request.dart';
 import '../requests/set_password_request.dart';
@@ -180,4 +184,25 @@ abstract class SmileShopDataAgent {
 
   Future<SuccessNetworkResponse> cancelOrder(
       String token, String acceptLanguage, OrderCancelRequest request);
+
+  Future<SuccessNetworkResponse> postRefund(
+      String token, String acceptLanguage,int orderNo,int reasonId,File? image);
+
+  Future<List<RefundVO>> getRefunds(
+      String token, String acceptLanguage);
+
+  Future<List<RefundVO>> getRefundsByStatus(
+      String token, String acceptLanguage,int status);
+
+  Future<List<PromotionVO>> getPromotionLogsByStatus(
+      String token, String acceptLanguage,String status);
+
+  Future<List<MyTeamVO>> getMyTeams(
+      String token, String acceptLanguage);
+
+  Future<List<PackageVO>> getPackages(
+      String token, String acceptLanguage);
+
+  Future<PackageVO> getPackageDetails(
+      String token, String acceptLanguage,int id);
 }

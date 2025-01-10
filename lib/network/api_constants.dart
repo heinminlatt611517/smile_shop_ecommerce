@@ -43,11 +43,19 @@ const String kEndPointCampaignJoin = '/api/campaign/join';
 const String kEndPointCampaignParticipant = '/api/campaign/participants';
 const String kEndPointOrderCancel = '/api/order-cancel';
 const String kEndPointMakePayment = '/api/make-payment';
+const String kEndPointGetRefunds = '/api/refund-list';
+const String kEndPointPostRefund = '/api/refund';
+const String kEndPointGetPromotionLogs = '/api/promotion-points-logs';
+const String kEndPointGetMyTeams = '/api/profile/myteam';
+const String kEndPointGetPackages = '/api/packages';
+const String kEndPointGetPackageDetails = '/api/packages';
 
 
 ///Parameters
 const String kParamApiKey = "api_key";
+const String kParamLogType = "log_type";
 const String kParamQuery = "query";
+const String kParamStatus = "status";
 const String kParamName = "name";
 const String kParamCategoryId = "category_id";
 const String kParamSubCategoryId = "subcategory_id";
@@ -102,7 +110,8 @@ const kAcceptLanguageEn = "en";
 const kAcceptLanguageCh = "ch";
 const kTypeDealer = "dealer";
 const kTypeEndUser = "enduser";
-
+const kStatusIncome = "income";
+const kStatusOutCome = "outcome";
 
 
 const errorImageUrl = "https://i0.wp.com/www.bishoprook.com/wp-content/uploads/2021/05/placeholder-image-gray-16x9-1.png?ssl=1";

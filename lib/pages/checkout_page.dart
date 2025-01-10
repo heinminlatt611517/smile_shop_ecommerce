@@ -327,7 +327,7 @@ class _BuildPromotionPointView extends StatelessWidget {
                 children: [
                   Flexible(
                       child: Text(
-                    GetStorage().read(kBoxKeyPromotionPoint) ?? "0",
+                    GetStorage().read(kBoxKeyPromotionPoint).toString(),
                     style: const TextStyle(color: kFillingFastColor),
                   )),
                   const SizedBox(
