@@ -20,6 +20,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../utils/dimens.dart';
 import '../widgets/category_vertical_icon_with_label_view.dart';
+import 'main_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -167,14 +168,24 @@ class SearchView extends StatelessWidget {
         ),
         Consumer<HomeBloc>(
           builder: (context,bloc,child)=>
-              ClipRRect(
-                borderRadius: BorderRadius.circular(25),
-                child: CachedNetworkImage(
-                    height: 50,
-                    width: 50,
-                    fit: BoxFit.cover,
-                    imageUrl: bloc.userProfile?.profileImage ??
-                        errorImageUrl),
+              InkWell(
+                onTap: (){
+                  Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                      builder: (_) => const MainPage(initialIndex: 3),
+                    ),
+                        (Route<dynamic> route) => false,
+                  );
+                },
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(25),
+                  child: CachedNetworkImage(
+                      height: 50,
+                      width: 50,
+                      fit: BoxFit.cover,
+                      imageUrl: bloc.userProfile?.profileImage ??
+                          errorImageUrl),
+                ),
               ),
         )
       ],

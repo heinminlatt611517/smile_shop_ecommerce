@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:smile_shop/blocs/profile_bloc.dart';
@@ -18,6 +19,7 @@ import 'package:smile_shop/pages/smile_point_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/utils/images.dart';
+import 'package:smile_shop/utils/strings.dart';
 
 import '../data/model/smile_shop_model.dart';
 import '../data/model/smile_shop_model_impl.dart';
@@ -34,27 +36,26 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   ///Model
   final SmileShopModel _model = SmileShopModelImpl();
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (BuildContext context)=> ProfileBloc(),
-      child: Selector<ProfileBloc,bool>(
+      create: (BuildContext context) => ProfileBloc(),
+      child: Selector<ProfileBloc, bool>(
         selector: (context, bloc) => bloc.isLoading,
-        builder: (context, isLoading, child) =>
-         Stack(
-           children: [
-             ///body view
-             Scaffold(
+        builder: (context, isLoading, child) => Stack(
+          children: [
+            ///body view
+            Scaffold(
               backgroundColor: kBackgroundColor,
               appBar: AppBar(
                 toolbarHeight: 185,
                 elevation: 0,
                 backgroundColor: kSecondaryColor,
                 automaticallyImplyLeading: false,
-                title: Selector<ProfileBloc,UserVO?>(
-                  selector: (context,bloc)=> bloc.userProfile,
-                  builder: (_,user,child) =>
-                   Column(
+                title: Selector<ProfileBloc, UserVO?>(
+                  selector: (context, bloc) => bloc.userProfile,
+                  builder: (_, user, child) => Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ClipRRect(
@@ -63,8 +64,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             height: 60,
                             width: 60,
                             fit: BoxFit.cover,
-                            imageUrl: user?.profileImage ??
-                                errorImageUrl),
+                            imageUrl: user?.profileImage ?? errorImageUrl),
                       ),
                       const SizedBox(
                         height: 10,
@@ -80,19 +80,21 @@ class _ProfilePageState extends State<ProfilePage> {
                             width: 10,
                           ),
                           GestureDetector(
-                            onTap: () async{
-                              final bool? isUpdated = await Navigator.of(context).push(
+                            onTap: () async {
+                              final bool? isUpdated =
+                                  await Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (builder) => EditProfilePage(userVo: user,)
-                                ),
+                                    builder: (builder) => EditProfilePage(
+                                          userVo: user,
+                                        )),
                               );
                               if (isUpdated == true) {
                                 context.read<ProfileBloc>().getProfile();
                               }
                             },
                             child: Container(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 5),
                               decoration: BoxDecoration(
                                   color: kMTicketColor.withOpacity(0.3),
                                   borderRadius: BorderRadius.circular(5)),
@@ -123,8 +125,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
               body: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: kMargin40),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 16, vertical: kMargin40),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -132,129 +134,35 @@ class _ProfilePageState extends State<ProfilePage> {
                     const SizedBox(
                       height: 15,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        GestureDetector(
-                            onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (_) => const MyOrderPage(tabIndex: 1,)));
-                            },
-                            child: _buildProfileItem(context, title: 'To Pay',assetImagePath: kToPayIcon)),
-                        GestureDetector(
-                          onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (_) => const MyOrderPage(tabIndex: 2,)));
-                            },
-                          child: _buildProfileItem(context, title: 'To Ship',assetImagePath: kToShipIcon)),
-                        GestureDetector(
-                          onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (_) => const MyOrderPage(tabIndex: 3,)));
-                            },
-                          child: _buildProfileItem(context, title: 'To Receive',assetImagePath: kCarIcon)),
-                        GestureDetector(
-                          onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (_) => const MyOrderPage(tabIndex: 4,)));
-                            },
-                          child: _buildProfileItem(context, title: 'To Review',assetImagePath: kToReviewIcon)),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (_) =>const RefundPage()));
-                            },
-                          child: _buildProfileItem(context, title: 'Refund',assetImagePath: kRefundIcon)),
-                        GestureDetector(
-                            onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (_) => const SmilePointPage()));
-                            },
-                            child: _buildProfileItem(context, title: 'Smile Wallet',assetImagePath: kSmileIcon)),
-                        GestureDetector(
-                            onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (_) => const PromotionPointPage()));
-                            },
-                            child:
-                                _buildProfileItem(context, title: 'Promotion Point',assetImagePath: kPointIcon)),
-                        GestureDetector(
-                            onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (_) => const PackagePage()));
-                            },
-                            child: _buildProfileItem(context, title: 'Package',assetImagePath: kPackageIcon)),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        GestureDetector(
-                            onTap:(){
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (_) => const MyFavouritePage()));
-                            },
-                            child: _buildProfileItem(context, title: 'My Favourite',assetImagePath: kFavouriteIcon)),
-                        _buildProfileItem(context, title: 'Language',assetImagePath: kLanguageIcon),
-                        GestureDetector(
-                            onTap: (){
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (_) => const MyTeamPage()));
-                            },
-                            child: _buildProfileItem(context, title: 'My Team',assetImagePath: kMyTeamIcon)),
-                        GestureDetector(
-                          onTap: (){
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (_) => const MyAddressPage()));
-                          },
-                            child: _buildProfileItem(context, title: 'Address',assetImagePath: kAddressIcon)),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        InkWell(
-                          onTap: (){
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (_) => const ReferralCodePage()));
-                          },
-                            child: _buildProfileItem(context, title: 'Referral Code',assetImagePath: kReferralIcon)),
-                        _buildProfileItem(context, title: 'About Us',assetImagePath: kAboutUsIcon),
-                        _buildProfileItem(context, title: 'Contact Us',assetImagePath: kContactUsIcon),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.2,
-                        ),
-                      ],
+                    GridView.count(
+                      crossAxisCount: 4,
+                      mainAxisSpacing: 0,
+
+                      /// Vertical spacing between items
+                      crossAxisSpacing: 10,
+
+                      /// Horizontal spacing between items
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      children: _buildProfileItems(context),
                     )
                   ],
                 ),
               ),
               bottomNavigationBar: Container(
-                margin: const EdgeInsets.only(left: 16, right: 16, bottom: 30, top: 10),
+                margin: const EdgeInsets.only(
+                    left: 16, right: 16, bottom: 30, top: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
                       child: InkWell(
-                        onTap: (){
+                        onTap: () {
                           _model.clearSaveLoginData();
                           Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(builder: (builder) => const LoginPage()),(Route<dynamic> route) => false);
+                              MaterialPageRoute(
+                                  builder: (builder) => const LoginPage()),
+                              (Route<dynamic> route) => false);
                         },
                         child: Container(
                           height: 40,
@@ -290,32 +198,168 @@ class _ProfilePageState extends State<ProfilePage> {
                   ],
                 ),
               ),
-                     ),
+            ),
 
-             ///loading view
-             if (isLoading)
-               Container(
-                 color: Colors.black12,
-                 child: const Center(
-                   child: LoadingView(
-                     indicatorColor: kPrimaryColor,
-                     indicator: Indicator.ballSpinFadeLoader,
-                   ),
-                 ),
-               ),
-           ],
-         ),
+            ///loading view
+            if (isLoading)
+              Container(
+                color: Colors.black12,
+                child: const Center(
+                  child: LoadingView(
+                    indicatorColor: kPrimaryColor,
+                    indicator: Indicator.ballSpinFadeLoader,
+                  ),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
+
+  ///build profile item
+  _buildProfileItems(BuildContext context) {
+    List<Widget> items = [];
+
+    items.add(InkWell(
+      onTap: () {
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => const MyOrderPage(tabIndex: 1)));
+      },
+      child: _buildProfileItem(context,
+          title: 'To Pay', assetImagePath: kToPayIcon),
+    ));
+
+    items.add(InkWell(
+      onTap: () {
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => const MyOrderPage(tabIndex: 2)));
+      },
+      child: _buildProfileItem(context,
+          title: 'To Ship', assetImagePath: kToShipIcon),
+    ));
+
+    items.add(InkWell(
+      onTap: () {
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => const MyOrderPage(tabIndex: 3)));
+      },
+      child: _buildProfileItem(context,
+          title: 'To Receive', assetImagePath: kCarIcon),
+    ));
+
+    items.add(InkWell(
+      onTap: () {
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => const MyOrderPage(tabIndex: 4)));
+      },
+      child: _buildProfileItem(context,
+          title: 'To Review', assetImagePath: kToReviewIcon),
+    ));
+
+    items.add(InkWell(
+      onTap: () {
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (_) => const RefundPage()));
+      },
+      child: _buildProfileItem(context,
+          title: 'Refund', assetImagePath: kRefundIcon),
+    ));
+
+    items.add(InkWell(
+      onTap: () {
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (_) => const SmilePointPage()));
+      },
+      child: _buildProfileItem(context,
+          title: 'Smile Wallet', assetImagePath: kSmileIcon),
+    ));
+
+    items.add(InkWell(
+      onTap: () {
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => const PromotionPointPage()));
+      },
+      child: _buildProfileItem(context,
+          title: 'Promotion Point', assetImagePath: kPointIcon),
+    ));
+
+    if (GetStorage().read(kBoxKeyLoginUserType) == kTypeDealer) {
+      items.add(InkWell(
+        onTap: () {
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (_) => const PackagePage()));
+        },
+        child: _buildProfileItem(context,
+            title: 'Package', assetImagePath: kPackageIcon),
+      ));
+    }
+
+    items.add(InkWell(
+      onTap: () {
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (_) => const MyFavouritePage()));
+      },
+      child: _buildProfileItem(context,
+          title: 'My Favourite', assetImagePath: kFavouriteIcon),
+    ));
+
+    items.add(_buildProfileItem(context,
+        title: 'Language', assetImagePath: kLanguageIcon));
+
+    if (GetStorage().read(kBoxKeyLoginUserType) == kTypeEndUser) {
+      items.add(InkWell(
+        onTap: () {
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (_) => const MyTeamPage()));
+        },
+        child: _buildProfileItem(context,
+            title: 'My Team', assetImagePath: kMyTeamIcon),
+      ));
+    }
+
+    items.add(InkWell(
+      onTap: () {
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (_) => const MyAddressPage()));
+      },
+      child: _buildProfileItem(context,
+          title: 'Address', assetImagePath: kAddressIcon),
+    ));
+
+    items.add(InkWell(
+      onTap: () {
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (_) => const ReferralCodePage()));
+      },
+      child: _buildProfileItem(context,
+          title: 'Referral Code', assetImagePath: kReferralIcon),
+    ));
+
+    items.add(_buildProfileItem(context,
+        title: 'About Us', assetImagePath: kAboutUsIcon));
+
+    items.add(_buildProfileItem(context,
+        title: 'Contact Us', assetImagePath: kContactUsIcon));
+
+    return items;
+  }
 }
 
-Widget _buildProfileItem(BuildContext context, {required String title,required String assetImagePath}) {
+Widget _buildProfileItem(BuildContext context,
+    {required String title, required String assetImagePath}) {
+  double itemWidth = (MediaQuery.of(context).size.width - 30) / 4;
   return SizedBox(
-    width: MediaQuery.of(context).size.width * 0.20,
+    width: itemWidth,
     child: Column(
       children: [
-        Image.asset(assetImagePath,width: 20,height: 20,fit: BoxFit.cover,color: kPrimaryColor,),
+        Image.asset(
+          assetImagePath,
+          width: 20,
+          height: 20,
+          fit: BoxFit.cover,
+          color: kPrimaryColor,
+        ),
         const SizedBox(
           height: 7,
         ),

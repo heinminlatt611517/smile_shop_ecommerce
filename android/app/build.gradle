@@ -39,6 +39,7 @@ android {
     }
 
     defaultConfig {
+        multiDexEnabled true
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.smile_shop.ecommerce"
         // You can update the following values to match your application needs.
@@ -60,6 +61,7 @@ android {
 
 dependencies {
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.3'
+    implementation 'com.android.support:multidex:2.0.1'
 }
 
 flutter {

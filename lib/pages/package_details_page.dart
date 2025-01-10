@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:smile_shop/blocs/package_details_bloc.dart';
@@ -122,6 +123,7 @@ class PackageDetailsPage extends StatelessWidget {
                                      ///linear progress
                                      if (bloc.packages?.packagePrice != null)
                                        LinearProgressIndicator(
+                                         minHeight: 10,
                                          value: bloc.packages!.packagePrice! /
                                              1000000,
                                          backgroundColor: Colors.grey,
@@ -184,33 +186,7 @@ class PackageDetailsPage extends StatelessWidget {
                                      borderRadius:
                                      BorderRadius.circular(kMarginMedium2),
                                      border: Border.all(color: kPrimaryColor)),
-                                 child: ListView.builder(
-                                     padding: EdgeInsets.zero,
-                                     itemCount: 7,
-                                     shrinkWrap: true,
-                                     physics:
-                                     const NeverScrollableScrollPhysics(),
-                                     itemBuilder: (context, index) {
-                                       return const Row(
-                                         children: [
-                                           Icon(
-                                             Icons.circle_rounded,
-                                             color: Colors.grey,
-                                             size: 5,
-                                           ),
-                                           SizedBox(
-                                             width: 10,
-                                           ),
-                                           Text(
-                                             maxLines: null,
-                                             'It is a long established fact when looking at its layout.',
-                                             style: TextStyle(
-                                                 fontSize: kTextSmall,
-                                                 color: Colors.grey),
-                                           )
-                                         ],
-                                       );
-                                     }),
+                                 child:  HtmlWidget(bloc.packages?.benefits ?? ""),
                                )
                              ],
                            ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:smile_shop/pages/cart_page.dart';
-import 'package:smile_shop/pages/live_chat_page.dart';
 import 'package:smile_shop/pages/profile_page.dart';
 import 'package:smile_shop/pages/ticket_screen.dart';
 import 'package:smile_shop/utils/colors.dart';
@@ -11,14 +10,22 @@ import 'package:smile_shop/utils/strings.dart';
 import 'home_page.dart';
 
 class MainPage extends StatefulWidget {
-  const MainPage({super.key});
+  final int initialIndex;
+
+  const MainPage({super.key, this.initialIndex = 0});
 
   @override
   State<MainPage> createState() => _MainPageState();
 }
 
 class _MainPageState extends State<MainPage> {
-  int currentIndex = 0;
+  late int currentIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    currentIndex = widget.initialIndex;
+  }
 
   List<Widget> screenWidgets = [
     const HomePage(),
@@ -52,65 +59,63 @@ class _MainPageState extends State<MainPage> {
 
   List<BottomNavigationBarItem> _getBottomNavigationBarItems() {
     return [
-      ///Home
       BottomNavigationBarItem(
-          icon: Image.asset(
-            kHomeIcon,
-            width: kMarginXLarge,
-            height: kMarginXLarge,
-            color: Colors.black,
-          ),
-          activeIcon: Image.asset(
-            kHomeIcon,
-            width: kMarginXLarge,
-            height: kMarginXLarge,
-          ),
-          label: kHomeLabel),
-
-      ///Cart
+        icon: Image.asset(
+          kHomeIcon,
+          width: kMarginXLarge,
+          height: kMarginXLarge,
+          color: Colors.black,
+        ),
+        activeIcon: Image.asset(
+          kHomeIcon,
+          width: kMarginXLarge,
+          height: kMarginXLarge,
+        ),
+        label: kHomeLabel,
+      ),
       BottomNavigationBarItem(
-          icon: Image.asset(
-            kCartIcon,
-            width: kMarginXLarge,
-            height: kMarginXLarge,
-            color: Colors.black,
-          ),
-          activeIcon: Image.asset(
-            kCartIcon,
-            width: kMarginXLarge,
-            height: kMarginXLarge,
-          ),
-          label: kCartLabel),
-
-      ///Live Chat
+        icon: Image.asset(
+          kCartIcon,
+          width: kMarginXLarge,
+          height: kMarginXLarge,
+          color: Colors.black,
+        ),
+        activeIcon: Image.asset(
+          kCartIcon,
+          width: kMarginXLarge,
+          height: kMarginXLarge,
+        ),
+        label: kCartLabel,
+      ),
       BottomNavigationBarItem(
-          icon: Image.asset(
-            kLiveChatIcon,
-            width: kMarginXLarge,
-            height: kMarginXLarge,
-            color: Colors.black,
-          ),
-          activeIcon: Image.asset(
-            kLiveChatIcon,
-            width: kMarginXLarge,
-            height: kMarginXLarge,
-          ),
-          label: kLiveChatLabel),
-
-      ///Profile
+        icon: Image.asset(
+          kLiveChatIcon,
+          width: kMarginXLarge,
+          height: kMarginXLarge,
+          color: Colors.black,
+        ),
+        activeIcon: Image.asset(
+          kLiveChatIcon,
+          width: kMarginXLarge,
+          height: kMarginXLarge,
+        ),
+        label: kLiveChatLabel,
+      ),
       BottomNavigationBarItem(
-          icon: Image.asset(
-            kProfileIcon,
-            width: kMarginXLarge,
-            height: kMarginXLarge,
-            color: Colors.black,
-          ),
-          activeIcon: Image.asset(
-            kProfileIcon,
-            width: kMarginXLarge,
-            height: kMarginXLarge,
-          ),
-          label: kProfileLabel)
+        icon: Image.asset(
+          kProfileIcon,
+          width: kMarginXLarge,
+          height: kMarginXLarge,
+          color: Colors.black,
+        ),
+        activeIcon: Image.asset(
+          kProfileIcon,
+          width: kMarginXLarge,
+          height: kMarginXLarge,
+        ),
+        label: kProfileLabel,
+      ),
     ];
   }
 }
+

@@ -12,22 +12,22 @@ class TrendingProductListItemView extends StatelessWidget {
   final String? imageUrl;
   final Function(ProductVO? productVO) onTapFavourite;
 
-  const TrendingProductListItemView({super.key,this.productVO,this.imageUrl,required this.onTapFavourite});
+  const TrendingProductListItemView({super.key, this.productVO, this.imageUrl, required this.onTapFavourite});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: (){
+      onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) =>  ProductDetailsPage(productId: productVO?.id.toString() ?? "",),
+            builder: (context) => ProductDetailsPage(productId: productVO?.id.toString() ?? ""),
           ),
         );
       },
       child: Container(
-        padding:const EdgeInsets.symmetric(vertical: kMarginMedium,horizontal: kMarginMedium),
-        decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(8)),
+        padding: const EdgeInsets.symmetric(vertical: kMarginMedium, horizontal: kMarginMedium),
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -36,53 +36,59 @@ class TrendingProductListItemView extends StatelessWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: CachedNetworkImageView(
-                      imageHeight: 120, imageWidth: double.infinity, imageUrl: productVO?.image ?? errorImageUrl),
+                    imageHeight: 120,
+                    imageWidth: double.infinity,
+                    imageUrl: productVO?.image ?? errorImageUrl,
+                  ),
                 ),
-                 Positioned(
+                Positioned(
                     top: 10,
                     right: 20,
                     child: InkWell(
-                        onTap: (){
+                        onTap: () {
                           onTapFavourite(productVO);
                         },
-                        child:const Icon(Icons.favorite_outline,color: kSecondaryColor,)))
+                        child: const Icon(Icons.favorite_outline, color: kSecondaryColor))),
               ],
             ),
-            const SizedBox(height: 10,),
-             Text(
-               maxLines: 1,
+            const SizedBox(height: 10),
+            Text(
+              maxLines: 1,
               overflow: TextOverflow.ellipsis,
               productVO?.name ?? "",
-              style:
-                  const TextStyle(fontWeight: FontWeight.bold, fontSize: kTextRegular2x),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: kTextRegular2x),
             ),
-            const SizedBox(height: 10,),
-             Text(
+            const SizedBox(height: 10),
+            Text(
               productVO?.subcategory?.name ?? "",
-              style:const TextStyle(
-                  fontWeight: FontWeight.normal,
-                  fontSize: kTextRegular,
-                  color: Colors.grey),
+              style: const TextStyle(fontWeight: FontWeight.normal, fontSize: kTextRegular, color: Colors.grey),
             ),
-            const SizedBox(height: 10,),
-             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Ks ${productVO?.price}',
-                  style:const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: kTextRegular2x,
-                      color: kPrimaryColor),
-                ),
-                const Text(
-                  '100 pt',
-                  style: TextStyle(
-                      fontWeight: FontWeight.normal,
-                      fontSize: kTextRegular,
-                      color: kSecondaryColor),
-                ),
-              ],
+            const SizedBox(height: 10),
+            LayoutBuilder(
+              builder: (context, constraints) {
+                double priceFontSize = constraints.maxWidth > 350 ? kTextRegular2x : kTextRegular;
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Ks ${productVO?.price}',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: priceFontSize,
+                        color: kPrimaryColor,
+                      ),
+                    ),
+                    const Text(
+                      '100 pt',
+                      style: TextStyle(
+                        fontWeight: FontWeight.normal,
+                        fontSize: kTextRegular,
+                        color: kSecondaryColor,
+                      ),
+                    ),
+                  ],
+                );
+              },
             )
           ],
         ),

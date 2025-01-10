@@ -17,6 +17,7 @@ import 'package:smile_shop/widgets/textfiled_with_label_input_view.dart';
 import '../widgets/common_dialog.dart';
 import '../widgets/error_dialog_view.dart';
 import '../widgets/loading_view.dart';
+import 'map_page.dart';
 
 class AddNewAddressPage extends StatelessWidget {
   final int? addressId;
@@ -103,7 +104,7 @@ class AddNewAddressPage extends StatelessWidget {
                             labelColor: Colors.white,
                             bgColor: kPrimaryColor,
                             onTapButton: () {
-                              bloc.onTapSave().then((value) {
+                              bloc.onTapSave(context).then((value) {
                                   Navigator.pop(context,true);
                               }).catchError((error) {
                                 showCommonDialog(
@@ -327,19 +328,69 @@ class StateTownshipAndMapDropdownView extends StatelessWidget {
           ),
 
           ///map view
-          Container(
-            height: 75,
-            width: double.infinity,
-            decoration: BoxDecoration(
-                color: Colors.blueAccent,
-                borderRadius: BorderRadius.circular(kMarginMedium)),
-            child:Image.asset(
-              kMapImg,
-              fit: BoxFit.contain,
-              height: 50,
-              width: double.infinity,
+          Consumer<AddNewAddressBloc>(
+              builder: (context,bloc,child)=>
+             InkWell(
+              onTap:() async{
+                final String? addressName = await Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (builder) =>const MapPage(),
+                  ),
+                );
+                if (addressName != null) {
+                  bloc.mapAddressNameController.text = addressName;
+                  bloc.onChangedGoogleMapNamed(addressName);
+                }
+              },
+              child: Container(
+                height: 75,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                    color: Colors.blueAccent,
+                    borderRadius: BorderRadius.circular(kMarginMedium)),
+                child:Image.asset(
+                  kMapImg,
+                  fit: BoxFit.contain,
+                  height: 50,
+                  width: double.infinity,
+                ),
+              ),
             ),
-          )
+          ),
+
+          const SizedBox(height: 10,),
+
+          Consumer<AddNewAddressBloc>(
+            builder: (context,bloc,child)=>
+             Visibility(
+               visible: bloc.googleMapName != "",
+               child: TextField(
+                maxLines: null,
+                onChanged: (value){
+                  if(value == ""){
+                    bloc.mapAddressNameController.clear();
+                    bloc.onChangedGoogleMapNamed("");
+                  }
+                },
+                controller: bloc.mapAddressNameController,
+                cursorColor: kPrimaryColor,
+                decoration: InputDecoration(
+                    hintStyle:const TextStyle(fontSize: kTextRegular),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      borderSide:const BorderSide(
+                        width: 0,
+                        style: BorderStyle.none,
+                      ),
+                    ),
+                    fillColor: kBackgroundColor.withOpacity(0.5),
+                    filled: true,
+                ),
+                           ),
+             ),
+          ),
+
+
         ],
       ),
     );

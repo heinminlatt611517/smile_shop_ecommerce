@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:smile_shop/data/vos/package_vo.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
@@ -42,33 +43,7 @@ class PackageListItemView extends StatelessWidget {
           const SizedBox(
             height: 20,
           ),
-          ListView.builder(
-              itemCount: 7,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemBuilder: (context, index) {
-                return const Row(
-                  children: [
-                    Icon(
-                      Icons.circle_rounded,
-                      color: Colors.grey,
-                      size: 10,
-                    ),
-                    SizedBox(
-                      width: 20,
-                    ),
-                    Expanded(
-                      child: Text(
-                        'It is a long established fact when looking at its layout.',
-                        style: TextStyle(
-                            fontSize: kTextSmall, color: Colors.grey),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ],
-                );
-              })
+          HtmlWidget(packageVO?.benefits ?? "")
         ],
       ),
     );

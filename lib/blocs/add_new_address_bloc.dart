@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:smile_shop/data/model/smile_shop_model.dart';
 import 'package:smile_shop/data/model/smile_shop_model_impl.dart';
 import 'package:smile_shop/data/vos/category_vo.dart';
@@ -6,6 +6,9 @@ import 'package:smile_shop/data/vos/state_vo.dart';
 import 'package:smile_shop/data/vos/township_vo.dart';
 import 'package:smile_shop/network/api_constants.dart';
 import 'package:smile_shop/network/requests/address_request.dart';
+
+import '../widgets/common_dialog.dart';
+import '../widgets/error_dialog_view.dart';
 
 class AddNewAddressBloc extends ChangeNotifier {
   /// State
@@ -23,6 +26,8 @@ class AddNewAddressBloc extends ChangeNotifier {
   List<TownshipVO> townships = [];
   List<CategoryVO> addressCategories = [];
   int? addressCategoryId = 1;
+  TextEditingController mapAddressNameController = TextEditingController();
+  String googleMapName = "";
 
   final SmileShopModel _smileShopModel = SmileShopModelImpl();
 
@@ -38,10 +43,17 @@ class AddNewAddressBloc extends ChangeNotifier {
     });
 
     ///get address categories list
-    _smileShopModel.addressCategories(accessToken).then((addressCategoryResponse) {
+    _smileShopModel
+        .addressCategories(accessToken)
+        .then((addressCategoryResponse) {
       addressCategories = addressCategoryResponse;
       _notifySafely();
     });
+  }
+
+  void onChangedGoogleMapNamed(String name) {
+    googleMapName = name;
+    _notifySafely();
   }
 
   ///fetch townships by state id
@@ -57,8 +69,25 @@ class AddNewAddressBloc extends ChangeNotifier {
   }
 
   ///save
-  Future onTapSave() {
-      var addressRequest = AddressRequest(
+  Future<void> onTapSave(BuildContext context) async {
+    var addressRequest = AddressRequest();
+
+    try {
+      if (googleMapName.isNotEmpty) {
+        addressRequest = AddressRequest(
+          phone: phone,
+          address: googleMapName,
+          name: name,
+          isDefault: isChecked == true ? 1 : 0,
+          categoryId: addressCategoryId,
+        );
+        if (name == "") {
+          throw ('Please enter your name');
+        } else if (phone == "") {
+          throw ('Please enter your phone number');
+        }
+      } else {
+        addressRequest = AddressRequest(
           phone: phone,
           address: name,
           name: name,
@@ -66,18 +95,31 @@ class AddNewAddressBloc extends ChangeNotifier {
           regionId: stateId,
           townshipId: townshipId,
           isDefault: isChecked == true ? 1 : 0,
-          categoryId: addressCategoryId);
+          categoryId: addressCategoryId,
+        );
 
+        if (name == "") {
+          throw ('Please enter your name');
+        } else if (phone == "") {
+          throw ('Please enter your phone number');
+        } else if (stateId == null) {
+          throw ('Please select state');
+        } else if (townshipId == null) {
+          throw ('Please select township');
+        }
+      }
       _showLoading();
-      return _smileShopModel
-          .addNewAddress(accessToken, kAcceptLanguageEn, addressRequest)
-          .whenComplete(() => _hideLoading());
+      await _smileShopModel.addNewAddress(
+          accessToken, kAcceptLanguageEn, addressRequest);
+    } finally {
+      _hideLoading();
+    }
   }
 
-  Future onTapDeleteAddress(int addressId){
+  Future onTapDeleteAddress(int addressId) {
     _showLoading();
     return _smileShopModel
-        .deleteAddress(accessToken,addressId)
+        .deleteAddress(accessToken, addressId)
         .whenComplete(() => _hideLoading());
   }
 
