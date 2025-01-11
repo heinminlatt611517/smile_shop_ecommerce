@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:smile_shop/blocs/edit_profile_bloc.dart';
 import 'package:smile_shop/data/vos/user_vo.dart';
 import 'package:smile_shop/network/api_constants.dart';
+import 'package:smile_shop/pages/change_password_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 
 import '../utils/dimens.dart';
@@ -169,24 +170,31 @@ class EditProfilePage extends StatelessWidget {
                       const SizedBox(
                         height: 15,
                       ),
-                      const Column(
+                       Column(
                         children: [
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 20),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text('Change password'),
-                                Row(
-                                  children: [
-                                    Text(''),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    Icon(Icons.chevron_right)
-                                  ],
-                                )
-                              ],
+                          InkWell(
+                            onTap: (){
+                              Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                      builder: (builder) => const ChangePasswordPage()));
+                            },
+                            child:const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 20),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text('Change password'),
+                                  Row(
+                                    children: [
+                                      Text(''),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Icon(Icons.chevron_right)
+                                    ],
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                           Divider()

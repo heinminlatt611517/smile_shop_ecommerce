@@ -109,7 +109,7 @@ class PackageDetailsPage extends StatelessWidget {
                                          ),
                                          const Spacer(),
                                          Text(
-                                           '${bloc.packages?.packagePrice ?? 0}/1,000,000',
+                                           '${bloc.packages?.currentPurchase ?? 0}/${bloc.packages?.packagePrice ?? 0}',
                                            style: const TextStyle(
                                                fontSize: kTextSmall,
                                                color: Colors.black),
@@ -170,23 +170,29 @@ class PackageDetailsPage extends StatelessWidget {
                                ),
 
                                ///benefits view
-                               const Text(
-                                 'Benefits',
-                                 style: TextStyle(
-                                     fontSize: 16,
-                                     fontWeight: FontWeight.normal,
-                                     color: Colors.black),
+                               Visibility(
+                                 visible: bloc.packages?.benefits != null,
+                                 child: const Text(
+                                   'Benefits',
+                                   style: TextStyle(
+                                       fontSize: 16,
+                                       fontWeight: FontWeight.normal,
+                                       color: Colors.black),
+                                 ),
                                ),
                                const SizedBox(
                                  height: 10,
                                ),
-                               Container(
-                                 padding: const EdgeInsets.all(kMarginMedium2),
-                                 decoration: BoxDecoration(
-                                     borderRadius:
-                                     BorderRadius.circular(kMarginMedium2),
-                                     border: Border.all(color: kPrimaryColor)),
-                                 child:  HtmlWidget(bloc.packages?.benefits ?? ""),
+                               Visibility(
+                                 visible: bloc.packages?.benefits != null,
+                                 child: Container(
+                                   padding: const EdgeInsets.all(kMarginMedium2),
+                                   decoration: BoxDecoration(
+                                       borderRadius:
+                                       BorderRadius.circular(kMarginMedium2),
+                                       border: Border.all(color: kPrimaryColor)),
+                                   child:  HtmlWidget(bloc.packages?.benefits ?? ""),
+                                 ),
                                )
                              ],
                            ),

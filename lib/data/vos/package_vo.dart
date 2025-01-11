@@ -15,11 +15,15 @@ class PackageVO {
   @JsonKey(name: "benefits")
   final String? benefits;
 
+  @JsonKey(name: "current_purchase")
+  final int? currentPurchase;
+
   PackageVO({
     this.id,
     this.name,
     this.packagePrice,
-    this.benefits
+    this.benefits,
+    this.currentPurchase
   });
 
   factory PackageVO.fromJson(Map<String, dynamic> json) =>

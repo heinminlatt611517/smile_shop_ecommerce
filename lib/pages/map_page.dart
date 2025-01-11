@@ -115,10 +115,17 @@ class MapPageState extends State<MapPage> {
       await placemarkFromCoordinates(position.latitude, position.longitude);
       if (placemarks.isNotEmpty) {
         final place = placemarks.first;
+        String state = place.administrativeArea ?? "";
+        String township = place.locality ?? "";
+
+        print("State: $state");
+        print("Township: $township");
         setState(() {
           _address =
           "${place.street}, ${place.locality}, ${place.administrativeArea}, ${place.country}";
         });
+
+        print("Address: $_address");
       } else {
         setState(() {
           _address = "No address found.";

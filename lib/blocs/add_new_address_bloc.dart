@@ -7,8 +7,6 @@ import 'package:smile_shop/data/vos/township_vo.dart';
 import 'package:smile_shop/network/api_constants.dart';
 import 'package:smile_shop/network/requests/address_request.dart';
 
-import '../widgets/common_dialog.dart';
-import '../widgets/error_dialog_view.dart';
 
 class AddNewAddressBloc extends ChangeNotifier {
   /// State
@@ -85,6 +83,10 @@ class AddNewAddressBloc extends ChangeNotifier {
           throw ('Please enter your name');
         } else if (phone == "") {
           throw ('Please enter your phone number');
+        } else if (stateId == null) {
+          throw ('Please select state');
+        } else if (townshipId == null) {
+          throw ('Please select township');
         }
       } else {
         addressRequest = AddressRequest(
