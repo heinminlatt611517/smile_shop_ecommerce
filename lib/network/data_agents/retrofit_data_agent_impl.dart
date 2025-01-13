@@ -33,6 +33,7 @@ import 'package:smile_shop/network/requests/check_wallet_password_request.dart';
 import 'package:smile_shop/network/requests/dealer_login_request.dart';
 import 'package:smile_shop/network/requests/login_request.dart';
 import 'package:smile_shop/network/requests/order_cancel_request.dart';
+import 'package:smile_shop/network/requests/order_status_request.dart';
 import 'package:smile_shop/network/requests/otp_request.dart';
 import 'package:smile_shop/network/requests/otp_verify_request.dart';
 import 'package:smile_shop/network/requests/set_password_request.dart';
@@ -831,6 +832,20 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
         .asStream()
         .map((response) {
       return response.data ?? [];
+    })
+        .first
+        .catchError((error) {
+      throw _createException(error);
+    });
+  }
+
+  @override
+  Future<SuccessNetworkResponse> checkOrderStatus(String acceptLanguage, String token, OrderStatusRequest request) {
+    return mApi
+        .checkOrderStatus(acceptLanguage,'Bearer $token',request)
+        .asStream()
+        .map((response) {
+      return response;
     })
         .first
         .catchError((error) {

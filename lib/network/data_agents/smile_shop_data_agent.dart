@@ -27,6 +27,7 @@ import 'package:smile_shop/network/requests/check_wallet_amount_request.dart';
 import 'package:smile_shop/network/requests/check_wallet_password_request.dart';
 import 'package:smile_shop/network/requests/dealer_login_request.dart';
 import 'package:smile_shop/network/requests/order_cancel_request.dart';
+import 'package:smile_shop/network/requests/order_status_request.dart';
 import 'package:smile_shop/network/requests/otp_request.dart';
 import 'package:smile_shop/network/requests/set_wallet_password_request.dart';
 import 'package:smile_shop/network/requests/sub_category_request.dart';
@@ -205,4 +206,7 @@ abstract class SmileShopDataAgent {
 
   Future<PackageVO> getPackageDetails(
       String token, String acceptLanguage,int id);
+
+  Future<SuccessNetworkResponse> checkOrderStatus(
+      String acceptLanguage,String token,OrderStatusRequest request);
 }

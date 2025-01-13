@@ -55,8 +55,7 @@ class TicketScreen extends StatelessWidget {
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => ChatScreen(
-                              ticketId: ticket.ticketId ?? '',
-                            )));
+                        )));
                   },
                   child: Container(
                     width: double.infinity,

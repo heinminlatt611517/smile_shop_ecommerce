@@ -40,7 +40,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (BuildContext context) => ProfileBloc(),
+      create: (BuildContext context) => ProfileBloc(context),
       child: Selector<ProfileBloc, bool>(
         selector: (context, bloc) => bloc.isLoading,
         builder: (context, isLoading, child) => Stack(
@@ -89,7 +89,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                         )),
                               );
                               if (isUpdated == true) {
-                                context.read<ProfileBloc>().getProfile();
+                                context.read<ProfileBloc>().getProfile(context);
                               }
                             },
                             child: Container(

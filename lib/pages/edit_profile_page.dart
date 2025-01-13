@@ -244,8 +244,8 @@ class EditProfilePage extends StatelessWidget {
               const SizedBox(),
               const Spacer(),
               const Text(
-                'Name',
-                style: TextStyle(fontSize: kTextRegular2x),
+                'Full Name',
+                style: TextStyle(fontSize: kTextRegular2x,fontWeight: FontWeight.bold),
               ),
               const Spacer(),
               IconButton(
@@ -259,13 +259,16 @@ class EditProfilePage extends StatelessWidget {
               ),
             ],
           ),
-          const Text(
-            'First & Last Name',
-            style: TextStyle(fontWeight: FontWeight.w700),
+          const Padding(
+            padding: EdgeInsets.only(left: kMarginMedium2),
+            child: Text(
+              'First & Last Name',
+              style: TextStyle(fontWeight: FontWeight.w500,fontSize: kTextSmall),
+            ),
           ),
           const SizedBox(height: 5),
           Container(
-            margin: const EdgeInsets.symmetric(horizontal: 10),
+            margin: const EdgeInsets.symmetric(horizontal: 15),
             height: 40,
             child: TextField(
               controller: bloc.nameController,
@@ -277,7 +280,7 @@ class EditProfilePage extends StatelessWidget {
               decoration: const InputDecoration(
                 hintText: 'Enter your name',
                 hintStyle: TextStyle(fontSize: kTextRegular),
-                contentPadding: EdgeInsets.only(left: 20),
+                contentPadding: EdgeInsets.only(left: kMarginMedium2),
                 enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: kPrimaryColor),
                 ),

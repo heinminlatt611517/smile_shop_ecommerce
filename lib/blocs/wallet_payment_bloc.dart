@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:smile_shop/data/model/smile_shop_model.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:smile_shop/pages/recharge_successful_page.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../network/requests/order_status_request.dart';
 import '../widgets/common_dialog.dart';
 import '../widgets/error_dialog_view.dart';
 import '../widgets/qr_dialog_view.dart';
@@ -65,18 +67,17 @@ class WalletPaymentBloc extends ChangeNotifier {
           .then((response) {
         if (response.data?.responseType == 'url') {
           launchUrl(Uri.parse(response.data?.response)).then((val) {
-            showLoadingAndNavigate(context);
+            startPollingOrderStatus(response.data?.orderNo, context);
           });
         } else if (response.data?.responseType == 'qr') {
           showCommonDialog(
                   context: context,
                   dialogWidget:
-                      QrDialogView(qrCodeString: response.data?.response))
-              .then((val) {
-            showLoadingAndNavigate(context);
-          });
+                      QrDialogView(qrCodeString: response.data?.response));
+          startPollingOrderStatus(response.data?.orderNo, context);
+
         } else if (response.data?.responseType == 'pin') {
-          showLoadingAndNavigate(context);
+          startPollingOrderStatus(response.data?.orderNo, context);
         } else {
           Navigator.of(context).push(MaterialPageRoute(
               builder: (builder) => const RechargeSuccessfulPage()));
@@ -95,17 +96,6 @@ class WalletPaymentBloc extends ChangeNotifier {
     }
   }
 
-  void showLoadingAndNavigate(BuildContext context) async {
-    _showLoading();
-    await Future.delayed(const Duration(minutes: 1));
-    _hideLoading();
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => const RechargeSuccessfulPage(),
-      ),
-    );
-  }
-
   void launchURL(String url) async {
     try {
       if (await canLaunch(url)) {
@@ -116,6 +106,62 @@ class WalletPaymentBloc extends ChangeNotifier {
     } catch (e) {
       print('Error launching URL: $e');
     }
+  }
+
+  ///start polling order status
+  Future<void> startPollingOrderStatus(String? orderId, BuildContext context) async {
+    _showLoading();
+    int retryCount = 0;
+    int maxRetries = 30;
+
+    Timer.periodic(const Duration(seconds: 10), (timer) {
+      if (retryCount >= maxRetries) {
+        timer.cancel();
+        _hideLoading();
+        debugPrint("Polling stopped after $maxRetries retries.");
+        return;
+      }
+
+      retryCount++;
+
+      checkOrderStatus(orderId).then((status) {
+        if (status == 'success') {
+          timer.cancel();
+          _hideLoading();
+          showSuccessSnackBarAndNavigate(context);
+        } else {
+          debugPrint("Order status: $status. Continuing to poll...");
+        }
+      }).catchError((error) {
+        // timer.cancel();
+        // _hideLoading();
+        debugPrint("Error checking order status: $error");
+      });
+    });
+  }
+
+  ///check order status
+  Future<String> checkOrderStatus(String? orderId) async {
+    var orderStatusRequest = OrderStatusRequest(orderId);
+    var response = await _smileShopModel.checkOrderStatus(
+        kAcceptLanguageEn, authToken, orderStatusRequest);
+    return response.status == 200 ? 'success' : 'failed';
+  }
+
+  ///show snack bar and navigate to success page
+  void showSuccessSnackBarAndNavigate(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Success!'),
+        backgroundColor: Colors.green,
+      ),
+    );
+
+    Future.delayed(const Duration(seconds: 2), () {
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => const RechargeSuccessfulPage()),
+      );
+    });
   }
 
   void onSelectPayment(int index, String paymentType) {

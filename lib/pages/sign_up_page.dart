@@ -60,7 +60,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       Consumer<SignupBloc>(
                         builder: (context, bloc, child) => normalPhoneTextField(
                             controller: phoneController,
-                            hint: '9+**********',
+                            hint: '09**********',
                             phoneCode:
                                 "${selectedCountry.name} ${selectedCountry.code}",
                             context: context,

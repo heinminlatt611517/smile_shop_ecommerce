@@ -64,17 +64,25 @@ class PaymentMethodListItemView extends StatelessWidget {
             ),
 
             /// Sub payment view
-            SizedBox(
-              height: 45,
-              child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: paymentVO?.subPaymentVO?.length,
-                  itemBuilder: (context, index) {
-                    return InkWell(
-                      onTap: () {
-                        onTapSubPayment(index);
-                      },
-                      child: Container(
+            GridView.builder(
+              shrinkWrap: true,
+              itemCount: paymentVO?.subPaymentVO?.length,
+              gridDelegate:
+              const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  mainAxisExtent: 80,
+                  mainAxisSpacing: 40,
+                  crossAxisSpacing: 10),
+              itemBuilder: (context, index) {
+                return InkWell(
+                  onTap: () {
+                    onTapSubPayment(index);
+                  },
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center, // Center vertically
+                    crossAxisAlignment: CrossAxisAlignment.center, // Center horizontally
+                    children: [
+                      Container(
                         height: 45,
                         width: 50,
                         padding: const EdgeInsets.all(3),
@@ -93,8 +101,23 @@ class PaymentMethodListItemView extends StatelessWidget {
                           imageUrl: paymentVO?.subPaymentVO?[index].image ?? errorImageUrl,
                         ),
                       ),
-                    );
-                  }),
+                      // Centering text horizontally and vertically
+                      Padding(
+                        padding: const EdgeInsets.only(top: 5), // Optional: Adjust spacing between image and text
+                        child: Text(
+                          paymentVO?.subPaymentVO?[index].code ?? "",
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: kTextSmall,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
             ),
           ],
         ),

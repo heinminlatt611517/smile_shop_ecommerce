@@ -10,6 +10,9 @@ import 'package:smile_shop/pages/wallet_payment_method_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 
+import '../utils/images.dart';
+import '../widgets/svg_image_view.dart';
+
 class SmilePointPage extends StatelessWidget {
   const SmilePointPage({super.key});
 
@@ -23,7 +26,22 @@ class SmilePointPage extends StatelessWidget {
           centerTitle: true,
           backgroundColor: kSecondaryColor,
           surfaceTintColor: kSecondaryColor,
-          title: const Text('Smile Point'),
+          automaticallyImplyLeading: false,
+          title:  Row(children: [InkWell(
+            onTap: (){
+              Navigator.pop(context);
+            },
+            child:const SvgImageView(
+              imageName: kBackSvgIcon,
+              imageHeight: 26,
+              imageWidth: 26,
+            ),
+          ),
+            const Spacer(),
+            const Text('Smile Point'),
+            const Spacer(),
+            const Text(''),
+          ],),
           actions: [
             Padding(
               padding: const EdgeInsets.only(right: kMarginMedium),
@@ -103,7 +121,7 @@ class SmilePointPage extends StatelessWidget {
                            borderRadius: BorderRadius.circular(4)),
                        child: const Center(
                          child: Text(
-                           'Recharge Point',
+                           'Recharge',
                            style: TextStyle(color: kBackgroundColor),
                          ),
                        ),
@@ -239,7 +257,7 @@ Widget _pointItemView(String pointLabel, WalletTransactionVO walletTransactionVO
                         style: const TextStyle(fontSize: kTextSmall),
                       ),
                       Text(
-                        '+${walletTransactionVO.points} Points',
+                        pointLabel == 'Outcome Points'? '-${walletTransactionVO.points} Points' : '+${walletTransactionVO.points} Points',
                         style: const TextStyle(fontSize: kTextRegular2x, color: kSecondaryColor),
                       ),
                     ],
@@ -247,12 +265,12 @@ Widget _pointItemView(String pointLabel, WalletTransactionVO walletTransactionVO
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        'Recharge',
-                        style: TextStyle(fontSize: kTextRegular2x),
+                       Text(
+                        pointLabel == 'Outcome Points'? 'Discharge' :'Recharge',
+                        style:const TextStyle(fontSize: kTextRegular2x),
                       ),
                       Text(
-                        DateFormat('MMM dd, yyyy/HH').format(DateTime.parse(walletTransactionVO.createdAt.toString())),
+                        DateFormat('MMM dd, yyyy/HH').format(DateTime.parse(walletTransactionVO.date.toString())),
                         style: const TextStyle(fontSize: kTextSmall),
                       ),
                     ],

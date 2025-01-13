@@ -7,7 +7,9 @@ import 'package:smile_shop/data/vos/refund_vo.dart';
 import 'package:smile_shop/list_items/refund_list_item_view.dart';
 import 'package:smile_shop/utils/colors.dart';
 
+import '../utils/images.dart';
 import '../widgets/loading_view.dart';
+import '../widgets/svg_image_view.dart';
 
 class RefundPage extends StatefulWidget {
   const RefundPage({super.key});
@@ -42,7 +44,22 @@ class _RefundPageState extends State<RefundPage>
           backgroundColor: Colors.white,
           centerTitle: true,
           toolbarHeight: 60,
-          title: const Text('My Orders'),
+          automaticallyImplyLeading: false,
+          title:  Row(children: [InkWell(
+            onTap: (){
+              Navigator.pop(context);
+            },
+            child:const SvgImageView(
+              imageName: kBackSvgIcon,
+              imageHeight: 26,
+              imageWidth: 26,
+            ),
+          ),
+            const Spacer(),
+            const Text('Refund'),
+            const Spacer(),
+            const Text(''),
+          ],),
           bottom: PreferredSize(
               preferredSize: const Size(double.infinity, 50),
               child: Consumer<RefundBloc>(

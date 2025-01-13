@@ -4,6 +4,8 @@ import 'package:smile_shop/network/api_constants.dart';
 
 import '../data/model/smile_shop_model.dart';
 import '../data/model/smile_shop_model_impl.dart';
+import '../widgets/common_dialog.dart';
+import '../widgets/session_expired_dialog_view.dart';
 
 class ProfileBloc extends ChangeNotifier {
   final SmileShopModel _smileShopModel = SmileShopModelImpl();
@@ -13,17 +15,24 @@ class ProfileBloc extends ChangeNotifier {
   bool isLoading = false;
   bool isDisposed = false;
   var authToken = "";
-  ProfileBloc(){
+  ProfileBloc(BuildContext context){
      authToken = _smileShopModel.getLoginResponseFromDatabase()?.accessToken ?? "";
-     getProfile();
+     getProfile(context);
   }
 
-  void getProfile(){
+  void getProfile(BuildContext context){
     _showLoading();
     _smileShopModel.userProfile(authToken, kAcceptLanguageEn).then((response){
       userProfile = response;
       _notifySafely();
-    }).whenComplete(()=> _hideLoading());
+    }).whenComplete(()=> _hideLoading()).catchError((error){
+      if (error.toString().toLowerCase() == 'unauthenticated') {
+        showCommonDialog(
+          context: context,
+          dialogWidget: SessionExpiredDialogView(),
+        );
+      }
+    });
   }
 
   void _showLoading() {

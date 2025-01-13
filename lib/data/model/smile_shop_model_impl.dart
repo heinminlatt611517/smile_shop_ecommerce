@@ -33,6 +33,7 @@ import 'package:smile_shop/network/requests/check_wallet_password_request.dart';
 import 'package:smile_shop/network/requests/dealer_login_request.dart';
 import 'package:smile_shop/network/requests/login_request.dart';
 import 'package:smile_shop/network/requests/order_cancel_request.dart';
+import 'package:smile_shop/network/requests/order_status_request.dart';
 import 'package:smile_shop/network/requests/otp_request.dart';
 import 'package:smile_shop/network/requests/set_password_request.dart';
 import 'package:smile_shop/network/requests/set_wallet_password_request.dart';
@@ -554,6 +555,11 @@ class SmileShopModelImpl extends SmileShopModel {
   @override
   Future<List<PackageVO>> getPackages(String token, String acceptLanguage) {
    return mDataAgent.getPackages(token, acceptLanguage);
+  }
+
+  @override
+  Future<SuccessNetworkResponse> checkOrderStatus(String acceptLanguage, String token, OrderStatusRequest request) {
+    return mDataAgent.checkOrderStatus(acceptLanguage, token, request);
   }
 
 }

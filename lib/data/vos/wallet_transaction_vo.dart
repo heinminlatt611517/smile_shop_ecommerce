@@ -19,6 +19,9 @@ class WalletTransactionVO {
   @JsonKey(name: "type")
   final String? type;
 
+  @JsonKey(name: "date")
+  final String? date;
+
   @JsonKey(name: "payment_type")
   final String? paymentType;
 
@@ -34,6 +37,7 @@ class WalletTransactionVO {
      this.amount,
      this.points,
      this.type,
+    this.date,
      this.paymentType,
      this.createdAt,
      this.updatedAt,

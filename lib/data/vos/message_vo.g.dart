@@ -12,6 +12,8 @@ MessageVo _$MessageVoFromJson(Map<String, dynamic> json) => MessageVo(
       message: json['message'] as String?,
       attachmentUrl: json['attachmentUrl'] as String?,
       sentAt: json['sentAt'] as String?,
+      isRead: json['isRead'] as bool?,
+      isAdmin: json['isAdmin'] as bool?,
     );
 
 Map<String, dynamic> _$MessageVoToJson(MessageVo instance) => <String, dynamic>{
@@ -20,4 +22,6 @@ Map<String, dynamic> _$MessageVoToJson(MessageVo instance) => <String, dynamic>{
       'message': instance.message,
       'attachmentUrl': instance.attachmentUrl,
       'sentAt': instance.sentAt,
+      'isRead': instance.isRead,
+      'isAdmin': instance.isAdmin,
     };

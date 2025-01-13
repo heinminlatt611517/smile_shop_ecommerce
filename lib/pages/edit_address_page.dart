@@ -387,25 +387,6 @@ class StateTownshipAndMapDropdownView extends StatelessWidget {
           const SizedBox(
             height: kMarginMedium,
           ),
-
-          const Text(
-            '(or)',
-            style: TextStyle(color: Colors.black, fontSize: kTextRegular2x),
-          ),
-
-          const SizedBox(
-            height: kMarginMedium,
-          ),
-
-          ///map view
-          Container(
-            height: 75,
-            width: double.infinity,
-            decoration: BoxDecoration(
-                color: Colors.lightBlueAccent,
-                borderRadius: BorderRadius.circular(kMarginMedium)),
-            child: const Icon(Icons.map),
-          )
         ],
       ),
     );

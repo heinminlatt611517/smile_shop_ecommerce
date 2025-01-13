@@ -228,7 +228,7 @@ class NameAndPhoneInputView extends StatelessWidget {
       padding: const EdgeInsets.all(kMarginLarge),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(kMarginMedium),
-          color: Colors.grey.withOpacity(0.3)),
+          color: const Color(0xFFEBEBEB)),
       child: Column(
         children: [
           Consumer<AddNewAddressBloc>(
@@ -267,7 +267,7 @@ class StateTownshipAndMapDropdownView extends StatelessWidget {
       padding: const EdgeInsets.all(kMarginLarge),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(kMarginMedium),
-          color: Colors.grey.withOpacity(0.3)),
+          color: const Color(0xFFEBEBEB)),
       child: Column(
         children: [
           Selector<AddNewAddressBloc,List<StateVO>>(
@@ -318,10 +318,10 @@ class StateTownshipAndMapDropdownView extends StatelessWidget {
             height: kMarginMedium,
           ),
 
-          const Text(
-            '(or)',
-            style: TextStyle(color: Colors.black, fontSize: kTextRegular2x),
-          ),
+          // const Text(
+          //   '(or)',
+          //   style: TextStyle(color: Colors.black, fontSize: kTextRegular2x),
+          // ),
 
           const SizedBox(
             height: kMarginMedium,

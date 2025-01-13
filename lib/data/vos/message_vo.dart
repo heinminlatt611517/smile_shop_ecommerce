@@ -14,6 +14,10 @@ class MessageVo {
   String? attachmentUrl;
   @JsonKey(name: 'sentAt')
   String? sentAt;
+  @JsonKey(name: 'isRead')
+  bool? isRead;
+  @JsonKey(name: 'isAdmin')
+  bool? isAdmin;
 
   MessageVo({
     this.senderId,
@@ -21,6 +25,8 @@ class MessageVo {
     this.message,
     this.attachmentUrl,
     this.sentAt,
+    this.isRead,
+    this.isAdmin
   });
 
   factory MessageVo.fromJson(Map<String, dynamic> json) => _$MessageVoFromJson(json);

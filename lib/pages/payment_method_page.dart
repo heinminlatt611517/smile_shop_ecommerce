@@ -23,18 +23,19 @@ class PaymentMethodPage extends StatelessWidget {
   final int? promotionPoint;
   final bool? isFromMyOrderPage;
   final String? orderNumber;
+  final String? orderSubTotal;
 
   const PaymentMethodPage(
       {super.key,
        this.productSubTotalPrice,
        this.isFromCartPage,
        this.productList,this.promotionPoint,
-       this.isFromMyOrderPage,this.orderNumber});
+       this.isFromMyOrderPage,this.orderNumber,this.orderSubTotal});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => PaymentBloc(productList ?? []),
+      create: (context) => PaymentBloc(productList ?? [],context),
       child: Scaffold(
         backgroundColor: kBackgroundColor,
         appBar: const CustomAppBarView(title: 'Payment Method'),
@@ -56,40 +57,6 @@ class PaymentMethodPage extends StatelessWidget {
                           const Text(
                             'Choose type of payment.',
                             style: TextStyle(fontSize: kTextRegular2x),
-                          ),
-                          const SizedBox(
-                            height: kMarginMedium2,
-                          ),
-
-                          ///password input view
-                          Consumer<PaymentBloc>(
-                            builder: (context, bloc, child) => Visibility(
-                              visible: bloc.showEnterAmountTextFiled,
-                              child: TextFormField(
-                                controller: bloc.amountTextController,
-                                cursorColor: Colors.black,
-                                decoration: const InputDecoration(
-                                    filled: true,
-                                    fillColor: Colors.white,
-                                    border: InputBorder.none,
-                                    contentPadding:
-                                        EdgeInsets.symmetric(horizontal: 21),
-                                    hintText: 'Please enter amount',
-                                    hintStyle: TextStyle(color: Colors.grey)),
-                                onChanged: (v) {
-                                  bloc.onChangedAmount(v);
-                                },
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter an amount';
-                                  }
-                                  if (double.tryParse(value) == null) {
-                                    return 'Please enter a valid number';
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
                           ),
                           const SizedBox(
                             height: kMargin30,
@@ -155,7 +122,7 @@ class PaymentMethodPage extends StatelessWidget {
                                                 errorMessage:
                                                 'Please select payment'));
                                       } else {
-                                        bloc.makePayment(orderNumber ?? "", context);
+                                        bloc.makePayment(orderNumber ?? "",orderSubTotal ?? "", context);
                                       }
                                     }
                                   }

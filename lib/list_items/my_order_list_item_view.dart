@@ -18,7 +18,7 @@ class MyOrderListItemView extends StatelessWidget {
   final bool isRefundView;
   final Function(OrderVO? orderVo)? onTapRefund;
   final Function(int orderId)? onTapReview;
-  final Function(int orderId)? onTapPayment;
+  final Function(int orderId,int subTotal)? onTapPayment;
   final Function(String orderId)? onTapCancel;
   final OrderVO? orderVO;
 
@@ -183,7 +183,7 @@ class MyOrderListItemView extends StatelessWidget {
                           ),
                           InkWell(
                             onTap:(){
-                              onTapPayment!(int.parse(orderVO?.orderNo.toString() ?? ""));
+                              onTapPayment!(int.parse(orderVO?.orderNo.toString() ?? ""),int.parse(orderVO?.subtotal.toString() ?? ""));
                             },
                             child: Container(
                               height: 26,

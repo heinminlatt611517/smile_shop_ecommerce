@@ -99,7 +99,7 @@ class DailyCheckInPage extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      checkInVO.totalCheckInPoint.toString(),
+                                      checkInVO.totalCheckInPoint.toString() == "null" ? "0" : checkInVO.totalCheckInPoint.toString() ,
                                       style: const TextStyle(
                                           fontSize: kMarginXLarge,
                                           color: kPrimaryColor),
@@ -180,12 +180,14 @@ class DailyCheckInPage extends StatelessWidget {
                                               mainAxisSpacing: 40,
                                               crossAxisSpacing: 10),
                                       itemBuilder: (context, index) {
-                                        Color bgColor = (index <
+                                        Color bgColor =checkInVO
+                                            .totalCheckInPoint
+                                            .toString() == "null" ? Colors.grey :  ((index <
                                                 int.parse(checkInVO
                                                     .totalCheckInPoint
                                                     .toString()))
                                             ? kPrimaryColor
-                                            : Colors.grey;
+                                            : Colors.grey);
                                         return DailyCheckInListItem(
                                           bgColor: bgColor,
                                           day: index+1,

@@ -14,13 +14,12 @@ import '../network/api_constants.dart';
 import '../network/firebase_api.dart';
 
 class ChatScreen extends StatelessWidget {
-  final String ticketId;
-  const ChatScreen({super.key, required this.ticketId});
+  const ChatScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => ChatBloc(ticketId),
+      create: (context) => ChatBloc(),
       child: Consumer<ChatBloc>(
         builder: (context, bloc, child) => Scaffold(
           backgroundColor: kBackgroundColor,

@@ -7,6 +7,8 @@ import 'package:smile_shop/data/vos/product_vo.dart';
 
 import '../data/vos/address_vo.dart';
 import '../network/api_constants.dart';
+import '../widgets/common_dialog.dart';
+import '../widgets/session_expired_dialog_view.dart';
 
 class CheckOutBloc extends ChangeNotifier {
   final SmileShopModel _smileShopModel = SmileShopModelImpl();
@@ -21,11 +23,12 @@ class CheckOutBloc extends ChangeNotifier {
   bool isDisposed = false;
   bool isSelectedStandardDelivery = true;
   bool isSelectedSpecialDelivery = false;
+  BuildContext? context;
 
   bool isSelectedUsePromotion = true;
   bool isSelectedNoPromotion = false;
 
-  CheckOutBloc(List<ProductVO> productList) {
+  CheckOutBloc(List<ProductVO> productList,this.context) {
     if (productList.isNotEmpty) {
       calculateTotalProductPrice(productList);
     }
@@ -44,6 +47,13 @@ class CheckOutBloc extends ChangeNotifier {
         .then((addressResponse) {
       addressList = addressResponse.data?.addressVO ?? [];
       notifyListeners();
+    }).catchError((error){
+      if (error.toString().toLowerCase() == 'unauthenticated') {
+        showCommonDialog(
+          context: context!,
+          dialogWidget: SessionExpiredDialogView(),
+        );
+      }
     });
   }
 

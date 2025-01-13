@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smile_shop/pages/cart_page.dart';
+import 'package:smile_shop/pages/chat_screen.dart';
 import 'package:smile_shop/pages/profile_page.dart';
 import 'package:smile_shop/pages/ticket_screen.dart';
 import 'package:smile_shop/utils/colors.dart';
@@ -7,6 +8,7 @@ import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/utils/images.dart';
 import 'package:smile_shop/utils/strings.dart';
 
+import '../widgets/svg_image_view.dart';
 import 'home_page.dart';
 
 class MainPage extends StatefulWidget {
@@ -30,7 +32,7 @@ class _MainPageState extends State<MainPage> {
   List<Widget> screenWidgets = [
     const HomePage(),
     const CartPage(),
-    const TicketScreen(),
+    const ChatScreen(),
     const ProfilePage()
   ];
 
@@ -59,59 +61,59 @@ class _MainPageState extends State<MainPage> {
 
   List<BottomNavigationBarItem> _getBottomNavigationBarItems() {
     return [
-      BottomNavigationBarItem(
-        icon: Image.asset(
-          kHomeIcon,
-          width: kMarginXLarge,
-          height: kMarginXLarge,
-          color: Colors.black,
+      const BottomNavigationBarItem(
+        icon: SvgImageView(
+          imageName: kHomeIcon,
+          imageHeight: 20,
+          imageWidth: 20,
+          iconColor: Colors.black,
         ),
-        activeIcon: Image.asset(
-          kHomeIcon,
-          width: kMarginXLarge,
-          height: kMarginXLarge,
+        activeIcon:SvgImageView(
+          imageName: kHomeIcon,
+          imageHeight: 20,
+          imageWidth: 20,
         ),
         label: kHomeLabel,
       ),
-      BottomNavigationBarItem(
-        icon: Image.asset(
-          kCartIcon,
-          width: kMarginXLarge,
-          height: kMarginXLarge,
-          color: Colors.black,
+      const BottomNavigationBarItem(
+        icon: SvgImageView(
+          imageName: kCartIcon,
+          imageHeight: 20,
+          imageWidth: 20,
+          iconColor: Colors.black,
         ),
-        activeIcon: Image.asset(
-          kCartIcon,
-          width: kMarginXLarge,
-          height: kMarginXLarge,
+        activeIcon:SvgImageView(
+          imageName: kCartIcon,
+          imageHeight: 20,
+          imageWidth: 20,
         ),
         label: kCartLabel,
       ),
-      BottomNavigationBarItem(
-        icon: Image.asset(
-          kLiveChatIcon,
-          width: kMarginXLarge,
-          height: kMarginXLarge,
-          color: Colors.black,
+      const BottomNavigationBarItem(
+        icon: SvgImageView(
+          imageName: kLiveChatIcon,
+          imageHeight: 20,
+          imageWidth: 20,
+          iconColor: Colors.black,
         ),
-        activeIcon: Image.asset(
-          kLiveChatIcon,
-          width: kMarginXLarge,
-          height: kMarginXLarge,
+        activeIcon:SvgImageView(
+          imageName: kLiveChatIcon,
+          imageHeight: 20,
+          imageWidth: 20,
         ),
         label: kLiveChatLabel,
       ),
-      BottomNavigationBarItem(
-        icon: Image.asset(
-          kProfileIcon,
-          width: kMarginXLarge,
-          height: kMarginXLarge,
-          color: Colors.black,
+      const BottomNavigationBarItem(
+        icon: SvgImageView(
+          imageName: kProfileIcon,
+          imageHeight: 20,
+          imageWidth: 20,
+          iconColor: Colors.black,
         ),
-        activeIcon: Image.asset(
-          kProfileIcon,
-          width: kMarginXLarge,
-          height: kMarginXLarge,
+        activeIcon:SvgImageView(
+          imageName: kProfileIcon,
+          imageHeight: 20,
+          imageWidth: 20,
         ),
         label: kProfileLabel,
       ),

@@ -12,7 +12,9 @@ import 'package:smile_shop/pages/product_refund_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/extensions.dart';
 
+import '../utils/images.dart';
 import '../widgets/loading_view.dart';
+import '../widgets/svg_image_view.dart';
 
 class MyOrderPage extends StatefulWidget {
   const MyOrderPage({super.key, this.tabIndex});
@@ -50,7 +52,22 @@ class _MyOrderPageState extends State<MyOrderPage>
           backgroundColor: Colors.white,
           centerTitle: true,
           toolbarHeight: 60,
-          title: const Text('My Orders'),
+          automaticallyImplyLeading: false,
+          title:  Row(children: [InkWell(
+            onTap: (){
+              Navigator.pop(context);
+            },
+            child:const SvgImageView(
+              imageName: kBackSvgIcon,
+              imageHeight: 26,
+              imageWidth: 26,
+            ),
+          ),
+            const Spacer(),
+            const Text('My Orders'),
+            const Spacer(),
+            const Text(''),
+          ],),
           bottom: PreferredSize(
               preferredSize: const Size(double.infinity, 50),
               child: Consumer<OrderBloc>(
@@ -147,10 +164,11 @@ class _MyOrderPageState extends State<MyOrderPage>
                 child: MyOrderListItemView(
                   orderVO: orderList[index],
                   isRefundView: false,
-                  onTapPayment: (orderId) {
+                  onTapPayment: (orderId,subTotal) {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (builder) =>  PaymentMethodPage(
                               isFromMyOrderPage: true,
+                              orderSubTotal: subTotal.toString(),
                               orderNumber: orderList[index].orderNo ?? '',
                             )));
                   },

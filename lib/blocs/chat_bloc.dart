@@ -16,7 +16,8 @@ import '../network/firebase_api.dart';
 class ChatBloc extends ChangeNotifier {
   final SmileShopModel _smileShopModel = SmileShopModelImpl();
   bool isDisposed = false;
-  final String ticketId;
+  //final String ticketId;
+  List<TicketVo> ticketList = [];
   TicketVo? ticket;
   final FirebaseApi _api = FirebaseApi();
   File? image;
@@ -26,26 +27,39 @@ class ChatBloc extends ChangeNotifier {
   bool isRecording = false;
   final record = AudioRecorder();
 
-  ChatBloc(this.ticketId) {
+  ChatBloc() {
     userVO = _smileShopModel.getUserDataFromDatabase();
-    listenChat();
+    listenTickets();
   }
 
   void sendMsg() async {
     if (audio != null) {
-      await _api.sendMessage(ticketId: ticketId, message: '', messageType: MessageType.voice, file: audio);
+      await _api.sendMessage(ticketId: ticketList.first.ticketId ?? "", message: '', messageType: MessageType.voice, file: audio);
       audio = null;
       safeNotifyListeners();
     } else if (msgController.text.isNotEmpty || image != null) {
-      await _api.sendMessage(ticketId: ticketId, message: msgController.text, messageType: image == null ? MessageType.text : MessageType.image, file: image);
+      await _api.sendMessage(ticketId: ticketList.first.ticketId ?? "", message: msgController.text, messageType: image == null ? MessageType.text : MessageType.image, file: image);
       msgController.clear();
       image = null;
       safeNotifyListeners();
     }
   }
 
+  void listenTickets() {
+    _api.getTicketsByUser().listen((tickets) {
+      tickets.sort((a, b) {
+        String updatedAtA = a.updatedAt ?? "";
+        String updatedAtB = b.updatedAt ?? "";
+        return updatedAtB.compareTo(updatedAtA);
+      });
+      ticketList = tickets;
+      safeNotifyListeners();
+      listenChat();
+    });
+  }
+
   void listenChat() {
-    _api.getTicketById(ticketId).listen(
+    _api.getTicketById(ticketList.first.ticketId ?? "").listen(
       (event) {
         ticket = event;
         safeNotifyListeners();

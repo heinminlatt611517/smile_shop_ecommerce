@@ -47,8 +47,8 @@ class ReferralCodePage extends StatelessWidget {
                        child: Image.asset(
                          kBackIcon,
                          fit: BoxFit.contain,
-                         height: 20,
-                         width: 20,
+                         height: 26,
+                         width: 26,
                        ),
                      ),
                    ),

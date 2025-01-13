@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smile_shop/widgets/svg_image_view.dart';
 
 import '../utils/colors.dart';
 import '../utils/dimens.dart';
@@ -15,24 +16,22 @@ class CustomAppBarView extends StatelessWidget implements PreferredSizeWidget {
       surfaceTintColor: kBackgroundColor,
       automaticallyImplyLeading: false,
       leadingWidth: 40,
-      leading: InkWell(
-        onTap: () {
+      backgroundColor: Colors.white,
+      title:  Row(children: [InkWell(
+        onTap: (){
           Navigator.pop(context);
         },
-        child: Padding(
-          padding: const EdgeInsets.only(left: kMarginMedium2),
-          child: Image.asset(
-            kBackIcon,
-            fit: BoxFit.contain,
-            height: 20,
-            width: 20,
-          ),
+        child:const SvgImageView(
+          imageName: kBackSvgIcon,
+          imageHeight: 26,
+          imageWidth: 26,
         ),
       ),
-      backgroundColor: Colors.white,
-      title: Text(
-        title ?? "",
-      ),
+        const Spacer(),
+        Text(title ?? ""),
+        const Spacer(),
+        const Text(''),
+      ],),
     );
   }
 

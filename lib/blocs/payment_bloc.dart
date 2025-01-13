@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:smile_shop/network/requests/order_status_request.dart';
 import 'package:smile_shop/utils/strings.dart';
 import 'package:smile_shop/widgets/qr_dialog_view.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -17,6 +19,7 @@ import '../network/requests/check_wallet_password_request.dart';
 import '../pages/order_successful_page.dart';
 import '../widgets/common_dialog.dart';
 import '../widgets/error_dialog_view.dart';
+import '../widgets/session_expired_dialog_view.dart';
 
 class PaymentBloc extends ChangeNotifier {
   final SmileShopModel _smileShopModel = SmileShopModelImpl();
@@ -33,12 +36,11 @@ class PaymentBloc extends ChangeNotifier {
   var selectedPaymentType = "";
   bool showEnterAmountTextFiled = false;
   Map<int, int> selectedSubPaymentIndices = {};
-  var amount = "";
-  var amountTextController = TextEditingController();
+
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   Map<String, String> paymentData = {};
 
-  PaymentBloc(this.products) {
+  PaymentBloc(this.products, BuildContext context) {
     authToken =
         _smileShopModel.getLoginResponseFromDatabase()?.accessToken ?? "";
 
@@ -50,6 +52,13 @@ class PaymentBloc extends ChangeNotifier {
         .then((paymentListResponse) {
       payments = paymentListResponse;
       _notifySafely();
+    }).catchError((error) {
+      if (error.toString().toLowerCase() == 'unauthenticated') {
+        showCommonDialog(
+          context: context,
+          dialogWidget: SessionExpiredDialogView(),
+        );
+      }
     });
   }
 
@@ -68,8 +77,7 @@ class PaymentBloc extends ChangeNotifier {
 
     try {
       if (selectedIndex == 0) {
-        var checkWalletAmountRequest =
-            CheckWalletAmountRequest(int.parse(amount));
+        var checkWalletAmountRequest = CheckWalletAmountRequest(subTotal);
         var checkWalletPasswordRequest = CheckWalletPasswordRequest(
             GetStorage().read(kBoxKeyWalletPassword));
 
@@ -92,47 +100,104 @@ class PaymentBloc extends ChangeNotifier {
         promotionPoint,
       )
           .then((response) {
-
-            if(isFromCartPage == true){
-              clearAddToCartProductByProductIdFromDatabase();
-            }
-          if (response.data?.responseType == 'url') {
-            launchUrl(Uri.parse(response.data?.response)).then((val) {
-              showLoadingAndNavigate(context);
-            });
-          } else if (response.data?.responseType == 'qr') {
-            showCommonDialog(
-                    context: context,
-                    dialogWidget:
-                        QrDialogView(qrCodeString: response.data?.response))
-                .then((val) {
-              showLoadingAndNavigate(context);
-            });
-          } else if (response.data?.responseType == 'pin') {
-            showLoadingAndNavigate(context);
-          } else {
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (builder) => const OrderSuccessfulPage()));
-          }
-
+        if (isFromCartPage == true) {
+          clearAddToCartProductByProductIdFromDatabase();
+        }
+        if (response.data?.responseType == 'url') {
+          launchUrl(Uri.parse(response.data?.response)).then((val){
+            ///start polling order status
+            startPollingOrderStatus(response.data?.orderNo, context);
+          });
+        } else if (response.data?.responseType == 'qr') {
+          showCommonDialog(
+              context: context,
+              dialogWidget:
+                  QrDialogView(qrCodeString: response.data?.response));
+          ///start polling order status
+          startPollingOrderStatus(response.data?.orderNo, context);
+        } else if (response.data?.responseType == 'pin') {
+          ///start polling order status
+          startPollingOrderStatus(response.data?.orderNo, context);
+        } else {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (builder) => const OrderSuccessfulPage()));
+        }
       });
     } catch (error) {
       showCommonDialog(
           context: context,
           dialogWidget: ErrorDialogView(errorMessage: error.toString()));
     } finally {
-      _hideLoading();
+     // _hideLoading();
     }
   }
 
+
+  ///start polling order status
+  Future<void> startPollingOrderStatus(String? orderId, BuildContext context) async {
+    _showLoading();
+    int retryCount = 0;
+    int maxRetries = 30;
+
+    Timer.periodic(const Duration(seconds: 10), (timer) {
+      if (retryCount >= maxRetries) {
+        timer.cancel();
+        _hideLoading();
+        debugPrint("Polling stopped after $maxRetries retries.");
+        return;
+      }
+
+      retryCount++;
+
+      checkOrderStatus(orderId).then((status) {
+        if (status == 'success') {
+          timer.cancel();
+          _hideLoading();
+          showSuccessSnackBarAndNavigate(context);
+        } else {
+          debugPrint("Order status: $status. Continuing to poll...");
+        }
+      }).catchError((error) {
+        // timer.cancel();
+        // _hideLoading();
+        debugPrint("Error checking order status: $error");
+      });
+    });
+  }
+
+  ///check order status
+  Future<String> checkOrderStatus(String? orderId) async {
+    var orderStatusRequest = OrderStatusRequest(orderId);
+    var response = await _smileShopModel.checkOrderStatus(
+        kAcceptLanguageEn, authToken, orderStatusRequest);
+    return response.status == 200 ? 'success' : 'failed';
+  }
+
+  ///show snack bar and navigate to success page
+  void showSuccessSnackBarAndNavigate(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Success!'),
+        backgroundColor: Colors.green,
+      ),
+    );
+
+    Future.delayed(const Duration(seconds: 2), () {
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => const OrderSuccessfulPage()),
+      );
+    });
+  }
+
   ///for order product
-  void makePayment(String orderNumber, BuildContext context) async {
+  void makePayment(
+      String orderNumber, String subTotal, BuildContext context) async {
     _showLoading();
 
     try {
       if (selectedIndex == 0) {
         var checkWalletAmountRequest =
-            CheckWalletAmountRequest(int.parse(amount));
+            CheckWalletAmountRequest(int.parse(subTotal));
         var checkWalletPasswordRequest = CheckWalletPasswordRequest(
             GetStorage().read(kBoxKeyWalletPassword));
 
@@ -149,22 +214,24 @@ class PaymentBloc extends ChangeNotifier {
           .then((response) {
         if (response.data?.responseType == 'url') {
           launchUrl(Uri.parse(response.data?.response)).then((val) {
-            showLoadingAndNavigate(context);
+            ///start polling order status
+            startPollingOrderStatus(response.data?.orderId, context);
           });
         } else if (response.data?.responseType == 'qr') {
           showCommonDialog(
                   context: context,
                   dialogWidget:
-                      QrDialogView(qrCodeString: response.data?.response))
-              .then((val) {
-            showLoadingAndNavigate(context);
-          });
+                      QrDialogView(qrCodeString: response.data?.response));
+          ///start polling order status
+          startPollingOrderStatus(response.data?.orderId, context);
         } else if (response.data?.responseType == 'pin') {
-          showLoadingAndNavigate(context);
+          ///start polling order status
+          startPollingOrderStatus(response.data?.orderId, context);
         } else {
           Navigator.of(context).push(MaterialPageRoute(
               builder: (builder) => const OrderSuccessfulPage()));
         }
+
       });
     } catch (error) {
       showCommonDialog(
@@ -175,45 +242,34 @@ class PaymentBloc extends ChangeNotifier {
     }
   }
 
-  void onChangedAmount(String value) {
-    amount = value;
-    _notifySafely();
-  }
-
-  void showLoadingAndNavigate(BuildContext context) async {
-    _showLoading();
-    await Future.delayed(const Duration(seconds: 20));
-    _hideLoading();
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => const OrderSuccessfulPage(),
-      ),
-    );
-  }
 
   void onSelectPayment(int index, String paymentType) {
     if (selectedIndex != index) {
       if (selectedIndex != -1) {
         selectedSubPaymentIndices[selectedIndex ?? 0] = -1;
       }
-    }
 
-    selectedIndex = isSelected(index) ? -1 : index;
+      selectedIndex = isSelected(index) ? -1 : index;
 
-    if (payments[index].name == 'Dinger') {
-      onSelectSubPayment(index, 0);
+      if (payments[index].name == 'Dinger') {
+        onSelectSubPayment(index, 0);
+      } else {
+        selectedSubPaymentIndices[index] = -1;
+
+        paymentData = {
+          "code": payments[index].code ?? "",
+          "method": payments[index].method ?? "",
+        };
+        _notifySafely();
+      }
     } else {
+      selectedIndex = -1;
       selectedSubPaymentIndices[index] = -1;
-      paymentData = {
-        "code": payments[index].code ?? "",
-        "method": payments[index].method ?? "",
-      };
+      paymentData = {};
       _notifySafely();
     }
 
     selectedPaymentType = paymentType;
-
-    showEnterAmountTextFiled = index == 0;
 
     notifyListeners();
   }
@@ -227,16 +283,20 @@ class PaymentBloc extends ChangeNotifier {
   }
 
   void onSelectSubPayment(int paymentIndex, int subPaymentIndex) {
+    selectedPaymentType = payments[paymentIndex].code ?? "";
     paymentData = {
       "code": "${payments[paymentIndex].subPaymentVO?[subPaymentIndex].code}",
       "method":
           "${payments[paymentIndex].subPaymentVO?[subPaymentIndex].method}"
     };
-
     if (selectedSubPaymentIndices[paymentIndex] == subPaymentIndex) {
       selectedSubPaymentIndices[paymentIndex] = -1;
     } else {
       selectedSubPaymentIndices[paymentIndex] = subPaymentIndex;
+    }
+
+    if (selectedSubPaymentIndices[paymentIndex] != -1) {
+      selectedIndex = paymentIndex;
     }
 
     notifyListeners();

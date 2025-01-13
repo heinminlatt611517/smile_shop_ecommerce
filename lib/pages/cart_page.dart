@@ -54,7 +54,7 @@ class CartPage extends StatelessWidget {
               : Column(
                 children: [
                   Visibility(
-                    visible: products.isNotEmpty,
+                    visible: false,
                     child: Container(
                       color: kBackgroundColor,
                       child: const Padding(

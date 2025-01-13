@@ -447,7 +447,7 @@ class RatingAndPriceView extends StatelessWidget {
             Container(
               margin: const EdgeInsets.symmetric(vertical: kMarginLarge),
               height: 1,
-              color: Colors.black,
+              color: Colors.grey,
               width: double.infinity,
             ),
             const Text(

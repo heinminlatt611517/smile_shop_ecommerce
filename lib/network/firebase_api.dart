@@ -172,6 +172,7 @@ class FirebaseApi {
 
     if(querySnapshot.docs.isEmpty){
       await users.add(userVo.toJson());
+      createTicket("", "");
     }
   }
 
@@ -242,6 +243,8 @@ class FirebaseApi {
       senderId: FIREBASE_USER.id?.toString(),
       sentAt: DateTime.now().toString(),
       attachmentUrl: downloadUrl,
+      isRead: false,
+      isAdmin: false
     );
 
     ticketRef.update({

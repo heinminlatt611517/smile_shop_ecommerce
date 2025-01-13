@@ -25,6 +25,9 @@ class PaymentDataVO {
   @JsonKey(name: "order_id")
   final String? orderId;
 
+  @JsonKey(name: "order_no")
+  final String? orderNo;
+
   PaymentDataVO({
     this.response,
     this.responseType,
@@ -33,6 +36,7 @@ class PaymentDataVO {
     this.message,
     this.paymentType,
     this.orderId,
+    this.orderNo
   });
 
   factory PaymentDataVO.fromJson(Map<String, dynamic> json) =>

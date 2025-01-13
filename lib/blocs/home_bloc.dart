@@ -6,8 +6,11 @@ import 'package:smile_shop/data/vos/brand_and_category_vo.dart';
 import 'package:smile_shop/data/vos/category_vo.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
 import 'package:smile_shop/network/api_constants.dart';
+import 'package:smile_shop/widgets/session_expired_dialog_view.dart';
 
 import '../data/vos/user_vo.dart';
+import '../widgets/common_dialog.dart';
+import '../widgets/error_dialog_view.dart';
 
 class HomeBloc extends ChangeNotifier {
   final SmileShopModel _smileShopModel = SmileShopModelImpl();
@@ -24,7 +27,7 @@ class HomeBloc extends ChangeNotifier {
   bool isDisposed = false;
   UserVO? userProfile;
 
-  HomeBloc() {
+  HomeBloc(BuildContext context) {
     ///get data from database
     authToken =
         _smileShopModel.getLoginResponseFromDatabase()?.refreshToken ?? "";
@@ -38,6 +41,13 @@ class HomeBloc extends ChangeNotifier {
       _smileShopModel.userProfile(accessToken, kAcceptLanguageEn).then((response){
         userProfile = response;
         _notifySafely();
+      }).catchError((error){
+        if (error.toString().toLowerCase() == 'unauthenticated') {
+          showCommonDialog(
+            context: context,
+            dialogWidget: SessionExpiredDialogView(),
+          );
+        }
       });
 
     ///get banner list

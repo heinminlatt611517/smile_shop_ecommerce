@@ -7,6 +7,9 @@ import 'package:smile_shop/data/vos/promotion_vo.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 
+import '../utils/images.dart';
+import '../widgets/svg_image_view.dart';
+
 class PromotionPointPage extends StatelessWidget {
   const PromotionPointPage({super.key});
 
@@ -19,7 +22,22 @@ class PromotionPointPage extends StatelessWidget {
         appBar: AppBar(
           centerTitle: true,
           backgroundColor: kSecondaryColor,
-          title: const Text('Promotion Point'),
+          automaticallyImplyLeading: false,
+          title:  Row(children: [InkWell(
+            onTap: (){
+              Navigator.pop(context);
+            },
+            child:const SvgImageView(
+              imageName: kBackSvgIcon,
+              imageHeight: 26,
+              imageWidth: 26,
+            ),
+          ),
+            const Spacer(),
+            const Text('Promotion Point'),
+            const Spacer(),
+            const Text(''),
+          ],),
         ),
         body: Column(
           children: [
@@ -156,7 +174,7 @@ Widget _pointItemView(String pointLabel, PromotionVO promotionVO) {
                         style: const TextStyle(fontSize: kTextSmall),
                       ),
                       Text(
-                        '+${promotionVO.amount} Points',
+                        pointLabel == 'Outcome Points'? '-${promotionVO.amount} Points' : '+${promotionVO.amount} Points',
                         style: const TextStyle(
                             fontSize: kTextRegular2x, color: kSecondaryColor),
                       ),
@@ -165,9 +183,9 @@ Widget _pointItemView(String pointLabel, PromotionVO promotionVO) {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        'Recharge',
-                        style: TextStyle(fontSize: kTextRegular2x),
+                       Text(
+                        pointLabel == 'Outcome Points'? 'Discharge' :'Recharge',
+                        style:const TextStyle(fontSize: kTextRegular2x),
                       ),
                       Text(
                         DateFormat('MMM dd, yyyy/HH').format(

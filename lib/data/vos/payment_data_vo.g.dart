@@ -15,6 +15,7 @@ PaymentDataVO _$PaymentDataVOFromJson(Map<String, dynamic> json) =>
       message: json['message'] as String?,
       paymentType: json['payment_type'] as String?,
       orderId: json['order_id'] as String?,
+      orderNo: json['order_no'] as String?,
     );
 
 Map<String, dynamic> _$PaymentDataVOToJson(PaymentDataVO instance) =>
@@ -26,4 +27,5 @@ Map<String, dynamic> _$PaymentDataVOToJson(PaymentDataVO instance) =>
       'message': instance.message,
       'payment_type': instance.paymentType,
       'order_id': instance.orderId,
+      'order_no': instance.orderNo,
     };

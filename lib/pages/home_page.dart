@@ -27,7 +27,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => HomeBloc(),
+      create: (context) => HomeBloc(context),
       child:const Scaffold(
         backgroundColor: kBackgroundColor,
         body: HomeContentView()

@@ -27,7 +27,7 @@ class CheckoutPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => CheckOutBloc(productList ?? []),
+      create: (context) => CheckOutBloc(productList ?? [],context),
       child: Scaffold(
         backgroundColor: kBackgroundColor,
         appBar: const CustomAppBarView(title: 'Check Out'),

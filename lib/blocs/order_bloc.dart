@@ -36,13 +36,14 @@ class OrderBloc extends ChangeNotifier {
   }
 
   void getAllOrder() {
+    _showLoading();
     _smileShopModel
         .orderList(authToken, kAcceptLanguageEn)
         .then((orderResponse) {
       orders = orderResponse;
       orderType = "";
       notifyListeners();
-    });
+    }).whenComplete(()=> _hideLoading());
   }
 
   void getOrdersByType(String type) {

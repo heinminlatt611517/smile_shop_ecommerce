@@ -7,6 +7,7 @@ import 'package:smile_shop/utils/colors.dart';
 import '../data/vos/product_vo.dart';
 import '../utils/dimens.dart';
 import '../utils/images.dart';
+import '../widgets/svg_image_view.dart';
 
 class MyFavouritePage extends StatelessWidget {
   const MyFavouritePage({super.key});
@@ -21,7 +22,22 @@ class MyFavouritePage extends StatelessWidget {
               backgroundColor: Colors.white,
               centerTitle: true,
               toolbarHeight: 60,
-              title: const Text('My Favourite')),
+            automaticallyImplyLeading: false,
+            title:  Row(children: [InkWell(
+              onTap: (){
+                Navigator.pop(context);
+              },
+              child:const SvgImageView(
+                imageName: kBackSvgIcon,
+                imageHeight: 26,
+                imageWidth: 26,
+              ),
+            ),
+              const Spacer(),
+              const Text('My Favourite'),
+              const Spacer(),
+              const Text(''),
+            ],),),
           body: Selector<MyFavouriteBloc, List<ProductVO>>(
             selector: (context, bloc) => bloc.favouriteProductList,
             builder: (context, products, Widget? child) =>
