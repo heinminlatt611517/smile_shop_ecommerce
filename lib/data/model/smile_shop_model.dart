@@ -5,6 +5,7 @@ import 'package:smile_shop/data/vos/campaign_vo.dart';
 import 'package:smile_shop/data/vos/category_vo.dart';
 import 'package:smile_shop/data/vos/login_data_vo.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
+import 'package:smile_shop/data/vos/promotion_data_vo.dart';
 import 'package:smile_shop/data/vos/search_product_vo.dart';
 import 'package:smile_shop/data/vos/township_data_vo.dart';
 import 'package:smile_shop/network/requests/dealer_login_request.dart';
@@ -32,6 +33,7 @@ import '../../network/responses/address_response.dart';
 import '../../network/responses/login_response.dart';
 import '../../network/responses/success_network_response.dart';
 import '../vos/brand_and_category_vo.dart';
+import '../../network/responses/campaign_history_response.dart';
 import '../vos/campaign_participant_vo.dart';
 import '../vos/checkIn_vo.dart';
 import '../vos/my_team_vo.dart';
@@ -223,7 +225,7 @@ abstract class SmileShopModel {
   Future<List<RefundVO>> getRefundsByStatus(
       String token, String acceptLanguage,int status);
 
-  Future<List<PromotionVO>> getPromotionLogsByStatus(
+  Future<PromotionDataVO> getPromotionLogsByStatus(
       String token, String acceptLanguage,String status);
 
   Future<List<MyTeamVO>> getMyTeams(
@@ -237,4 +239,7 @@ abstract class SmileShopModel {
 
   Future<SuccessNetworkResponse> checkOrderStatus(
       String acceptLanguage,String token,OrderStatusRequest request);
+
+  Future<CampaignHistoryResponse> getCampaignHistory(
+      String acceptLanguage,String token);
 }

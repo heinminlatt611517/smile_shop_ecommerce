@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:smile_shop/data/vos/banner_vo.dart';
 import 'package:smile_shop/data/vos/brand_and_category_vo.dart';
+import 'package:smile_shop/network/responses/campaign_history_response.dart';
 import 'package:smile_shop/data/vos/campaign_participant_vo.dart';
 import 'package:smile_shop/data/vos/campaign_vo.dart';
 import 'package:smile_shop/data/vos/category_vo.dart';
@@ -12,6 +13,7 @@ import 'package:smile_shop/data/vos/package_vo.dart';
 import 'package:smile_shop/data/vos/payment_vo.dart';
 import 'package:smile_shop/data/vos/product_response_data_vo.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
+import 'package:smile_shop/data/vos/promotion_data_vo.dart';
 import 'package:smile_shop/data/vos/promotion_vo.dart';
 import 'package:smile_shop/data/vos/state_vo.dart';
 import 'package:smile_shop/data/vos/sub_category_vo.dart';
@@ -195,7 +197,7 @@ abstract class SmileShopDataAgent {
   Future<List<RefundVO>> getRefundsByStatus(
       String token, String acceptLanguage,int status);
 
-  Future<List<PromotionVO>> getPromotionLogsByStatus(
+  Future<PromotionDataVO> getPromotionLogsByStatus(
       String token, String acceptLanguage,String status);
 
   Future<List<MyTeamVO>> getMyTeams(
@@ -209,4 +211,7 @@ abstract class SmileShopDataAgent {
 
   Future<SuccessNetworkResponse> checkOrderStatus(
       String acceptLanguage,String token,OrderStatusRequest request);
+
+  Future<CampaignHistoryResponse> getCampaignHistory(
+      String acceptLanguage,String token);
 }

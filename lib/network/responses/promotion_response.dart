@@ -1,6 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:smile_shop/data/vos/promotion_vo.dart';
 
+import '../../data/vos/promotion_data_vo.dart';
+
 part 'promotion_response.g.dart';
 
 @JsonSerializable()
@@ -12,7 +14,7 @@ class PromotionResponse {
   final String? message;
 
   @JsonKey(name: "data")
-  final List<PromotionVO>? data;
+  final PromotionDataVO? data;
 
   PromotionResponse(
       {this.status,

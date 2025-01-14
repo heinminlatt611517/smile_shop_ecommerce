@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:smile_shop/data/vos/banner_vo.dart';
 import 'package:smile_shop/data/vos/brand_and_category_vo.dart';
+import 'package:smile_shop/network/responses/campaign_history_response.dart';
 import 'package:smile_shop/data/vos/campaign_participant_vo.dart';
 import 'package:smile_shop/data/vos/campaign_vo.dart';
 import 'package:smile_shop/data/vos/category_vo.dart';
@@ -15,6 +16,7 @@ import 'package:smile_shop/data/vos/package_vo.dart';
 import 'package:smile_shop/data/vos/payment_vo.dart';
 import 'package:smile_shop/data/vos/product_response_data_vo.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
+import 'package:smile_shop/data/vos/promotion_data_vo.dart';
 import 'package:smile_shop/data/vos/promotion_vo.dart';
 import 'package:smile_shop/data/vos/refund_vo.dart';
 import 'package:smile_shop/data/vos/state_vo.dart';
@@ -784,12 +786,12 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   }
 
   @override
-  Future<List<PromotionVO>> getPromotionLogsByStatus(String token, String acceptLanguage, String status) {
+  Future<PromotionDataVO> getPromotionLogsByStatus(String token, String acceptLanguage, String status) {
     return mApi
         .getPromotionLogByStatus(acceptLanguage,'Bearer $token',status)
         .asStream()
         .map((response) {
-      return response.data ?? [];
+      return response.data ?? PromotionDataVO();
     })
         .first
         .catchError((error) {
@@ -843,6 +845,20 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   Future<SuccessNetworkResponse> checkOrderStatus(String acceptLanguage, String token, OrderStatusRequest request) {
     return mApi
         .checkOrderStatus(acceptLanguage,'Bearer $token',request)
+        .asStream()
+        .map((response) {
+      return response;
+    })
+        .first
+        .catchError((error) {
+      throw _createException(error);
+    });
+  }
+
+  @override
+  Future<CampaignHistoryResponse> getCampaignHistory(String acceptLanguage, String token) {
+    return mApi
+        .getCampaignHistory(acceptLanguage,'Bearer $token')
         .asStream()
         .map((response) {
       return response;

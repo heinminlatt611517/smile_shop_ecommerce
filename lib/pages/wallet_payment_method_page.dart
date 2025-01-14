@@ -77,6 +77,17 @@ class WalletPaymentMethodPage extends StatelessWidget {
                           Selector<WalletPaymentBloc, List<PaymentVO>>(
                             selector: (context, bloc) => bloc.payments,
                             builder: (context, paymentMethods, child) =>
+                            paymentMethods.isEmpty ? ///loading view
+                            Container(
+                              color: Colors.transparent,
+                              child: const Center(
+                                child: LoadingView(
+                                  bgColor: Colors.transparent,
+                                  indicatorColor: kPrimaryColor,
+                                  indicator: Indicator.ballSpinFadeLoader,
+                                ),
+                              ),
+                            ) :
                                 MediaQuery.removePadding(
                                     context: context,
                                     removeBottom: true,

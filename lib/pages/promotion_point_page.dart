@@ -44,28 +44,30 @@ class PromotionPointPage extends StatelessWidget {
             Container(
               width: double.infinity,
               color: kSecondaryColor,
-              child: const Column(
+              child:  Column(
                 children: [
-                  Text(
+                  const Text(
                     'You have                 ',
                     style:
                         TextStyle(fontSize: kTextRegular, color: Colors.black),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 7,
                   ),
-                  Text(
-                    '500,000',
-                    style: TextStyle(
-                        fontSize: 32,
-                        color: kBackgroundColor,
-                        fontWeight: FontWeight.bold),
+                  Consumer<PromotionBloc>(
+                    builder: (context,bloc,child)=>
+                     Text(bloc.promotionDataVO?.currentPoint.toString() ?? "0",
+                      style:const TextStyle(
+                          fontSize: 32,
+                          color: kBackgroundColor,
+                          fontWeight: FontWeight.bold),
+                    ),
                   ),
-                  Text(
+                  const Text(
                     '        promotion points',
                     style: TextStyle(fontSize: kTextSmall, color: Colors.black),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                 ],

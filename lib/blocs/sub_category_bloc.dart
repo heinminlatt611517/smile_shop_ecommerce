@@ -11,6 +11,8 @@ class SubCategoryBloc extends ChangeNotifier {
 
   List<SubcategoryVO> subCategories = [];
   List<ProductVO> products = [];
+  bool isLoading = false;
+  bool isDisposed = false;
 
   SubCategoryBloc(int categoryId) {
     ///get data from database
@@ -21,6 +23,7 @@ class SubCategoryBloc extends ChangeNotifier {
             "";
     var subCategoryRequest = SubCategoryRequest(categoryId: categoryId);
 
+    _showLoading();
     ///get sub category list
     _smileShopModel
         .subCategoryByCategory(authToken, kAcceptLanguageEn, subCategoryRequest)
@@ -36,7 +39,7 @@ class SubCategoryBloc extends ChangeNotifier {
         .then((productResponse) {
       products = productResponse;
       notifyListeners();
-    });
+    }).whenComplete(()=> _hideLoading());
   }
 
   void onTapFavourite(ProductVO? product,BuildContext context){
@@ -55,5 +58,20 @@ class SubCategoryBloc extends ChangeNotifier {
         duration: const Duration(seconds: 2),
       ),
     );
+  }
+  void _showLoading() {
+    isLoading = true;
+    _notifySafely();
+  }
+
+  void _hideLoading() {
+    isLoading = false;
+    _notifySafely();
+  }
+
+  void _notifySafely() {
+    if (!isDisposed) {
+      notifyListeners();
+    }
   }
 }

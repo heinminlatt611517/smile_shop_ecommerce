@@ -137,11 +137,11 @@ class TicketBloc extends ChangeNotifier {
       );
       return;
     }
-    await _api.createTicket(title, description);
+    await _api.createTicket(title, description,"");
   }
 
   void listenTickets() {
-    _api.getTicketsByUser().listen((tickets) {
+    _api.getTicketsByUser("").listen((tickets) {
       tickets.sort((a, b) {
         String updatedAtA = a.updatedAt ?? "";
         String updatedAtB = b.updatedAt ?? "";

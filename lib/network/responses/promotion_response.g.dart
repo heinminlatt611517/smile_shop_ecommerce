@@ -10,9 +10,9 @@ PromotionResponse _$PromotionResponseFromJson(Map<String, dynamic> json) =>
     PromotionResponse(
       status: (json['status_code'] as num?)?.toInt(),
       message: json['message'] as String?,
-      data: (json['data'] as List<dynamic>?)
-          ?.map((e) => PromotionVO.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      data: json['data'] == null
+          ? null
+          : PromotionDataVO.fromJson(json['data'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$PromotionResponseToJson(PromotionResponse instance) =>

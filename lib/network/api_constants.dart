@@ -50,6 +50,7 @@ const String kEndPointGetMyTeams = '/api/profile/myteam';
 const String kEndPointGetPackages = '/api/packages';
 const String kEndPointGetPackageDetails = '/api/packages';
 const String kEndPointCheckOrderStatus = '/api/order/check-status';
+const String kEndPointCampaignHistory = '/api/campaign/history';
 
 
 ///Parameters

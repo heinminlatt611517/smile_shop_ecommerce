@@ -25,38 +25,56 @@ class SubCategoryPage extends StatelessWidget {
       child: Scaffold(
           backgroundColor: kBackgroundColor,
           appBar: CustomAppBarView(title: categoryVO?.name ?? "",),
-          body: Selector<SubCategoryBloc, List<SubcategoryVO>>(
-              selector: (context, bloc) => bloc.subCategories,
-              builder: (context, subCategories, child) {
-                return subCategories.isEmpty
-                    ? const LoadingView(
-                        indicator: Indicator.ballSpinFadeLoader,
-                        indicatorColor: kPrimaryColor)
-                    : Padding(
-                        padding: const EdgeInsets.all(kMarginMedium2),
-                        child: CustomScrollView(
-                          slivers: [
-                            ///sub category view
-                            SliverToBoxAdapter(
-                              child: SubCategoryView(
-                                subCategories: subCategories,
+          body: Selector<SubCategoryBloc, bool>(
+            selector: (context, bloc) => bloc.isLoading,
+            builder: (BuildContext context, isLoading, Widget? child) =>
+                Stack(
+                  children: [
+                    ///body view
+                    Selector<SubCategoryBloc, List<SubcategoryVO>>(
+                    selector: (context, bloc) => bloc.subCategories,
+                    builder: (context, subCategories, child) {
+                      return subCategories.isNotEmpty
+                          ? Padding(
+                              padding: const EdgeInsets.all(kMarginMedium2),
+                              child: CustomScrollView(
+                                slivers: [
+                                  ///sub category view
+                                  SliverToBoxAdapter(
+                                    child: SubCategoryView(
+                                      subCategories: subCategories,
+                                    ),
+                                  ),
+
+                                  ///spacer
+                                  const SliverToBoxAdapter(
+                                      child: SizedBox(
+                                    height: kMarginMedium2,
+                                  )),
+
+                                  ///product view
+                                  const SliverToBoxAdapter(
+                                    child: ProductsView(),
+                                  ),
+                                ],
                               ),
-                            ),
+                            ) :const SizedBox.shrink();
+                    }),
 
-                            ///spacer
-                            const SliverToBoxAdapter(
-                                child: SizedBox(
-                              height: kMarginMedium2,
-                            )),
-
-                            ///product view
-                            const SliverToBoxAdapter(
-                              child: ProductsView(),
-                            ),
-                          ],
+                    ///loading view
+                    if (isLoading)
+                      Container(
+                        color: Colors.black12,
+                        child: const Center(
+                          child: LoadingView(
+                            indicatorColor: kPrimaryColor,
+                            indicator: Indicator.ballSpinFadeLoader,
+                          ),
                         ),
-                      );
-              })),
+                      ),
+                  ],
+                ),
+          )),
     );
   }
 }
@@ -106,11 +124,8 @@ class ProductsView extends StatelessWidget {
     return Selector<SubCategoryBloc, List<ProductVO>>(
         selector: (context, bloc) => bloc.products,
         builder: (context, products, child) {
-          return products.isEmpty
-              ? const Center(
-            child: CircularProgressIndicator(),
-          )
-              : GridView.builder(
+          return products.isNotEmpty
+              ? GridView.builder(
             shrinkWrap: true,
             padding: EdgeInsets.zero,
             physics: const NeverScrollableScrollPhysics(),
@@ -131,7 +146,7 @@ class ProductsView extends StatelessWidget {
                 mainAxisSpacing: 14.0,
                 crossAxisSpacing: 10.0,
                 childAspectRatio: 2 / 2.7),
-          );
+          ) : const SizedBox.shrink();
         });
   }
 }

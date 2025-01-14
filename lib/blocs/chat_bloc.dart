@@ -46,7 +46,7 @@ class ChatBloc extends ChangeNotifier {
   }
 
   void listenTickets() {
-    _api.getTicketsByUser().listen((tickets) {
+    _api.getTicketsByUser(userVO?.id.toString() ?? "").listen((tickets) {
       tickets.sort((a, b) {
         String updatedAtA = a.updatedAt ?? "";
         String updatedAtB = b.updatedAt ?? "";

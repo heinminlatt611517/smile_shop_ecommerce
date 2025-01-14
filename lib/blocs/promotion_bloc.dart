@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:smile_shop/data/model/smile_shop_model.dart';
 import 'package:smile_shop/data/model/smile_shop_model_impl.dart';
+import 'package:smile_shop/data/vos/promotion_data_vo.dart';
 import 'package:smile_shop/data/vos/promotion_vo.dart';
 import 'package:smile_shop/data/vos/wallet_transaction_vo.dart';
 import 'package:smile_shop/data/vos/wallet_vo.dart';
@@ -16,6 +17,7 @@ class PromotionBloc extends ChangeNotifier {
   bool isDisposed = false;
   WalletVO? walletVO;
   List<PromotionVO> promotions = [];
+  PromotionDataVO? promotionDataVO;
   var accessToken = "";
   int? selectedSegment = 0;
   dynamic walletTransitionRequest;
@@ -40,10 +42,11 @@ class PromotionBloc extends ChangeNotifier {
   void getPromotionByStatus() {
     _showLoading();
     _smileShopModel
-        .getPromotionLogsByStatus(
-            accessToken, kAcceptLanguageEn,selectedSegment == 0 ? kStatusIncome : kStatusOutCome)
+        .getPromotionLogsByStatus(accessToken, kAcceptLanguageEn,
+            selectedSegment == 0 ? kStatusIncome : kStatusOutCome)
         .then((response) {
-      promotions = response;
+      promotionDataVO = response;
+      promotions = response.promotions ?? [];
       _notifySafely();
     }).whenComplete(() => _hideLoading());
   }

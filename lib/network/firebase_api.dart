@@ -172,11 +172,11 @@ class FirebaseApi {
 
     if(querySnapshot.docs.isEmpty){
       await users.add(userVo.toJson());
-      createTicket("", "");
+      createTicket("", "",userVo.id.toString());
     }
   }
 
-  Future<void> createTicket(String title, String description) async {
+  Future<void> createTicket(String title, String description,String userID) async {
     CollectionReference tickets = _firebase.collection("tickets");
     DocumentReference docRef = tickets.doc();
 
@@ -185,7 +185,7 @@ class FirebaseApi {
       title: title,
       description: description,
       status: "open",
-      createdBy: FIREBASE_USER.id?.toString(),
+      createdBy: userID,
       assignedTo: null,
       createdAt: DateTime.now().toString(),
       updatedAt: DateTime.now().toString(),
@@ -196,10 +196,10 @@ class FirebaseApi {
 
 
 
-  Stream<List<TicketVo>> getTicketsByUser() {
+  Stream<List<TicketVo>> getTicketsByUser(String userId) {
     CollectionReference tickets = _firebase.collection("tickets");
 
-    return tickets.where("createdBy", isEqualTo: FIREBASE_USER.id?.toString()).snapshots().map(
+    return tickets.where("createdBy", isEqualTo: userId).snapshots().map(
           (snapshot) => snapshot.docs.map((doc) => TicketVo.fromJson(doc.data() as Map<String, dynamic>)).toList(),
     );
   }

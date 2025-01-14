@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:retrofit/error_logger.dart';
 import 'package:retrofit/http.dart';
+import 'package:smile_shop/network/responses/campaign_history_response.dart';
 import 'package:smile_shop/network/requests/address_request.dart';
 import 'package:smile_shop/network/requests/campaign_join_request.dart';
 import 'package:smile_shop/network/requests/checkIn_request.dart';
@@ -421,4 +422,9 @@ abstract class SmileShopApi {
       @Header(kHeaderAcceptLanguage) String acceptLanguage,
       @Header(kHeaderAuthorization) String token,
       @Body() OrderStatusRequest request);
+
+  @GET(kEndPointCampaignHistory)
+  Future<CampaignHistoryResponse> getCampaignHistory(
+      @Header(kHeaderAcceptLanguage) String acceptLanguage,
+      @Header(kHeaderAuthorization) String token);
 }

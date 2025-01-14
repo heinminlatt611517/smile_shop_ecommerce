@@ -5,6 +5,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:smile_shop/data/model/smile_shop_model.dart';
 import 'package:smile_shop/data/vos/banner_vo.dart';
 import 'package:smile_shop/data/vos/brand_and_category_vo.dart';
+import 'package:smile_shop/network/responses/campaign_history_response.dart';
 import 'package:smile_shop/data/vos/campaign_participant_vo.dart';
 import 'package:smile_shop/data/vos/campaign_vo.dart';
 import 'package:smile_shop/data/vos/category_vo.dart';
@@ -15,6 +16,7 @@ import 'package:smile_shop/data/vos/order_vo.dart';
 import 'package:smile_shop/data/vos/package_vo.dart';
 import 'package:smile_shop/data/vos/payment_vo.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
+import 'package:smile_shop/data/vos/promotion_data_vo.dart';
 import 'package:smile_shop/data/vos/promotion_vo.dart';
 import 'package:smile_shop/data/vos/refund_vo.dart';
 import 'package:smile_shop/data/vos/search_product_vo.dart';
@@ -538,7 +540,7 @@ class SmileShopModelImpl extends SmileShopModel {
   }
 
   @override
-  Future<List<PromotionVO>> getPromotionLogsByStatus(String token, String acceptLanguage, String status) {
+  Future<PromotionDataVO> getPromotionLogsByStatus(String token, String acceptLanguage, String status) {
     return mDataAgent.getPromotionLogsByStatus(token, acceptLanguage, status);
   }
 
@@ -560,6 +562,11 @@ class SmileShopModelImpl extends SmileShopModel {
   @override
   Future<SuccessNetworkResponse> checkOrderStatus(String acceptLanguage, String token, OrderStatusRequest request) {
     return mDataAgent.checkOrderStatus(acceptLanguage, token, request);
+  }
+
+  @override
+  Future<CampaignHistoryResponse> getCampaignHistory(String acceptLanguage, String token) {
+   return mDataAgent.getCampaignHistory(acceptLanguage, token);
   }
 
 }

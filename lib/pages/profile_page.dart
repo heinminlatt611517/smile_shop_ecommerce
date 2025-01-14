@@ -20,6 +20,9 @@ import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/utils/images.dart';
 import 'package:smile_shop/utils/strings.dart';
+import 'package:smile_shop/widgets/common_dialog.dart';
+import 'package:smile_shop/widgets/logout_dialog_view.dart';
+import 'package:smile_shop/widgets/svg_image_view.dart';
 
 import '../data/model/smile_shop_model.dart';
 import '../data/model/smile_shop_model_impl.dart';
@@ -149,55 +152,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   ],
                 ),
               ),
-              bottomNavigationBar: Container(
-                margin: const EdgeInsets.only(
-                    left: 16, right: 16, bottom: 30, top: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: InkWell(
-                        onTap: () {
-                          _model.clearSaveLoginData();
-                          Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(
-                                  builder: (builder) => const LoginPage()),
-                              (Route<dynamic> route) => false);
-                        },
-                        child: Container(
-                          height: 40,
-                          decoration: BoxDecoration(
-                              color: kPrimaryColor,
-                              borderRadius: BorderRadius.circular(4)),
-                          child: const Center(
-                            child: Text(
-                              'Log Out',
-                              style: TextStyle(color: kBackgroundColor),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 16,
-                    ),
-                    Expanded(
-                      child: Container(
-                        height: 40,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4),
-                            border: Border.all(color: kPrimaryColor)),
-                        child: const Center(
-                          child: Text(
-                            'Delete Account',
-                            style: TextStyle(color: kPrimaryColor),
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
             ),
 
             ///loading view
@@ -245,7 +199,7 @@ class _ProfilePageState extends State<ProfilePage> {
             MaterialPageRoute(builder: (_) => const MyOrderPage(tabIndex: 3)));
       },
       child: _buildProfileItem(context,
-          title: 'To Receive', assetImagePath: kCarIcon),
+          title: 'To Receive', assetImagePath: kToReceiveIcon),
     ));
 
     items.add(InkWell(
@@ -342,6 +296,23 @@ class _ProfilePageState extends State<ProfilePage> {
     items.add(_buildProfileItem(context,
         title: 'Contact Us', assetImagePath: kContactUsIcon));
 
+    items.add(InkWell(
+      onTap: (){
+        showCommonDialog(context: context,dialogWidget: LogoutDialogView(onLogout: (){
+          _model.clearSaveLoginData();
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                  builder: (builder) => const LoginPage()),
+                  (Route<dynamic> route) => false);
+        }));
+      },
+      child: _buildProfileItem(context,
+          title: 'Log Out', assetImagePath: kLogoutIcon),
+    ));
+
+    items.add(_buildProfileItem(context,
+        title: 'Delete Account', assetImagePath: kDeleteIcon));
+
     return items;
   }
 }
@@ -353,12 +324,9 @@ Widget _buildProfileItem(BuildContext context,
     width: itemWidth,
     child: Column(
       children: [
-        Image.asset(
-          assetImagePath,
-          width: 20,
-          height: 20,
-          fit: BoxFit.cover,
-          color: kPrimaryColor,
+        SvgImageView(imageName: assetImagePath,
+          imageHeight: 20,
+          imageWidth: 20,
         ),
         const SizedBox(
           height: 7,
