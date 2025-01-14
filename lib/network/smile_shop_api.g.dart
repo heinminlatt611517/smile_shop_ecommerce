@@ -1525,7 +1525,7 @@ class _SmileShopApi implements SmileShopApi {
   }
 
   @override
-  Future<dynamic> checkWalletPassword(
+  Future<SuccessNetworkResponse> checkWalletPassword(
     String token,
     String acceptLanguage,
     CheckWalletPasswordRequest checkWalletPassword,
@@ -1539,7 +1539,7 @@ class _SmileShopApi implements SmileShopApi {
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
     _data.addAll(checkWalletPassword.toJson());
-    final _options = _setStreamType<dynamic>(Options(
+    final _options = _setStreamType<SuccessNetworkResponse>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -1555,8 +1555,14 @@ class _SmileShopApi implements SmileShopApi {
           _dio.options.baseUrl,
           baseUrl,
         )));
-    final _result = await _dio.fetch(_options);
-    final _value = _result.data;
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late SuccessNetworkResponse _value;
+    try {
+      _value = SuccessNetworkResponse.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
     return _value;
   }
 

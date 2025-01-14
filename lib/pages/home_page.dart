@@ -24,14 +24,13 @@ import 'main_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => HomeBloc(context),
-      child:const Scaffold(
-        backgroundColor: kBackgroundColor,
-        body: HomeContentView()
-      ),
+      child: const Scaffold(
+          backgroundColor: kBackgroundColor, body: HomeContentView()),
     );
   }
 }
@@ -45,7 +44,6 @@ class HomeContentView extends StatefulWidget {
 }
 
 class _HomeContentViewState extends State<HomeContentView> {
-
   var scrollController = ScrollController();
 
   @override
@@ -54,8 +52,7 @@ class _HomeContentViewState extends State<HomeContentView> {
     scrollController.addListener(() {
       if (scrollController.position.pixels ==
           scrollController.position.maxScrollExtent) {
-        var bloc = Provider.of<HomeBloc>(context,
-            listen: false);
+        var bloc = Provider.of<HomeBloc>(context, listen: false);
         bloc.getProducts();
         debugPrint("OnListEndReach");
       }
@@ -76,8 +73,8 @@ class _HomeContentViewState extends State<HomeContentView> {
         ///spacer
         const SliverToBoxAdapter(
             child: SizedBox(
-              height: kMarginXXLarge,
-            )),
+          height: kMarginXXLarge,
+        )),
 
         ///search view
         const SliverToBoxAdapter(
@@ -93,10 +90,10 @@ class _HomeContentViewState extends State<HomeContentView> {
         ),
 
         ///Campaign ,Daily check in and User Level view
-         SliverToBoxAdapter(
+        SliverToBoxAdapter(
           child: Visibility(
-               visible: GetStorage().read(kBoxKeyLoginUserType) == kTypeEndUser,
-              child:const CampaignDailyCheckInUserLevelView()),
+              visible: GetStorage().read(kBoxKeyLoginUserType) == kTypeEndUser,
+              child: const CampaignDailyCheckInUserLevelView()),
         ),
 
         ///Categories View
@@ -112,7 +109,6 @@ class _HomeContentViewState extends State<HomeContentView> {
     );
   }
 }
-
 
 ///Search View
 class SearchView extends StatelessWidget {
@@ -167,26 +163,26 @@ class SearchView extends StatelessWidget {
           width: kMarginMedium2,
         ),
         Consumer<HomeBloc>(
-          builder: (context,bloc,child)=>
-              InkWell(
-                onTap: (){
-                  Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(
-                      builder: (_) => const MainPage(initialIndex: 3),
-                    ),
-                        (Route<dynamic> route) => false,
-                  );
-                },
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(25),
-                  child: CachedNetworkImage(
-                      height: 50,
-                      width: 50,
-                      fit: BoxFit.cover,
-                      imageUrl: bloc.userProfile?.profileImage ??
-                          errorImageUrl),
+          builder: (context, bloc, child) => InkWell(
+            onTap: () {
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                  builder: (_) => const MainPage(initialIndex: 3),
                 ),
-              ),
+                (Route<dynamic> route) => false,
+              );
+            },
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(25),
+              child: CachedNetworkImage(
+                  height: 50,
+                  width: 50,
+                  fit: BoxFit.cover,
+                  imageUrl: bloc.userProfile?.profileImage == ''
+                      ? errorImageUrl
+                      : bloc.userProfile?.profileImage ?? errorImageUrl),
+            ),
+          ),
         )
       ],
     );
@@ -211,7 +207,8 @@ class CampaignDailyCheckInUserLevelView extends StatelessWidget {
               children: [
                 ///Daily check in view
                 InkWell(
-                  onTap: ()=> Navigator.of(context).push(MaterialPageRoute(builder: (_)=> const DailyCheckInPage())),
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => const DailyCheckInPage())),
                   child: Container(
                     padding: const EdgeInsets.all(kMarginMedium2),
                     decoration: BoxDecoration(
@@ -253,7 +250,10 @@ class CampaignDailyCheckInUserLevelView extends StatelessWidget {
                                 color: Colors.white,
                                 borderRadius:
                                     BorderRadius.circular(kMarginMedium)),
-                            child: Image.asset(kDailyCheckInIcon,fit: BoxFit.cover,))
+                            child: Image.asset(
+                              kDailyCheckInIcon,
+                              fit: BoxFit.cover,
+                            ))
                       ],
                     ),
                   ),
@@ -304,7 +304,10 @@ class CampaignDailyCheckInUserLevelView extends StatelessWidget {
                               color: Colors.white,
                               borderRadius:
                                   BorderRadius.circular(kMarginMedium)),
-                          child: Image.asset(kUserLevelIcon,fit: BoxFit.cover,))
+                          child: Image.asset(
+                            kUserLevelIcon,
+                            fit: BoxFit.cover,
+                          ))
                     ],
                   ),
                 )
@@ -315,11 +318,11 @@ class CampaignDailyCheckInUserLevelView extends StatelessWidget {
           ///Campaign view
           Expanded(
             child: InkWell(
-              onTap:(){
+              onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>const  CampaignPage(),
+                    builder: (context) => const CampaignPage(),
                   ),
                 );
               },
@@ -344,7 +347,10 @@ class CampaignDailyCheckInUserLevelView extends StatelessWidget {
                         decoration: BoxDecoration(
                             color: Colors.transparent,
                             borderRadius: BorderRadius.circular(kMarginMedium)),
-                        child:  Image.asset(kCampaignIcon,fit: BoxFit.cover,)),
+                        child: Image.asset(
+                          kCampaignIcon,
+                          fit: BoxFit.cover,
+                        )),
                     const Text(
                       kCampaignLabel,
                       style: TextStyle(
@@ -390,7 +396,9 @@ class CategoriesView extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>  SubCategoryPage(categoryVO: categories[index],),
+                    builder: (context) => SubCategoryPage(
+                      categoryVO: categories[index],
+                    ),
                   ),
                 );
               },
@@ -453,25 +461,25 @@ class BannerSectionView extends StatelessWidget {
           ),
 
           ///Dots indicator
-      if (banners.isNotEmpty)
-      SmoothPageIndicator(
-        controller: _bannerPageController,
-        count: banners.length,
-        axisDirection: Axis.horizontal,
-        effect: const SlideEffect(
-          dotHeight: kMarginMedium,
-          dotWidth: kMarginMedium,
-          dotColor: kInactiveColor,
-          activeDotColor: kPrimaryColor,
-        ),
-        onDotClicked: (index) {
-          _bannerPageController.animateToPage(
-            index,
-            curve: Curves.easeOut,
-            duration: const Duration(milliseconds: 500),
-          );
-        },
-      )
+          if (banners.isNotEmpty)
+            SmoothPageIndicator(
+              controller: _bannerPageController,
+              count: banners.length,
+              axisDirection: Axis.horizontal,
+              effect: const SlideEffect(
+                dotHeight: kMarginMedium,
+                dotWidth: kMarginMedium,
+                dotColor: kInactiveColor,
+                activeDotColor: kPrimaryColor,
+              ),
+              onDotClicked: (index) {
+                _bannerPageController.animateToPage(
+                  index,
+                  curve: Curves.easeOut,
+                  duration: const Duration(milliseconds: 500),
+                );
+              },
+            )
         ],
       ),
     );
@@ -481,6 +489,7 @@ class BannerSectionView extends StatelessWidget {
 ///Trending Products View
 class TrendingProductsView extends StatelessWidget {
   const TrendingProductsView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -504,42 +513,50 @@ class TrendingProductsView extends StatelessWidget {
                         child: CircularProgressIndicator(),
                       )
                     : Selector<HomeBloc, bool>(
-                  selector: (context, bloc) => bloc.isLoading,
-                  builder: (context, isLoading, child) {
-                    return Column(
-                      children: [
-                        GridView.builder(
-                          shrinkWrap: true,
-                          padding: EdgeInsets.zero,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            return TrendingProductListItemView(
-                              productVO: products[index],
-                              onTapFavourite: (product){
-                                var bloc = Provider.of<HomeBloc>(context,
-                                    listen: false);
-                                bloc.onTapFavourite(product, context);
-                              },
-                            );
-                          },
-                          itemCount: products.length,
-                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            mainAxisSpacing: 14.0,
-                            crossAxisSpacing: 10.0,
-                            childAspectRatio: 2 / 2.7,
-                          ),
-                        ),
-                        const SizedBox(height: 30,),
-                        Visibility(
-                            visible : isLoading,
-                            child: const Center(child: CircularProgressIndicator(color: kPrimaryColor,),)),
-                        const SizedBox(height: 40,)
-                      ],
-                    );
-                  },
-                )
-                ;
+                        selector: (context, bloc) => bloc.isLoading,
+                        builder: (context, isLoading, child) {
+                          return Column(
+                            children: [
+                              GridView.builder(
+                                shrinkWrap: true,
+                                padding: EdgeInsets.zero,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemBuilder: (context, index) {
+                                  return TrendingProductListItemView(
+                                    productVO: products[index],
+                                    onTapFavourite: (product) {
+                                      var bloc = Provider.of<HomeBloc>(context,
+                                          listen: false);
+                                      bloc.onTapFavourite(product, context);
+                                    },
+                                  );
+                                },
+                                itemCount: products.length,
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  mainAxisSpacing: 14.0,
+                                  crossAxisSpacing: 10.0,
+                                  childAspectRatio: 2 / 2.7,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 30,
+                              ),
+                              Visibility(
+                                  visible: isLoading,
+                                  child: const Center(
+                                    child: CircularProgressIndicator(
+                                      color: kPrimaryColor,
+                                    ),
+                                  )),
+                              const SizedBox(
+                                height: 40,
+                              )
+                            ],
+                          );
+                        },
+                      );
               }),
         ],
       ),

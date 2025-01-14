@@ -136,9 +136,9 @@ class CampaignSubProductVO {
   });
 
   factory CampaignSubProductVO.fromJson(Map<String, dynamic> json) =>
-      _$ProductVOFromJson(json);
+      _$CampaignSubProductVOFromJson(json);
 
-  Map<String, dynamic> toJson() => _$ProductVOToJson(this);
+  Map<String, dynamic> toJson() => _$CampaignSubProductVOToJson(this);
 }
 
 @JsonSerializable()

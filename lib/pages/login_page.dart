@@ -118,6 +118,10 @@ class _LoginPageState extends State<LoginPage> {
                       ///password input view
                       Consumer<LogInBloc>(
                         builder: (context, bloc, child) => InputViewLockIcon(
+                            toggleObscured: () {
+                              bloc.onTapShowPassword();
+                            },
+                            isSecure: bloc.isShowPassword,
                             hintLabel: 'Type your password',
                             onChangeValue: (value) {
                               bloc.onPasswordChanged(value);

@@ -306,7 +306,7 @@ abstract class SmileShopApi {
       @Body() CheckWalletAmountRequest checkWalletRequest);
 
   @POST(kEndPointCheckWalletPassword)
-  Future checkWalletPassword(
+  Future<SuccessNetworkResponse> checkWalletPassword(
       @Header(kHeaderAuthorization) String token,
       @Header(kHeaderAcceptLanguage) String acceptLanguage,
       @Body() CheckWalletPasswordRequest checkWalletPassword);

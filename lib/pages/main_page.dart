@@ -7,7 +7,6 @@ import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/utils/images.dart';
 import 'package:smile_shop/utils/strings.dart';
-
 import '../widgets/svg_image_view.dart';
 import 'home_page.dart';
 
@@ -36,26 +35,39 @@ class _MainPageState extends State<MainPage> {
     const ProfilePage()
   ];
 
+  Future<bool> _onWillPop() async {
+    if (currentIndex != 0) {
+      setState(() {
+        currentIndex = 0;
+      });
+      return false;
+    }
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: currentIndex,
-        selectedItemColor: kSecondaryColor,
-        selectedFontSize: kTextSmall,
-        unselectedFontSize: kTextSmall,
-        unselectedItemColor: kBottomNavigationUnSelectedColor,
-        showUnselectedLabels: true,
-        backgroundColor: Colors.white,
-        type: BottomNavigationBarType.fixed,
-        onTap: (index) {
-          setState(() {
-            currentIndex = index;
-          });
-        },
-        items: _getBottomNavigationBarItems(),
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: currentIndex,
+          selectedItemColor: kSecondaryColor,
+          selectedFontSize: kTextSmall,
+          unselectedFontSize: kTextSmall,
+          unselectedItemColor: kBottomNavigationUnSelectedColor,
+          showUnselectedLabels: true,
+          backgroundColor: Colors.white,
+          type: BottomNavigationBarType.fixed,
+          onTap: (index) {
+            setState(() {
+              currentIndex = index;
+            });
+          },
+          items: _getBottomNavigationBarItems(),
+        ),
+        body: screenWidgets[currentIndex],
       ),
-      body: screenWidgets[currentIndex],
     );
   }
 
@@ -120,4 +132,3 @@ class _MainPageState extends State<MainPage> {
     ];
   }
 }
-

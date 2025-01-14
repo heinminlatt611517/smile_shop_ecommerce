@@ -45,6 +45,10 @@ class ChangePasswordPage extends StatelessWidget {
                       ///type old password
                       Consumer<ChangePasswordBloc>(
                         builder: (context, bloc, child) => InputViewLockIcon(
+                            toggleObscured: () {
+                              bloc.onTapShowOldPassword();
+                            },
+                            isSecure: bloc.isShowOldPassword,
                             hintLabel: 'Type your old password',
                             onChangeValue: (value) {
                               bloc.onPasswordChanged(value);
@@ -58,6 +62,10 @@ class ChangePasswordPage extends StatelessWidget {
                       ///type new password view
                       Consumer<ChangePasswordBloc>(
                         builder: (context, bloc, child) => InputViewLockIcon(
+                            toggleObscured: () {
+                              bloc.onTapShowNewPassword();
+                            },
+                            isSecure: bloc.isShowNewPassword,
                             hintLabel: 'Type your new password',
                             onChangeValue: (value) {
                               bloc.onPasswordChanged(value);
@@ -71,6 +79,10 @@ class ChangePasswordPage extends StatelessWidget {
                       ///retype new password view
                       Consumer<ChangePasswordBloc>(
                         builder: (context, bloc, child) => InputViewLockIcon(
+                            toggleObscured: () {
+                              bloc.onTapShowRetypePassword();
+                            },
+                            isSecure: bloc.isShowRetypePassword,
                             hintLabel: 'Re-type your new password',
                             onChangeValue: (value) {
                               bloc.onPasswordChanged(value);

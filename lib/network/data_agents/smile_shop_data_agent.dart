@@ -156,7 +156,7 @@ abstract class SmileShopDataAgent {
   Future checkWalletAmount(String token, String acceptLanguage,
       CheckWalletAmountRequest checkWalletAmountRequest);
 
-  Future checkWalletPassword(String token, String acceptLanguage,
+  Future<SuccessNetworkResponse> checkWalletPassword(String token, String acceptLanguage,
       CheckWalletPasswordRequest checkWalletPasswordRequest);
 
   Future<SuccessNetworkResponse> setWalletPassword(String token, String acceptLanguage,

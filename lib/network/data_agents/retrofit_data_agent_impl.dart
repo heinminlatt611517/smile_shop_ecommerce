@@ -535,7 +535,7 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   }
 
   @override
-  Future checkWalletPassword(String token, String acceptLanguage,
+  Future<SuccessNetworkResponse> checkWalletPassword(String token, String acceptLanguage,
       CheckWalletPasswordRequest checkWalletPasswordRequest) {
     return mApi
         .checkWalletPassword(

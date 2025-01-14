@@ -18,6 +18,8 @@ class WalletPasswordBloc extends ChangeNotifier {
   var endUserId = "";
   var password = "";
   var confirmPassword = "";
+  bool isShowPassword = true;
+  bool isShowRetypePassword = true;
 
   WalletPasswordBloc() {
     authToken =
@@ -44,6 +46,16 @@ class WalletPasswordBloc extends ChangeNotifier {
   void onConfirmPasswordChanged(String newConfirmPassword) {
     confirmPassword = newConfirmPassword;
     notifyListeners();
+  }
+
+  void onTapShowPassword() {
+    isShowPassword = !isShowPassword;
+    _notifySafely();
+  }
+
+  void onTapShowRetypePassword() {
+    isShowRetypePassword = !isShowRetypePassword;
+    _notifySafely();
   }
 
   void _showLoading() {

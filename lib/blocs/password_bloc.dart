@@ -18,6 +18,8 @@ class PasswordBloc extends ChangeNotifier {
   var endUserId = "";
   var password = "";
   var confirmPassword = "";
+  bool isShowPassword = true;
+  bool isShowRetypePassword = true;
   final FirebaseApi _api = FirebaseApi();
 
   PasswordBloc() {
@@ -45,6 +47,16 @@ class PasswordBloc extends ChangeNotifier {
       }) async {
     var firebaseUser = FirebaseUserVo(id: id,name: name,phone: phone,role: 'user');
     await _api.createUser(firebaseUser);
+  }
+
+  void onTapShowPassword() {
+    isShowPassword = !isShowPassword;
+    _notifySafely();
+  }
+
+  void onTapShowRetypePassword() {
+    isShowRetypePassword = !isShowRetypePassword;
+    _notifySafely();
   }
 
   void onPasswordChanged(String newPassword) {

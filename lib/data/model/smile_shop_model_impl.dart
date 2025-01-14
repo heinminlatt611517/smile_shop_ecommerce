@@ -333,7 +333,7 @@ class SmileShopModelImpl extends SmileShopModel {
   }
 
   @override
-  Future checkWalletPassword(String token, String acceptLanguage,
+  Future<SuccessNetworkResponse> checkWalletPassword(String token, String acceptLanguage,
       CheckWalletPasswordRequest checkWalletPasswordRequest) {
     return mDataAgent.checkWalletPassword(
         token, acceptLanguage, checkWalletPasswordRequest);

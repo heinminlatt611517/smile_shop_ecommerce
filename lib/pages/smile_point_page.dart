@@ -130,19 +130,21 @@ class SmilePointPage extends StatelessWidget {
                    const SizedBox(
                      height: 18,
                    ),
-                   InkWell(
-                     onTap: (){
-                     },
-                     child: Container(
-                       width: MediaQuery.of(context).size.width - 60,
-                       padding: const EdgeInsets.all(2),
-                       decoration: BoxDecoration(
-                           borderRadius: BorderRadius.circular(2),
-                           border: Border.all(color: kBackgroundColor)),
-                       child: const Center(
-                         child: Text(
-                           'Please set password to secure your smile point.',
-                           style: TextStyle(color: Colors.white),
+                   Consumer<SmileWalletBloc>(
+                     builder: (context,bloc,child)=>
+                      Visibility(
+                        visible: bloc.isShowSetPasswordText,
+                       child: Container(
+                         width: MediaQuery.of(context).size.width - 60,
+                         padding: const EdgeInsets.all(2),
+                         decoration: BoxDecoration(
+                             borderRadius: BorderRadius.circular(2),
+                             border: Border.all(color: kBackgroundColor)),
+                         child: const Center(
+                           child: Text(
+                             'Please set password to secure your smile point.',
+                             style: TextStyle(color: Colors.white),
+                           ),
                          ),
                        ),
                      ),

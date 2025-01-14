@@ -68,7 +68,8 @@ CampaignProductVO _$CampaignProductVOFromJson(Map<String, dynamic> json) =>
       price: json['price'] as String?,
       product: json['product'] == null
           ? null
-          : CampaignSubProductVO.fromJson(json['product'] as Map<String, dynamic>),
+          : CampaignSubProductVO.fromJson(
+              json['product'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$CampaignProductVOToJson(CampaignProductVO instance) =>
@@ -79,7 +80,9 @@ Map<String, dynamic> _$CampaignProductVOToJson(CampaignProductVO instance) =>
       'product': instance.product,
     };
 
-CampaignSubProductVO _$ProductVOFromJson(Map<String, dynamic> json) => CampaignSubProductVO(
+CampaignSubProductVO _$CampaignSubProductVOFromJson(
+        Map<String, dynamic> json) =>
+    CampaignSubProductVO(
       id: (json['id'] as num?)?.toInt(),
       name: json['name'] as String?,
       show: (json['show'] as num?)?.toInt(),
@@ -89,7 +92,9 @@ CampaignSubProductVO _$ProductVOFromJson(Map<String, dynamic> json) => CampaignS
       campaignId: json['campaign_id'] as String?,
     );
 
-Map<String, dynamic> _$ProductVOToJson(CampaignSubProductVO instance) => <String, dynamic>{
+Map<String, dynamic> _$CampaignSubProductVOToJson(
+        CampaignSubProductVO instance) =>
+    <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
       'show': instance.show,

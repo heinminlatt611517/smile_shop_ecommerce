@@ -15,7 +15,9 @@ class ChangePasswordBloc extends ChangeNotifier {
   String phone = "";
   String email = "";
   String password = "";
-  bool isShowPassword = true;
+  bool isShowOldPassword = true;
+  bool isShowNewPassword = true;
+  bool isShowRetypePassword = true;
   bool isDisposed = false;
   bool isChecked = false;
   final FirebaseApi _api = FirebaseApi();
@@ -67,10 +69,21 @@ class ChangePasswordBloc extends ChangeNotifier {
     _notifySafely();
   }
 
-  void onTapShowPassword() {
-    isShowPassword = !isShowPassword;
+  void onTapShowOldPassword() {
+    isShowOldPassword = !isShowOldPassword;
     _notifySafely();
   }
+
+  void onTapShowNewPassword() {
+    isShowNewPassword = !isShowNewPassword;
+    _notifySafely();
+  }
+
+  void onTapShowRetypePassword() {
+    isShowRetypePassword = !isShowRetypePassword;
+    _notifySafely();
+  }
+
 
   void onCheckChange() {
     isChecked = !isChecked;

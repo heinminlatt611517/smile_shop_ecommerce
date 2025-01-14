@@ -63,6 +63,10 @@ class _PasswordPageState extends State<PasswordPage> {
                       Consumer<PasswordBloc>(
                         builder: (context,bloc,child) =>
                             InputViewLockIcon(
+                                toggleObscured: () {
+                                  bloc.onTapShowPassword();
+                                },
+                                isSecure: bloc.isShowPassword,
                                 hintLabel: 'Set your password',
                                 onChangeValue: (value){
                                   bloc.onPasswordChanged(value);
@@ -76,6 +80,10 @@ class _PasswordPageState extends State<PasswordPage> {
                       Consumer<PasswordBloc>(
                         builder: (context,bloc,child) =>
                             InputViewLockIcon(
+                                toggleObscured: () {
+                                  bloc.onTapShowRetypePassword();
+                                },
+                                isSecure: bloc.isShowRetypePassword,
                                 hintLabel: 'Retype your password',
                                 onChangeValue: (value){
                                   bloc.onConfirmPasswordChanged(value);

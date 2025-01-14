@@ -63,6 +63,7 @@ class _DealerLoginPageState extends State<DealerLoginPage> {
                       ///email input view
                       Consumer<LogInBloc>(
                         builder: (context, bloc, child) => InputViewLockIcon(
+                            isSecure: true,
                             hintLabel: 'Type your email address',
                             isMailIcon: true,
                             onChangeValue: (value) {
@@ -78,6 +79,10 @@ class _DealerLoginPageState extends State<DealerLoginPage> {
                       Consumer<LogInBloc>(
                         builder: (context, bloc, child) => InputViewLockIcon(
                             hintLabel: 'Type your password',
+                            toggleObscured: () {
+                              bloc.onTapShowPassword();
+                            },
+                            isSecure: bloc.isShowPassword,
                             onChangeValue: (value) {
                               bloc.onPasswordChanged(value);
                             }),
