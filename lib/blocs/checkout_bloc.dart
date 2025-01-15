@@ -24,7 +24,7 @@ class CheckOutBloc extends ChangeNotifier {
   bool isSelectedStandardDelivery = true;
   bool isSelectedSpecialDelivery = false;
   BuildContext? context;
-
+  var addressForShow = "";
   bool isSelectedUsePromotion = true;
   bool isSelectedNoPromotion = false;
 
@@ -57,6 +57,11 @@ class CheckOutBloc extends ChangeNotifier {
     });
   }
 
+  void onChangedAddressForShow(String newAddress){
+    addressForShow = newAddress;
+    _notifySafely();
+  }
+
   void refreshAddress() {
     debugPrint("RefreshAddress");
     _loadAddress();
@@ -73,6 +78,22 @@ class CheckOutBloc extends ChangeNotifier {
       totalProductPrice = 0;
       _notifySafely();
     }
+  }
+
+  void showSnackBar(BuildContext context, String message,Color snackBarColor) {
+    final scaffold = ScaffoldMessenger.of(context);
+
+    final snackBar = SnackBar(
+      content: Text(message),
+      duration: const Duration(seconds: 2),
+      backgroundColor:snackBarColor,
+      behavior: SnackBarBehavior.floating,
+      margin: const EdgeInsets.only(top: 80.0, left: 20.0, right: 20.0),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+    );
+    scaffold.showSnackBar(snackBar);
   }
 
   void onTapAddStandardDelivery() {

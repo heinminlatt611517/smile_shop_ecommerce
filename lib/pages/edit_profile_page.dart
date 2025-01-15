@@ -59,8 +59,9 @@ class EditProfilePage extends StatelessWidget {
                                       height: 60,
                                       width: 60,
                                       fit: BoxFit.cover,
-                                      imageUrl: userVo?.profileImage ??
-                                          errorImageUrl),
+                                      imageUrl:  userVo?.profileImage == ''
+                                          ? errorImageUrl
+                                          : userVo?.profileImage ?? errorImageUrl),
                                 )
                               : ClipRRect(
                             borderRadius: BorderRadius.circular(30),

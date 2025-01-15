@@ -13,6 +13,8 @@ import 'package:smile_shop/widgets/common_button_view.dart';
 import 'package:smile_shop/widgets/promotion_point_view.dart';
 import 'package:smile_shop/widgets/vertical_icon_with_label_view.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 import '../utils/dimens.dart';
 import '../utils/images.dart';
@@ -161,7 +163,8 @@ class _ProductDetailsPageState extends State<ProductDetailsPage>
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => const TicketScreen()),
+                                          builder: (context) =>
+                                              const TicketScreen()),
                                     );
                                   },
                                   icon: Icons.chat,
@@ -171,14 +174,16 @@ class _ProductDetailsPageState extends State<ProductDetailsPage>
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => const CartPage()),
+                                          builder: (context) =>
+                                              const CartPage()),
                                     );
                                   },
                                   icon: Icons.shopping_cart_outlined,
                                   label: "Cart"),
                               VerticalIconWithLabelView(
                                   onTap: () {
-                                    var bloc = Provider.of<ProductDetailsBloc>(context,
+                                    var bloc = Provider.of<ProductDetailsBloc>(
+                                        context,
                                         listen: false);
                                     bloc.onTapFavourite(product, context);
                                   },
@@ -225,31 +230,34 @@ class _ProductDetailsPageState extends State<ProductDetailsPage>
                                         ),
                                       ),
                                     ),
-                                    InkWell(
-                                      onTap: () {
-                                        showBuyNowBottomSheet(
-                                            context,
-                                            product?.variantVO?.isNotEmpty ??
-                                                    true
-                                                ? product?.variantVO
-                                                : [],
-                                            product?.name ?? "",
-                                            product);
-                                      },
-                                      child: Container(
-                                        decoration: const BoxDecoration(
-                                          borderRadius: BorderRadius.only(
-                                              topRight: Radius.circular(6),
-                                              bottomRight: Radius.circular(6)),
-                                          color: kPrimaryColor,
-                                        ),
-                                        child: const Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Text(
-                                            'Buy Now',
-                                            style: TextStyle(
-                                                color: kBackgroundColor,
-                                                fontWeight: FontWeight.bold),
+                                    Consumer<ProductDetailsBloc>(
+                                      builder: (context,bloc,chid)=>
+                                       InkWell(
+                                        onTap: () {
+                                          showBuyNowBottomSheet(
+                                              context,
+                                              product?.variantVO?.isNotEmpty ??
+                                                      true
+                                                  ? product?.variantVO
+                                                  : [],
+                                              product?.name ?? "",
+                                              product,bloc);
+                                        },
+                                        child: Container(
+                                          decoration: const BoxDecoration(
+                                            borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(6),
+                                                bottomRight: Radius.circular(6)),
+                                            color: kPrimaryColor,
+                                          ),
+                                          child: const Padding(
+                                            padding: EdgeInsets.all(8.0),
+                                            child: Text(
+                                              'Buy Now',
+                                              style: TextStyle(
+                                                  color: kBackgroundColor,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -375,8 +383,9 @@ class BannerSectionView extends StatelessWidget {
                   Navigator.pop(context);
                 },
                 child: Container(
-                  padding:const EdgeInsets.all(kMarginMedium),
-                  decoration:const BoxDecoration(color: Colors.white,shape: BoxShape.circle),
+                  padding: const EdgeInsets.all(kMarginMedium),
+                  decoration: const BoxDecoration(
+                      color: Colors.white, shape: BoxShape.circle),
                   child: const SvgImageView(
                     imageName: kBackSvgIcon,
                     imageHeight: 20,
@@ -441,12 +450,15 @@ class CategoryAndReturnPointView extends StatelessWidget {
               ),
               const Icon(
                 Icons.star,
-                color: Colors.black,
+                color: kPrimaryColor,
+                size: 20,
               ),
               Text(
                 productVO?.rating.toString() ?? "0",
                 style: const TextStyle(
-                    fontSize: kTextRegular, fontWeight: FontWeight.bold),
+                    fontSize: kTextRegular,
+                    fontWeight: FontWeight.bold,
+                    color: kPrimaryColor),
               )
             ],
           ),
@@ -505,7 +517,9 @@ class CategoryAndReturnPointView extends StatelessWidget {
                     fontSize: kTextRegular2x, fontWeight: FontWeight.bold),
               ),
               const Spacer(),
-              PromotionPointView(point: productVO?.variantVO?.first.redeemPoint  ?? 0,),
+              PromotionPointView(
+                point: productVO?.variantVO?.first.redeemPoint ?? 0,
+              ),
             ],
           ),
         ),
@@ -516,252 +530,383 @@ class CategoryAndReturnPointView extends StatelessWidget {
 
 ///bottomsheet
 void showBuyNowBottomSheet(BuildContext context, List<VariantVO>? variantVO,
-    String productName, ProductVO? productVO) {
+    String productName, ProductVO? productVO,ProductDetailsBloc productDetailBloc) {
   showModalBottomSheet(
     context: context,
     builder: (context) {
-      return ChangeNotifierProvider(
-        create: (context) => ProductDetailsBottomSheetBloc(
-            variantVO?.first.colorName ?? "", variantVO?.first.price),
-        child: Container(
-          decoration: const BoxDecoration(
-            color: kBackgroundColor,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
+      return  ChangeNotifierProvider(
+          create: (context) => ProductDetailsBottomSheetBloc(
+              variantVO?.first.colorName ?? "", variantVO?.first.price),
+          child: Container(
+            decoration: const BoxDecoration(
+              color: kBackgroundColor,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+              ),
             ),
-          ),
-          width: double.infinity, // Ensures full width of the parent
-          child: Padding(
-            padding: const EdgeInsets.all(kMarginMedium2),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ///close button
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    icon: const Icon(Icons.clear),
+            width: double.infinity, // Ensures full width of the parent
+            child: Padding(
+              padding: const EdgeInsets.all(kMarginMedium2),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ///close button
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      icon: const Icon(Icons.clear),
+                    ),
                   ),
-                ),
 
-                ///image , name , price view
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ClipRRect(
-                      child: CachedNetworkImageView(
-                        imageHeight: 100,
-                        imageWidth: 100,
-                        imageUrl: variantVO?.first.images.isNotEmpty ?? true
-                            ? variantVO?.first.images.first.url ?? errorImageUrl
-                            : errorImageUrl,
+                  ///image , name , price view
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ClipRRect(
+                        child: CachedNetworkImageView(
+                          imageHeight: 100,
+                          imageWidth: 100,
+                          imageUrl: productVO?.images?.isNotEmpty ?? true
+                              ? productVO?.images?.first ?? errorImageUrl
+                              : errorImageUrl,
+                        ),
                       ),
-                    ),
-                    const SizedBox(
-                      width: kMarginMedium3,
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            productName,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontSize: kTextRegular2x,
-                              fontWeight: FontWeight.w600,
+                      const SizedBox(
+                        width: kMarginMedium3,
+                      ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              productName,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontSize: kTextRegular2x,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
-                          ),
-                          const SizedBox(
-                            height: kMargin10,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Ks ${variantVO?.first.price.toString() ?? ""}",
-                                style:
-                                    const TextStyle(fontSize: kTextRegular2x),
-                              ),
-                              const SizedBox(
-                                width: kMargin30,
-                              ),
-                               PromotionPointView(point: variantVO?.first.promotionPoint ?? 0,)
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-
-                ///spacer
-                const SizedBox(
-                  height: kMarginLarge,
-                ),
-
-                ///color view
-                const Text(
-                  'Available Color',
-                  style:
-                      TextStyle(color: Colors.black, fontSize: kTextRegular2x),
-                ),
-
-                ///spacer
-                const SizedBox(
-                  height: kMarginSmall,
-                ),
-
-                ///selectable colors
-                Consumer<ProductDetailsBottomSheetBloc>(
-                  builder: (context, bloc, child) {
-                    return SizedBox(
-                      height: 24,
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: variantVO?.length,
-                        itemBuilder: (context, index) {
-                          bool isSelected = bloc.isSelected(index);
-
-                          return Padding(
-                            padding:
-                                const EdgeInsets.only(right: kMarginMedium),
-                            child: InkWell(
-                              onTap: () {
-                                bloc.toggleSelectionColor(
-                                    index, variantVO?[index].colorName ?? "");
-                                var productDetailBloc =
-                                    Provider.of<ProductDetailsBloc>(context,
-                                        listen: false);
-                                productDetailBloc.onTapColor(
-                                    variantVO?[index].colorName ?? "");
-                              },
-                              child: Container(
-                                width: 20,
-                                height: 20,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle, // Circle shape
-                                  color: hexToColor(
-                                      variantVO?[index].colorVO?.value ?? ""),
-                                  border: Border.all(
-                                    color: isSelected
-                                        ? kPrimaryColor
-                                        : Colors.grey,
-                                    width: 1,
+                            const SizedBox(
+                              height: kMargin10,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Consumer<ProductDetailsBottomSheetBloc>(
+                                  builder: (context, bloc, child) => Text(
+                                    "Ks ${bloc.updateTotalPrice}",
+                                    style:
+                                        const TextStyle(fontSize: kTextRegular2x),
                                   ),
                                 ),
+                                const SizedBox(
+                                  width: kMargin30,
+                                ),
+                                PromotionPointView(
+                                  point: variantVO?.first.promotionPoint ?? 0,
+                                )
+                              ],
+                            ),
+
+                            const SizedBox(
+                              height: kMargin10,
+                            ),
+
+                            ///quality increase and decrease view
+                            Consumer<ProductDetailsBottomSheetBloc>(
+                              builder: (context, bloc, child) => Row(
+                                children: [
+                                  ///increase and decrease
+                                  TextButton(
+                                    style: TextButton.styleFrom(
+                                      minimumSize: Size.zero,
+                                      padding: EdgeInsets.zero,
+                                      tapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
+                                    ),
+                                    onPressed: () {
+                                      bloc.onTapMinus();
+                                    },
+                                    child: const Icon(
+                                      Icons.remove_circle,
+                                      color: kPrimaryColor,
+                                      size: 27,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: kMarginMedium,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: kMarginMedium),
+                                    child: Text(bloc.quantityCount.toString()),
+                                  ),
+                                  const SizedBox(
+                                    width: kMarginMedium,
+                                  ),
+                                  TextButton(
+                                    style: TextButton.styleFrom(
+                                      minimumSize: Size.zero,
+                                      padding: EdgeInsets.zero,
+                                      tapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
+                                    ),
+                                    onPressed: () {
+                                      bloc.onTapAdd();
+                                    },
+                                    child: const Icon(
+                                      Icons.add_circle,
+                                      color: kPrimaryColor,
+                                      size: 27,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          );
-                        },
-                      ),
-                    );
-                  },
-                ),
-
-                ///spacer
-                const SizedBox(
-                  height: kMarginLarge,
-                ),
-
-                ///quality increase and decrease view
-                Consumer<ProductDetailsBottomSheetBloc>(
-                  builder: (context, bloc, child) => Row(
-                    children: [
-                      const Text(
-                        'Quantity',
-                        style: TextStyle(
-                            color: Colors.black, fontSize: kTextRegular2x),
-                      ),
-                      const Spacer(),
-
-                      ///increase and decrease
-                      TextButton(
-                        style: TextButton.styleFrom(
-                          minimumSize: Size.zero,
-                          padding: EdgeInsets.zero,
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ],
                         ),
-                        onPressed: () {
-                          bloc.onTapMinus();
-                        },
-                        child: const Icon(
-                          Icons.remove_circle,
-                          color: kPrimaryColor,
-                        ),
-                      ),
-                      const SizedBox(
-                        width: kMarginMedium,
-                      ),
-                      Text(bloc.quantityCount.toString()),
-                      const SizedBox(
-                        width: kMarginMedium,
-                      ),
-                      TextButton(
-                        style: TextButton.styleFrom(
-                          minimumSize: Size.zero,
-                          padding: EdgeInsets.zero,
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        ),
-                        onPressed: () {
-                          bloc.onTapAdd();
-                        },
-                        child: const Icon(
-                          Icons.add_circle,
-                          color: kPrimaryColor,
-                        ),
-                      ),
-                      const SizedBox(
-                        width: kMarginXXLarge,
                       ),
                     ],
                   ),
-                ),
 
-                ///spacer
-                const SizedBox(
-                  height: kMarginLarge,
-                ),
+                  ///spacer
+                  const SizedBox(
+                    height: kMarginLarge,
+                  ),
 
-                ///buy now button
-                Consumer<ProductDetailsBottomSheetBloc>(
-                  builder: (context, bloc, child) => CommonButtonView(
-                    label: 'Buy Now',
-                    labelColor: Colors.white,
-                    bgColor: kPrimaryColor,
-                    onTapButton: () {
-                      Navigator.pop(context);
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (builder) => CheckoutPage(
-                                isFromCartPage: false,
-                                productList: [
-                                  productVO?.copyWith(
-                                          colorName: bloc.selectedColor,
-                                          totalPrice: bloc.updateTotalPrice,
-                                          qtyCount: bloc.quantityCount) ??
-                                      ProductVO()
-                                ],
-                              )));
+                  ///color view
+                  const Text(
+                    'Available Color',
+                    style:
+                        TextStyle(color: Colors.black, fontSize: kTextRegular2x),
+                  ),
+
+                  ///spacer
+                  const SizedBox(
+                    height: kMarginSmall,
+                  ),
+
+                  ///selectable colors
+                  Consumer<ProductDetailsBottomSheetBloc>(
+                    builder: (context, bloc, child) {
+                      return SizedBox(
+                        height: 24,
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: variantVO?.length,
+                          itemBuilder: (context, index) {
+                            bool isSelected = bloc.isSelected(index);
+
+                            return InkWell(
+                              onTap: () {
+                                bloc.toggleSelectionColor(
+                                    index, variantVO?[index].colorName ?? "");
+                                productDetailBloc.onTapColor(
+                                    variantVO?[index].colorName ?? "");
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: kMarginMedium),
+                                child: Row(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius:
+                                const BorderRadius.only(
+                                    topLeft: Radius.circular(6),
+                                  bottomLeft:
+                                  Radius.circular(6)),
+                                      child: CachedNetworkImageView(
+                                          imageHeight: 24,
+                                          imageWidth: 24,
+                                          imageUrl: variantVO?[index].image ??
+                                              errorImageUrl),
+                                    ),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                          const BorderRadius.only(
+                                              topRight: Radius.circular(6),
+                                              bottomRight:
+                                              Radius.circular(6)),
+                                          color: isSelected
+                                              ? kPrimaryColor
+                                              : Colors.white),
+                                      child: Center(
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: kMarginMedium),
+                                          child: Text(
+                                            variantVO?[index].colorName ?? "",
+                                            style: TextStyle(
+                                                color: isSelected
+                                                    ? Colors.white
+                                                    : kPrimaryColor),
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            );
+
+                            // return Padding(
+                            //   padding:
+                            //       const EdgeInsets.only(right: kMarginMedium),
+                            //   child: InkWell(
+                            //     onTap: () {
+                            //       bloc.toggleSelectionColor(
+                            //           index, variantVO?[index].colorName ?? "");
+                            //       var productDetailBloc =
+                            //           Provider.of<ProductDetailsBloc>(context,
+                            //               listen: false);
+                            //       productDetailBloc.onTapColor(
+                            //           variantVO?[index].colorName ?? "");
+                            //     },
+                            //     child: Container(
+                            //       width: 20,
+                            //       height: 20,
+                            //       decoration: BoxDecoration(
+                            //         shape: BoxShape.circle, // Circle shape
+                            //         color: hexToColor(
+                            //             variantVO?[index].colorVO?.value ?? ""),
+                            //         border: Border.all(
+                            //           color: isSelected
+                            //               ? kPrimaryColor
+                            //               : Colors.grey,
+                            //           width: 1,
+                            //         ),
+                            //       ),
+                            //     ),
+                            //   ),
+                            // );
+                          },
+                        ),
+                      );
                     },
                   ),
-                ),
 
-                ///spacer
-                const SizedBox(
-                  height: kMarginLarge,
-                ),
-              ],
+                  ///spacer
+                  const SizedBox(
+                    height: kMarginLarge,
+                  ),
+
+                  ///color view
+                  const Text(
+                    'Available Size',
+                    style:
+                    TextStyle(color: Colors.black, fontSize: kTextRegular2x),
+                  ),
+
+                  ///spacer
+                  const SizedBox(
+                    height: kMarginSmall,
+                  ),
+
+                  ///selectable size
+                  Consumer<ProductDetailsBottomSheetBloc>(
+                    builder: (context, bloc, child) {
+                      return SizedBox(
+                        height: 24,
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: variantVO?.length,
+                          itemBuilder: (context, index) {
+                            bool isSelected = bloc.isSelectedSize(index);
+
+                            return InkWell(
+                              onTap: () {
+                                bloc.toggleSelectionSize(
+                                    index, variantVO?[index].sizeVO?.value ?? "");
+                                productDetailBloc.onTapSize(
+                                    variantVO?[index].sizeVO?.value ?? "");
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: kMarginMedium),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius:BorderRadius.circular(6),
+                                      color: isSelected
+                                          ? kPrimaryColor
+                                          : Colors.white),
+                                  child: Center(
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: kMarginMedium),
+                                      child: Text(
+                                        variantVO?[index].sizeVO?.value ?? "",
+                                        style: TextStyle(
+                                            color: isSelected
+                                                ? Colors.white
+                                                : kPrimaryColor),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      );
+                    },
+                  ),
+
+                  ///spacer
+                  const SizedBox(
+                    height: kMarginLarge,
+                  ),
+
+                  ///buy now button
+                  Consumer<ProductDetailsBottomSheetBloc>(
+                    builder: (context, bloc, child) => CommonButtonView(
+                      label: 'Buy Now',
+                      labelColor: Colors.white,
+                      bgColor: kPrimaryColor,
+                      onTapButton: () {
+                        if(bloc.selectedColor != "" && bloc.selectedSize != "")
+                          {
+                            Navigator.pop(context);
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (builder) => CheckoutPage(
+                                  isFromCartPage: false,
+                                  productList: [
+                                    productVO?.copyWith(
+                                        colorName: bloc.selectedColor,
+                                        size: bloc.selectedSize,
+                                        totalPrice: bloc.updateTotalPrice,
+                                        qtyCount: bloc.quantityCount) ??
+                                        ProductVO()
+                                  ],
+                                )));
+                          }
+                        else {
+                          showTopSnackBar(
+                            displayDuration:const Duration(milliseconds: 300),
+                            Overlay.of(context),
+                            const CustomSnackBar.error(
+                              message:
+                              "Please select both color and size.",
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                  ),
+
+                  ///spacer
+                  const SizedBox(
+                    height: kMarginLarge,
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
       );
     },
   );

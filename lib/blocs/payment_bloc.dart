@@ -6,6 +6,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:smile_shop/network/requests/order_status_request.dart';
 import 'package:smile_shop/utils/strings.dart';
 import 'package:smile_shop/widgets/qr_dialog_view.dart';
+import 'package:smile_shop/widgets/set_wallet_password_dialog_view.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../data/model/smile_shop_model.dart';
@@ -124,9 +125,16 @@ class PaymentBloc extends ChangeNotifier {
         }
       });
     } catch (error) {
-      showCommonDialog(
-          context: context,
-          dialogWidget: ErrorDialogView(errorMessage: error.toString()));
+      if(error == 'The password field is required.'){
+        showCommonDialog(
+            context: context,
+            dialogWidget:const SetWalletPasswordDialogView(message: 'Please set wallet password first.'));
+      }
+      else{
+        showCommonDialog(
+            context: context,
+            dialogWidget: ErrorDialogView(errorMessage: error.toString()));
+      }
     } finally {
      // _hideLoading();
     }

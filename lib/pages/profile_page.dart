@@ -67,8 +67,9 @@ class _ProfilePageState extends State<ProfilePage> {
                             height: 60,
                             width: 60,
                             fit: BoxFit.cover,
-                            imageUrl: user?.profileImage ?? errorImageUrl),
-                      ),
+                            imageUrl: user?.profileImage == ''
+                        ? errorImageUrl
+                            : user?.profileImage ?? errorImageUrl),),
                       const SizedBox(
                         height: 10,
                       ),

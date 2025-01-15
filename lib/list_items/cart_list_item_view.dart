@@ -17,7 +17,7 @@ class CartListItemView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-      height: 140,
+      height: 164,
       width: double.infinity,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -75,6 +75,7 @@ class CartListItemView extends StatelessWidget {
                           const SizedBox(
                             height: kMargin10,
                           ),
+                          ///color
                           Row(
                             children: [
                                Expanded(
@@ -99,9 +100,43 @@ class CartListItemView extends StatelessWidget {
                                     style:const TextStyle(fontSize: kTextSmall),
                                   ),
                                 ),
-                              )
+                              ),
                             ],
                           ),
+
+                          const SizedBox(
+                            height: 2,
+                          ),
+
+                          ///size
+                          Row(
+                            children: [
+                              const Expanded(
+                                child: Text(
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                   "",
+                                  style:TextStyle(
+                                      color: kTpinTextColor, fontSize: kTextSmall),
+                                ),
+                              ),
+                              const SizedBox(
+                                width: kMargin6 + 1,
+                              ),
+                              Container(
+                                color: kCartColor.withOpacity(0.4),
+                                height: 22,
+                                padding: const EdgeInsets.symmetric(horizontal: 5),
+                                child:  Center(
+                                  child: Text(
+                                    'Size: ${productVO?.size}',
+                                    style:const TextStyle(fontSize: kTextSmall),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+
                           const SizedBox(
                             height: kMargin10,
                           ),
@@ -148,6 +183,7 @@ class CartListItemView extends StatelessWidget {
                           child: const Icon(
                             Icons.remove_circle,
                             color: kCartColor,
+                            size: 26,
                           )),
                       const SizedBox(
                         width: kMarginMedium,
@@ -172,6 +208,7 @@ class CartListItemView extends StatelessWidget {
                           child: const Icon(
                             Icons.add_circle,
                             color: kCartColor,
+                            size: 26,
                           )),
                     ],
                   )

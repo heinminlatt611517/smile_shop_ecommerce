@@ -279,7 +279,9 @@ class ChatBubble extends StatelessWidget {
             builder: (context,userVO,child)=>
                 CircleAvatar(
                   radius: 16,
-                  backgroundImage: NetworkImage(userVO?.profileImage ?? errorImageUrl), // Dummy profile image
+                  backgroundImage: NetworkImage(userVO?.profileImage == ''
+                      ? errorImageUrl
+                      : userVO?.profileImage ?? errorImageUrl), // Dummy profile image
                 ),
           ),
       ],

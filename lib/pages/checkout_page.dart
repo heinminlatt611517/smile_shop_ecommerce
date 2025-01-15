@@ -12,6 +12,8 @@ import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/utils/strings.dart';
 import 'package:smile_shop/widgets/common_button_view.dart';
 import 'package:smile_shop/widgets/custom_app_bar_view.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 import '../data/vos/product_vo.dart';
 import '../widgets/cached_network_image_view.dart';
@@ -91,15 +93,28 @@ class CheckoutPage extends StatelessWidget {
         bottomNavigationBar: Consumer<CheckOutBloc>(
           builder: (context, bloc, child) => GestureDetector(
             onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (builder) => PaymentMethodPage(
-                        productSubTotalPrice: bloc.totalSummaryProductPrice,
-                        isFromCartPage: isFromCartPage,
-                        productList: productList,
-                        promotionPoint: bloc.isSelectedUsePromotion == true
-                            ? GetStorage().read(kBoxKeyPromotionPoint)
-                            : 0, isFromMyOrderPage: false,
-                      )));
+              if(bloc.addressForShow == ""){
+                showTopSnackBar(
+                  displayDuration:const Duration(milliseconds: 300),
+                  Overlay.of(context),
+                  const CustomSnackBar.error(
+                    message:
+                    "Please select address",
+                  ),
+                );
+              }
+              else {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (builder) => PaymentMethodPage(
+                      productSubTotalPrice: bloc.totalSummaryProductPrice,
+                      isFromCartPage: isFromCartPage,
+                      productList: productList,
+                      promotionPoint: bloc.isSelectedUsePromotion == true
+                          ? GetStorage().read(kBoxKeyPromotionPoint)
+                          : 0, isFromMyOrderPage: false,
+                    )));
+              }
+
             },
             child: Container(
               margin: const EdgeInsets.only(bottom: 30, left: 16, right: 16),
@@ -129,44 +144,47 @@ class _BuildAddressView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (builder) => const MyAddressPage()));
-      },
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16),
-        padding: const EdgeInsets.symmetric(horizontal: 30),
-        height: 50,
-        width: double.infinity,
-        decoration: BoxDecoration(
-            color: kFillingFastColor.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(10)),
-        child: Row(
-          children: [
-            const Text('Address'),
-            const SizedBox(
-              width: 50,
-            ),
-            Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Flexible(
-                      child: Text(
-                    addressList?.isNotEmpty ?? true
-                        ? '${addressList?.first.townshipVO?.name ?? ""},${addressList?.first.stateVO?.name ?? ""}'
-                        : '',
-                    overflow: TextOverflow.ellipsis,
-                  )),
-                  const SizedBox(
-                    width: 20,
-                  ),
-                  const Icon(Icons.chevron_right)
-                ],
+    return Consumer<CheckOutBloc>(
+      builder: (context,bloc,child)=>
+       InkWell(
+        onTap: () async{
+          final String? addressName = await Navigator.of(context).push(
+              MaterialPageRoute(builder: (builder) => const MyAddressPage()));
+          if (addressName != null) {
+            bloc.onChangedAddressForShow(addressName);
+          }
+        },
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 30),
+          height: 50,
+          width: double.infinity,
+          decoration: BoxDecoration(
+              color: kFillingFastColor.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(10)),
+          child: Row(
+            children: [
+              const Text('Address'),
+              const SizedBox(
+                width: 50,
               ),
-            )
-          ],
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Flexible(
+                        child: Text(bloc.addressForShow,
+                      overflow: TextOverflow.ellipsis,
+                    )),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    const Icon(Icons.chevron_right)
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

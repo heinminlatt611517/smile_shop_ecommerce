@@ -11,6 +11,7 @@ class ProductDetailsBloc extends ChangeNotifier {
   bool isLoading = false;
   bool isDisposed = false;
   var selectedColorName = "";
+  var selectedSizeName = "";
 
   ProductDetailsBloc(String productId) {
     ///get data from database
@@ -35,37 +36,53 @@ class ProductDetailsBloc extends ChangeNotifier {
       var oldProduct =
           _smileShopModel.getProductByIdFromDatabase(productVO?.id ?? 0);
       if (oldProduct == null) {
-        _smileShopModel.saveProductToHive(
-            productVO?.copyWith(totalPrice: productVO?.variantVO?.first.price, qtyCount: 1,colorName: selectedColorName) ??
-                ProductVO());
+        _smileShopModel.saveProductToHive(productVO?.copyWith(
+                totalPrice: productVO?.variantVO?.first.price,
+                qtyCount: 1,
+                colorName: selectedColorName,
+                size: selectedSizeName) ??
+            ProductVO());
 
-        showSnackBar(context, '${productVO?.name} added to cart successfully!',Colors.green);
+        showSnackBar(context, '${productVO?.name} added to cart successfully!',
+            Colors.green);
       } else {
         int initialPrice = oldProduct.variantVO?.first.price ?? 0;
-        var newProductVO = oldProduct.copyWith(qtyCount: oldProduct.qtyCount!+1);
+        var newProductVO =
+            oldProduct.copyWith(qtyCount: oldProduct.qtyCount! + 1);
         var updatedTotalPrice = newProductVO.qtyCount! * (initialPrice);
-        _smileShopModel.saveProductToHive(newProductVO.copyWith(totalPrice: updatedTotalPrice,colorName: selectedColorName));
-        showSnackBar(context, '${productVO?.name} added to cart successfully!',Colors.green);
+        _smileShopModel.saveProductToHive(newProductVO.copyWith(
+            totalPrice: updatedTotalPrice, colorName: selectedColorName,size: selectedSizeName));
+        showSnackBar(context, '${productVO?.name} added to cart successfully!',
+            Colors.green);
       }
     } else {
-      showSnackBar(context, 'Failed to add product to cart.',Colors.red);
+      showSnackBar(context, 'Failed to add product to cart.', Colors.red);
     }
   }
 
-  void onTapColor(String colorName){
+  void onTapColor(String colorName) {
     selectedColorName = colorName;
     _notifySafely();
   }
 
-  void onTapFavourite(ProductVO? product,BuildContext context){
-    _smileShopModel.saveFavouriteProductToHive(
-        product?.copyWith(isFavourite: true,image: product.images?.first,) ??
-            ProductVO());
-
-    showSnackBar(context, '${product?.name} added to favourite successfully!',Colors.green);
+  void onTapSize(String size) {
+    selectedSizeName = size;
+    _notifySafely();
   }
 
-  void showSnackBar(BuildContext context, String description,Color snackBarColor) {
+  void onTapFavourite(ProductVO? product, BuildContext context) {
+    _smileShopModel.saveFavouriteProductToHive(product?.copyWith(
+          isFavourite: true,
+          image: product.images?.first,
+        ) ??
+        ProductVO());
+
+    showSnackBar(context, '${product?.name} added to favourite successfully!',
+        Colors.green);
+  }
+
+  void showSnackBar(
+      BuildContext context, String description, Color snackBarColor) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(description),

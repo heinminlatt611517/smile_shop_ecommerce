@@ -12,3 +12,27 @@ extension FormatTime on DateTime {
     return formatted;
   }
 }
+
+extension SplitStringExtension on String {
+
+  String getFirstPart() {
+    List<String> words = split(' ');
+    if (words.length > 1) {
+      return words.sublist(0, words.length - 1).join(' ');
+    } else {
+      return '';
+    }
+  }
+
+  String? getFirstWord() {
+    return split(' ').first;
+  }
+
+  String? getLastWords() {
+    List<String> words = split(' ') ?? [];
+    if (words.length <= 1) {
+      return '';
+    }
+    return words.sublist(1).join(' ');
+  }
+}

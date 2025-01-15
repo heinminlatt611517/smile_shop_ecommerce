@@ -81,6 +81,10 @@ class VariantVO {
   @HiveField(16)
   final String? colorName;
 
+  @JsonKey(name: 'image')
+  @HiveField(17)
+  final String? image;
+
   VariantVO({
     this.id,
     this.productId,
@@ -98,7 +102,8 @@ class VariantVO {
     this.inventoryVO,
     this.promotionPoint,
     this.redeemPoint,
-    this.colorName
+    this.colorName,
+    this.image
   });
 
   factory VariantVO.fromJson(Map<String, dynamic> json) =>

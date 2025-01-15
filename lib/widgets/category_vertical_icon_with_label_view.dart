@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smile_shop/data/vos/category_vo.dart';
 import 'package:smile_shop/network/api_constants.dart';
 import 'package:smile_shop/utils/dimens.dart';
+import 'package:smile_shop/utils/extensions.dart';
 import 'package:smile_shop/widgets/cached_network_image_view.dart';
 
 import '../data/dummy_data/accessories_dummy_data.dart';
@@ -15,6 +16,8 @@ class CategoryVerticalIconWithLabelView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<String> words = categoryVO?.name?.split(' ') ?? [];
+    bool isSingleWord = words.length == 1;
     return Container(
       decoration: BoxDecoration(color: isIconWithBg == true ? null : bgColor,borderRadius: BorderRadius.circular(kMarginMedium)),
       child: Column(
@@ -29,9 +32,13 @@ class CategoryVerticalIconWithLabelView extends StatelessWidget {
                     child: CachedNetworkImageView(imageHeight: 24, imageWidth: 24, imageUrl: categoryVO?.image ?? errorImageUrl)
                   ))),
           const SizedBox(height: 4,),
-          Text(
+         isSingleWord ?
+         Text(
+           textAlign: TextAlign.center,
+           categoryVO?.name ?? "",style:const TextStyle(color: Colors.black,fontSize:12
+         ),) : Text(
             textAlign: TextAlign.center,
-            categoryVO?.name ?? "",style:const TextStyle(color: Colors.black,fontSize:12
+            "${categoryVO?.name?.getFirstWord()}\n${categoryVO?.name?.getLastWords()}",style:const TextStyle(color: Colors.black,fontSize:12
           ),)
         ],),
     );

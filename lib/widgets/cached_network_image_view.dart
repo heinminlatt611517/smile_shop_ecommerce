@@ -18,6 +18,6 @@ class CachedNetworkImageView extends StatelessWidget {
         fit: BoxFit.cover,
         imageUrl: imageUrl,
         errorWidget: (context, url, error) =>
-            Image.network(errorImageUrl));
+            Image.network(errorImageUrl,fit: BoxFit.cover,));
   }
 }
