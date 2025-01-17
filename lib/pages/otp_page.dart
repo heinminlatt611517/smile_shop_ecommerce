@@ -183,6 +183,7 @@ class _OtpPageState extends State<OtpPage> {
                                         phone: widget.phone,
                                       )));
                             }).catchError((error) {
+                              debugPrint("Error>>>>>>$error");
                               showCommonDialog(
                                   context: context,
                                   dialogWidget: ErrorDialogView(

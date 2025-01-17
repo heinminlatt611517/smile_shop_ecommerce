@@ -52,13 +52,14 @@ class UserVOAdapter extends TypeAdapter<UserVO> {
       profileImage: fields[32] as String?,
       referCodeVO: fields[33] as ReferCodeVO?,
       promotionPoints: fields[34] as int?,
+      showPopUp: fields[35] as int?,
     );
   }
 
   @override
   void write(BinaryWriter writer, UserVO obj) {
     writer
-      ..writeByte(35)
+      ..writeByte(36)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -128,7 +129,9 @@ class UserVOAdapter extends TypeAdapter<UserVO> {
       ..writeByte(33)
       ..write(obj.referCodeVO)
       ..writeByte(34)
-      ..write(obj.promotionPoints);
+      ..write(obj.promotionPoints)
+      ..writeByte(35)
+      ..write(obj.showPopUp);
   }
 
   @override
@@ -184,6 +187,7 @@ UserVO _$UserVOFromJson(Map<String, dynamic> json) => UserVO(
           ? null
           : ReferCodeVO.fromJson(json['refer_code'] as Map<String, dynamic>),
       promotionPoints: (json['promotion_points'] as num?)?.toInt(),
+      showPopUp: (json['show_popup'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$UserVOToJson(UserVO instance) => <String, dynamic>{
@@ -222,4 +226,5 @@ Map<String, dynamic> _$UserVOToJson(UserVO instance) => <String, dynamic>{
       'profile_image': instance.profileImage,
       'refer_code': instance.referCodeVO,
       'promotion_points': instance.promotionPoints,
+      'show_popup': instance.showPopUp,
     };

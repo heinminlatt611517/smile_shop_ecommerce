@@ -26,6 +26,7 @@ import '../../network/requests/login_request.dart';
 import '../../network/requests/order_cancel_request.dart';
 import '../../network/requests/order_status_request.dart';
 import '../../network/requests/otp_verify_request.dart';
+import '../../network/requests/pop_up_request.dart';
 import '../../network/requests/set_wallet_password_request.dart';
 import '../../network/requests/sub_category_request.dart';
 import '../../network/requests/wallet_transition_request.dart';
@@ -40,6 +41,7 @@ import '../vos/my_team_vo.dart';
 import '../vos/order_vo.dart';
 import '../vos/package_vo.dart';
 import '../vos/payment_vo.dart';
+import '../vos/popup_data_vo.dart';
 import '../vos/product_response_data_vo.dart';
 import '../vos/promotion_vo.dart';
 import '../vos/refund_vo.dart';
@@ -242,4 +244,10 @@ abstract class SmileShopModel {
 
   Future<CampaignHistoryResponse> getCampaignHistory(
       String acceptLanguage,String token);
+
+  Future<SuccessNetworkResponse> updateHomePopUp(
+      String acceptLanguage,String token,PopupRequest request);
+
+  Future<PopupDataVO> getHomePopUpData(
+      String acceptLanguage,String token,PopupRequest request);
 }

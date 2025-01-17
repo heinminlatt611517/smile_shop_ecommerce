@@ -35,6 +35,8 @@ const kContactUsIcon = 'assets/images/contact_us.svg';
 const kDeleteIcon = 'assets/images/delete.svg';
 const kFavouriteIcon = 'assets/images/favourite.svg';
 const kLogoutIcon = 'assets/images/logout.svg';
+const kWelcomeIcon = 'assets/images/welcome.png';
+const kWelcomeSvgIcon = 'assets/images/welcome.svg';
 
 const kCampaignIcon = 'assets/images/campaign.png';
 const kDailyCheckInIcon = 'assets/images/daily_check_in.png';

@@ -213,6 +213,14 @@ class CampaignDailyCheckInUserLevelView extends StatelessWidget {
                     padding: const EdgeInsets.all(kMarginMedium2),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(kMarginMedium),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.3),
+                            spreadRadius: 0,
+                            blurRadius: 1,
+                            offset:const Offset(0, 3), // changes position of shadow
+                          ),
+                        ],
                         gradient: const LinearGradient(
                             begin: Alignment.centerLeft,
                             end: Alignment.centerRight,
@@ -251,6 +259,8 @@ class CampaignDailyCheckInUserLevelView extends StatelessWidget {
                                 borderRadius:
                                     BorderRadius.circular(kMarginMedium)),
                             child: Image.asset(
+                              height: 20,
+                              width: 20,
                               kDailyCheckInIcon,
                               fit: BoxFit.cover,
                             ))
@@ -267,6 +277,14 @@ class CampaignDailyCheckInUserLevelView extends StatelessWidget {
                   padding: const EdgeInsets.all(kMarginMedium2),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(kMarginMedium),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.3),
+                          spreadRadius: 0,
+                          blurRadius: 1,
+                          offset:const Offset(0, 3), // changes position of shadow
+                        ),
+                      ],
                       gradient: const LinearGradient(
                           begin: Alignment.centerLeft,
                           end: Alignment.centerRight,
@@ -306,6 +324,8 @@ class CampaignDailyCheckInUserLevelView extends StatelessWidget {
                                   BorderRadius.circular(kMarginMedium)),
                           child: Image.asset(
                             kUserLevelIcon,
+                            height: 20,
+                            width: 20,
                             fit: BoxFit.cover,
                           ))
                     ],
@@ -314,6 +334,9 @@ class CampaignDailyCheckInUserLevelView extends StatelessWidget {
               ],
             ),
           ),
+
+          const SizedBox(width: kMarginMedium
+            ,),
 
           ///Campaign view
           Expanded(
@@ -327,10 +350,18 @@ class CampaignDailyCheckInUserLevelView extends StatelessWidget {
                 );
               },
               child: Container(
-                height: 150,
+                height: 154,
                 padding: const EdgeInsets.only(left: kMarginMedium2),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(kMarginMedium),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.3),
+                        spreadRadius: 0,
+                        blurRadius: 1,
+                        offset:const Offset(0, 3), // changes position of shadow
+                      ),
+                    ],
                     gradient: const LinearGradient(
                         begin: Alignment.centerLeft,
                         end: Alignment.centerRight,
@@ -349,6 +380,8 @@ class CampaignDailyCheckInUserLevelView extends StatelessWidget {
                             borderRadius: BorderRadius.circular(kMarginMedium)),
                         child: Image.asset(
                           kCampaignIcon,
+                          height: 60,
+                          width: 63,
                           fit: BoxFit.cover,
                         )),
                     const Text(

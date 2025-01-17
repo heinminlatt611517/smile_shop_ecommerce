@@ -12,12 +12,15 @@ class ErrorVO {
   final String? message;
 
   @JsonKey(name: "errors")
+  final ErrorDataVO? errorData;
+
+  @JsonKey(name: "data")
   final ErrorDataVO? data;
 
   @JsonKey(name: "error")
   final String? error;
 
-  ErrorVO({this.statusCode, this.message, this.data, this.error});
+  ErrorVO({this.statusCode, this.message, this.errorData,this.data, this.error});
 
   factory ErrorVO.fromJson(Map<String, dynamic> json) =>
       _$ErrorVOFromJson(json);
@@ -25,20 +28,28 @@ class ErrorVO {
   Map<String, dynamic> toJson() => _$ErrorVOToJson(this);
 
   String? getErrorMessages() {
-    if (data == null) return message ?? error;
+    if (data != null && data!.message != null && data!.message!.isNotEmpty) {
+      return data!.message;
+    }
+
+    if (errorData == null) return message ?? error;
 
     List<String> errors = [];
 
-    if (data?.password != null) {
-      errors.add(data!.password!);
+    if (errorData?.password != null) {
+      errors.add(errorData!.password!);
     }
-    if (data?.type != null) {
-      errors.add(data!.type!);
+    if (errorData?.type != null) {
+      errors.add(errorData!.type!);
     }
-    if (data?.phone != null) {
-      errors.add(data!.phone!);
+    if (errorData?.message != null) {
+      errors.add(errorData!.message!);
+    }
+    if (errorData?.phone != null) {
+      errors.add(errorData!.phone!);
     }
 
     return errors.isNotEmpty ? errors.join('\n') : message ?? error;
   }
+
 }

@@ -448,6 +448,7 @@ class CategoryAndReturnPointView extends StatelessWidget {
                       fontSize: kTextRegular2x, fontWeight: FontWeight.bold),
                 ),
               ),
+             const SizedBox(width: 100,),
               const Icon(
                 Icons.star,
                 color: kPrimaryColor,
@@ -459,7 +460,8 @@ class CategoryAndReturnPointView extends StatelessWidget {
                     fontSize: kTextRegular,
                     fontWeight: FontWeight.bold,
                     color: kPrimaryColor),
-              )
+              ),
+              const SizedBox(width: 20,),
             ],
           ),
         ),

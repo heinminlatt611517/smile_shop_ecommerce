@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:smile_shop/data/vos/banner_vo.dart';
 import 'package:smile_shop/data/vos/brand_and_category_vo.dart';
+import 'package:smile_shop/data/vos/popup_data_vo.dart';
+import 'package:smile_shop/network/requests/pop_up_request.dart';
 import 'package:smile_shop/network/responses/campaign_history_response.dart';
 import 'package:smile_shop/data/vos/campaign_participant_vo.dart';
 import 'package:smile_shop/data/vos/campaign_vo.dart';
@@ -214,4 +216,10 @@ abstract class SmileShopDataAgent {
 
   Future<CampaignHistoryResponse> getCampaignHistory(
       String acceptLanguage,String token);
+
+  Future<SuccessNetworkResponse> updateHomePopUp(
+      String acceptLanguage,String token,PopupRequest request);
+
+  Future<PopupDataVO> getHomePopUpData(
+      String acceptLanguage,String token,PopupRequest request);
 }

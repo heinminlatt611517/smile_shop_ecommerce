@@ -6,11 +6,12 @@ import 'package:smile_shop/data/vos/brand_and_category_vo.dart';
 import 'package:smile_shop/data/vos/category_vo.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
 import 'package:smile_shop/network/api_constants.dart';
+import 'package:smile_shop/network/requests/pop_up_request.dart';
 import 'package:smile_shop/widgets/session_expired_dialog_view.dart';
+import 'package:smile_shop/widgets/welcome_dialog_view.dart';
 
 import '../data/vos/user_vo.dart';
 import '../widgets/common_dialog.dart';
-import '../widgets/error_dialog_view.dart';
 
 class HomeBloc extends ChangeNotifier {
   final SmileShopModel _smileShopModel = SmileShopModelImpl();
@@ -25,6 +26,7 @@ class HomeBloc extends ChangeNotifier {
   var accessToken = "";
   bool isLoading = false;
   bool isDisposed = false;
+  bool isPopupLoading = false;
   UserVO? userProfile;
 
   HomeBloc(BuildContext context) {
@@ -40,6 +42,9 @@ class HomeBloc extends ChangeNotifier {
     ///get user profile data
       _smileShopModel.userProfile(accessToken, kAcceptLanguageEn).then((response){
         userProfile = response;
+        if(response.showPopUp == 0){
+          getHomePopupData(response.id ?? 0,context);
+        }
         _notifySafely();
       }).catchError((error){
         if (error.toString().toLowerCase() == 'unauthenticated') {
@@ -78,7 +83,33 @@ class HomeBloc extends ChangeNotifier {
       brandAndCategoryVO = brandsAndCategoriesResponse;
       _notifySafely();
     });
+  }
 
+  ///get home popup data
+  void getHomePopupData(int userId,BuildContext context){
+    var popUpRequest = PopupRequest(userId);
+    _smileShopModel.getHomePopUpData(kAcceptLanguageEn, accessToken, popUpRequest).then((response){
+      ///welcome pop up
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        showCommonDialog(context: context, dialogWidget: WelcomeDialogView(
+          showLoading: isPopupLoading,
+          title: response.title ?? "",
+          message: response.message ?? "",
+          onPressOk: () {
+          updateHomePopupData(userId, context);
+        },),isDismissible: false);
+      });
+    });
+  }
+
+  void updateHomePopupData(int userId,BuildContext context){
+    _showPopupLoading();
+    var popUpRequest = PopupRequest(userId);
+    _smileShopModel.updateHomePopUp(kAcceptLanguageEn, accessToken, popUpRequest).then((response){
+      if(response.status == 200){
+        Navigator.pop(context);
+      }
+    }).whenComplete(()=> _hidePopupLoading());
   }
 
   void getProducts() {
@@ -120,6 +151,17 @@ class HomeBloc extends ChangeNotifier {
         duration: const Duration(seconds: 2),
       ),
     );
+  }
+
+
+  void _showPopupLoading() {
+    isPopupLoading = true;
+    _notifySafely();
+  }
+
+  void _hidePopupLoading() {
+    isPopupLoading = false;
+    _notifySafely();
   }
 
   void _showLoading() {

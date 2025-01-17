@@ -5,6 +5,8 @@ import 'package:get_storage/get_storage.dart';
 import 'package:smile_shop/data/model/smile_shop_model.dart';
 import 'package:smile_shop/data/vos/banner_vo.dart';
 import 'package:smile_shop/data/vos/brand_and_category_vo.dart';
+import 'package:smile_shop/data/vos/popup_data_vo.dart';
+import 'package:smile_shop/network/requests/pop_up_request.dart';
 import 'package:smile_shop/network/responses/campaign_history_response.dart';
 import 'package:smile_shop/data/vos/campaign_participant_vo.dart';
 import 'package:smile_shop/data/vos/campaign_vo.dart';
@@ -17,7 +19,6 @@ import 'package:smile_shop/data/vos/package_vo.dart';
 import 'package:smile_shop/data/vos/payment_vo.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
 import 'package:smile_shop/data/vos/promotion_data_vo.dart';
-import 'package:smile_shop/data/vos/promotion_vo.dart';
 import 'package:smile_shop/data/vos/refund_vo.dart';
 import 'package:smile_shop/data/vos/search_product_vo.dart';
 import 'package:smile_shop/data/vos/state_vo.dart';
@@ -567,6 +568,16 @@ class SmileShopModelImpl extends SmileShopModel {
   @override
   Future<CampaignHistoryResponse> getCampaignHistory(String acceptLanguage, String token) {
    return mDataAgent.getCampaignHistory(acceptLanguage, token);
+  }
+
+  @override
+  Future<PopupDataVO> getHomePopUpData(String acceptLanguage, String token, PopupRequest request) {
+    return mDataAgent.getHomePopUpData(acceptLanguage, token, request);
+  }
+
+  @override
+  Future<SuccessNetworkResponse> updateHomePopUp(String acceptLanguage, String token, PopupRequest request) {
+    return mDataAgent.updateHomePopUp(acceptLanguage, token, request);
   }
 
 }

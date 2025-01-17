@@ -5,6 +5,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:smile_shop/data/vos/banner_vo.dart';
 import 'package:smile_shop/data/vos/brand_and_category_vo.dart';
+import 'package:smile_shop/data/vos/popup_data_vo.dart';
+import 'package:smile_shop/network/requests/pop_up_request.dart';
 import 'package:smile_shop/network/responses/campaign_history_response.dart';
 import 'package:smile_shop/data/vos/campaign_participant_vo.dart';
 import 'package:smile_shop/data/vos/campaign_vo.dart';
@@ -859,6 +861,34 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   Future<CampaignHistoryResponse> getCampaignHistory(String acceptLanguage, String token) {
     return mApi
         .getCampaignHistory(acceptLanguage,'Bearer $token')
+        .asStream()
+        .map((response) {
+      return response;
+    })
+        .first
+        .catchError((error) {
+      throw _createException(error);
+    });
+  }
+
+  @override
+  Future<PopupDataVO> getHomePopUpData(String acceptLanguage, String token, PopupRequest request) {
+    return mApi
+        .getHomePagePopup(acceptLanguage,'Bearer $token',request)
+        .asStream()
+        .map((response) {
+      return response.data ?? PopupDataVO();
+    })
+        .first
+        .catchError((error) {
+      throw _createException(error);
+    });
+  }
+
+  @override
+  Future<SuccessNetworkResponse> updateHomePopUp(String acceptLanguage, String token, PopupRequest request) {
+    return mApi
+        .updateHomePagePopup(acceptLanguage,'Bearer $token',request)
         .asStream()
         .map((response) {
       return response;

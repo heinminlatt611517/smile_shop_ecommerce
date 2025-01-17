@@ -106,7 +106,7 @@ class _SmileShopApi implements SmileShopApi {
     )
         .compose(
           _dio.options,
-          '/api/auth/set-password?Accept',
+          '/api/auth/set-password',
           queryParameters: queryParameters,
           data: _data,
         )
@@ -2316,6 +2316,90 @@ class _SmileShopApi implements SmileShopApi {
     late CampaignHistoryResponse _value;
     try {
       _value = CampaignHistoryResponse.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<SuccessNetworkResponse> updateHomePagePopup(
+    String acceptLanguage,
+    String token,
+    PopupRequest request,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{
+      r'Accept-Language': acceptLanguage,
+      r'Authorization': token,
+    };
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(request.toJson());
+    final _options = _setStreamType<SuccessNetworkResponse>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/api/update-homepage-popup',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late SuccessNetworkResponse _value;
+    try {
+      _value = SuccessNetworkResponse.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<HomePopupDataResponse> getHomePagePopup(
+    String acceptLanguage,
+    String token,
+    PopupRequest request,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{
+      r'Accept-Language': acceptLanguage,
+      r'Authorization': token,
+    };
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(request.toJson());
+    final _options = _setStreamType<HomePopupDataResponse>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/api/homepage-popup',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late HomePopupDataResponse _value;
+    try {
+      _value = HomePopupDataResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;

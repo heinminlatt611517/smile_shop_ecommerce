@@ -147,6 +147,10 @@ class UserVO {
   @HiveField(34)
   final int? promotionPoints;
 
+  @JsonKey(name: 'show_popup')
+  @HiveField(35)
+  final int? showPopUp;
+
 
   UserVO({
     this.id,
@@ -183,7 +187,8 @@ class UserVO {
     this.userPhoto,
     this.profileImage,
     this.referCodeVO,
-    this.promotionPoints
+    this.promotionPoints,
+    this.showPopUp
   });
 
   factory UserVO.fromJson(Map<String, dynamic> json) =>

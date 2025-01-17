@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:retrofit/error_logger.dart';
 import 'package:retrofit/http.dart';
+import 'package:smile_shop/network/requests/pop_up_request.dart';
 import 'package:smile_shop/network/responses/campaign_history_response.dart';
 import 'package:smile_shop/network/requests/address_request.dart';
 import 'package:smile_shop/network/requests/campaign_join_request.dart';
@@ -27,6 +28,7 @@ import 'package:smile_shop/network/responses/campaign_participant_response.dart'
 import 'package:smile_shop/network/responses/campaign_response.dart';
 import 'package:smile_shop/network/responses/category_response.dart';
 import 'package:smile_shop/network/responses/checkIn_response.dart';
+import 'package:smile_shop/network/responses/home_popup_data_response.dart';
 import 'package:smile_shop/network/responses/login_response.dart';
 import 'package:smile_shop/network/responses/my_team_response.dart';
 import 'package:smile_shop/network/responses/order_details_response.dart';
@@ -427,4 +429,16 @@ abstract class SmileShopApi {
   Future<CampaignHistoryResponse> getCampaignHistory(
       @Header(kHeaderAcceptLanguage) String acceptLanguage,
       @Header(kHeaderAuthorization) String token);
+
+  @POST(kEndPointUpdateHomePagePopupData)
+  Future<SuccessNetworkResponse> updateHomePagePopup(
+      @Header(kHeaderAcceptLanguage) String acceptLanguage,
+      @Header(kHeaderAuthorization) String token,
+      @Body() PopupRequest request);
+
+  @POST(kEndPointGetHomePagePopupData)
+  Future<HomePopupDataResponse> getHomePagePopup(
+      @Header(kHeaderAcceptLanguage) String acceptLanguage,
+      @Header(kHeaderAuthorization) String token,
+      @Body() PopupRequest request);
 }

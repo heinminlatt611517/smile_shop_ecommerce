@@ -10,7 +10,7 @@ const String kEndPointProducts = "/api/get/products/list";
 const String kEndPointProductDetails = "/api/get/product/detail";
 const String kEndPointBrandsAndCategories = "/api/get/brands_and_categories";
 const String kEndPointSearchProducts = "/api/get/products/list";
-const String kEndPointSetPassword = "/api/auth/set-password?Accept";
+const String kEndPointSetPassword = "/api/auth/set-password";
 const String kEndPointProfile = "/api/profile";
 const String kEndPointUpdateProfile = "/api/profile/update";
 const String kEndPointCategories = "/api/categories";
@@ -51,6 +51,8 @@ const String kEndPointGetPackages = '/api/packages';
 const String kEndPointGetPackageDetails = '/api/packages';
 const String kEndPointCheckOrderStatus = '/api/order/check-status';
 const String kEndPointCampaignHistory = '/api/campaign/history';
+const String kEndPointGetHomePagePopupData = '/api/homepage-popup';
+const String kEndPointUpdateHomePagePopupData = '/api/update-homepage-popup';
 
 
 ///Parameters
