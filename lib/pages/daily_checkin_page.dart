@@ -33,11 +33,8 @@ class DailyCheckInPage extends StatelessWidget {
                       backgroundColor: const Color(0xffF7E1C5),
                       appBar: AppBar(
                         automaticallyImplyLeading: false,
-                        toolbarHeight:
-                        MediaQuery
-                            .of(context)
-                            .size
-                            .height / 2.2,
+                        toolbarHeight:400,
+                        surfaceTintColor: Colors.transparent,
                         flexibleSpace: Stack(children: [
                           SizedBox(
                               width: double.infinity,
@@ -126,7 +123,7 @@ class DailyCheckInPage extends StatelessWidget {
                               ),
                               SizedBox(
                                 width: 180,
-                                height: 180,
+                                height: 170,
                                 child:
                                 Image.asset(kDailyCheckInCalendarImage),
                               ),
