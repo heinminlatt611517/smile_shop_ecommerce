@@ -26,6 +26,7 @@ class TrendingProductListItemView extends StatelessWidget {
         );
       },
       child: Container(
+        height: 208,
         padding: const EdgeInsets.symmetric(vertical: kMarginMedium, horizontal: kMarginMedium),
         decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8)),
         child: Column(
@@ -36,7 +37,7 @@ class TrendingProductListItemView extends StatelessWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: CachedNetworkImageView(
-                    imageHeight: 120,
+                    imageHeight: 100,
                     imageWidth: double.infinity,
                     imageUrl: productVO?.image ?? errorImageUrl,
                   ),
@@ -51,44 +52,38 @@ class TrendingProductListItemView extends StatelessWidget {
                         child: const Icon(Icons.favorite_outline, color: kSecondaryColor))),
               ],
             ),
-            const SizedBox(height: 10),
             Text(
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               productVO?.name ?? "",
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: kTextRegular2x),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: kTextRegular,height: 3),
             ),
-            const SizedBox(height: 10),
             Text(
               productVO?.subcategory?.name ?? "",
-              style: const TextStyle(fontWeight: FontWeight.normal, fontSize: kTextRegular, color: Colors.grey),
+              style: const TextStyle(fontWeight: FontWeight.normal, fontSize: kTextSmall, color: Colors.grey,height: 1),
             ),
-            const SizedBox(height: 10),
-            LayoutBuilder(
-              builder: (context, constraints) {
-                double priceFontSize = constraints.maxWidth > 350 ? kTextRegular2x : kTextRegular;
-                return Row(
+              Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       'Ks ${productVO?.price}',
-                      style: TextStyle(
+                      style:const TextStyle(
+                        height: 3,
                         fontWeight: FontWeight.bold,
-                        fontSize: priceFontSize,
+                        fontSize: kTextRegular,
                         color: kPrimaryColor,
                       ),
                     ),
                     const Text(
                       '100 pt',
                       style: TextStyle(
+                        height: 3,
                         fontWeight: FontWeight.normal,
                         fontSize: kTextRegular,
                         color: kSecondaryColor,
                       ),
                     ),
                   ],
-                );
-              },
             )
           ],
         ),
