@@ -37,13 +37,16 @@ class ProductVOAdapter extends TypeAdapter<ProductVO> {
       colorName: fields[17] as String?,
       isFavourite: fields[18] as bool?,
       size: fields[20] as String?,
+      detailImages: (fields[23] as List?)?.cast<String>(),
+      video: fields[22] as String?,
+      specificationList: (fields[21] as List?)?.cast<SpecificationVO>(),
     )..isAddedToCartProduct = fields[19] as bool?;
   }
 
   @override
   void write(BinaryWriter writer, ProductVO obj) {
     writer
-      ..writeByte(21)
+      ..writeByte(24)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -85,7 +88,13 @@ class ProductVOAdapter extends TypeAdapter<ProductVO> {
       ..writeByte(19)
       ..write(obj.isAddedToCartProduct)
       ..writeByte(20)
-      ..write(obj.size);
+      ..write(obj.size)
+      ..writeByte(21)
+      ..write(obj.specificationList)
+      ..writeByte(22)
+      ..write(obj.video)
+      ..writeByte(23)
+      ..write(obj.detailImages);
   }
 
   @override
@@ -125,6 +134,13 @@ ProductVO _$ProductVOFromJson(Map<String, dynamic> json) => ProductVO(
       rating: (json['rating'] as num?)?.toInt(),
       description: json['description'] as String?,
       highlight: json['highlight'] as String?,
+      detailImages: (json['details_images'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+      video: json['video'] as String?,
+      specificationList: (json['specifications'] as List<dynamic>?)
+          ?.map((e) => SpecificationVO.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$ProductVOToJson(ProductVO instance) => <String, dynamic>{
@@ -142,4 +158,7 @@ Map<String, dynamic> _$ProductVOToJson(ProductVO instance) => <String, dynamic>{
       'subcategory': instance.subcategory,
       'brand': instance.brand,
       'variant': instance.variantVO,
+      'specifications': instance.specificationList,
+      'video': instance.video,
+      'details_images': instance.detailImages,
     };

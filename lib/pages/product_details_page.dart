@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:smile_shop/blocs/product_details_bloc.dart';
 import 'package:smile_shop/blocs/product_details_bottom_sheet_bloc.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
+import 'package:smile_shop/data/vos/specification_vo.dart';
 import 'package:smile_shop/data/vos/variant_vo.dart';
 import 'package:smile_shop/network/api_constants.dart';
 import 'package:smile_shop/pages/cart_page.dart';
@@ -15,6 +16,7 @@ import 'package:smile_shop/widgets/vertical_icon_with_label_view.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
+import 'package:video_player/video_player.dart';
 
 import '../utils/dimens.dart';
 import '../utils/images.dart';
@@ -33,13 +35,12 @@ class ProductDetailsPage extends StatefulWidget {
   State<ProductDetailsPage> createState() => _ProductDetailsPageState();
 }
 
-class _ProductDetailsPageState extends State<ProductDetailsPage>
-    with SingleTickerProviderStateMixin {
+class _ProductDetailsPageState extends State<ProductDetailsPage> with SingleTickerProviderStateMixin {
   TabController? tabController;
 
   @override
   void initState() {
-    tabController = TabController(length: 3, vsync: this);
+    tabController = TabController(length: 2, vsync: this);
     super.initState();
   }
 
@@ -59,13 +60,17 @@ class _ProductDetailsPageState extends State<ProductDetailsPage>
                     Stack(
                       children: [
                         NestedScrollView(
-                          headerSliverBuilder:
-                              (BuildContext context, bool innerBoxIsScrolled) {
+                          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
                             return <Widget>[
                               /// Banner Section View
-                              SliverToBoxAdapter(
-                                child: BannerSectionView(
-                                  images: product?.images ?? [],
+                              Selector<ProductDetailsBloc, VideoPlayerController?>(
+                                selector: (context, bloc) => bloc.videoPlayerController,
+                                builder: (context, controller, child) => SliverToBoxAdapter(
+                                  child: BannerSectionView(
+                                    images: product?.images ?? [],
+                                    video: product?.video,
+                                    playerController: controller,
+                                  ),
                                 ),
                               ),
 
@@ -101,15 +106,12 @@ class _ProductDetailsPageState extends State<ProductDetailsPage>
                                     indicatorWeight: 1,
                                     dividerColor: Colors.transparent,
                                     indicatorSize: TabBarIndicatorSize.label,
-                                    labelPadding: const EdgeInsets.symmetric(
-                                        horizontal: 10),
+                                    labelPadding: const EdgeInsets.symmetric(horizontal: 10),
                                     tabs: const [
-                                      Text('Product Details',
-                                          textAlign: TextAlign.center),
-                                      Text('Product Specifications',
-                                          textAlign: TextAlign.center),
-                                      Text('After Sale',
-                                          textAlign: TextAlign.center),
+                                      Text('Product Details', textAlign: TextAlign.center),
+                                      Text('Product Specifications', textAlign: TextAlign.center),
+                                      // Text('After Sale',
+                                      //     textAlign: TextAlign.center),
                                     ],
                                     controller: tabController,
                                     indicatorColor: kPrimaryColor,
@@ -122,14 +124,13 @@ class _ProductDetailsPageState extends State<ProductDetailsPage>
                             controller: tabController,
                             children: [
                               ProductDetailsView(
-                                images: product?.images ?? [],
+                                images: product?.detailImages ?? [],
                               ),
-                              ProductDetailsView(
-                                images: product?.images ?? [],
-                              ),
-                              ProductDetailsView(
-                                images: product?.images ?? [],
-                              ),
+                              ProductSpecificationView(specificationList: product?.specificationList ?? []),
+
+                              // ProductDetailsView(
+                              //   images: product?.images ?? [],
+                              // ),
                             ],
                           ),
                         ),
@@ -162,9 +163,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage>
                                   onTap: () {
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const TicketScreen()),
+                                      MaterialPageRoute(builder: (context) => const TicketScreen()),
                                     );
                                   },
                                   icon: Icons.chat,
@@ -173,18 +172,14 @@ class _ProductDetailsPageState extends State<ProductDetailsPage>
                                   onTap: () {
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const CartPage()),
+                                      MaterialPageRoute(builder: (context) => const CartPage()),
                                     );
                                   },
                                   icon: Icons.shopping_cart_outlined,
                                   label: "Cart"),
                               VerticalIconWithLabelView(
                                   onTap: () {
-                                    var bloc = Provider.of<ProductDetailsBloc>(
-                                        context,
-                                        listen: false);
+                                    var bloc = Provider.of<ProductDetailsBloc>(context, listen: false);
                                     bloc.onTapFavourite(product, context);
                                   },
                                   icon: Icons.favorite_outline,
@@ -197,44 +192,23 @@ class _ProductDetailsPageState extends State<ProductDetailsPage>
                                   children: [
                                     ///add to cart
                                     Consumer<ProductDetailsBloc>(
-                                      builder: (context, bloc, child) =>
-                                          InkWell(
+                                      builder: (context, bloc, child) => InkWell(
                                         onTap: () {
-                                          showBuyNowOrAddToCartBottomSheet(
-                                              context,
-                                              product?.variantVO?.isNotEmpty ??
-                                                      true
-                                                  ? product?.variantVO
-                                                  : [],
-                                              product?.name ?? "",
-                                              product,
-                                              bloc,
-                                              true);
+                                          showBuyNowOrAddToCartBottomSheet(context, product?.variantVO?.isNotEmpty ?? true ? product?.variantVO : [], product?.name ?? "", product, bloc, true);
                                         },
                                         child: Container(
                                           decoration: BoxDecoration(
-                                              borderRadius:
-                                                  const BorderRadius.only(
-                                                      topLeft:
-                                                          Radius.circular(6),
-                                                      bottomLeft:
-                                                          Radius.circular(6)),
+                                              borderRadius: const BorderRadius.only(topLeft: Radius.circular(6), bottomLeft: Radius.circular(6)),
                                               color: kPrimaryColor,
-                                              gradient: LinearGradient(
-                                                  begin: Alignment.centerLeft,
-                                                  end: Alignment.centerRight,
-                                                  colors: [
-                                                    kSecondaryColor,
-                                                    kPrimaryColor
-                                                        .withOpacity(0.7),
-                                                  ])),
+                                              gradient: LinearGradient(begin: Alignment.centerLeft, end: Alignment.centerRight, colors: [
+                                                kSecondaryColor,
+                                                kPrimaryColor.withOpacity(0.7),
+                                              ])),
                                           child: const Padding(
                                             padding: EdgeInsets.all(8.0),
                                             child: Text(
                                               'Add To Cart',
-                                              style: TextStyle(
-                                                  color: kBackgroundColor,
-                                                  fontWeight: FontWeight.bold),
+                                              style: TextStyle(color: kBackgroundColor, fontWeight: FontWeight.bold),
                                             ),
                                           ),
                                         ),
@@ -246,31 +220,24 @@ class _ProductDetailsPageState extends State<ProductDetailsPage>
                                       builder: (context, bloc, chid) => InkWell(
                                         onTap: () {
                                           showBuyNowOrAddToCartBottomSheet(
-                                              context,
-                                              product?.variantVO?.isNotEmpty ??
-                                                      true
-                                                  ? product?.variantVO
-                                                  : [],
-                                              product?.name ?? "",
-                                              product,
-                                              bloc,
-                                              false);
+                                            context,
+                                            product?.variantVO?.isNotEmpty ?? true ? product?.variantVO : [],
+                                            product?.name ?? "",
+                                            product,
+                                            bloc,
+                                            false,
+                                          );
                                         },
                                         child: Container(
                                           decoration: const BoxDecoration(
-                                            borderRadius: BorderRadius.only(
-                                                topRight: Radius.circular(6),
-                                                bottomRight:
-                                                    Radius.circular(6)),
+                                            borderRadius: BorderRadius.only(topRight: Radius.circular(6), bottomRight: Radius.circular(6)),
                                             color: kPrimaryColor,
                                           ),
                                           child: const Padding(
                                             padding: EdgeInsets.all(8.0),
                                             child: Text(
                                               'Buy Now',
-                                              style: TextStyle(
-                                                  color: kBackgroundColor,
-                                                  fontWeight: FontWeight.bold),
+                                              style: TextStyle(color: kBackgroundColor, fontWeight: FontWeight.bold),
                                             ),
                                           ),
                                         ),
@@ -306,8 +273,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   double get maxExtent => tabBar.preferredSize.height;
 
   @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
       color: kBackgroundColor,
       child: tabBar,
@@ -352,14 +318,46 @@ class ProductDetailsView extends StatelessWidget {
   }
 }
 
+/// Product Specification View
+class ProductSpecificationView extends StatelessWidget {
+  final List<SpecificationVO> specificationList;
+
+  const ProductSpecificationView({super.key, required this.specificationList});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: kMarginLarge),
+      child: ListView.builder(
+        itemCount: specificationList.length,
+        padding: const EdgeInsets.symmetric(horizontal: kMarginMedium2),
+        itemBuilder: (context, index) {
+          SpecificationVO vo = specificationList[index];
+          return Padding(
+            padding: const EdgeInsets.only(bottom: kMarginMedium),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(vo.key ?? ''),
+                Text(vo.value ?? '')
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
 /// Banner Section View
 class BannerSectionView extends StatelessWidget {
+  final String? video;
   final List<String> images;
+  final VideoPlayerController? playerController;
 
-  BannerSectionView({super.key, required this.images});
+  BannerSectionView({super.key, required this.images, this.video, this.playerController});
 
-  final PageController _bannerPageController =
-      PageController(viewportFraction: 1);
+  final PageController _bannerPageController = PageController(viewportFraction: 1);
 
   @override
   Widget build(BuildContext context) {
@@ -372,7 +370,7 @@ class BannerSectionView extends StatelessWidget {
             SizedBox(
               height: 260,
               width: double.infinity,
-              child: images.isEmpty
+              child: images.isEmpty && (video == null || (video?.isEmpty ?? false))
                   ? const CachedNetworkImageView(
                       imageHeight: 120,
                       imageWidth: double.infinity,
@@ -381,13 +379,28 @@ class BannerSectionView extends StatelessWidget {
                   : PageView.builder(
                       controller: _bannerPageController,
                       itemBuilder: (context, index) {
+                        int realIndex = index - ((video?.isNotEmpty ?? false) ? 1 : 0);
+                        if (realIndex == -1) {
+                          // VIDEO EXISTS
+
+                          return playerController != null
+                              ?
+                                    VideoPlayer(
+                                      playerController!,
+                                    )
+                                    
+                                
+                              : const Center(
+                                  child: Text("Video Can Not Be Played"),
+                                );
+                        }
                         return CachedNetworkImageView(
                           imageHeight: 120,
                           imageWidth: double.infinity,
-                          imageUrl: images[index],
+                          imageUrl: images[realIndex],
                         );
                       },
-                      itemCount: images.length,
+                      itemCount: images.length + ((video?.isNotEmpty ?? false) ? 1 : 0),
                     ),
             ),
             Padding(
@@ -398,8 +411,7 @@ class BannerSectionView extends StatelessWidget {
                 },
                 child: Container(
                   padding: const EdgeInsets.all(kMarginMedium),
-                  decoration: const BoxDecoration(
-                      color: Colors.white, shape: BoxShape.circle),
+                  decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
                   child: const SvgImageView(
                     imageName: kBackSvgIcon,
                     imageHeight: 20,
@@ -419,7 +431,7 @@ class BannerSectionView extends StatelessWidget {
         /// Dots Indicator
         SmoothPageIndicator(
           controller: _bannerPageController,
-          count: images.length,
+          count: images.length + ((video?.isNotEmpty ?? false) ? 1 : 0),
           axisDirection: Axis.horizontal,
           effect: const SlideEffect(
             dotHeight: kMarginMedium,
@@ -428,9 +440,7 @@ class BannerSectionView extends StatelessWidget {
             activeDotColor: kPrimaryColor,
           ),
           onDotClicked: (index) {
-            _bannerPageController.animateToPage(index,
-                curve: Curves.easeOut,
-                duration: const Duration(milliseconds: 500));
+            _bannerPageController.animateToPage(index, curve: Curves.easeOut, duration: const Duration(milliseconds: 500));
           },
         ),
       ],
@@ -449,8 +459,7 @@ class CategoryAndReturnPointView extends StatelessWidget {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(
-              vertical: kMarginMedium, horizontal: kMarginMedium),
+          padding: const EdgeInsets.symmetric(vertical: kMarginMedium, horizontal: kMarginMedium),
           child: Row(
             children: [
               Expanded(
@@ -458,8 +467,7 @@ class CategoryAndReturnPointView extends StatelessWidget {
                   maxLines: 2,
                   productVO?.name ?? "",
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                      fontSize: kTextRegular2x, fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontSize: kTextRegular2x, fontWeight: FontWeight.bold),
                 ),
               ),
               const SizedBox(
@@ -472,10 +480,7 @@ class CategoryAndReturnPointView extends StatelessWidget {
               ),
               Text(
                 productVO?.rating.toString() ?? "0",
-                style: const TextStyle(
-                    fontSize: kTextRegular,
-                    fontWeight: FontWeight.bold,
-                    color: kPrimaryColor),
+                style: const TextStyle(fontSize: kTextRegular, fontWeight: FontWeight.bold, color: kPrimaryColor),
               ),
               const SizedBox(
                 width: 20,
@@ -484,61 +489,48 @@ class CategoryAndReturnPointView extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(
-              vertical: kMarginMedium, horizontal: kMarginMedium),
+          padding: const EdgeInsets.symmetric(vertical: kMarginMedium, horizontal: kMarginMedium),
           child: Row(
             children: [
               Text(
                 productVO?.subcategory?.name ?? "",
-                style: const TextStyle(
-                    fontSize: kTextRegular, fontWeight: FontWeight.normal),
+                style: const TextStyle(fontSize: kTextRegular, fontWeight: FontWeight.normal),
               ),
               const Spacer(),
             ],
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(
-              vertical: kMarginMedium, horizontal: kMarginMedium),
+          padding: const EdgeInsets.symmetric(vertical: kMarginMedium, horizontal: kMarginMedium),
           child: Row(
             children: [
               const Text(
                 'Ks 50,000',
-                style: TextStyle(
-                    fontSize: kTextRegular,
-                    decoration: TextDecoration.lineThrough),
+                style: TextStyle(fontSize: kTextRegular, decoration: TextDecoration.lineThrough),
               ),
               const SizedBox(
                 width: kMarginSmall,
               ),
               Text(
                 'Ks ${productVO?.price}',
-                style: const TextStyle(
-                    fontSize: kTextRegular,
-                    fontWeight: FontWeight.bold,
-                    color: kPrimaryColor),
+                style: const TextStyle(fontSize: kTextRegular, fontWeight: FontWeight.bold, color: kPrimaryColor),
               )
             ],
           ),
         ),
         Container(
-          decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(kMarginMedium)),
-          margin: const EdgeInsets.symmetric(
-              vertical: kMarginMedium, horizontal: kMarginMedium),
-          padding: const EdgeInsets.symmetric(
-              vertical: kMarginMedium, horizontal: kMarginMedium),
+          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(kMarginMedium)),
+          margin: const EdgeInsets.symmetric(vertical: kMarginMedium, horizontal: kMarginMedium),
+          padding: const EdgeInsets.symmetric(vertical: kMarginMedium, horizontal: kMarginMedium),
           child: Row(
             children: [
               const Text(
                 'Return Points',
-                style: TextStyle(
-                    fontSize: kTextRegular2x, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: kTextRegular2x, fontWeight: FontWeight.bold),
               ),
               const Spacer(),
               PromotionPointView(
-                point:productVO?.variantVO?.isNotEmpty ?? true ? productVO?.variantVO?.first.redeemPoint ?? 0 : 0,
+                point: productVO?.variantVO?.isNotEmpty ?? true ? productVO?.variantVO?.first.redeemPoint ?? 0 : 0,
               ),
             ],
           ),
@@ -550,18 +542,22 @@ class CategoryAndReturnPointView extends StatelessWidget {
 
 ///bottomsheet
 void showBuyNowOrAddToCartBottomSheet(
-    BuildContext context,
-    List<VariantVO>? variantVO,
-    String productName,
-    ProductVO? productVO,
-    ProductDetailsBloc productDetailBloc,
-    bool isAddToCart) {
+  BuildContext context,
+  List<VariantVO>? variantVO,
+  String productName,
+  ProductVO? productVO,
+  ProductDetailsBloc productDetailBloc,
+  bool isAddToCart,
+) {
   showModalBottomSheet(
     context: context,
     builder: (context) {
       return ChangeNotifierProvider(
         create: (context) => ProductDetailsBottomSheetBloc(
-           variantVO?.isNotEmpty ?? true ? variantVO?.first.colorName ?? "" : "", variantVO?.isNotEmpty ?? true ? variantVO?.first.price : 0),
+          variantVO?.isNotEmpty ?? true ? variantVO?.first.colorName ?? "" : "",
+          variantVO?.isNotEmpty ?? true ? variantVO?.first.price : 0,
+          productVO,
+        ),
         child: Container(
           decoration: const BoxDecoration(
             color: kBackgroundColor,
@@ -593,13 +589,15 @@ void showBuyNowOrAddToCartBottomSheet(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ClipRRect(
-                      child: CachedNetworkImageView(
-                        imageHeight: 100,
-                        imageWidth: 100,
-                        imageUrl: productVO?.images?.isNotEmpty ?? true
-                            ? productVO?.images?.first ?? errorImageUrl
-                            : errorImageUrl,
+                    Selector<ProductDetailsBottomSheetBloc, String>(
+                      selector: (context, bloc) => bloc.selectedVariant?.images.first.url ?? '',
+                      builder: (context, productImage, child) => ClipRRect(
+                        child: CachedNetworkImageView(
+                          imageHeight: 100,
+                          imageWidth: 100,
+                          // imageUrl: productImage.isNotEmpty ?? true ? productVO?.images?.first ?? errorImageUrl : errorImageUrl,
+                          imageUrl: productImage,
+                        ),
                       ),
                     ),
                     const SizedBox(
@@ -627,15 +625,14 @@ void showBuyNowOrAddToCartBottomSheet(
                               Consumer<ProductDetailsBottomSheetBloc>(
                                 builder: (context, bloc, child) => Text(
                                   "Ks ${bloc.updateTotalPrice}",
-                                  style:
-                                      const TextStyle(fontSize: kTextRegular2x),
+                                  style: const TextStyle(fontSize: kTextRegular2x),
                                 ),
                               ),
                               const SizedBox(
                                 width: kMargin30,
                               ),
                               PromotionPointView(
-                                point:variantVO?.isNotEmpty ?? true ? variantVO?.first.promotionPoint ?? 0 : 0,
+                                point: variantVO?.isNotEmpty ?? true ? variantVO?.first.promotionPoint ?? 0 : 0,
                               )
                             ],
                           ),
@@ -653,8 +650,7 @@ void showBuyNowOrAddToCartBottomSheet(
                                   style: TextButton.styleFrom(
                                     minimumSize: Size.zero,
                                     padding: EdgeInsets.zero,
-                                    tapTargetSize:
-                                        MaterialTapTargetSize.shrinkWrap,
+                                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                   ),
                                   onPressed: () {
                                     bloc.onTapMinus();
@@ -669,8 +665,7 @@ void showBuyNowOrAddToCartBottomSheet(
                                   width: kMarginMedium,
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: kMarginMedium),
+                                  padding: const EdgeInsets.symmetric(horizontal: kMarginMedium),
                                   child: Text(bloc.quantityCount.toString()),
                                 ),
                                 const SizedBox(
@@ -680,8 +675,7 @@ void showBuyNowOrAddToCartBottomSheet(
                                   style: TextButton.styleFrom(
                                     minimumSize: Size.zero,
                                     padding: EdgeInsets.zero,
-                                    tapTargetSize:
-                                        MaterialTapTargetSize.shrinkWrap,
+                                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                   ),
                                   onPressed: () {
                                     bloc.onTapAdd();
@@ -709,8 +703,7 @@ void showBuyNowOrAddToCartBottomSheet(
                 ///color view
                 const Text(
                   'Available Color',
-                  style:
-                      TextStyle(color: Colors.black, fontSize: kTextRegular2x),
+                  style: TextStyle(color: Colors.black, fontSize: kTextRegular2x),
                 ),
 
                 ///spacer
@@ -726,50 +719,37 @@ void showBuyNowOrAddToCartBottomSheet(
                       child: ListView.builder(
                         shrinkWrap: true,
                         scrollDirection: Axis.horizontal,
-                        itemCount: variantVO?.length,
+                        itemCount: bloc.allVariantListGroupByColor.keys.length,
                         itemBuilder: (context, index) {
-                          bool isSelected = bloc.isSelected(index);
+                          // bool isSelected = bloc.isSelected(index);
+                          String color = bloc.allVariantListGroupByColor.keys.toList()[index];
+                          bool isSelected = bloc.isSelectedColor(color);
+                          String colorName = bloc.allVariantListGroupByColor[color]?.first.colorName ?? '';
 
                           return InkWell(
                             onTap: () {
-                              bloc.toggleSelectionColor(
-                                  index, variantVO?[index].colorName ?? "");
+                              bloc.selectColor(color);
+                              // bloc.toggleSelectionColor(index, variantVO?[index].colorName ?? "");
                               // productDetailBloc.onTapColor(
                               //     variantVO?[index].colorName ?? "");
                             },
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: kMarginMedium),
+                              padding: const EdgeInsets.symmetric(horizontal: kMarginMedium),
                               child: Row(
                                 children: [
                                   ClipRRect(
-                                    borderRadius: const BorderRadius.only(
-                                        topLeft: Radius.circular(6),
-                                        bottomLeft: Radius.circular(6)),
-                                    child: CachedNetworkImageView(
-                                        imageHeight: 24,
-                                        imageWidth: 24,
-                                        imageUrl: variantVO?[index].image ??
-                                            errorImageUrl),
+                                    borderRadius: const BorderRadius.only(topLeft: Radius.circular(6), bottomLeft: Radius.circular(6)),
+                                    child: CachedNetworkImageView(imageHeight: 24, imageWidth: 24, imageUrl: variantVO?[index].image ?? errorImageUrl),
                                   ),
                                   Container(
-                                    decoration: BoxDecoration(
-                                        borderRadius: const BorderRadius.only(
-                                            topRight: Radius.circular(6),
-                                            bottomRight: Radius.circular(6)),
-                                        color: isSelected
-                                            ? kPrimaryColor
-                                            : Colors.white),
+                                    decoration: BoxDecoration(borderRadius: const BorderRadius.only(topRight: Radius.circular(6), bottomRight: Radius.circular(6)), color: isSelected ? kPrimaryColor : Colors.white),
                                     child: Center(
                                       child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: kMarginMedium),
+                                        padding: const EdgeInsets.symmetric(horizontal: kMarginMedium),
                                         child: Text(
-                                          variantVO?[index].colorName ?? "",
-                                          style: TextStyle(
-                                              color: isSelected
-                                                  ? Colors.white
-                                                  : kPrimaryColor),
+                                          // variantVO?[index].colorName ?? "",
+                                          colorName,
+                                          style: TextStyle(color: isSelected ? Colors.white : kPrimaryColor),
                                         ),
                                       ),
                                     ),
@@ -823,8 +803,7 @@ void showBuyNowOrAddToCartBottomSheet(
                 ///color view
                 const Text(
                   'Available Size',
-                  style:
-                      TextStyle(color: Colors.black, fontSize: kTextRegular2x),
+                  style: TextStyle(color: Colors.black, fontSize: kTextRegular2x),
                 ),
 
                 ///spacer
@@ -840,36 +819,32 @@ void showBuyNowOrAddToCartBottomSheet(
                       child: ListView.builder(
                         shrinkWrap: true,
                         scrollDirection: Axis.horizontal,
-                        itemCount: variantVO?.length,
+                        itemCount: bloc.selectedVariantListByColor?.length,
                         itemBuilder: (context, index) {
-                          bool isSelected = bloc.isSelectedSize(index);
+                          // bool isSelected = bloc.isSelectedSize(index);
+                          List<VariantVO> variantList = bloc.selectedVariantListByColor ?? [];
+                          VariantVO vo = variantList[index];
+
+                          bool isSelected = vo.id == bloc.selectedVariant?.id;
 
                           return InkWell(
                             onTap: () {
-                              bloc.toggleSelectionSize(
-                                  index, variantVO?[index].sizeVO?.value ?? "");
+                              bloc.selectSize(vo.id ?? -1);
+                              // bloc.toggleSelectionSize(index, variantVO?[index].sizeVO?.value ?? "");
                               // productDetailBloc.onTapSize(
                               //     variantVO?[index].sizeVO?.value ?? "");
                             },
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: kMarginMedium),
+                              padding: const EdgeInsets.symmetric(horizontal: kMarginMedium),
                               child: Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(6),
-                                    color: isSelected
-                                        ? kPrimaryColor
-                                        : Colors.white),
+                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(6), color: isSelected ? kPrimaryColor : Colors.white),
                                 child: Center(
                                   child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: kMarginMedium),
+                                    padding: const EdgeInsets.symmetric(horizontal: kMarginMedium),
                                     child: Text(
-                                      variantVO?[index].sizeVO?.value ?? "",
-                                      style: TextStyle(
-                                          color: isSelected
-                                              ? Colors.white
-                                              : kPrimaryColor),
+                                      // variantVO?[index].sizeVO?.value ?? "",
+                                      vo.sizeVO?.value ?? '',
+                                      style: TextStyle(color: isSelected ? Colors.white : kPrimaryColor),
                                     ),
                                   ),
                                 ),
@@ -896,19 +871,13 @@ void showBuyNowOrAddToCartBottomSheet(
                       labelColor: Colors.white,
                       bgColor: kPrimaryColor,
                       onTapButton: () {
-                        if (bloc.selectedColor != "" &&
-                            bloc.selectedSize != "") {
+                        if (bloc.selectedVariant != null) {
                           Navigator.pop(context);
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (builder) => CheckoutPage(
                                     isFromCartPage: false,
                                     productList: [
-                                      productVO?.copyWith(
-                                              colorName: bloc.selectedColor,
-                                              size: bloc.selectedSize,
-                                              totalPrice: bloc.updateTotalPrice,
-                                              qtyCount: bloc.quantityCount) ??
-                                          ProductVO()
+                                      productVO?.copyWith(colorName: bloc.selectedColor, size: bloc.selectedSize, totalPrice: bloc.updateTotalPrice, qtyCount: bloc.quantityCount) ?? ProductVO()
                                     ],
                                   )));
                         } else {
@@ -920,6 +889,25 @@ void showBuyNowOrAddToCartBottomSheet(
                             ),
                           );
                         }
+
+                        // if (bloc.selectedColor != "" && bloc.selectedSize != "") {
+                        //   Navigator.pop(context);
+                        //   Navigator.of(context).push(MaterialPageRoute(
+                        //       builder: (builder) => CheckoutPage(
+                        //             isFromCartPage: false,
+                        //             productList: [
+                        //               productVO?.copyWith(colorName: bloc.selectedColor, size: bloc.selectedSize, totalPrice: bloc.updateTotalPrice, qtyCount: bloc.quantityCount) ?? ProductVO()
+                        //             ],
+                        //           )));
+                        // } else {
+                        //   showTopSnackBar(
+                        //     displayDuration: const Duration(milliseconds: 300),
+                        //     Overlay.of(context),
+                        //     const CustomSnackBar.error(
+                        //       message: "Please select both color and size.",
+                        //     ),
+                        //   );
+                        // }
                       },
                     ),
                   ),
@@ -934,14 +922,9 @@ void showBuyNowOrAddToCartBottomSheet(
                       labelColor: Colors.white,
                       bgColor: kPrimaryColor,
                       onTapButton: () {
-                        if (bloc.selectedColor != "" &&
-                            bloc.selectedSize != "") {
-                          productDetailBloc.onTapAddToCart(
-                              context,
-                              bloc.selectedColor,
-                              bloc.selectedSize,
-                              bloc.quantityCount ?? 0,
-                              bloc.updateTotalPrice ?? 0);
+                        if (bloc.selectedColor != "" && bloc.selectedSize != "") {
+                          productDetailBloc.onTapAddToCart(context, bloc.selectedVariant?.colorName ?? "", bloc.selectedVariant?.sizeVO?.value ?? "", bloc.quantityCount ?? 0, bloc.updateTotalPrice ?? 0);
+                          // productDetailBloc.onTapAddToCart(context, bloc.selectedColor, bloc.selectedSize, bloc.quantityCount ?? 0, bloc.updateTotalPrice ?? 0);
                         } else {
                           showTopSnackBar(
                             displayDuration: const Duration(milliseconds: 300),

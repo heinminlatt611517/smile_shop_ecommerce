@@ -1,0 +1,2 @@
+D:/MyProjects/Nanolabs/Smile/android/app/.cxx/Debug/2e5d3m2a/x86/CMakeFiles/edit_cache.dir
+D:/MyProjects/Nanolabs/Smile/android/app/.cxx/Debug/2e5d3m2a/x86/CMakeFiles/rebuild_cache.dir

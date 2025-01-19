@@ -24,20 +24,17 @@ class _SplashPageState extends State<SplashPage> {
   void initState() {
     super.initState();
     Future.delayed(const Duration(seconds: 4), () {
-      if(_model.getLoginResponseFromDatabase() != null){
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const MainPage()));
-      }
-      else {
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const LoginPage()));
+      if (_model.getLoginResponseFromDatabase() != null) {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const MainPage()));
+      } else {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const LoginPage()));
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       backgroundColor: kBackgroundColor,
       body: Center(
         child: Column(
@@ -70,8 +67,7 @@ class _SplashPageState extends State<SplashPage> {
                 ),
                 Text(
                   kLoadingLabel,
-                  style: TextStyle(
-                      color: kLoadingLabelColor, fontSize: kTextRegular3x),
+                  style: TextStyle(color: kLoadingLabelColor, fontSize: kTextRegular3x),
                 )
               ],
             )

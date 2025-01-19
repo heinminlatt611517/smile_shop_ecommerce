@@ -156,6 +156,7 @@ class PaymentMethodPage extends StatelessWidget {
                                     if (bloc.formKey.currentState!.validate()) {
                                       List<OrderVariantVO> orderVariants = [];
                                       for (var product in productList ?? []) {
+                                        
                                         var subOrderVariantVo = OrderVariantVO(
                                             qty: product.qtyCount,
                                             colorName: product.colorName,

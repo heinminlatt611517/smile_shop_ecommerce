@@ -1,6 +1,7 @@
 import 'package:hive_flutter/adapters.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:smile_shop/data/vos/brand_vo.dart';
+import 'package:smile_shop/data/vos/specification_vo.dart';
 import 'package:smile_shop/data/vos/sub_category_vo.dart';
 import 'package:smile_shop/data/vos/variant_vo.dart';
 
@@ -95,31 +96,45 @@ class ProductVO {
   @HiveField(20)
   String? size;
 
-  ProductVO(
-      {this.id,
-      this.name,
-      this.sku,
-      this.price,
-      this.brandId,
-      this.subcategoryId,
-      this.image,
-      this.subcategory,
-      this.brand,
-      this.variantVO,
-      this.images,
-      this.rating,
-      this.description,
-      this.highlight,
-      this.qtyCount,
-      this.isChecked = false,
-      this.totalPrice,
-      this.colorName,
-      this.isFavourite = false,
-        this.size
-     });
+  @JsonKey(name: 'specifications')
+  @HiveField(21)
+  List<SpecificationVO>? specificationList;
 
-  factory ProductVO.fromJson(Map<String, dynamic> json) =>
-      _$ProductVOFromJson(json);
+  @JsonKey(name: 'video')
+  @HiveField(22)
+  String? video;
+
+  @JsonKey(name: 'details_images')
+  @HiveField(23)
+  List<String>? detailImages;
+
+  ProductVO({
+    this.id,
+    this.name,
+    this.sku,
+    this.price,
+    this.brandId,
+    this.subcategoryId,
+    this.image,
+    this.subcategory,
+    this.brand,
+    this.variantVO,
+    this.images,
+    this.rating,
+    this.description,
+    this.highlight,
+    this.qtyCount,
+    this.isChecked = false,
+    this.totalPrice,
+    this.colorName,
+    this.isFavourite = false,
+    this.size,
+    this.detailImages,
+    this.video,
+    this.specificationList,
+  });
+
+  factory ProductVO.fromJson(Map<String, dynamic> json) => _$ProductVOFromJson(json);
 
   Map<String, dynamic> toJson() => _$ProductVOToJson(this);
 
@@ -168,5 +183,20 @@ class ProductVO {
       isFavourite: isFavourite ?? this.isFavourite,
       size: size ?? this.size,
     );
+  }
+
+  Map<String, List<VariantVO>> getColorMapList() {
+    Map<String, List<VariantVO>> colorMap = {};
+
+    for (VariantVO variant in variantVO ?? []) {
+      if (colorMap.containsKey(variant.colorVO?.value)) {
+        colorMap[variant.colorVO?.value]!.add(variant);
+      } else {
+        colorMap[variant.colorVO?.value ?? ''] = [
+          variant
+        ];
+      }
+    }
+    return colorMap;
   }
 }
