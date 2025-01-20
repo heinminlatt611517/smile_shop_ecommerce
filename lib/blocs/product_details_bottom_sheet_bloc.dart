@@ -20,7 +20,7 @@ class ProductDetailsBottomSheetBloc extends ChangeNotifier {
     this.productVO,
   ) {
     allVariantListGroupByColor = productVO?.getColorMapList() ?? {};
-    selectedColor = allVariantListGroupByColor.values.first.first.colorVO?.value ?? '';
+    selectedColor = allVariantListGroupByColor.values.first.first.colorName ?? '';
     selectedVariantListByColor = allVariantListGroupByColor[selectedColor];
     selectedVariant = selectedVariantListByColor?.first;
     calculateTotalPrice();

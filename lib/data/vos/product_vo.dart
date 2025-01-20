@@ -189,10 +189,10 @@ class ProductVO {
     Map<String, List<VariantVO>> colorMap = {};
 
     for (VariantVO variant in variantVO ?? []) {
-      if (colorMap.containsKey(variant.colorVO?.value)) {
-        colorMap[variant.colorVO?.value]!.add(variant);
+      if (colorMap.containsKey(variant.colorName)) {
+        colorMap[variant.colorName]!.add(variant);
       } else {
-        colorMap[variant.colorVO?.value ?? ''] = [
+        colorMap[variant.colorName ?? ''] = [
           variant
         ];
       }

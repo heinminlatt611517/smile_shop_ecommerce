@@ -384,12 +384,9 @@ class BannerSectionView extends StatelessWidget {
                           // VIDEO EXISTS
 
                           return playerController != null
-                              ?
-                                    VideoPlayer(
-                                      playerController!,
-                                    )
-                                    
-                                
+                              ? VideoPlayer(
+                                  playerController!,
+                                )
                               : const Center(
                                   child: Text("Video Can Not Be Played"),
                                 );
@@ -877,7 +874,8 @@ void showBuyNowOrAddToCartBottomSheet(
                               builder: (builder) => CheckoutPage(
                                     isFromCartPage: false,
                                     productList: [
-                                      productVO?.copyWith(colorName: bloc.selectedColor, size: bloc.selectedSize, totalPrice: bloc.updateTotalPrice, qtyCount: bloc.quantityCount) ?? ProductVO()
+                                      productVO?.copyWith(colorName: bloc.selectedVariant?.colorName, size: bloc.selectedVariant?.sizeVO?.value, totalPrice: bloc.updateTotalPrice, qtyCount: bloc.quantityCount) ?? ProductVO()
+                                      // productVO?.copyWith(colorName: bloc.selectedColor, size: bloc.selectedSize, totalPrice: bloc.updateTotalPrice, qtyCount: bloc.quantityCount) ?? ProductVO()
                                     ],
                                   )));
                         } else {
