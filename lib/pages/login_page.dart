@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:smile_shop/blocs/login_bloc.dart';
 import 'package:smile_shop/network/api_constants.dart';
 import 'package:smile_shop/pages/dealer_login_page.dart';
+import 'package:smile_shop/pages/forgot_password_page.dart';
 import 'package:smile_shop/pages/main_page.dart';
 import 'package:smile_shop/pages/sign_up_page.dart';
 import 'package:smile_shop/utils/colors.dart';
@@ -137,7 +138,10 @@ class _LoginPageState extends State<LoginPage> {
                         children: [
                           const Spacer(),
                           TextButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (builder) => const ForgotPasswordPage()));
+                              },
                               child: const Text(
                                 'Forgot password?',
                                 style: TextStyle(color: kPrimaryColor),
