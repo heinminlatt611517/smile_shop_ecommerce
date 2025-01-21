@@ -122,6 +122,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> with SingleTick
                           },
                           body: TabBarView(
                             controller: tabController,
+                            physics: const NeverScrollableScrollPhysics(),
                             children: [
                               ProductDetailsView(
                                 images: product?.detailImages ?? [],
@@ -368,13 +369,14 @@ class BannerSectionView extends StatelessWidget {
         Stack(
           children: [
             SizedBox(
-              height: 260,
+              height: 380,
               width: double.infinity,
               child: images.isEmpty && (video == null || (video?.isEmpty ?? false))
                   ? const CachedNetworkImageView(
                       imageHeight: 120,
                       imageWidth: double.infinity,
                       imageUrl: errorImageUrl,
+                      boxFit: BoxFit.fitHeight,
                     )
                   : PageView.builder(
                       controller: _bannerPageController,
@@ -395,6 +397,7 @@ class BannerSectionView extends StatelessWidget {
                           imageHeight: 120,
                           imageWidth: double.infinity,
                           imageUrl: images[realIndex],
+                          boxFit: BoxFit.fitHeight,
                         );
                       },
                       itemCount: images.length + ((video?.isNotEmpty ?? false) ? 1 : 0),
@@ -501,13 +504,13 @@ class CategoryAndReturnPointView extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: kMarginMedium, horizontal: kMarginMedium),
           child: Row(
             children: [
-              const Text(
-                'Ks 50,000',
-                style: TextStyle(fontSize: kTextRegular, decoration: TextDecoration.lineThrough),
-              ),
-              const SizedBox(
-                width: kMarginSmall,
-              ),
+              // const Text(
+              //   'Ks 50,000',
+              //   style: TextStyle(fontSize: kTextRegular, decoration: TextDecoration.lineThrough),
+              // ),
+              // const SizedBox(
+              //   width: kMarginSmall,
+              // ),
               Text(
                 'Ks ${productVO?.price}',
                 style: const TextStyle(fontSize: kTextRegular, fontWeight: FontWeight.bold, color: kPrimaryColor),

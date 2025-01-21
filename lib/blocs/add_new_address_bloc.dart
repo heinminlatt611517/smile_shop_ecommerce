@@ -7,7 +7,6 @@ import 'package:smile_shop/data/vos/township_vo.dart';
 import 'package:smile_shop/network/api_constants.dart';
 import 'package:smile_shop/network/requests/address_request.dart';
 
-
 class AddNewAddressBloc extends ChangeNotifier {
   /// State
   bool isTownshipLoading = false;
@@ -30,8 +29,7 @@ class AddNewAddressBloc extends ChangeNotifier {
   final SmileShopModel _smileShopModel = SmileShopModelImpl();
 
   AddNewAddressBloc() {
-    accessToken =
-        _smileShopModel.getLoginResponseFromDatabase()?.accessToken ?? "";
+    accessToken = _smileShopModel.getLoginResponseFromDatabase()?.accessToken ?? "";
 
     ///get state list
     _smileShopModel.states().then((stateResponse) {
@@ -41,9 +39,7 @@ class AddNewAddressBloc extends ChangeNotifier {
     });
 
     ///get address categories list
-    _smileShopModel
-        .addressCategories(accessToken)
-        .then((addressCategoryResponse) {
+    _smileShopModel.addressCategories(accessToken).then((addressCategoryResponse) {
       addressCategories = addressCategoryResponse;
       _notifySafely();
     });
@@ -76,6 +72,9 @@ class AddNewAddressBloc extends ChangeNotifier {
           phone: phone,
           address: googleMapName,
           name: name,
+          stateId: stateId,
+          regionId: stateId,
+          townshipId: townshipId,
           isDefault: isChecked == true ? 1 : 0,
           categoryId: addressCategoryId,
         );
@@ -111,8 +110,7 @@ class AddNewAddressBloc extends ChangeNotifier {
         }
       }
       _showLoading();
-      await _smileShopModel.addNewAddress(
-          accessToken, kAcceptLanguageEn, addressRequest);
+      await _smileShopModel.addNewAddress(accessToken, kAcceptLanguageEn, addressRequest);
     } finally {
       _hideLoading();
     }
@@ -120,9 +118,7 @@ class AddNewAddressBloc extends ChangeNotifier {
 
   Future onTapDeleteAddress(int addressId) {
     _showLoading();
-    return _smileShopModel
-        .deleteAddress(accessToken, addressId)
-        .whenComplete(() => _hideLoading());
+    return _smileShopModel.deleteAddress(accessToken, addressId).whenComplete(() => _hideLoading());
   }
 
   bool _validateAddressFields() {

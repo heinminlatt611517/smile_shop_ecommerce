@@ -117,6 +117,7 @@ class ProductsView extends StatelessWidget {
             shrinkWrap: true,
             padding: EdgeInsets.zero,
             physics: const NeverScrollableScrollPhysics(),
+            
             itemBuilder: (context, index) {
               return TrendingProductListItemView(
                 productVO: products[index],
