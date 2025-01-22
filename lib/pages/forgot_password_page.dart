@@ -10,6 +10,7 @@ import 'package:smile_shop/widgets/error_dialog_view.dart';
 import '../blocs/forgot_password_bloc.dart';
 import '../widgets/loading_view.dart';
 import '../widgets/phone_input_textfield.dart';
+import 'otp_page.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});
@@ -50,7 +51,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                         ),
                       ),
                       const SizedBox(
-                        height: 58,
+                        height: 80,
                       ),
 
                       Consumer<ForgotPasswordBloc>(
@@ -75,7 +76,17 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                           var bloc =
                               Provider.of<ForgotPasswordBloc>(context, listen: false);
 
-                          bloc.onTapNext().catchError((error) {
+                          bloc.onTapNext().then((value){
+                            if (value.status == 200) {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (builder) => OtpPage(
+                                      requestId:
+                                      value.data?.requestId.toString(),
+                                      phone: value.data?.to,
+                                      referralCode:value.data?.referralCode,
+                                      isFromForgotPasswordPage: true,)));
+                            }
+                          }).catchError((error) {
                             showCommonDialog(
                                 context: context,
                                 dialogWidget: ErrorDialogView(

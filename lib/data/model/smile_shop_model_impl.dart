@@ -580,4 +580,19 @@ class SmileShopModelImpl extends SmileShopModel {
     return mDataAgent.updateHomePopUp(acceptLanguage, token, request);
   }
 
+  @override
+  Future<OtpResponse> forgotPasswordRequestOtp(OtpRequest otpRequest) {
+    return mDataAgent.forgotPasswordRequestOtp(otpRequest);
+  }
+
+  @override
+  Future<SetPasswordResponse> forgotPasswordSetPassword(SetPasswordRequest setPasswordRequest) {
+    return mDataAgent.forgotPasswordSetPassword(setPasswordRequest);
+  }
+
+  @override
+  Future forgotPasswordVerifyOtp(OtpVerifyRequest otpVerifyRequest) {
+    return mDataAgent.forgotPasswordVerifyOtp(otpVerifyRequest);
+  }
+
 }

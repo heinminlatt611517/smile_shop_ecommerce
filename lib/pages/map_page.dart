@@ -87,7 +87,7 @@ class MapPageState extends State<MapPage> {
     );
 
     setState(() {
-      _currentLocationMarker = marker;
+      //_currentLocationMarker = marker;
     });
 
     /// Move the camera to the current location
@@ -197,6 +197,8 @@ class MapPageState extends State<MapPage> {
               if (_currentLocationMarker != null) _currentLocationMarker!,
               if (_tappedLocationMarker != null) _tappedLocationMarker!,
             },
+            myLocationButtonEnabled: true,
+            myLocationEnabled: true,
           ),
 
           ///back arrow

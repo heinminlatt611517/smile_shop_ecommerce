@@ -74,6 +74,13 @@ abstract class SmileShopDataAgent {
 
   Future<OtpResponse> requestOtp(OtpRequest otpRequest);
 
+  Future forgotPasswordVerifyOtp(OtpVerifyRequest otpVerifyRequest);
+
+  Future<SetPasswordResponse> forgotPasswordSetPassword(
+      SetPasswordRequest setPasswordRequest);
+
+  Future<OtpResponse> forgotPasswordRequestOtp(OtpRequest otpRequest);
+
   Future<BrandAndCategoryVO> getBrandsAndCategories(
     String token,
     String acceptLanguage,

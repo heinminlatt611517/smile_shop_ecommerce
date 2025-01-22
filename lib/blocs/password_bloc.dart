@@ -20,9 +20,11 @@ class PasswordBloc extends ChangeNotifier {
   var confirmPassword = "";
   bool isShowPassword = true;
   bool isShowRetypePassword = true;
+  bool isFromPasswordPage;
+
   final FirebaseApi _api = FirebaseApi();
 
-  PasswordBloc() {
+  PasswordBloc(this.isFromPasswordPage) {
     authToken =
         _smileShopModel.getLoginResponseFromDatabase()?.refreshToken ?? "";
     endUserId =
@@ -35,7 +37,9 @@ class PasswordBloc extends ChangeNotifier {
     var setPasswordRequest =
         SetPasswordRequest(requestId, password, confirmPassword, phone);
     _showLoading();
-    return _smileShopModel
+    return isFromPasswordPage == true ?_smileShopModel
+        .forgotPasswordSetPassword(setPasswordRequest)
+        .whenComplete(() => _hideLoading()) : _smileShopModel
         .setPassword(setPasswordRequest)
         .whenComplete(() => _hideLoading());
   }

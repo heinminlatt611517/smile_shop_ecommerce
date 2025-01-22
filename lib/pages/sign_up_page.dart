@@ -118,7 +118,8 @@ class _SignUpPageState extends State<SignUpPage> {
                                         requestId:
                                             value.data?.requestId.toString(),
                                         phone: value.data?.to,
-                                        referralCode:value.data?.referralCode)));
+                                        referralCode:value.data?.referralCode,
+                                        isFromForgotPasswordPage: false,)));
                               }
                             }).catchError((error) {
                               showCommonDialog(

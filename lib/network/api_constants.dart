@@ -53,6 +53,10 @@ const String kEndPointCheckOrderStatus = '/api/order/check-status';
 const String kEndPointCampaignHistory = '/api/campaign/history';
 const String kEndPointGetHomePagePopupData = '/api/homepage-popup';
 const String kEndPointUpdateHomePagePopupData = '/api/update-homepage-popup';
+const String kEndPointForgotPasswordOtpRequest = '/api/auth/forget-password/otp-request';
+const String kEndPointForgotPasswordOtpVerify = "/api/auth/forget-password/otp-verify";
+const String kEndPointForgotPasswordSetPassword = "/api/auth/forget-password/set-password";
+
 
 
 ///Parameters

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smile_shop/pages/cart_page.dart';
 import 'package:smile_shop/pages/chat_screen.dart';
 import 'package:smile_shop/pages/profile_page.dart';
-import 'package:smile_shop/pages/ticket_screen.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/utils/images.dart';
@@ -73,61 +73,61 @@ class _MainPageState extends State<MainPage> {
 
   List<BottomNavigationBarItem> _getBottomNavigationBarItems() {
     return [
-      const BottomNavigationBarItem(
-        icon: SvgImageView(
+       BottomNavigationBarItem(
+        icon:const SvgImageView(
           imageName: kHomeIcon,
           imageHeight: 20,
           imageWidth: 20,
           iconColor: Colors.black,
         ),
-        activeIcon:SvgImageView(
+        activeIcon:const SvgImageView(
           imageName: kHomeIcon,
           imageHeight: 20,
           imageWidth: 20,
         ),
-        label: kHomeLabel,
+        label: AppLocalizations.of(context)!.home,
       ),
-      const BottomNavigationBarItem(
-        icon: SvgImageView(
+       BottomNavigationBarItem(
+        icon:const SvgImageView(
           imageName: kCartIcon,
           imageHeight: 20,
           imageWidth: 20,
           iconColor: Colors.black,
         ),
-        activeIcon:SvgImageView(
+        activeIcon:const SvgImageView(
           imageName: kCartIcon,
           imageHeight: 20,
           imageWidth: 20,
         ),
-        label: kCartLabel,
+        label: AppLocalizations.of(context)!.cart,
       ),
-      const BottomNavigationBarItem(
-        icon: SvgImageView(
+       BottomNavigationBarItem(
+        icon:const SvgImageView(
           imageName: kLiveChatIcon,
           imageHeight: 20,
           imageWidth: 20,
           iconColor: Colors.black,
         ),
-        activeIcon:SvgImageView(
+        activeIcon:const SvgImageView(
           imageName: kLiveChatIcon,
           imageHeight: 20,
           imageWidth: 20,
         ),
-        label: kLiveChatLabel,
+        label: AppLocalizations.of(context)!.liveChat,
       ),
-      const BottomNavigationBarItem(
-        icon: SvgImageView(
+       BottomNavigationBarItem(
+        icon:const SvgImageView(
           imageName: kProfileIcon,
           imageHeight: 20,
           imageWidth: 20,
           iconColor: Colors.black,
         ),
-        activeIcon:SvgImageView(
+        activeIcon:const SvgImageView(
           imageName: kProfileIcon,
           imageHeight: 20,
           imageWidth: 20,
         ),
-        label: kProfileLabel,
+         label: AppLocalizations.of(context)!.profile,
       ),
     ];
   }

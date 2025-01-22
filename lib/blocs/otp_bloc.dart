@@ -16,13 +16,14 @@ class OtpBloc extends ChangeNotifier {
   var authToken = "";
   var endUserId = "";
   var pinCode = "";
+  bool isFromForgotPasswordPage;
 
   /// Countdown timer variables
   Timer? _timer;
   int remainingSeconds = 240;
   bool isOtpExpired = false;
 
-  OtpBloc(){
+  OtpBloc(this.isFromForgotPasswordPage){
     authToken = _smileShopModel.getLoginResponseFromDatabase()?.refreshToken ?? "";
     endUserId = _smileShopModel.getLoginResponseFromDatabase()?.data?.id.toString() ?? "";
     startCountdown();
@@ -30,11 +31,11 @@ class OtpBloc extends ChangeNotifier {
 
   ///verify otp
   Future onTapVerifyOtp(String requestId) {
-    debugPrint("RequestId:::$requestId");
-    debugPrint("Code:::$pinCode");
     var otpVerifyRequest = OtpVerifyRequest(pinCode, requestId);
     _showLoading();
-    return _smileShopModel
+    return isFromForgotPasswordPage == true ?  _smileShopModel
+        .forgotPasswordVerifyOtp(otpVerifyRequest)
+        .whenComplete(() => _hideLoading()) : _smileShopModel
         .verifyOtp(otpVerifyRequest)
         .whenComplete(() => _hideLoading());
   }
@@ -43,7 +44,9 @@ class OtpBloc extends ChangeNotifier {
   Future requestOtp(String phone,String code) {
     var otpRequest = OtpRequest(phone, code);
     _showLoading();
-    return _smileShopModel
+    return isFromForgotPasswordPage == true ? _smileShopModel
+        .forgotPasswordRequestOtp(otpRequest)
+        .whenComplete(() => _hideLoading()) : _smileShopModel
         .requestOtp(otpRequest)
         .whenComplete(() => _hideLoading());
   }

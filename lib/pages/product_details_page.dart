@@ -8,6 +8,8 @@ import 'package:smile_shop/data/vos/specification_vo.dart';
 import 'package:smile_shop/data/vos/variant_vo.dart';
 import 'package:smile_shop/network/api_constants.dart';
 import 'package:smile_shop/pages/cart_page.dart';
+import 'package:smile_shop/pages/chat_screen.dart';
+import 'package:smile_shop/pages/live_chat_page.dart';
 import 'package:smile_shop/pages/ticket_screen.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/widgets/common_button_view.dart';
@@ -164,7 +166,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> with SingleTick
                                   onTap: () {
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (context) => const TicketScreen()),
+                                      MaterialPageRoute(builder: (context) => const ChatScreen()),
                                     );
                                   },
                                   icon: Icons.chat,
@@ -464,7 +466,7 @@ class CategoryAndReturnPointView extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  maxLines: 2,
+                  maxLines: 3,
                   productVO?.name ?? "",
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(fontSize: kTextRegular2x, fontWeight: FontWeight.bold),
@@ -590,7 +592,7 @@ void showBuyNowOrAddToCartBottomSheet(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Selector<ProductDetailsBottomSheetBloc, String>(
-                      selector: (context, bloc) => bloc.selectedVariant?.images.first.url ?? '',
+                      selector: (context, bloc) =>bloc.selectedVariant?.images.isNotEmpty ?? true ? bloc.selectedVariant?.images.first.url ?? '' : errorImageUrl,
                       builder: (context, productImage, child) => ClipRRect(
                         child: CachedNetworkImageView(
                           imageHeight: 100,

@@ -118,6 +118,16 @@ abstract class SmileShopApi {
   @POST(kEndPointOtpRequest)
   Future<OtpResponse> requestOtp(@Body() OtpRequest otpRequest);
 
+  @POST(kEndPointForgotPasswordOtpVerify)
+  Future forgotPasswordVerifyOtp(@Body() OtpVerifyRequest otpVerifyRequest);
+
+  @POST(kEndPointForgotPasswordOtpRequest)
+  Future<OtpResponse> forgotPasswordRequestOtp(@Body() OtpRequest otpRequest);
+
+  @POST(kEndPointForgotPasswordSetPassword)
+  Future<SetPasswordResponse> forgotPasswordSetPassword(
+      @Body() SetPasswordRequest setPasswordRequest);
+
   @POST(kEndPointSearchProducts)
   Future<ProductResponse> searchProductsByName(
     @Header(kHeaderAuthorization) String token,

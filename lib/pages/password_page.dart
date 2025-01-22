@@ -17,7 +17,8 @@ import '../widgets/loading_view.dart';
 class PasswordPage extends StatefulWidget {
   final String? requestId;
   final String? phone;
-  const PasswordPage({super.key,required this.requestId,required this.phone});
+  final bool? isFromPasswordPage;
+  const PasswordPage({super.key,required this.requestId,required this.phone,required this.isFromPasswordPage});
 
   @override
   State<PasswordPage> createState() => _PasswordPageState();
@@ -30,7 +31,7 @@ class _PasswordPageState extends State<PasswordPage> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => PasswordBloc(),
+      create: (context) => PasswordBloc(widget.isFromPasswordPage ?? false),
       child: Scaffold(
         backgroundColor: kBackgroundColor,
         body: Selector<PasswordBloc,bool>(

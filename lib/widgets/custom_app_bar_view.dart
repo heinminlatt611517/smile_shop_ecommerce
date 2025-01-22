@@ -23,8 +23,8 @@ class CustomAppBarView extends StatelessWidget implements PreferredSizeWidget {
         },
         child:const SvgImageView(
           imageName: kBackSvgIcon,
-          imageHeight: 26,
-          imageWidth: 26,
+          imageHeight: 20,
+          imageWidth: 20,
         ),
       ),
         const Spacer(),

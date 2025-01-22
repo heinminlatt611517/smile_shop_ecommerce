@@ -17,12 +17,14 @@ class OtpPage extends StatefulWidget {
   final String? requestId;
   final String? phone;
   final String? referralCode;
+  final bool? isFromForgotPasswordPage;
 
   const OtpPage(
       {super.key,
       required this.requestId,
       required this.phone,
-      required this.referralCode});
+      required this.referralCode,
+      required this.isFromForgotPasswordPage});
 
   @override
   State<OtpPage> createState() => _OtpPageState();
@@ -54,7 +56,7 @@ class _OtpPageState extends State<OtpPage> {
       ),
     );
     return ChangeNotifierProvider(
-      create: (context) => OtpBloc(),
+      create: (context) => OtpBloc(widget.isFromForgotPasswordPage ?? false),
       child: Selector<OtpBloc, bool>(
         selector: (context, bloc) => bloc.isLoading,
         builder: (context, isLoading, child) => Scaffold(
@@ -181,6 +183,7 @@ class _OtpPageState extends State<OtpPage> {
                                   builder: (builder) => PasswordPage(
                                         requestId: widget.requestId,
                                         phone: widget.phone,
+                                        isFromPasswordPage: widget.isFromForgotPasswordPage,
                                       )));
                             }).catchError((error) {
                               debugPrint("Error>>>>>>$error");

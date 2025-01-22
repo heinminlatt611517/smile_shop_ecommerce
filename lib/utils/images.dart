@@ -41,3 +41,7 @@ const kWelcomeSvgIcon = 'assets/images/welcome.svg';
 const kCampaignIcon = 'assets/images/campaign.png';
 const kDailyCheckInIcon = 'assets/images/daily_check_in.png';
 const kUserLevelIcon = 'assets/images/user_level.png';
+
+const kEnglishImg = 'assets/images/english.jpg';
+const kMyanmarImg = 'assets/images/myanmar.png';
+const kChinaImg = 'assets/images/china.jpg';

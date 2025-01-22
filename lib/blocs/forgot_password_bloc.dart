@@ -1,7 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:smile_shop/data/model/smile_shop_model.dart';
 import 'package:smile_shop/data/model/smile_shop_model_impl.dart';
-import '../network/responses/login_response.dart';
+import 'package:smile_shop/network/responses/otp_response.dart';
+import '../network/requests/otp_request.dart';
 
 class ForgotPasswordBloc extends ChangeNotifier {
   /// State
@@ -12,9 +13,12 @@ class ForgotPasswordBloc extends ChangeNotifier {
   final SmileShopModel _smileShopModel = SmileShopModelImpl();
 
   ///onTap next
-  Future<LoginResponse> onTapNext() {
+  Future<OtpResponse> onTapNext() {
     _showLoading();
-    return Future.value();
+    var otpRequest = OtpRequest(phone, "");
+    return _smileShopModel
+        .forgotPasswordRequestOtp(otpRequest)
+        .whenComplete(() => _hideLoading());
   }
 
   void onPhoneNumberChanged(String phone) {

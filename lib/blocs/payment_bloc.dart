@@ -125,7 +125,8 @@ class PaymentBloc extends ChangeNotifier {
         }
       });
     } catch (error) {
-      if(error == 'The password field is required.'){
+      if(error.toString() == 'The password field is required.'){
+        _hideLoading();
         showCommonDialog(
             context: context,
             dialogWidget:const SetWalletPasswordDialogView(message: 'Please set wallet password first.'));

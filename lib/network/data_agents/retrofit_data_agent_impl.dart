@@ -898,6 +898,42 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
       throw _createException(error);
     });
   }
+
+  @override
+  Future<OtpResponse> forgotPasswordRequestOtp(OtpRequest otpRequest) {
+    return mApi
+        .forgotPasswordRequestOtp(otpRequest)
+        .asStream()
+        .map((response) => response)
+        .first
+        .catchError((error) {
+      throw _createException(error);
+    });
+  }
+
+  @override
+  Future<SetPasswordResponse> forgotPasswordSetPassword(SetPasswordRequest setPasswordRequest) {
+    return mApi
+        .forgotPasswordSetPassword(setPasswordRequest)
+        .asStream()
+        .map((response) => response)
+        .first
+        .catchError((error) {
+      throw _createException(error);
+    });
+  }
+
+  @override
+  Future forgotPasswordVerifyOtp(OtpVerifyRequest otpVerifyRequest) {
+    return mApi
+        .forgotPasswordVerifyOtp(otpVerifyRequest)
+        .asStream()
+        .map((response) => response)
+        .first
+        .catchError((error) {
+      throw _createException(error);
+    });
+  }
 }
 
 ///custom exception

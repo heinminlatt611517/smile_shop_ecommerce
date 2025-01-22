@@ -24,10 +24,14 @@ class ChatScreen extends StatelessWidget {
         builder: (context, bloc, child) => Scaffold(
           backgroundColor: kBackgroundColor,
           appBar: AppBar(
+            automaticallyImplyLeading: false,
+            backgroundColor: Colors.white,
+            foregroundColor: Colors.black,
             centerTitle: true,
-            title: const Text("Chat"),
-            forceMaterialTransparency: true,
-            scrolledUnderElevation: 0,
+            title: const Text(
+              'Chat',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
           ),
           body: Stack(
             children: [
