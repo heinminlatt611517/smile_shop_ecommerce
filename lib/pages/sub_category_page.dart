@@ -24,20 +24,23 @@ class SubCategoryPage extends StatelessWidget {
       create: (context) => SubCategoryBloc(categoryVO?.id ?? 0),
       child: Scaffold(
           backgroundColor: kBackgroundColor,
-          appBar: CustomAppBarView(title: categoryVO?.name ?? "",),
+          appBar: CustomAppBarView(
+            title: categoryVO?.name ?? "",
+          ),
           body: Selector<SubCategoryBloc, bool>(
             selector: (context, bloc) => bloc.isLoading,
-            builder: (BuildContext context, isLoading, Widget? child) =>
-                Stack(
-                  children: [
-                    ///body view
-                    Selector<SubCategoryBloc, List<SubcategoryVO>>(
+            builder: (BuildContext context, isLoading, Widget? child) => Stack(
+              children: [
+                ///body view
+                Selector<SubCategoryBloc, List<SubcategoryVO>>(
                     selector: (context, bloc) => bloc.subCategories,
                     builder: (context, subCategories, child) {
+                      SubCategoryBloc bloc = Provider.of<SubCategoryBloc>(context, listen: false);
                       return subCategories.isNotEmpty
                           ? Padding(
                               padding: const EdgeInsets.all(kMarginMedium2),
                               child: CustomScrollView(
+                                controller: bloc.scrollController,
                                 slivers: [
                                   ///sub category view
                                   SliverToBoxAdapter(
@@ -58,22 +61,23 @@ class SubCategoryPage extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                            ) :const SizedBox.shrink();
+                            )
+                          : const SizedBox.shrink();
                     }),
 
-                    ///loading view
-                    if (isLoading)
-                      Container(
-                        color: Colors.black12,
-                        child: const Center(
-                          child: LoadingView(
-                            indicatorColor: kPrimaryColor,
-                            indicator: Indicator.ballSpinFadeLoader,
-                          ),
-                        ),
+                ///loading view
+                if (isLoading)
+                  Container(
+                    color: Colors.black12,
+                    child: const Center(
+                      child: LoadingView(
+                        indicatorColor: kPrimaryColor,
+                        indicator: Indicator.ballSpinFadeLoader,
                       ),
-                  ],
-                ),
+                    ),
+                  ),
+              ],
+            ),
           )),
     );
   }
@@ -97,7 +101,10 @@ class SubCategoryView extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => ProductCategoryPage(categoryName: subCategories[index].name,subCategoryId: subCategories[index].id,),
+                builder: (context) => ProductCategoryPage(
+                  categoryName: subCategories[index].name,
+                  subCategoryId: subCategories[index].id,
+                ),
               ),
             );
           },
@@ -108,9 +115,10 @@ class SubCategoryView extends StatelessWidget {
       },
       itemCount: subCategories.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 4,
-          mainAxisSpacing: 10.0,
-          crossAxisSpacing: 10.0,),
+        crossAxisCount: 4,
+        mainAxisSpacing: 10.0,
+        crossAxisSpacing: 10.0,
+      ),
     );
   }
 }
@@ -121,32 +129,28 @@ class ProductsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Selector<SubCategoryBloc, List<ProductVO>>(
-        selector: (context, bloc) => bloc.products,
-        builder: (context, products, child) {
-          return products.isNotEmpty
-              ? GridView.builder(
-            shrinkWrap: true,
-            padding: EdgeInsets.zero,
-            physics: const NeverScrollableScrollPhysics(),
-            itemBuilder: (context, index) {
-              return TrendingProductListItemView(
-                productVO: products[index],
-                onTapFavourite: (product){
-                  var bloc = Provider.of<SubCategoryBloc>(context,
-                      listen: false);
-                  bloc.onTapFavourite(product, context);
+    return Consumer<SubCategoryBloc>(
+      builder: (context, bloc, child) {
+        List<ProductVO> products = bloc.products;
+        return products.isNotEmpty
+            ? GridView.builder(
+                shrinkWrap: true,
+                padding: EdgeInsets.zero,
+                physics: const NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  return TrendingProductListItemView(
+                    productVO: products[index],
+                    onTapFavourite: (product) {
+                      var bloc = Provider.of<SubCategoryBloc>(context, listen: false);
+                      bloc.onTapFavourite(product, context);
+                    },
+                  );
                 },
-              );
-            },
-            itemCount: products.length,
-            gridDelegate:
-            const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: 14.0,
-                crossAxisSpacing: 10.0,
-                childAspectRatio: 2 / 2.7),
-          ) : const SizedBox.shrink();
-        });
+                itemCount: products.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, mainAxisSpacing: 14.0, crossAxisSpacing: 10.0, childAspectRatio: 2 / 2.7),
+              )
+            : const SizedBox.shrink();
+      },
+    );
   }
 }

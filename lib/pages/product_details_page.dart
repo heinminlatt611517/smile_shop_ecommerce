@@ -308,9 +308,10 @@ class ProductDetailsView extends StatelessWidget {
               right: kMarginMedium,
             ),
             child: CachedNetworkImageView(
-              imageHeight: 340,
+              imageHeight: null,
               imageWidth: double.infinity,
               imageUrl: images[index],
+              boxFit: BoxFit.contain,
             ),
           );
         },
@@ -376,7 +377,7 @@ class BannerSectionView extends StatelessWidget {
                       imageHeight: 120,
                       imageWidth: double.infinity,
                       imageUrl: errorImageUrl,
-                      boxFit: BoxFit.fitHeight,
+                      boxFit: BoxFit.contain,
                     )
                   : PageView.builder(
                       controller: _bannerPageController,
@@ -397,7 +398,7 @@ class BannerSectionView extends StatelessWidget {
                           imageHeight: 120,
                           imageWidth: double.infinity,
                           imageUrl: images[realIndex],
-                          boxFit: BoxFit.fitHeight,
+                          boxFit: BoxFit.contain,
                         );
                       },
                       itemCount: images.length + ((video?.isNotEmpty ?? false) ? 1 : 0),

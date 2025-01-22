@@ -13,44 +13,54 @@ class SubCategoryBloc extends ChangeNotifier {
   List<ProductVO> products = [];
   bool isLoading = false;
   bool isDisposed = false;
+  int pageNumber = 1;
+  final int categoryId;
+  ScrollController scrollController = ScrollController();
 
-  SubCategoryBloc(int categoryId) {
+  SubCategoryBloc(this.categoryId) {
+    scrollController.addListener(
+      () {
+        if (scrollController.position.pixels == scrollController.position.maxScrollExtent) {
+          getProducts();
+        }
+      },
+    );
+
     ///get data from database
-    var authToken =
-        _smileShopModel.getLoginResponseFromDatabase()?.refreshToken ?? "";
-    var endUserId =
-        _smileShopModel.getLoginResponseFromDatabase()?.data?.id.toString() ??
-            "";
+    var authToken = _smileShopModel.getLoginResponseFromDatabase()?.refreshToken ?? "";
     var subCategoryRequest = SubCategoryRequest(categoryId: categoryId);
 
     _showLoading();
+
     ///get sub category list
-    _smileShopModel
-        .subCategoryByCategory(authToken, kAcceptLanguageEn, subCategoryRequest)
-        .then((subCategoriesResponse) {
-      subCategories = subCategoriesResponse;
+    _smileShopModel.subCategoryByCategory(authToken, kAcceptLanguageEn, subCategoryRequest).then((subCategoriesResponse) {
+      subCategories.addAll(subCategoriesResponse);
       notifyListeners();
     });
 
+    getProducts().whenComplete(() => _hideLoading());
+  }
+
+  Future<void> getProducts() async {
+    ///get data from database
+    var authToken = _smileShopModel.getLoginResponseFromDatabase()?.refreshToken ?? "";
+    var endUserId = _smileShopModel.getLoginResponseFromDatabase()?.data?.id.toString() ?? "";
+
     ///get product list
-    _smileShopModel
-        .searchProductsCategoryId(
-            authToken, kAcceptLanguageEn, endUserId, 1, categoryId)
-        .then((productResponse) {
-      products = productResponse;
+    return _smileShopModel.searchProductsCategoryId(authToken, kAcceptLanguageEn, endUserId, pageNumber, categoryId).then((productResponse) {
+      pageNumber += 1;
+      products.addAll(productResponse);
       notifyListeners();
-    }).whenComplete(()=> _hideLoading());
+    });
   }
 
-  void onTapFavourite(ProductVO? product,BuildContext context){
-    _smileShopModel.saveFavouriteProductToHive(
-        product?.copyWith(isFavourite: true) ??
-            ProductVO());
+  void onTapFavourite(ProductVO? product, BuildContext context) {
+    _smileShopModel.saveFavouriteProductToHive(product?.copyWith(isFavourite: true) ?? ProductVO());
 
-    showSnackBar(context, '${product?.name} added to favourite successfully!',Colors.green);
+    showSnackBar(context, '${product?.name} added to favourite successfully!', Colors.green);
   }
 
-  void showSnackBar(BuildContext context, String description,Color snackBarColor) {
+  void showSnackBar(BuildContext context, String description, Color snackBarColor) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(description),
@@ -59,6 +69,7 @@ class SubCategoryBloc extends ChangeNotifier {
       ),
     );
   }
+
   void _showLoading() {
     isLoading = true;
     _notifySafely();
