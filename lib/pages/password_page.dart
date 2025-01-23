@@ -3,7 +3,7 @@ import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:smile_shop/blocs/password_bloc.dart';
 import 'package:smile_shop/pages/login_page.dart';
-import 'package:smile_shop/pages/main_page.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/utils/images.dart';
@@ -68,7 +68,7 @@ class _PasswordPageState extends State<PasswordPage> {
                                   bloc.onTapShowPassword();
                                 },
                                 isSecure: bloc.isShowPassword,
-                                hintLabel: 'Set your password',
+                                hintLabel: AppLocalizations.of(context)!.setYourPassword,
                                 onChangeValue: (value){
                                   bloc.onPasswordChanged(value);
                                 }),
@@ -85,7 +85,7 @@ class _PasswordPageState extends State<PasswordPage> {
                                   bloc.onTapShowRetypePassword();
                                 },
                                 isSecure: bloc.isShowRetypePassword,
-                                hintLabel: 'Retype your password',
+                                hintLabel: AppLocalizations.of(context)!.reTypeYourPassword,
                                 onChangeValue: (value){
                                   bloc.onConfirmPasswordChanged(value);
                                 }),
@@ -119,10 +119,10 @@ class _PasswordPageState extends State<PasswordPage> {
                           decoration: BoxDecoration(
                               color: kPrimaryColor,
                               borderRadius: BorderRadius.circular(4)),
-                          child: const Center(
+                          child:  Center(
                             child: Text(
-                              'Confirm',
-                              style: TextStyle(color: kBackgroundColor),
+                              AppLocalizations.of(context)!.confirm,
+                              style:const TextStyle(color: kBackgroundColor),
                             ),
                           ),
                         ),

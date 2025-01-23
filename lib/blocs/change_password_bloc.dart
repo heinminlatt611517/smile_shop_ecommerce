@@ -4,6 +4,7 @@ import 'package:smile_shop/data/model/smile_shop_model_impl.dart';
 import 'package:smile_shop/data/vos/firebase_user_vo.dart';
 import 'package:smile_shop/network/api_constants.dart';
 import 'package:smile_shop/network/requests/dealer_login_request.dart';
+import 'package:smile_shop/network/responses/success_network_response.dart';
 
 import '../network/firebase_api.dart';
 import '../network/requests/login_request.dart';
@@ -12,57 +13,50 @@ import '../network/responses/login_response.dart';
 class ChangePasswordBloc extends ChangeNotifier {
   /// State
   bool isLoading = false;
-  String phone = "";
-  String email = "";
-  String password = "";
+  String oldPassword = "";
+  String newPassword = "";
+  String confirmPassword = "";
   bool isShowOldPassword = true;
   bool isShowNewPassword = true;
   bool isShowRetypePassword = true;
   bool isDisposed = false;
   bool isChecked = false;
-  final FirebaseApi _api = FirebaseApi();
+  var authToken = "";
+  var endUserId = "";
 
   final SmileShopModel _smileShopModel = SmileShopModelImpl();
 
-  ///sign in
-  Future<LoginResponse> onTapSign() {
-    var loginRequest = LoginRequest(phone, kTypeEndUser, password);
-    _showLoading();
-    return _smileShopModel
-        .login(loginRequest)
-        .whenComplete(() => _hideLoading());
+  ChangePasswordBloc() {
+    authToken =
+        _smileShopModel.getLoginResponseFromDatabase()?.accessToken ?? "";
+    endUserId =
+        _smileShopModel.getLoginResponseFromDatabase()?.data?.id.toString() ??
+            "";
   }
 
   ///sign in
-  Future<LoginResponse> onTapDealerSign() {
-    var loginRequest = DealerLoginRequest(email, kTypeDealer, password);
+  Future<SuccessNetworkResponse> onTapConfirm() {
     _showLoading();
     return _smileShopModel
-        .dealerLogin(loginRequest)
+        .changePassword(authToken, kAcceptLanguageEn, int.parse(endUserId),
+            oldPassword, newPassword, confirmPassword, 'password')
         .whenComplete(() => _hideLoading());
   }
 
-  void crateFirebaseChatUser(
-      {required int id,
-      required String name,
-      required String phone,
-      }) async {
-    var firebaseUser = FirebaseUserVo(id: id,name: name,phone: phone,role: 'user');
-    await _api.createUser(firebaseUser);
-  }
-
-  void onPhoneNumberChanged(String phone) {
-    this.phone = phone;
-  }
-
-  void onPasswordChanged(String password) {
-    this.password = password;
-  }
-
-  void onChangedEmail(String newValue){
-    email = newValue;
+  void onChangedOldPassword(String password){
+    oldPassword = password;
     _notifySafely();
-}
+  }
+
+  void onChangedNewPassword(String password){
+    newPassword = password;
+    _notifySafely();
+  }
+
+  void onChangedConfirmPassword(String password){
+    confirmPassword = password;
+    _notifySafely();
+  }
 
   void _showLoading() {
     isLoading = true;
@@ -83,7 +77,6 @@ class ChangePasswordBloc extends ChangeNotifier {
     isShowRetypePassword = !isShowRetypePassword;
     _notifySafely();
   }
-
 
   void onCheckChange() {
     isChecked = !isChecked;

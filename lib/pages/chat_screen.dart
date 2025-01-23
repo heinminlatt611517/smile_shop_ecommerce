@@ -12,6 +12,8 @@ import '../data/vos/message_vo.dart';
 import '../data/vos/user_vo.dart';
 import '../network/api_constants.dart';
 import '../network/firebase_api.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class ChatScreen extends StatelessWidget {
   const ChatScreen({super.key});
@@ -28,9 +30,9 @@ class ChatScreen extends StatelessWidget {
             backgroundColor: Colors.white,
             foregroundColor: Colors.black,
             centerTitle: true,
-            title: const Text(
-              'Chat',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            title:  Text(
+              AppLocalizations.of(context)!.chat,
+              style:const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
           ),
           body: Stack(
@@ -352,10 +354,10 @@ class ChatInputField extends StatelessWidget {
                 child: TextField(
                   controller: textController,
                   style: const TextStyle(fontSize: 12),
-                  decoration: const InputDecoration(
-                    hintText: "Send a message",
+                  decoration:  InputDecoration(
+                    hintText: AppLocalizations.of(context)!.sendAMessage,
                     border: InputBorder.none,
-                    contentPadding: EdgeInsets.only(bottom: 8),
+                    contentPadding:const EdgeInsets.only(bottom: 8),
                   ),
                 ),
               ),

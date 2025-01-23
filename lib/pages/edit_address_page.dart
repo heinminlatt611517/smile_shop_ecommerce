@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:smile_shop/blocs/edit_address_bloc.dart';
-import 'package:smile_shop/blocs/my_address_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:smile_shop/data/vos/address_vo.dart';
 import 'package:smile_shop/data/vos/state_vo.dart';
 import 'package:smile_shop/data/vos/township_vo.dart';
@@ -30,7 +30,7 @@ class EditAddressPage extends StatelessWidget {
       create: (context) => EditAddressBloc(addressVO),
       child: Scaffold(
         backgroundColor: kBackgroundColor,
-        appBar:const CustomAppBarView(title: 'Edit My Address'),
+        appBar: CustomAppBarView(title: AppLocalizations.of(context)!.editMyAddress),
         body: Selector<EditAddressBloc, bool>(
           selector: (context, bloc) => bloc.isLoading,
           builder: (context, isLoading, child) => Stack(
@@ -94,9 +94,9 @@ class EditAddressPage extends StatelessWidget {
                                 },
                               ),
                             ),
-                            const Text(
-                              'Set as default address',
-                              style: TextStyle(
+                             Text(
+                              AppLocalizations.of(context)!.setAsDefaultAddress,
+                              style:const TextStyle(
                                   fontSize: kTextRegular, color: Colors.black),
                             )
                           ],
@@ -110,7 +110,7 @@ class EditAddressPage extends StatelessWidget {
                       ///delete button
                       Consumer<EditAddressBloc>(
                         builder: (context, bloc, child) => CommonButtonView(
-                            label: 'Delete Address',
+                            label:  AppLocalizations.of(context)!.deleteAddress,
                             isShowBorder: true,
                             labelColor: Colors.black,
                             bgColor: Colors.transparent,
@@ -135,7 +135,7 @@ class EditAddressPage extends StatelessWidget {
                       ///save button
                       Consumer<EditAddressBloc>(
                         builder: (context, bloc, child) => CommonButtonView(
-                            label: 'Save',
+                            label:  AppLocalizations.of(context)!.save,
                             labelColor: Colors.white,
                             bgColor: kPrimaryColor,
                             onTapButton: () {
@@ -185,9 +185,9 @@ class AddressCategoryView extends StatelessWidget {
       create: (context) => AddressCategoryBloc(addressVO?.categoryId ?? 0),
       child: Row(
         children: [
-          const Text(
-            'Address Category',
-            style: TextStyle(fontSize: kTextRegular2x),
+           Text(
+             AppLocalizations.of(context)!.addressCategory,
+            style:const TextStyle(fontSize: kTextRegular2x),
           ),
           const SizedBox(
             width: kMarginMedium2,

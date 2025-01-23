@@ -10,7 +10,6 @@ import 'package:smile_shop/pages/my_address_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/utils/strings.dart';
-import 'package:smile_shop/widgets/common_button_view.dart';
 import 'package:smile_shop/widgets/custom_app_bar_view.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
@@ -18,6 +17,8 @@ import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import '../data/vos/product_vo.dart';
 import '../widgets/cached_network_image_view.dart';
 import 'payment_method_page.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class CheckoutPage extends StatelessWidget {
   final List<ProductVO>? productList;
@@ -32,7 +33,7 @@ class CheckoutPage extends StatelessWidget {
       create: (context) => CheckOutBloc(productList ?? [],context),
       child: Scaffold(
         backgroundColor: kBackgroundColor,
-        appBar: const CustomAppBarView(title: 'Check Out'),
+        appBar: CustomAppBarView(title: AppLocalizations.of(context)?.checkOut ?? ''),
         body: Selector<CheckOutBloc, List<AddressVO>>(
           selector: (context, bloc) => bloc.addressList,
           builder: (context, addressList, child) => SingleChildScrollView(
@@ -122,10 +123,10 @@ class CheckoutPage extends StatelessWidget {
               width: double.infinity,
               decoration: BoxDecoration(
                   color: kPrimaryColor, borderRadius: BorderRadius.circular(4)),
-              child: const Center(
+              child: Center(
                 child: Text(
-                  'Pay Now',
-                  style: TextStyle(color: kBackgroundColor),
+                  AppLocalizations.of(context)?.payNow ?? '',
+                  style: const TextStyle(color: kBackgroundColor),
                 ),
               ),
             ),
@@ -164,7 +165,7 @@ class _BuildAddressView extends StatelessWidget {
               borderRadius: BorderRadius.circular(10)),
           child: Row(
             children: [
-              const Text('Address'),
+              Text(AppLocalizations.of(context)?.address ?? ''),
               const SizedBox(
                 width: 50,
               ),
@@ -214,7 +215,7 @@ class _BuildDeliveryOptionView extends StatelessWidget {
               borderRadius: BorderRadius.circular(10)),
           child: Row(
             children: [
-              const Text('Delivery Options'),
+              Text(AppLocalizations.of(context)?.deliveryOptions ?? ''),
               const SizedBox(
                 width: 50,
               ),
@@ -225,8 +226,8 @@ class _BuildDeliveryOptionView extends StatelessWidget {
                     Flexible(
                         child: Text(
                       bloc.isSelectedStandardDelivery
-                          ? kStandardDelivery
-                          : kSpecialDelivery,
+                          ? AppLocalizations.of(context)?.standardDelivery ?? ''
+                          : AppLocalizations.of(context)?.specialDelivery ?? '',
                       overflow: TextOverflow.ellipsis,
                     )),
                     const SizedBox(
@@ -260,7 +261,7 @@ class _BuildOrderSummaryView extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Order Summary'),
+          Text(AppLocalizations.of(context)?.orderSummary ?? ''),
           const SizedBox(
             height: 20,
           ),
@@ -272,7 +273,7 @@ class _BuildOrderSummaryView extends StatelessWidget {
             builder: (context, bloc, child) => Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('Order'),
+                Text(AppLocalizations.of(context)?.order ?? ''),
                 Text('Ks ${bloc.totalProductPrice}')
               ],
             ),
@@ -280,9 +281,9 @@ class _BuildOrderSummaryView extends StatelessWidget {
           const SizedBox(
             height: 20,
           ),
-          const Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text('Delivery'), Text('Ks 0')],
+            children: [Text(AppLocalizations.of(context)?.delivery ?? ''), const Text('Ks 0')],
           ),
           const SizedBox(
             height: 20,
@@ -295,7 +296,7 @@ class _BuildOrderSummaryView extends StatelessWidget {
             builder: (context, bloc, child) => Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('Total'),
+                Text(AppLocalizations.of(context)?.total ?? ''),
                 Text('Ks ${bloc.totalSummaryProductPrice}')
               ],
             ),
@@ -335,7 +336,7 @@ class _BuildPromotionPointView extends StatelessWidget {
             borderRadius: BorderRadius.circular(10)),
         child: Row(
           children: [
-            const Text('Promotion Points'),
+            Text(AppLocalizations.of(context)?.promotionPoint ?? ''),
             const SizedBox(
               width: 50,
             ),
@@ -381,9 +382,9 @@ Widget deliveryOptionModalSheet(BuildContext context, CheckOutBloc bloc) {
           children: [
             const SizedBox(),
             const SizedBox(),
-            const Text(
-              'Delivery Options',
-              style: TextStyle(fontSize: kTextRegular2x),
+            Text(
+              AppLocalizations.of(context)?.deliveryOptions ?? '',
+              style: const TextStyle(fontSize: kTextRegular2x),
             ),
             IconButton(
                 onPressed: () {
@@ -415,11 +416,11 @@ Widget deliveryOptionModalSheet(BuildContext context, CheckOutBloc bloc) {
                     width: 1),
                 color: kFillingFastColor.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(10)),
-            child: const Padding(
-              padding: EdgeInsets.symmetric(horizontal: kMarginMedium),
+            child:  Padding(
+              padding: const EdgeInsets.symmetric(horizontal: kMarginMedium),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [Text(kStandardDelivery), Text('Free')],
+                children: [Text(AppLocalizations.of(context)?.standardDelivery ?? ''), Text('Free')],
               ),
             ),
           ),
@@ -444,11 +445,11 @@ Widget deliveryOptionModalSheet(BuildContext context, CheckOutBloc bloc) {
                     width: 1),
                 color: kFillingFastColor.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(10)),
-            child: const Padding(
-              padding: EdgeInsets.symmetric(horizontal: kMarginMedium),
+            child:  Padding(
+              padding: const EdgeInsets.symmetric(horizontal: kMarginMedium),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [Text(kSpecialDelivery), Text('Ks 3500')],
+                children: [Text(AppLocalizations.of(context)?.specialDelivery ?? ''), Text('Ks 3500')],
               ),
             ),
           ),
@@ -477,9 +478,9 @@ Widget promotionPointModalSheet(
       mainAxisSize: MainAxisSize.min,
       children: [
         const SizedBox(height: 20),
-        const Text(
-          'Promotion Point',
-          style: TextStyle(fontSize: kTextRegular2x),
+        Text(
+          AppLocalizations.of(context)?.promotionPoint ?? '',
+          style: const TextStyle(fontSize: kTextRegular2x),
         ),
         const SizedBox(height: 20),
         Container(
@@ -499,7 +500,7 @@ Widget promotionPointModalSheet(
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('Use Promotion'),
+                        Text(AppLocalizations.of(context)?.usePromotion ?? ''),
                         Row(
                           children: [
                             Text(
@@ -582,7 +583,7 @@ Widget promotionPointModalSheet(
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('No Use'),
+                  Text(AppLocalizations.of(context)?.noUse ?? ''),
                   InkWell(
                     onTap: () {
                       bloc.onTapUsePromotion();

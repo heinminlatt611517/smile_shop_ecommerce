@@ -7,6 +7,8 @@ import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/widgets/custom_app_bar_view.dart';
 import 'package:smile_shop/widgets/loading_view.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class CampaignParticipantPage extends StatelessWidget {
   const CampaignParticipantPage({super.key, required this.campaignId});
@@ -19,8 +21,8 @@ class CampaignParticipantPage extends StatelessWidget {
       create: (_) => CampaignParticipantBloc(campaignId),
       child: Scaffold(
         backgroundColor: kBackgroundColor,
-        appBar: const CustomAppBarView(
-          title: 'Participants',
+        appBar:  CustomAppBarView(
+          title: AppLocalizations.of(context)!.participants,
         ),
         body: Selector<CampaignParticipantBloc, bool?>(
           selector: (context, bloc) => bloc.isLoading,
@@ -38,7 +40,7 @@ class CampaignParticipantPage extends StatelessWidget {
                           const SizedBox(
                             height: 40,
                           ),
-                          const Text('Participants in this campaign'),
+                           Text(AppLocalizations.of(context)!.participantsInThisCampaign),
                           ListView.builder(
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),

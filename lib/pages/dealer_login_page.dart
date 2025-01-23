@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:loading_indicator/loading_indicator.dart';
@@ -6,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:smile_shop/blocs/login_bloc.dart';
 import 'package:smile_shop/network/api_constants.dart';
 import 'package:smile_shop/pages/main_page.dart';
-import 'package:smile_shop/pages/sign_up_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/utils/images.dart';
@@ -14,10 +12,9 @@ import 'package:smile_shop/widgets/common_dialog.dart';
 import 'package:smile_shop/widgets/error_dialog_view.dart';
 import 'package:smile_shop/widgets/input_view_lock_icon.dart';
 
-import '../data/dummy_data/country_code.dart';
 import '../utils/strings.dart';
 import '../widgets/loading_view.dart';
-import '../widgets/phone_input_textfield.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DealerLoginPage extends StatefulWidget {
   const DealerLoginPage({super.key});
@@ -64,7 +61,7 @@ class _DealerLoginPageState extends State<DealerLoginPage> {
                       Consumer<LogInBloc>(
                         builder: (context, bloc, child) => InputViewLockIcon(
                             isSecure: true,
-                            hintLabel: 'Type your email address',
+                            hintLabel: AppLocalizations.of(context)!.typeYourEmailAddress,
                             isMailIcon: true,
                             onChangeValue: (value) {
                               bloc.onChangedEmail(value);
@@ -78,7 +75,7 @@ class _DealerLoginPageState extends State<DealerLoginPage> {
                       ///password input view
                       Consumer<LogInBloc>(
                         builder: (context, bloc, child) => InputViewLockIcon(
-                            hintLabel: 'Type your password',
+                            hintLabel: AppLocalizations.of(context)!.typeYourPassword,
                             toggleObscured: () {
                               bloc.onTapShowPassword();
                             },
@@ -123,10 +120,10 @@ class _DealerLoginPageState extends State<DealerLoginPage> {
                           decoration: BoxDecoration(
                               color: kPrimaryColor,
                               borderRadius: BorderRadius.circular(4)),
-                          child: const Center(
+                          child:  Center(
                             child: Text(
-                              'Login',
-                              style: TextStyle(color: kBackgroundColor),
+                              AppLocalizations.of(context)!.login,
+                              style:const TextStyle(color: kBackgroundColor),
                             ),
                           ),
                         ),

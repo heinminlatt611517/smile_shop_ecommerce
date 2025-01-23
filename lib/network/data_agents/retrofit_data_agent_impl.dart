@@ -19,7 +19,6 @@ import 'package:smile_shop/data/vos/payment_vo.dart';
 import 'package:smile_shop/data/vos/product_response_data_vo.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
 import 'package:smile_shop/data/vos/promotion_data_vo.dart';
-import 'package:smile_shop/data/vos/promotion_vo.dart';
 import 'package:smile_shop/data/vos/refund_vo.dart';
 import 'package:smile_shop/data/vos/state_vo.dart';
 import 'package:smile_shop/data/vos/sub_category_vo.dart';
@@ -927,6 +926,18 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   Future forgotPasswordVerifyOtp(OtpVerifyRequest otpVerifyRequest) {
     return mApi
         .forgotPasswordVerifyOtp(otpVerifyRequest)
+        .asStream()
+        .map((response) => response)
+        .first
+        .catchError((error) {
+      throw _createException(error);
+    });
+  }
+
+  @override
+  Future<SuccessNetworkResponse> changePassword(String token, String acceptLanguage, int endUserId, String oldPassword, String newPassword, String confirmPassword, String passwordType) {
+    return mApi
+        .changePassword(token, acceptLanguage, endUserId, oldPassword, newPassword, confirmPassword, passwordType)
         .asStream()
         .map((response) => response)
         .first

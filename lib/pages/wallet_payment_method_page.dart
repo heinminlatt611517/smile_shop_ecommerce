@@ -12,6 +12,8 @@ import '../blocs/wallet_payment_bloc.dart';
 import '../widgets/common_dialog.dart';
 import '../widgets/error_dialog_view.dart';
 import '../widgets/loading_view.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class WalletPaymentMethodPage extends StatelessWidget {
   const WalletPaymentMethodPage({
@@ -24,7 +26,7 @@ class WalletPaymentMethodPage extends StatelessWidget {
       create: (context) => WalletPaymentBloc(),
       child: Scaffold(
         backgroundColor: kBackgroundColor,
-        appBar: const CustomAppBarView(title: 'Payment Method'),
+        appBar:  CustomAppBarView(title: AppLocalizations.of(context)?.paymentMethod ?? ''),
         body: Selector<WalletPaymentBloc, bool>(
           selector: (context, bloc) => bloc.isLoading,
           builder: (BuildContext context, isLoading, Widget? child) => Stack(
@@ -40,9 +42,9 @@ class WalletPaymentMethodPage extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'Choose type of payment.',
-                            style: TextStyle(fontSize: kTextRegular2x),
+                           Text(
+                            AppLocalizations.of(context)?.chooseTypeOfPayment ?? '',
+                            style: const TextStyle(fontSize: kTextRegular2x),
                           ),
                           const SizedBox(
                             height: kMarginMedium2,
@@ -50,20 +52,20 @@ class WalletPaymentMethodPage extends StatelessWidget {
                           TextFormField(
                             controller: bloc.amountTextController,
                             cursorColor: Colors.black,
-                            decoration: const InputDecoration(
+                            decoration:  InputDecoration(
                                 filled: true,
                                 fillColor: Colors.white,
                                 border: InputBorder.none,
                                 contentPadding:
-                                    EdgeInsets.symmetric(horizontal: 21),
-                                hintText: 'Please enter amount',
-                                hintStyle: TextStyle(color: Colors.grey)),
+                                    const EdgeInsets.symmetric(horizontal: 21),
+                                hintText: AppLocalizations.of(context)?.pleaseEnterAmount ?? '',
+                                hintStyle: const TextStyle(color: Colors.grey)),
                             onChanged: (v) {
                               bloc.onChangedAmount(v);
                             },
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please enter an amount';
+                                return AppLocalizations.of(context)?.pleaseEnterAmount ?? '';
                               }
                               if (double.tryParse(value) == null) {
                                 return 'Please enter a valid number';
@@ -137,7 +139,7 @@ class WalletPaymentMethodPage extends StatelessWidget {
                           ),
                           Consumer<WalletPaymentBloc>(
                             builder: (context, bloc, child) => CommonButtonView(
-                                label: 'Confirm',
+                                label: AppLocalizations.of(context)?.confirm ?? '',
                                 labelColor: Colors.white,
                                 bgColor: kPrimaryColor,
                                 onTapButton: () {

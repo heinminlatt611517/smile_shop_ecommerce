@@ -4,6 +4,8 @@ import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/utils/images.dart';
 import 'package:smile_shop/widgets/common_button_view.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class OrderSuccessfulPage extends StatelessWidget {
   const OrderSuccessfulPage({super.key});
@@ -26,19 +28,19 @@ class OrderSuccessfulPage extends StatelessWidget {
             const SizedBox(
               height: 20,
             ),
-            const Text(
-              'Thanks for shopping with us.',
-              style: TextStyle(fontSize: kTextRegular3x),
+             Text(
+              AppLocalizations.of(context)!.thankForShoppingWithUs,
+              style:const TextStyle(fontSize: kTextRegular3x),
             ),
             const SizedBox(
               height: 23,
             ),
-            const Text(
-                'We appreciate your support and hope you enjoy your purchase. Feel free to reach out if you need any assistance. We look forward to serving you again!',textAlign: TextAlign.center,),
+             Text(
+               AppLocalizations.of(context)!.weAppreciateYourSupportAndHope,),
             const SizedBox(
               height: 23,
             ),
-            CommonButtonView(label: 'Back', labelColor: Colors.white, bgColor: kPrimaryColor, onTapButton: (){
+            CommonButtonView(label: AppLocalizations.of(context)!.back, labelColor: Colors.white, bgColor: kPrimaryColor, onTapButton: (){
               Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(builder: (builder) => const MainPage()),(Route<dynamic> route) => false);
             })

@@ -131,6 +131,12 @@ class PaymentBloc extends ChangeNotifier {
             context: context,
             dialogWidget:const SetWalletPasswordDialogView(message: 'Please set wallet password first.'));
       }
+      if(error.toString() == 'Not Enough Amount in wallet'){
+        _hideLoading();
+        showCommonDialog(
+            context: context,
+            dialogWidget: ErrorDialogView(errorMessage: error.toString()));
+      }
       else{
         showCommonDialog(
             context: context,

@@ -595,4 +595,10 @@ class SmileShopModelImpl extends SmileShopModel {
     return mDataAgent.forgotPasswordVerifyOtp(otpVerifyRequest);
   }
 
+  @override
+  Future<SuccessNetworkResponse> changePassword(String token, String acceptLanguage, int endUserId, String oldPassword, String newPassword, String confirmPassword, String passwordType) {
+   return mDataAgent.changePassword(token, acceptLanguage, endUserId, oldPassword, newPassword, confirmPassword, passwordType
+   );
+  }
+
 }

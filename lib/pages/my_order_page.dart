@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:smile_shop/blocs/order_bloc.dart';
-import 'package:smile_shop/data/dummy_data/my_order_tab_bar_dummy_data.dart';
 import 'package:smile_shop/data/vos/order_vo.dart';
 import 'package:smile_shop/list_items/my_order_list_item_view.dart';
 import 'package:smile_shop/network/api_constants.dart';
@@ -15,6 +14,7 @@ import 'package:smile_shop/utils/extensions.dart';
 import '../utils/images.dart';
 import '../widgets/loading_view.dart';
 import '../widgets/svg_image_view.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MyOrderPage extends StatefulWidget {
   const MyOrderPage({super.key, this.tabIndex});
@@ -44,6 +44,13 @@ class _MyOrderPageState extends State<MyOrderPage>
 
   @override
   Widget build(BuildContext context) {
+    List<String> myOrderTabBarDummyData = [
+      AppLocalizations.of(context)?.all ?? '',
+      AppLocalizations.of(context)?.toPay ?? '',
+      AppLocalizations.of(context)?.toShip ?? '',
+      AppLocalizations.of(context)?.toReceive ?? '',
+      AppLocalizations.of(context)?.delivered ?? ''
+    ];
     return ChangeNotifierProvider(
       create: (context) => OrderBloc(widget.tabIndex ?? 0),
       child: Scaffold(
@@ -53,21 +60,24 @@ class _MyOrderPageState extends State<MyOrderPage>
           centerTitle: true,
           toolbarHeight: 60,
           automaticallyImplyLeading: false,
-          title:  Row(children: [InkWell(
-            onTap: (){
-              Navigator.pop(context);
-            },
-            child:const SvgImageView(
-              imageName: kBackSvgIcon,
-              imageHeight: 26,
-              imageWidth: 26,
-            ),
+          title: Row(
+            children: [
+              InkWell(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: const SvgImageView(
+                  imageName: kBackSvgIcon,
+                  imageHeight: 26,
+                  imageWidth: 26,
+                ),
+              ),
+              const Spacer(),
+              Text(AppLocalizations.of(context)?.myOrders ?? ''),
+              const Spacer(),
+              const Text(''),
+            ],
           ),
-            const Spacer(),
-            const Text('My Orders'),
-            const Spacer(),
-            const Text(''),
-          ],),
           bottom: PreferredSize(
               preferredSize: const Size(double.infinity, 50),
               child: Consumer<OrderBloc>(
@@ -76,7 +86,8 @@ class _MyOrderPageState extends State<MyOrderPage>
                     physics: const NeverScrollableScrollPhysics(),
                     dividerColor: Colors.transparent,
                     indicatorColor: kFillingFastColor,
-                    isScrollable: false,
+                    isScrollable: true,
+
                     labelPadding: const EdgeInsets.all(13),
                     indicatorPadding: const EdgeInsets.only(bottom: 5),
                     tabAlignment: TabAlignment.center,
@@ -164,9 +175,9 @@ class _MyOrderPageState extends State<MyOrderPage>
                 child: MyOrderListItemView(
                   orderVO: orderList[index],
                   isRefundView: false,
-                  onTapPayment: (orderId,subTotal) {
+                  onTapPayment: (orderId, subTotal) {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (builder) =>  PaymentMethodPage(
+                        builder: (builder) => PaymentMethodPage(
                               isFromMyOrderPage: true,
                               orderSubTotal: subTotal.toString(),
                               orderNumber: orderList[index].orderNo ?? '',
@@ -176,9 +187,11 @@ class _MyOrderPageState extends State<MyOrderPage>
                     var bloc = context.read<OrderBloc>();
                     bloc.onTapCancelOrder(orderId);
                   },
-                  onTapRefund: (orderNo){
+                  onTapRefund: (orderNo) {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (builder) =>  ProductRefundPage(orderVO: orderNo,)));
+                        builder: (builder) => ProductRefundPage(
+                              orderVO: orderNo,
+                            )));
                   },
                 ),
               );

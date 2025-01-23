@@ -6,7 +6,13 @@ import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/utils/images.dart';
 import 'package:smile_shop/widgets/input_view_lock_icon.dart';
+import '../widgets/common_dialog.dart';
+import '../widgets/error_dialog_view.dart';
 import '../widgets/loading_view.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import 'main_page.dart';
+
 
 class ChangePasswordPage extends StatelessWidget {
   const ChangePasswordPage({super.key});
@@ -49,9 +55,9 @@ class ChangePasswordPage extends StatelessWidget {
                               bloc.onTapShowOldPassword();
                             },
                             isSecure: bloc.isShowOldPassword,
-                            hintLabel: 'Type your old password',
+                            hintLabel: AppLocalizations.of(context)!.typeYourOldPassword,
                             onChangeValue: (value) {
-                              bloc.onPasswordChanged(value);
+                              bloc.onChangedOldPassword(value);
                             }),
                       ),
 
@@ -66,9 +72,9 @@ class ChangePasswordPage extends StatelessWidget {
                               bloc.onTapShowNewPassword();
                             },
                             isSecure: bloc.isShowNewPassword,
-                            hintLabel: 'Type your new password',
+                            hintLabel: AppLocalizations.of(context)!.typeYourNewPassword,
                             onChangeValue: (value) {
-                              bloc.onPasswordChanged(value);
+                              bloc.onChangedNewPassword(value);
                             }),
                       ),
 
@@ -83,9 +89,9 @@ class ChangePasswordPage extends StatelessWidget {
                               bloc.onTapShowRetypePassword();
                             },
                             isSecure: bloc.isShowRetypePassword,
-                            hintLabel: 'Re-type your new password',
+                            hintLabel: AppLocalizations.of(context)!.reTypeYourNewPassword,
                             onChangeValue: (value) {
-                              bloc.onPasswordChanged(value);
+                              bloc.onChangedConfirmPassword(value);
                             }),
                       ),
 
@@ -93,19 +99,33 @@ class ChangePasswordPage extends StatelessWidget {
                         height: 60,
                       ),
 
-                      GestureDetector(
-                        onTap: () {
-                        },
-                        child: Container(
-                          height: 40,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                              color: kPrimaryColor,
-                              borderRadius: BorderRadius.circular(4)),
-                          child: const Center(
-                            child: Text(
-                              'Confirm',
-                              style: TextStyle(color: kBackgroundColor),
+                      Consumer<ChangePasswordBloc>(
+                        builder: (context,bloc,child)=>
+                         GestureDetector(
+                          onTap: () {
+                            bloc.onTapConfirm().then((response){
+                              if(response.status == 200){
+                                Navigator.of(context).pushAndRemoveUntil(
+                                    MaterialPageRoute(builder: (builder) => const MainPage()),(Route<dynamic> route) => false);
+                              }
+                            }).catchError((error) {
+                              showCommonDialog(
+                                  context: context,
+                                  dialogWidget: ErrorDialogView(
+                                      errorMessage: error.toString()));
+                            });
+                          },
+                          child: Container(
+                            height: 40,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                                color: kPrimaryColor,
+                                borderRadius: BorderRadius.circular(4)),
+                            child:  Center(
+                              child: Text(
+                                AppLocalizations.of(context)!.confirm,
+                                style:const TextStyle(color: kBackgroundColor),
+                              ),
                             ),
                           ),
                         ),

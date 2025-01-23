@@ -16,6 +16,8 @@ import 'package:smile_shop/widgets/common_dialog.dart';
 import '../widgets/cached_network_image_view.dart';
 import '../widgets/error_dialog_view.dart';
 import '../widgets/loading_view.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class ProductRefundPage extends StatelessWidget {
   final OrderVO? orderVO;
@@ -31,7 +33,7 @@ class ProductRefundPage extends StatelessWidget {
           backgroundColor: Colors.white,
           centerTitle: true,
           toolbarHeight: 60,
-          title: const Text('Product Refund'),
+          title:  Text(AppLocalizations.of(context)!.productRefund),
         ),
         body: Selector<ProductRefundBloc,bool>(
             selector: (context, bloc) => bloc.isLoading,
@@ -44,9 +46,9 @@ class ProductRefundPage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'You need to send your refund item to our address.',
-                        style: TextStyle(fontSize: kTextRegular),
+                       Text(
+                         AppLocalizations.of(context)!.youNeedToSendYourRefundItem,
+                        style:const TextStyle(fontSize: kTextRegular),
                       ),
                       const SizedBox(
                         height: 30,
@@ -137,10 +139,10 @@ class ProductRefundPage extends StatelessWidget {
                             decoration: BoxDecoration(
                                 color: kPrimaryColor,
                                 borderRadius: BorderRadius.circular(4)),
-                            child: const Center(
+                            child:  Center(
                               child: Text(
-                                'Done',
-                                style: TextStyle(color: kBackgroundColor),
+                                AppLocalizations.of(context)!.done,
+                                style:const TextStyle(color: kBackgroundColor),
                               ),
                             ),
                           ),
@@ -187,7 +189,7 @@ class _RefundDropDownState extends State<RefundDropDown> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Choose refund reason',style: TextStyle(fontSize: kTextRegular2x),),
+         Text(AppLocalizations.of(context)!.chooseRefundReason,style:const TextStyle(fontSize: kTextRegular2x),),
         const SizedBox(
           height: 15,
         ),
@@ -242,7 +244,7 @@ class _UploadPhotoViewState extends State<UploadPhotoView> {
          child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Upload Photo'),
+             Text(AppLocalizations.of(context)!.uploadPhoto),
             const SizedBox(
               height: 20,
             ),

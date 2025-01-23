@@ -18,6 +18,8 @@ import '../widgets/common_dialog.dart';
 import '../widgets/error_dialog_view.dart';
 import '../widgets/loading_view.dart';
 import 'map_page.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class AddNewAddressPage extends StatelessWidget {
   final int? addressId;
@@ -29,7 +31,7 @@ class AddNewAddressPage extends StatelessWidget {
       create: (context) => AddNewAddressBloc(),
       child: Scaffold(
         backgroundColor: kBackgroundColor,
-        appBar:const CustomAppBarView(title: 'Add New Address'),
+        appBar: CustomAppBarView(title: AppLocalizations.of(context)?.addNewAddress ?? ''),
         body: Selector<AddNewAddressBloc,bool>(
             selector: (context, bloc) => bloc.isLoading,
             builder: (context, isLoading, child) =>
@@ -83,10 +85,10 @@ class AddNewAddressPage extends StatelessWidget {
                                 bloc.onCheckChange();
                               },
                             ),
-                            const Text(
-                              'Set as default address',
+                            Text(
+                              AppLocalizations.of(context)?.setAsDefaultAddress ?? '',
                               style:
-                                  TextStyle(fontSize: kTextRegular, color: Colors.black),
+                                  const TextStyle(fontSize: kTextRegular, color: Colors.black),
                             )
                           ],
                         ),
@@ -100,7 +102,7 @@ class AddNewAddressPage extends StatelessWidget {
                       Consumer<AddNewAddressBloc>(
                         builder: (context,bloc,child) =>
                          CommonButtonView(
-                            label: 'Save',
+                            label: AppLocalizations.of(context)?.save ?? '',
                             labelColor: Colors.white,
                             bgColor: kPrimaryColor,
                             onTapButton: () {
@@ -148,9 +150,9 @@ class AddressCategoryView extends StatelessWidget {
       create: (context) => AddressCategoryBloc(1),
       child: Row(
         children: [
-          const Text(
-            'Address Category',
-            style: TextStyle(fontSize: kTextRegular2x),
+           Text(
+             AppLocalizations.of(context)?.addressCategory ?? '',
+            style: const TextStyle(fontSize: kTextRegular2x),
           ),
           const SizedBox(
             width: kMarginMedium2,
@@ -234,8 +236,8 @@ class NameAndPhoneInputView extends StatelessWidget {
           Consumer<AddNewAddressBloc>(
             builder: (context,bloc,child) =>
              TextFieldWithLabelInputView(
-                hint: 'Please enter your name',
-                label: 'Name',
+                hint: AppLocalizations.of(context)?.pleaseEnterYourName ?? '',
+                label: AppLocalizations.of(context)?.name ?? '',
                 onChanged: (value) {
                   bloc.onNameChanged(value);
                 }),
@@ -245,8 +247,8 @@ class NameAndPhoneInputView extends StatelessWidget {
           ),
           Consumer<AddNewAddressBloc>(
             builder: (context,bloc,child) => TextFieldWithLabelInputView(
-                hint: 'Please enter your phone number',
-                label: 'Phone',
+                hint: AppLocalizations.of(context)?.pleaseEnterYourPhoneNumber ?? '',
+                label: AppLocalizations.of(context)?.phone ?? '',
                 onChanged: (value) {
                   bloc.onPhoneNumberChanged(value);
                 }),
@@ -276,8 +278,8 @@ class StateTownshipAndMapDropdownView extends StatelessWidget {
               var bloc =
               Provider.of<AddNewAddressBloc>(context, listen: false);
               return DynamicDropDownWidget(
-                  hintText: 'Select state',
-                  label: 'State', items: states, onSelect: (value) {
+                  hintText: AppLocalizations.of(context)?.state ?? '',
+                  label: AppLocalizations.of(context)?.state ?? '', items: states, onSelect: (value) {
                     bloc.onStateIdChanged(value.id);
               });
             }
@@ -292,8 +294,8 @@ class StateTownshipAndMapDropdownView extends StatelessWidget {
             builder: (context,isLoading,child) {
               if (isLoading) {
                 return DynamicDropDownWidget(
-                    hintText: 'Select township',
-                    label: 'Township', items: [], onSelect: (value) {
+                    hintText: AppLocalizations.of(context)?.township ?? '',
+                    label: AppLocalizations.of(context)?.township ?? '', items: [], onSelect: (value) {
                 });
               }
               else {
@@ -303,8 +305,8 @@ class StateTownshipAndMapDropdownView extends StatelessWidget {
                       var bloc =
                       Provider.of<AddNewAddressBloc>(context, listen: false);
                       return DynamicDropDownWidget(
-                          hintText: 'Select township',
-                          label: 'Township', items: townships, onSelect: (value) {
+                          hintText: AppLocalizations.of(context)?.township ?? '',
+                          label: AppLocalizations.of(context)?.township ?? '', items: townships, onSelect: (value) {
                         bloc.onTownshipIdChanged(value.id);
                       });
                     }

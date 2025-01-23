@@ -7,6 +7,8 @@ import 'package:smile_shop/utils/images.dart';
 import 'package:smile_shop/utils/strings.dart';
 import 'package:smile_shop/widgets/common_button_view.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class ReferralCodePage extends StatelessWidget {
   const ReferralCodePage({super.key});
@@ -51,8 +53,7 @@ class ReferralCodePage extends StatelessWidget {
                          width: 26,
                        ),
                      ),
-                   ),
-                   const Text('Referral Code',style: TextStyle(fontSize: kTextRegular22,color: Colors.black,fontWeight: FontWeight.w600
+                   ), Text(AppLocalizations.of(context)?.referralCode ?? '',style: const TextStyle(fontSize: kTextRegular22,color: Colors.black,fontWeight: FontWeight.w600
                    ),),
                    Container()
                  ],),
@@ -66,7 +67,7 @@ class ReferralCodePage extends StatelessWidget {
                  decoration: BoxDecoration(color: Colors.white,
                borderRadius: BorderRadius.circular(kMarginMedium2)),
                child:  Column(children: [
-                 const Text('Your referral code is',style: TextStyle(fontSize: kTextSmall,color: Colors.black),),
+                  Text(AppLocalizations.of(context)?.yourReferralCodeIs ?? '',style: const TextStyle(fontSize: kTextSmall,color: Colors.black),),
 
                  const SizedBox(height: kMarginMedium2,),
 
@@ -88,7 +89,7 @@ class ReferralCodePage extends StatelessWidget {
                  
                  SizedBox(
                    width: 260,
-                     child: CommonButtonView(label: 'Share Referral Code', labelColor: Colors.white, bgColor: kPrimaryColor, onTapButton: (){
+                     child: CommonButtonView(label: AppLocalizations.of(context)?.shareReferralCode ?? '', labelColor: Colors.white, bgColor: kPrimaryColor, onTapButton: (){
                        launchURL("https://smile.saxdihtan.asia/signup?referral_code=${GetStorage().read(kBoxKeyReferralCode) ?? ""}");
                      })),
 

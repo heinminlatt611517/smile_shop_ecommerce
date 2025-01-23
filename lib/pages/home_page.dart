@@ -17,6 +17,8 @@ import 'package:smile_shop/utils/images.dart';
 import 'package:smile_shop/utils/strings.dart';
 import 'package:smile_shop/widgets/cached_network_image_view.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 import '../utils/dimens.dart';
 import '../widgets/category_vertical_icon_with_label_view.dart';
@@ -139,17 +141,17 @@ class SearchView extends StatelessWidget {
                   ),
                 ],
               ),
-              child: const Row(
+              child:  Row(
                 children: [
-                  Icon(Icons.search),
-                  SizedBox(width: 8.0), // Space between the icon and text field
+                  const Icon(Icons.search),
+                  const SizedBox(width: 8.0), // Space between the icon and text field
                   Expanded(
                     child: TextField(
                       enabled: false,
                       decoration: InputDecoration(
                           border: InputBorder.none,
-                          hintText: kSearchHereHintLabel,
-                          hintStyle: TextStyle(
+                          hintText: AppLocalizations.of(context)!.searchHere,
+                          hintStyle:const TextStyle(
                               fontSize: kTextRegular,
                               fontWeight: FontWeight.bold)),
                     ),
@@ -202,7 +204,7 @@ class CampaignDailyCheckInUserLevelView extends StatelessWidget {
         children: [
           ///daily check in and user level view
           SizedBox(
-            height: 155,
+            height: 160,
             child: Column(
               children: [
                 ///Daily check in view
@@ -230,19 +232,19 @@ class CampaignDailyCheckInUserLevelView extends StatelessWidget {
                             ])),
                     child: Row(
                       children: [
-                        const Column(
+                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              kDailyCheckInLabel,
-                              style: TextStyle(
+                              AppLocalizations.of(context)!.dailyCheckIn,
+                              style:const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: kTextRegular2x,
                                   color: Colors.black),
                             ),
                             Text(
-                              kToClaimPointDailyLabel,
-                              style: TextStyle(
+                              AppLocalizations.of(context)!.toClaimPointDaily,
+                              style:const TextStyle(
                                   fontWeight: FontWeight.normal,
                                   fontSize: kTextSmall,
                                   color: Colors.grey),
@@ -294,19 +296,19 @@ class CampaignDailyCheckInUserLevelView extends StatelessWidget {
                           ])),
                   child: Row(
                     children: [
-                      const Column(
+                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            kUserLevelLabel,
-                            style: TextStyle(
+                            AppLocalizations.of(context)!.userLevel,
+                            style:const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: kTextRegular2x,
                                 color: Colors.black),
                           ),
                           Text(
-                            kToClaimPointDailyLabel,
-                            style: TextStyle(
+                            AppLocalizations.of(context)!.toClaimPointDaily,
+                            style:const TextStyle(
                                 fontWeight: FontWeight.normal,
                                 fontSize: kTextSmall,
                                 color: Colors.grey),
@@ -384,16 +386,16 @@ class CampaignDailyCheckInUserLevelView extends StatelessWidget {
                           width: 63,
                           fit: BoxFit.cover,
                         )),
-                    const Text(
-                      kCampaignLabel,
-                      style: TextStyle(
+                     Text(
+                       AppLocalizations.of(context)!.campaign,
+                      style:const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: kTextRegular2x,
                           color: Colors.black),
                     ),
-                    const Text(
-                      kLetPracticeAndEnjoyLabel,
-                      style: TextStyle(
+                     Text(
+                      AppLocalizations.of(context)!.letPracticeAndEnjoyIt,
+                      style:const TextStyle(
                           fontWeight: FontWeight.normal,
                           fontSize: kTextSmall,
                           color: Colors.grey),
@@ -530,9 +532,9 @@ class TrendingProductsView extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            kTrendingProductsLabel,
-            style: TextStyle(
+           Text(
+             AppLocalizations.of(context)!.trendingProducts,
+            style:const TextStyle(
                 fontWeight: FontWeight.bold, fontSize: kTextRegular3x),
           ),
           const SizedBox(

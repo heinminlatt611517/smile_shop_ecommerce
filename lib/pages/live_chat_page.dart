@@ -14,6 +14,8 @@ import 'package:voice_message_package/voice_message_package.dart';
 import '../data/dummy_data/dummy_data.dart';
 import '../data/vos/message_vo.dart';
 import '../network/firebase_api.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class LiveChatPage extends StatelessWidget {
   const LiveChatPage({super.key});
@@ -28,7 +30,7 @@ class LiveChatPage extends StatelessWidget {
           appBar: AppBar(
             backgroundColor: Colors.white,
             centerTitle: true,
-            title: const Text("Chat"),
+            title: Text(AppLocalizations.of(context)?.chat ?? ''),
             scrolledUnderElevation: 0,
           ),
           body: Stack(
@@ -350,10 +352,10 @@ class ChatInputField extends StatelessWidget {
                 child: TextField(
                   controller: textController,
                   style: const TextStyle(fontSize: 12),
-                  decoration: const InputDecoration(
-                    hintText: "Send a message",
+                  decoration:  InputDecoration(
+                    hintText: AppLocalizations.of(context)?.sendAMessage ?? '',
                     border: InputBorder.none,
-                    contentPadding: EdgeInsets.only(bottom: 8),
+                    contentPadding: const EdgeInsets.only(bottom: 8),
                   ),
                 ),
               ),

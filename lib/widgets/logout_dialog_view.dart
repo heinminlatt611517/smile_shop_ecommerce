@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../utils/colors.dart';
 import '../utils/dimens.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class LogoutDialogView extends StatelessWidget {
   final Function onLogout;
@@ -40,19 +42,19 @@ class LogoutDialogView extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            const Text(
-              "Are you sure?",
-              style: TextStyle(
+             Text(
+              AppLocalizations.of(context)!.areYouSure,
+              style:const TextStyle(
                 fontSize: kTextRegular2x,
                 color: Colors.black,
                 fontWeight: FontWeight.w600,
               ),
             ),
             const SizedBox(height: 4),
-            const Text(
-              "Do you want to logout from the app?",
+             Text(
+               AppLocalizations.of(context)!.doYouWantToLogoutFromTheApp,
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style:const TextStyle(
                 fontSize: kTextRegular,
                 color: Colors.black,
                 fontWeight: FontWeight.normal,
@@ -72,10 +74,10 @@ class LogoutDialogView extends StatelessWidget {
                       decoration: BoxDecoration(
                           color: Colors.grey,
                           borderRadius: BorderRadius.circular(4)),
-                      child: const Center(
+                      child:  Center(
                         child: Text(
-                          'Cancel',
-                          style: TextStyle(color: Colors.white),
+                          AppLocalizations.of(context)!.cancel,
+                          style:const TextStyle(color: Colors.white),
                         ),
                       ),
                     ),
@@ -93,10 +95,10 @@ class LogoutDialogView extends StatelessWidget {
                       decoration: BoxDecoration(
                           color: kPrimaryColor,
                           borderRadius: BorderRadius.circular(4)),
-                      child: const Center(
+                      child:  Center(
                         child: Text(
-                          'Logout',
-                          style: TextStyle(color: Colors.white),
+                          AppLocalizations.of(context)!.logout,
+                          style:const TextStyle(color: Colors.white),
                         ),
                       ),
                     ),

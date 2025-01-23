@@ -8,6 +8,7 @@ import 'package:smile_shop/pages/password_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/utils/strings.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../widgets/common_dialog.dart';
 import '../widgets/error_dialog_view.dart';
@@ -69,9 +70,9 @@ class _OtpPageState extends State<OtpPage> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
-                        'Check your phone',
-                        style: TextStyle(
+                       Text(
+                        AppLocalizations.of(context)!.checkYourPhone,
+                        style:const TextStyle(
                             fontSize: kTextRegular3x,
                             color: Colors.black,
                             fontWeight: FontWeight.w500),
@@ -79,9 +80,9 @@ class _OtpPageState extends State<OtpPage> {
                       const SizedBox(
                         height: kMarginMedium3,
                       ),
-                      const Text(
-                        'We\'ve send the code to your phone.',
-                        style: TextStyle(
+                       Text(
+                         AppLocalizations.of(context)!.weHaveHaveSendTheCodeToYourPhone,
+                        style:const TextStyle(
                             fontSize: kTextRegular,
                             color: Colors.black,
                             fontWeight: FontWeight.w500),
@@ -150,7 +151,7 @@ class _OtpPageState extends State<OtpPage> {
                             children: [
                               const Spacer(),
                               Text(
-                                'Code expired in ${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
+                                '${AppLocalizations.of(context)!.codeExpireIn} ${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
                                 style: const TextStyle(
                                   fontSize: kTextRegular,
                                   color: Colors.black,
@@ -199,10 +200,10 @@ class _OtpPageState extends State<OtpPage> {
                             decoration: BoxDecoration(
                                 color: kPrimaryColor,
                                 borderRadius: BorderRadius.circular(4)),
-                            child: const Center(
+                            child:  Center(
                               child: Text(
-                                'Verify',
-                                style: TextStyle(color: kBackgroundColor),
+                                AppLocalizations.of(context)!.verify,
+                                style:const TextStyle(color: kBackgroundColor),
                               ),
                             ),
                           ),
@@ -244,7 +245,7 @@ class _OtpPageState extends State<OtpPage> {
                                 borderRadius: BorderRadius.circular(4)),
                             child: Center(
                               child: Text(
-                                'Send Again',
+                                AppLocalizations.of(context)!.sendAgain,
                                 style: TextStyle(
                                     color: bloc.isOtpExpired == false
                                         ? Colors.white

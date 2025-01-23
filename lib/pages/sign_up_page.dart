@@ -7,6 +7,7 @@ import 'package:smile_shop/pages/otp_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/utils/images.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../data/dummy_data/country_code.dart';
 import '../widgets/common_dialog.dart';
@@ -88,14 +89,14 @@ class _SignUpPageState extends State<SignUpPage> {
                               onChanged: (value) {
                                 bloc.onReferralCodeChanged(value);
                               },
-                              decoration: const InputDecoration(
+                              decoration:  InputDecoration(
                                   filled: true,
                                   fillColor: Colors.white,
                                   border: InputBorder.none,
                                   contentPadding:
-                                      EdgeInsets.symmetric(horizontal: 21),
-                                  hintText: 'Enter referral code',
-                                  hintStyle: TextStyle(color: Colors.grey)),
+                                      const EdgeInsets.symmetric(horizontal: 21),
+                                  hintText: AppLocalizations.of(context)!.enterReferralCode,
+                                  hintStyle:const TextStyle(color: Colors.grey)),
                             ),
                           ),
                         ),
@@ -134,10 +135,10 @@ class _SignUpPageState extends State<SignUpPage> {
                             decoration: BoxDecoration(
                                 color: kPrimaryColor,
                                 borderRadius: BorderRadius.circular(4)),
-                            child: const Center(
+                            child:  Center(
                               child: Text(
-                                'Sign Up',
-                                style: TextStyle(color: kBackgroundColor),
+                                AppLocalizations.of(context)!.signUp,
+                                style:const TextStyle(color: kBackgroundColor),
                               ),
                             ),
                           ),
@@ -150,12 +151,12 @@ class _SignUpPageState extends State<SignUpPage> {
                       //
                       RichText(
                           text: TextSpan(children: [
-                        const TextSpan(
-                            text: 'If you already have an account.',
-                            style: TextStyle(
+                         TextSpan(
+                            text: AppLocalizations.of(context)!.ifYouAlreadyHaveAnAccount,
+                            style:const TextStyle(
                                 fontSize: kTextRegular, color: Colors.black)),
                         TextSpan(
-                            text: ' Login',
+                            text: ' ${AppLocalizations.of(context)!.login}',
                             style: const TextStyle(
                                 fontSize: kTextRegular, color: kPrimaryColor),
                             recognizer: TapGestureRecognizer()

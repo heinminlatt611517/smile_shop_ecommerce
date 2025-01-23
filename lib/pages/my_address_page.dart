@@ -11,6 +11,8 @@ import 'package:smile_shop/widgets/custom_app_bar_view.dart';
 
 import '../widgets/loading_view.dart';
 import 'add_new_address_page.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class MyAddressPage extends StatelessWidget {
   const MyAddressPage({super.key});
@@ -21,7 +23,7 @@ class MyAddressPage extends StatelessWidget {
       create: (context) => MyAddressBloc(),
       child: Scaffold(
         backgroundColor: kBackgroundColor,
-        appBar: const CustomAppBarView(title: 'My Address'),
+        appBar: CustomAppBarView(title: AppLocalizations.of(context)?.myAddress ?? ''),
         body: Selector<MyAddressBloc, bool>(
           selector: (context, bloc) => bloc.isLoading,
           builder: (context, isLoading, child) => Stack(
@@ -55,10 +57,10 @@ class MyAddressPage extends StatelessWidget {
                             border: Border.all(color: kPrimaryColor, width: 1),
                             borderRadius: BorderRadius.circular(kMarginMedium2),
                           ),
-                          child: const Center(
+                          child:  Center(
                             child: Text(
-                              '+ Add Address',
-                              style: TextStyle(fontSize: kTextRegular2x),
+                              AppLocalizations.of(context)?.addAddress ?? '',
+                              style: const TextStyle(fontSize: kTextRegular2x),
                             ),
                           ),
                         ),

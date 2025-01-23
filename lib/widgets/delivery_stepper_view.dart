@@ -4,6 +4,8 @@ import '../utils/colors.dart';
 import '../utils/dimens.dart';
 import '../utils/images.dart';
 import 'dash_line_vertical_painter.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class DeliveryStepperView extends StatefulWidget {
   const DeliveryStepperView({super.key});
@@ -14,38 +16,38 @@ class DeliveryStepperView extends StatefulWidget {
 
 class _DeliveryStepperViewState extends State<DeliveryStepperView> {
   bool isEditing = false;
-  List<Map<String, dynamic>> userInfoList = [
-    {
-      'icon': Image.asset(
-        kBoxIcon,
-        fit: BoxFit.contain,
-        height: 20,
-        width: 20,
-      ),
-      'title': 'Start Delivery',
-    },
-    {
-      'icon': Image.asset(
-        kTransitIcon,
-        fit: BoxFit.contain,
-        height: 20,
-        width: 20,
-      ),
-      'title': 'In Transit',
-    },
-    {
-      'icon': Image.asset(
-        kCarIcon,
-        fit: BoxFit.contain,
-        height: 20,
-        width: 20,
-      ),
-      'title': 'To Receive',
-    },
-  ];
 
   @override
   Widget build(BuildContext context) {
+    List<Map<String, dynamic>> userInfoList = [
+      {
+        'icon': Image.asset(
+          kBoxIcon,
+          fit: BoxFit.contain,
+          height: 20,
+          width: 20,
+        ),
+        'title': AppLocalizations.of(context)!.startDelivery,
+      },
+      {
+        'icon': Image.asset(
+          kTransitIcon,
+          fit: BoxFit.contain,
+          height: 20,
+          width: 20,
+        ),
+        'title': AppLocalizations.of(context)!.inTransit,
+      },
+      {
+        'icon': Image.asset(
+          kCarIcon,
+          fit: BoxFit.contain,
+          height: 20,
+          width: 20,
+        ),
+        'title': AppLocalizations.of(context)!.toReceive,
+      },
+    ];
     return SingleChildScrollView(
       child: ListView.builder(
         itemCount: userInfoList.length,

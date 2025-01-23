@@ -15,6 +15,8 @@ import '../list_items/trending_product_list_item_view.dart';
 import '../utils/images.dart';
 import '../utils/strings.dart';
 import '../widgets/loading_view.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class SearchProductPage extends StatelessWidget {
   const SearchProductPage({super.key});
@@ -74,9 +76,9 @@ class SearchProductPage extends StatelessWidget {
                                                               kMarginMedium2),
                                                   child: Row(
                                                     children: [
-                                                      const Text(
-                                                        'Search History',
-                                                        style: TextStyle(
+                                                       Text(
+                                                        AppLocalizations.of(context)!.searchHistory,
+                                                        style:const TextStyle(
                                                             fontSize:
                                                                 kTextRegular),
                                                       ),
@@ -87,20 +89,20 @@ class SearchProductPage extends StatelessWidget {
                                                               SearchProductBloc>();
                                                           bloc.onTapClearAll();
                                                         },
-                                                        child: const Row(
+                                                        child:  Row(
                                                           children: [
                                                             Text(
-                                                              'Clear All',
-                                                              style: TextStyle(
+                                                              AppLocalizations.of(context)!.clearAll,
+                                                              style:const TextStyle(
                                                                   fontSize:
                                                                       kTextRegular,
                                                                   color: Colors
                                                                       .grey),
                                                             ),
-                                                            SizedBox(
+                                                            const SizedBox(
                                                               width: kMarginSmall,
                                                             ),
-                                                            Icon(
+                                                            const Icon(
                                                               Icons.delete,
                                                               color: Colors.grey,
                                                               size: 18,
@@ -360,10 +362,10 @@ class SearchBarWithBackArrowView extends StatelessWidget {
                       bloc.queryStreamController.sink.add(value);
                     },
                     cursorColor: kPrimaryColor,
-                    decoration: const InputDecoration(
+                    decoration:  InputDecoration(
                         border: InputBorder.none,
-                        hintText: kSearchHereHintLabel,
-                        hintStyle: TextStyle(
+                        hintText: AppLocalizations.of(context)!.searchHere,
+                        hintStyle:const TextStyle(
                             fontSize: kTextRegular,
                             fontWeight: FontWeight.bold)),
                   ),

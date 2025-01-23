@@ -6,6 +6,8 @@ import 'package:smile_shop/data/vos/checkIn_vo.dart';
 import 'package:smile_shop/list_items/daily_checkin_list_item.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/utils/images.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 import '../utils/colors.dart';
 import '../widgets/loading_view.dart';
@@ -65,9 +67,9 @@ class DailyCheckInPage extends StatelessWidget {
                                           width: 20,
                                         ),
                                       ),
-                                      const Text(
-                                        'Daily Check_In',
-                                        style: TextStyle(
+                                       Text(
+                                        AppLocalizations.of(context)!.dailyCheckIn,
+                                        style:const TextStyle(
                                             fontSize: kTextRegular2x,
                                             fontWeight: FontWeight.bold),
                                       ),
@@ -97,7 +99,7 @@ class DailyCheckInPage extends StatelessWidget {
                                   )
                                 ],
                               ),
-                              const Text('Total Count'),
+                               Text(AppLocalizations.of(context)!.totalCount),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -140,10 +142,10 @@ class DailyCheckInPage extends StatelessWidget {
                                             borderRadius:
                                             BorderRadius.circular(20),
                                             color: kPrimaryColor),
-                                        child: const Center(
+                                        child:  Center(
                                           child: Text(
-                                            'Check In',
-                                            style: TextStyle(
+                                            AppLocalizations.of(context)!.checkIn,
+                                            style:const TextStyle(
                                                 color: Colors.white),
                                           ),
                                         ),
@@ -166,10 +168,10 @@ class DailyCheckInPage extends StatelessWidget {
                               const SizedBox(
                                 height: kMargin34,
                               ),
-                              const Padding(
-                                padding: EdgeInsets.symmetric(
+                               Padding(
+                                padding:const EdgeInsets.symmetric(
                                     horizontal: kMargin25),
-                                child: Text('Check-in Count'),
+                                child: Text(AppLocalizations.of(context)!.checkInCount),
                               ),
                               const SizedBox(
                                 height: kMargin34 - 4,

@@ -6,6 +6,7 @@ import 'package:smile_shop/blocs/package_details_bloc.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/utils/images.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../widgets/loading_view.dart';
 

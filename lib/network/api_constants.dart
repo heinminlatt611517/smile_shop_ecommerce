@@ -56,6 +56,7 @@ const String kEndPointUpdateHomePagePopupData = '/api/update-homepage-popup';
 const String kEndPointForgotPasswordOtpRequest = '/api/auth/forget-password/otp-request';
 const String kEndPointForgotPasswordOtpVerify = "/api/auth/forget-password/otp-verify";
 const String kEndPointForgotPasswordSetPassword = "/api/auth/forget-password/set-password";
+const String kEndPointChangePassword = "/api/change/password";
 
 
 
@@ -107,6 +108,10 @@ const String kParamWalletRecharge = "wallet_recharge";
 const String kParamMinPrice = "min_price";
 const String kParamMaxPrice = "max_price";
 const String kFieldOrderNo = "order_no";
+const String kFieldOldPassword = "oldPassword";
+const String kFieldNewPassword = "newPassword";
+const String kFieldConfirmPassword = "confirmPassword";
+const String kFieldPasswordType = "password_type";
 
 
 ///Constant Values

@@ -6,6 +6,7 @@ import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/utils/images.dart';
 import 'package:smile_shop/widgets/common_dialog.dart';
 import 'package:smile_shop/widgets/error_dialog_view.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../blocs/forgot_password_bloc.dart';
 import '../widgets/loading_view.dart';
@@ -57,7 +58,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                       Consumer<ForgotPasswordBloc>(
                         builder: (context, bloc, child) => normalPhoneTextField(
                             controller: phoneController,
-                            hint: 'Enter phone number',
+                            hint: AppLocalizations.of(context)!.enterPhoneNumber,
                             context: context,
                             onChangeTextField: (v) {
                               bloc.onPhoneNumberChanged(v);
@@ -99,10 +100,10 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                           decoration: BoxDecoration(
                               color: kPrimaryColor,
                               borderRadius: BorderRadius.circular(4)),
-                          child: const Center(
+                          child:  Center(
                             child: Text(
-                              'Next',
-                              style: TextStyle(color: kBackgroundColor),
+                             AppLocalizations.of(context)!.next,
+                              style:const TextStyle(color: kBackgroundColor),
                             ),
                           ),
                         ),

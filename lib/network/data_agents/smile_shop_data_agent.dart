@@ -229,4 +229,7 @@ abstract class SmileShopDataAgent {
 
   Future<PopupDataVO> getHomePopUpData(
       String acceptLanguage,String token,PopupRequest request);
+
+  Future<SuccessNetworkResponse> changePassword(
+     String token, String acceptLanguage,int endUserId,String oldPassword,String newPassword,String confirmPassword,String passwordType);
 }

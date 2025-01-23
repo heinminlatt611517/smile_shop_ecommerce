@@ -4,6 +4,8 @@ import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/utils/images.dart';
 import 'package:smile_shop/widgets/common_button_view.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class RechargeSuccessfulPage extends StatelessWidget {
   const RechargeSuccessfulPage({super.key});
@@ -26,22 +28,22 @@ class RechargeSuccessfulPage extends StatelessWidget {
             const SizedBox(
               height: 20,
             ),
-            const Text(
-              'Recharge successful',
-              style: TextStyle(fontSize: kTextRegular3x),
+             Text(
+              AppLocalizations.of(context)!.rechargeSuccessful,
+              style:const TextStyle(fontSize: kTextRegular3x),
             ),
             const SizedBox(
               height: 23,
             ),
-            const Text(
-              'Your wallet has been successfully recharged, and the updated balance is now available for use. Thank you for choosing our service!',
+             Text(
+               AppLocalizations.of(context)!.yourWalletHasBeenSuccessfullyRecharged,
               textAlign: TextAlign.center,
             ),
             const SizedBox(
               height: 23,
             ),
             CommonButtonView(
-                label: 'Back',
+                label:AppLocalizations.of(context)!.back,
                 labelColor: Colors.white,
                 bgColor: kPrimaryColor,
                 onTapButton: () {

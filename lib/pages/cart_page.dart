@@ -6,6 +6,8 @@ import 'package:smile_shop/list_items/cart_list_item_view.dart';
 import 'package:smile_shop/pages/checkout_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 import '../utils/images.dart';
 
@@ -23,9 +25,9 @@ class CartPage extends StatelessWidget {
           backgroundColor: Colors.white,
           foregroundColor: Colors.black,
           centerTitle: true,
-          title: const Text(
-            'Cart',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          title: Text(
+            AppLocalizations.of(context)?.chat ?? '',
+            style:const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
         ),
         body: Selector<CartBloc, List<ProductVO>>(
@@ -43,10 +45,10 @@ class CartPage extends StatelessWidget {
                         height: kSplashAppLogoHeight,
                         width: kSplashAppLogoWidth,
                       ),
-                      const Text(
+                      Text(
                         textAlign: TextAlign.center,
-                        'There were no result\nTry to add a new product.',
-                        style: TextStyle(fontSize: kTextSmall),
+                        AppLocalizations.of(context)?.thereWereNoResultTryToAddNewProduct ?? '',
+                        style: const TextStyle(fontSize: kTextSmall),
                       ),
                     ],
                   ),
@@ -96,16 +98,17 @@ class CartPage extends StatelessWidget {
           builder: (context, products, Widget? child) => Visibility(
             visible: products.isNotEmpty,
             child: Container(
-              margin: const EdgeInsets.only(bottom: 16),
-              height: 40,
+              margin: const EdgeInsets.only(bottom: 16,left: 16,right: 16),
               width: double.infinity,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
                     children: [
                       Consumer<CartBloc>(
                         builder: (context, bloc, child) => Container(
+                          height: 24.0,
+                          width: 24.0,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(3),
                           ),
@@ -118,14 +121,15 @@ class CartPage extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(
-                        width: 10,
+                        width: 4,
                       ),
-                      const Text('Select All'),
+                      Text(AppLocalizations.of(context)?.selectAll ?? ''),
                     ],
                   ),
+                  const SizedBox(width: 20,),
                   Row(
                     children: [
-                      const Text('Total: '),
+                      Text(AppLocalizations.of(context)?.total ?? ''),
                       Selector<CartBloc, int?>(
                         selector: (context, bloc) => bloc.totalProductPrice,
                         builder: (context, totalPrice, child) => Text(
@@ -135,29 +139,35 @@ class CartPage extends StatelessWidget {
                       )
                     ],
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      if (products
-                          .where((product) => product.isChecked == true)
-                          .isNotEmpty) {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (builder) => CheckoutPage(
-                                  isFromCartPage: true,
-                                  productList: products
-                                      .where((product) =>
-                                          product.isChecked == true)
-                                      .toList(),
-                                )));
-                      }
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(7),
-                      decoration: BoxDecoration(
-                          color: kFillingFastColor,
-                          borderRadius: BorderRadius.circular(4)),
-                      child: Text(
-                        'Check Out (${products.where((product) => product.isChecked == true).toList().length})',
-                        style: const TextStyle(color: kBackgroundColor),
+                  const SizedBox(width: 20,),
+                  Flexible(
+                    child: GestureDetector(
+                      onTap: () {
+                        if (products
+                            .where((product) => product.isChecked == true)
+                            .isNotEmpty) {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (builder) => CheckoutPage(
+                                    isFromCartPage: true,
+                                    productList: products
+                                        .where((product) =>
+                                            product.isChecked == true)
+                                        .toList(),
+                                  )));
+                        }
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(7),
+                        decoration: BoxDecoration(
+                            color: kFillingFastColor,
+                            borderRadius: BorderRadius.circular(4)),
+                        child: Text(
+                          maxLines: 2,
+                          softWrap: true,
+                          overflow: TextOverflow.ellipsis,
+                          '${AppLocalizations.of(context)?.checkOut ?? ''} (${products.where((product) => product.isChecked == true).toList().length})',
+                          style: const TextStyle(color: kBackgroundColor),
+                        ),
                       ),
                     ),
                   )

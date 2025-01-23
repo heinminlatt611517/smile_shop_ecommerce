@@ -12,6 +12,8 @@ import 'package:smile_shop/widgets/common_dialog.dart';
 import 'package:smile_shop/widgets/custom_app_bar_view.dart';
 import 'package:smile_shop/widgets/error_dialog_view.dart';
 import 'package:smile_shop/widgets/loading_view.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class CampaignDetailsPage extends StatelessWidget {
   const CampaignDetailsPage({super.key, this.campaignId});
@@ -65,9 +67,9 @@ class CampaignDetailsPage extends StatelessWidget {
                       child:  Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
-                            'Participants',
-                            style: TextStyle(fontSize: kTextRegular),
+                           Text(
+                            AppLocalizations.of(context)!.participants,
+                            style:const TextStyle(fontSize: kTextRegular),
                           ),
                           InkWell(
                             onTap: (){
@@ -90,9 +92,9 @@ class CampaignDetailsPage extends StatelessWidget {
                     const SizedBox(
                       height: kMargin30,
                     ),
-                    const Text(
-                      'Description',
-                      style: TextStyle(
+                     Text(
+                      AppLocalizations.of(context)!.description,
+                      style:const TextStyle(
                           fontSize: kTextRegular2x, fontWeight: FontWeight.w400),
                     ),
                     const SizedBox(
@@ -138,10 +140,10 @@ class CampaignDetailsPage extends StatelessWidget {
                       decoration: BoxDecoration(
                           color: kPrimaryColor,
                           borderRadius: BorderRadius.circular(kMargin6 - 2)),
-                      child: const Center(
+                      child:  Center(
                         child: Text(
-                          'Join Now',
-                          style: TextStyle(color: Colors.white),
+                          AppLocalizations.of(context)!.joinNow,
+                          style:const TextStyle(color: Colors.white),
                         ),
                       ),
                     ),

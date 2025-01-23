@@ -8,6 +8,8 @@ import '../data/vos/product_vo.dart';
 import '../utils/dimens.dart';
 import '../utils/images.dart';
 import '../widgets/svg_image_view.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class MyFavouritePage extends StatelessWidget {
   const MyFavouritePage({super.key});
@@ -34,7 +36,7 @@ class MyFavouritePage extends StatelessWidget {
               ),
             ),
               const Spacer(),
-              const Text('My Favourite'),
+              Text(AppLocalizations.of(context)?.myFavourite ?? ''),
               const Spacer(),
               const Text(''),
             ],),),
@@ -54,10 +56,10 @@ class MyFavouritePage extends StatelessWidget {
                     height: kSplashAppLogoHeight,
                     width: kSplashAppLogoWidth,
                   ),
-                  const Text(
+                   Text(
                     textAlign: TextAlign.center,
-                    'There were no result\nTry to add a new product.',
-                    style: TextStyle(fontSize: kTextSmall),
+                    AppLocalizations.of(context)?.thereWereNoResultTryToAddNewProduct ?? '',
+                    style: const TextStyle(fontSize: kTextSmall),
                   ),
                 ],
               ),

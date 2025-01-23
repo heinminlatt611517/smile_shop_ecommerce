@@ -10,6 +10,8 @@ import 'package:smile_shop/utils/colors.dart';
 import '../utils/images.dart';
 import '../widgets/loading_view.dart';
 import '../widgets/svg_image_view.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class RefundPage extends StatefulWidget {
   const RefundPage({super.key});
@@ -45,7 +47,9 @@ class _RefundPageState extends State<RefundPage>
           centerTitle: true,
           toolbarHeight: 60,
           automaticallyImplyLeading: false,
-          title:  Row(children: [InkWell(
+          title:  Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [InkWell(
             onTap: (){
               Navigator.pop(context);
             },
@@ -55,10 +59,8 @@ class _RefundPageState extends State<RefundPage>
               imageWidth: 26,
             ),
           ),
-            const Spacer(),
-            const Text('Refund'),
-            const Spacer(),
-            const Text(''),
+              Text(AppLocalizations.of(context)?.refund ?? ''),
+              const SizedBox()
           ],),
           bottom: PreferredSize(
               preferredSize: const Size(double.infinity, 50),
@@ -89,11 +91,11 @@ class _RefundPageState extends State<RefundPage>
                         bloc.getRefundListByStatus(2);
                       }
                     },
-                    tabs: const [
-                      Text('All'),
-                      Text('Pending'),
-                      Text('Approved'),
-                      Text('Rejected'),
+                    tabs:  [
+                      Text(AppLocalizations.of(context)?.all ?? ''),
+                      Text(AppLocalizations.of(context)?.pending ?? ''),
+                      Text(AppLocalizations.of(context)?.approved ?? ''),
+                      Text(AppLocalizations.of(context)?.rejected ?? ''),
                     ]),
               )),
         ),

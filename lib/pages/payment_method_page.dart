@@ -6,7 +6,6 @@ import 'package:smile_shop/data/vos/order_variant_vo.dart';
 import 'package:smile_shop/data/vos/payment_vo.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
 import 'package:smile_shop/list_items/payment_method_list_item_view.dart';
-import 'package:smile_shop/pages/order_successful_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/widgets/common_button_view.dart';
@@ -15,6 +14,8 @@ import 'package:smile_shop/widgets/custom_app_bar_view.dart';
 import '../widgets/common_dialog.dart';
 import '../widgets/error_dialog_view.dart';
 import '../widgets/loading_view.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class PaymentMethodPage extends StatelessWidget {
   final int? productSubTotalPrice;
@@ -41,7 +42,7 @@ class PaymentMethodPage extends StatelessWidget {
       create: (context) => PaymentBloc(productList ?? [], context),
       child: Scaffold(
         backgroundColor: kBackgroundColor,
-        appBar: const CustomAppBarView(title: 'Payment Method'),
+        appBar:  CustomAppBarView(title: AppLocalizations.of(context)?.paymentMethod ?? ''),
         body: Selector<PaymentBloc, bool>(
           selector: (context, bloc) => bloc.isLoading,
           builder: (BuildContext context, isLoading, Widget? child) => Stack(
@@ -57,9 +58,9 @@ class PaymentMethodPage extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'Choose type of payment.',
-                            style: TextStyle(fontSize: kTextRegular2x),
+                           Text(
+                            AppLocalizations.of(context)?.chooseTypeOfPayment ?? '',
+                            style: const TextStyle(fontSize: kTextRegular2x),
                           ),
                           const SizedBox(
                             height: kMargin30,
@@ -131,7 +132,7 @@ class PaymentMethodPage extends StatelessWidget {
                           ),
                           Consumer<PaymentBloc>(
                             builder: (context, bloc, child) => CommonButtonView(
-                                label: 'Check Out',
+                                label: AppLocalizations.of(context)?.checkOut ?? '',
                                 labelColor: Colors.white,
                                 bgColor: kPrimaryColor,
                                 onTapButton: () {

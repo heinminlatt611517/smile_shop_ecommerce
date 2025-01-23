@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:smile_shop/blocs/my_team_bloc.dart';
-import 'package:smile_shop/data/vos/my_team_vo.dart';
 import 'package:smile_shop/list_items/my_team_list_item.dart';
 import 'package:smile_shop/network/api_constants.dart';
 import 'package:smile_shop/utils/colors.dart';
@@ -12,6 +11,8 @@ import 'package:smile_shop/widgets/custom_app_bar_view.dart';
 
 import '../widgets/loading_view.dart';
 import 'campaign_details_page.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class MyTeamPage extends StatelessWidget {
   const MyTeamPage({super.key});
@@ -22,8 +23,8 @@ class MyTeamPage extends StatelessWidget {
       create: (context) => MyTeamBloc(),
       child: Scaffold(
         backgroundColor: kBackgroundColor,
-        appBar: const CustomAppBarView(
-          title: 'My Team',
+        appBar:  CustomAppBarView(
+          title: AppLocalizations.of(context)?.myTeam ?? '',
         ),
         body: Selector<MyTeamBloc, bool>(
           selector: (context, bloc) => bloc.isLoading,
@@ -89,7 +90,7 @@ class MyTeamPage extends StatelessWidget {
                         const SizedBox(
                           height: 40,
                         ),
-                        const Text('Your members'),
+                        Text(AppLocalizations.of(context)?.yourMembers ?? ''),
                         Consumer<MyTeamBloc>(
                           builder: (context, bloc, child) => ListView.builder(
                               shrinkWrap: true,

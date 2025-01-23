@@ -9,6 +9,8 @@ import 'package:smile_shop/utils/dimens.dart';
 
 import '../utils/images.dart';
 import '../widgets/svg_image_view.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class PromotionPointPage extends StatelessWidget {
   const PromotionPointPage({super.key});
@@ -34,7 +36,7 @@ class PromotionPointPage extends StatelessWidget {
             ),
           ),
             const Spacer(),
-            const Text('Promotion Point'),
+            Text(AppLocalizations.of(context)?.promotionPoint ?? ''),
             const Spacer(),
             const Text(''),
           ],),
@@ -63,9 +65,9 @@ class PromotionPointPage extends StatelessWidget {
                           fontWeight: FontWeight.bold),
                     ),
                   ),
-                  const Text(
-                    '        promotion points',
-                    style: TextStyle(fontSize: kTextSmall, color: Colors.black),
+                  Text(
+                    '        ${AppLocalizations.of(context)?.promotionPoint ?? ''}',
+                    style: const TextStyle(fontSize: kTextSmall, color: Colors.black),
                   ),
                   const SizedBox(
                     height: 20,
@@ -91,11 +93,11 @@ class PromotionPointPage extends StatelessWidget {
                         children: {
                           0: Container(
                             margin: const EdgeInsets.symmetric(vertical: 10),
-                            child: const Text('Income Points'),
+                            child:  Text(AppLocalizations.of(context)?.incomePoints ?? ''),
                           ),
                           1: Container(
                             margin: const EdgeInsets.symmetric(vertical: 10),
-                            child: const Text('Outcome Points'),
+                            child:  Text(AppLocalizations.of(context)?.outcomePoints ?? ''),
                           ),
                         },
                         thumbColor: kSecondaryColor,

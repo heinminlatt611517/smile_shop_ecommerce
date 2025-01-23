@@ -9,6 +9,7 @@ import 'package:smile_shop/data/vos/user_vo.dart';
 import 'package:smile_shop/network/api_constants.dart';
 import 'package:smile_shop/pages/change_password_page.dart';
 import 'package:smile_shop/utils/colors.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../utils/dimens.dart';
 import '../widgets/loading_view.dart';
@@ -84,10 +85,10 @@ class EditProfilePage extends StatelessWidget {
                                 decoration: BoxDecoration(
                                     color: kPrimaryColor.withOpacity(0.5),
                                     borderRadius: BorderRadius.circular(5)),
-                                child: const Center(
+                                child:  Center(
                                   child: Text(
-                                    'Change photo',
-                                    style: TextStyle(fontSize: kTextSmall),
+                                    AppLocalizations.of(context)!.changePhoto,
+                                    style:const TextStyle(fontSize: kTextSmall),
                                   ),
                                 ),
                               ),
@@ -121,7 +122,7 @@ class EditProfilePage extends StatelessWidget {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    const Text('Name'),
+                                     Text(AppLocalizations.of(context)!.name,),
                                     Row(
                                       children: [
                                         Consumer<EditProfileBloc>(
@@ -152,7 +153,7 @@ class EditProfilePage extends StatelessWidget {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const Text('Phone number'),
+                                 Text(AppLocalizations.of(context)!.phoneNumber,),
                                 Row(
                                   children: [
                                     Text(userVo?.phone ?? ''),
@@ -179,13 +180,13 @@ class EditProfilePage extends StatelessWidget {
                                   MaterialPageRoute(
                                       builder: (builder) => const ChangePasswordPage()));
                             },
-                            child:const Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 20),
+                            child: Padding(
+                              padding:const EdgeInsets.symmetric(horizontal: 20),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text('Change password'),
-                                  Row(
+                                  Text(AppLocalizations.of(context)!.changePassword,),
+                                  const Row(
                                     children: [
                                       Text(''),
                                       SizedBox(
@@ -198,7 +199,7 @@ class EditProfilePage extends StatelessWidget {
                               ),
                             ),
                           ),
-                          Divider()
+                          const Divider()
                         ],
                       )
                     ],
@@ -244,9 +245,9 @@ class EditProfilePage extends StatelessWidget {
             children: [
               const SizedBox(),
               const Spacer(),
-              const Text(
-                'Full Name',
-                style: TextStyle(fontSize: kTextRegular2x,fontWeight: FontWeight.bold),
+               Text(
+                   AppLocalizations.of(context)!.fullName,
+                style:const TextStyle(fontSize: kTextRegular2x,fontWeight: FontWeight.bold),
               ),
               const Spacer(),
               IconButton(
@@ -260,11 +261,11 @@ class EditProfilePage extends StatelessWidget {
               ),
             ],
           ),
-          const Padding(
-            padding: EdgeInsets.only(left: kMarginMedium2),
+           Padding(
+            padding:const EdgeInsets.only(left: kMarginMedium2),
             child: Text(
-              'First & Last Name',
-              style: TextStyle(fontWeight: FontWeight.w500,fontSize: kTextSmall),
+                AppLocalizations.of(context)!.firstAndLastName,
+              style:const TextStyle(fontWeight: FontWeight.w500,fontSize: kTextSmall),
             ),
           ),
           const SizedBox(height: 5),
@@ -278,14 +279,14 @@ class EditProfilePage extends StatelessWidget {
               onChanged: (value) {
                 bloc.onChangedName(value);
               },
-              decoration: const InputDecoration(
-                hintText: 'Enter your name',
-                hintStyle: TextStyle(fontSize: kTextRegular),
-                contentPadding: EdgeInsets.only(left: kMarginMedium2),
-                enabledBorder: UnderlineInputBorder(
+              decoration:  InputDecoration(
+                hintText: AppLocalizations.of(context)!.pleaseEnterYourName,
+                hintStyle:const TextStyle(fontSize: kTextRegular),
+                contentPadding:const EdgeInsets.only(left: kMarginMedium2),
+                enabledBorder:const UnderlineInputBorder(
                   borderSide: BorderSide(color: kPrimaryColor),
                 ),
-                focusedBorder: UnderlineInputBorder(
+                focusedBorder:const UnderlineInputBorder(
                   borderSide: BorderSide(color: kPrimaryColor),
                 ),
               ),
@@ -308,10 +309,10 @@ class EditProfilePage extends StatelessWidget {
                       color: kPrimaryColor,
                       borderRadius: BorderRadius.circular(4),
                     ),
-                    child: const Center(
+                    child:  Center(
                       child: Text(
-                        'Confirm',
-                        style: TextStyle(color: kBackgroundColor),
+                        AppLocalizations.of(context)!.confirm,
+                        style:const TextStyle(color: kBackgroundColor),
                       ),
                     ),
                   ),

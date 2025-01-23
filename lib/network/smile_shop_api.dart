@@ -451,4 +451,15 @@ abstract class SmileShopApi {
       @Header(kHeaderAcceptLanguage) String acceptLanguage,
       @Header(kHeaderAuthorization) String token,
       @Body() PopupRequest request);
+
+  @POST(kEndPointChangePassword)
+  Future<SuccessNetworkResponse> changePassword(
+      @Header(kHeaderAuthorization) String token,
+      @Header(kHeaderAcceptLanguage) String acceptLanguage,
+      @Field(kFieldEndUserId) int endUserId,
+      @Field(kFieldOldPassword) String oldPassword,
+      @Field(kFieldNewPassword) String newPassword,
+      @Field(kFieldConfirmPassword) String confirmPassword,
+      @Field(kFieldPasswordType) String passwordType,
+      );
 }

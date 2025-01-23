@@ -9,6 +9,7 @@ import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/utils/images.dart';
 import 'package:smile_shop/widgets/loading_view.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'campaign_details_page.dart';
 
@@ -73,13 +74,13 @@ class CampaignPage extends StatelessWidget {
                       ],
                     ),
                   )),
-             const Positioned(
+              Positioned(
                 bottom: kMargin34 + 15,
                 child:  Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text('CAMPAIGN',style: TextStyle(fontSize: 36,fontWeight: FontWeight.w600),),
-                    Text('Enjoy the moment',style: TextStyle(fontSize: kTextRegular),),
+                    Text(AppLocalizations.of(context)!.campaign.toUpperCase(),style:const TextStyle(fontSize: 36,fontWeight: FontWeight.w600),),
+                    Text(AppLocalizations.of(context)!.enjoyTheMoment,style:const TextStyle(fontSize: kTextRegular),),
                   ],
                 ),
               ),

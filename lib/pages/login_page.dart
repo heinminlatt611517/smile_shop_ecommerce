@@ -16,6 +16,7 @@ import 'package:smile_shop/utils/strings.dart';
 import 'package:smile_shop/widgets/common_dialog.dart';
 import 'package:smile_shop/widgets/error_dialog_view.dart';
 import 'package:smile_shop/widgets/input_view_lock_icon.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../data/dummy_data/country_code.dart';
 import '../widgets/loading_view.dart';
@@ -98,7 +99,7 @@ class _LoginPageState extends State<LoginPage> {
                       Consumer<LogInBloc>(
                         builder: (context, bloc, child) => normalPhoneTextField(
                             controller: phoneController,
-                            hint: 'Enter phone number',
+                            hint: AppLocalizations.of(context)!.enterPhoneNumber,
                             phoneCode:
                                 "${selectedCountry.name} ${selectedCountry.code}",
                             context: context,
@@ -123,7 +124,7 @@ class _LoginPageState extends State<LoginPage> {
                               bloc.onTapShowPassword();
                             },
                             isSecure: bloc.isShowPassword,
-                            hintLabel: 'Type your password',
+                            hintLabel: AppLocalizations.of(context)!.typeYourPassword,
                             onChangeValue: (value) {
                               bloc.onPasswordChanged(value);
                             }),
@@ -142,9 +143,9 @@ class _LoginPageState extends State<LoginPage> {
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (builder) => const ForgotPasswordPage()));
                               },
-                              child: const Text(
-                                'Forgot password?',
-                                style: TextStyle(color: kPrimaryColor),
+                              child:  Text(
+                                AppLocalizations.of(context)!.forgotPassword,
+                                style:const TextStyle(color: kPrimaryColor),
                               ))
                         ],
                       ),
@@ -184,10 +185,10 @@ class _LoginPageState extends State<LoginPage> {
                           decoration: BoxDecoration(
                               color: kPrimaryColor,
                               borderRadius: BorderRadius.circular(4)),
-                          child: const Center(
+                          child:  Center(
                             child: Text(
-                              'Login',
-                              style: TextStyle(color: kBackgroundColor),
+                              AppLocalizations.of(context)!.login,
+                              style:const TextStyle(color: kBackgroundColor),
                             ),
                           ),
                         ),
@@ -198,12 +199,12 @@ class _LoginPageState extends State<LoginPage> {
 
                       RichText(
                           text: TextSpan(children: [
-                        const TextSpan(
-                            text: 'If you don\'t have an account.',
-                            style: TextStyle(
+                         TextSpan(
+                            text: AppLocalizations.of(context)!.ifYouDontHaveAccount,
+                            style:const TextStyle(
                                 fontSize: kTextRegular, color: Colors.black)),
                         TextSpan(
-                            text: ' Sign Up.',
+                            text:  AppLocalizations.of(context)!.signUp,
                             style: const TextStyle(
                                 fontSize: kTextRegular, color: kPrimaryColor),
                             recognizer: TapGestureRecognizer()

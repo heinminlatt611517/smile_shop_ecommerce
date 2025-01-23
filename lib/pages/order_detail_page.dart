@@ -7,6 +7,8 @@ import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/widgets/delivery_stepper_view.dart';
 import 'package:smile_shop/widgets/loading_view.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class OrderDetailPage extends StatelessWidget {
   const OrderDetailPage(
@@ -25,7 +27,7 @@ class OrderDetailPage extends StatelessWidget {
           backgroundColor: Colors.white,
           centerTitle: true,
           toolbarHeight: 60,
-          title: const Text('Order Detail'),
+          title: Text(AppLocalizations.of(context)?.order ?? ''),
         ),
         body: Consumer<OrderDetailBloc>(
           builder: (context, bloc, child) =>
@@ -40,23 +42,23 @@ class OrderDetailPage extends StatelessWidget {
                   children: [
                 Visibility(
                 visible: orderStatus == "delivered",
-                  child: const Text(
-                    'Your order is completed.',
-                    style: TextStyle(fontSize: kTextRegular),
+                  child:  Text(
+                    AppLocalizations.of(context)?.yourOrderIsCompleted ?? '',
+                    style: const TextStyle(fontSize: kTextRegular),
                   ),
                 ),
                 Visibility(
                   visible: orderStatus == "cancel",
-                  child: const Text(
-                    'Your order is canceled.',
-                    style: TextStyle(fontSize: kTextRegular),
+                  child:  Text(
+                   AppLocalizations.of(context)!.yourOrderIsCanceled,
+                    style:const TextStyle(fontSize: kTextRegular),
                   ),
                 ),
                 Visibility(
                   visible: orderStatus == "paid",
-                  child: const Text(
-                    'Your order is shipping.',
-                    style: TextStyle(fontSize: kTextRegular),
+                  child:  Text(
+                   AppLocalizations.of(context)?.yourOrderIsShipping ?? '',
+                    style: const TextStyle(fontSize: kTextRegular),
                   ),
                 ),
 
@@ -77,23 +79,23 @@ class OrderDetailPage extends StatelessWidget {
                       ),
                       Visibility(
                         visible: orderStatus == "paid",
-                        child: const Text(
-                          'Your order is on the way.',
-                          style: TextStyle(fontSize: kTextRegular),
+                        child:  Text(
+                          AppLocalizations.of(context)?.yourOrderIsOnTheWay ?? '',
+                          style: const TextStyle(fontSize: kTextRegular),
                         ),
                       ),
                       Visibility(
                         visible: orderStatus == "cancel",
-                        child: const Text(
-                          'Your order is canceled.',
-                          style: TextStyle(fontSize: kTextRegular),
+                        child:  Text(
+                          AppLocalizations.of(context)!.yourOrderIsCanceled,
+                          style:const TextStyle(fontSize: kTextRegular),
                         ),
                       ),
                       Visibility(
                         visible: orderStatus == "delivered",
-                        child: const Text(
-                          'Your order has been delivered on.',
-                          style: TextStyle(fontSize: kTextRegular),
+                        child:  Text(
+                          AppLocalizations.of(context)!.yourOrderHasBeenDeliveredOn,
+                          style:const TextStyle(fontSize: kTextRegular),
                         ),
                       ),
                     ],
@@ -104,7 +106,7 @@ class OrderDetailPage extends StatelessWidget {
                 ),
 
                  Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  padding:const EdgeInsets.symmetric(horizontal: 20),
                   child: Row(
                     children: [
                       const Icon(
@@ -164,9 +166,9 @@ class OrderDetailPage extends StatelessWidget {
         ///stepper
         Visibility(
           visible: orderStatus == "ongoing" || orderStatus == "paid",
-          child: const Text(
-            'Your Order Tracking',
-            style: TextStyle(fontSize: kTextRegular2x),
+          child: Text(
+            AppLocalizations.of(context)?.yourOrderTracking ?? '',
+            style: const TextStyle(fontSize: kTextRegular2x),
           ),
         ),
         const SizedBox(
