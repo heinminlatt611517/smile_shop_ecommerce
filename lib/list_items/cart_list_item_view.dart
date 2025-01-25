@@ -90,14 +90,18 @@ class CartListItemView extends StatelessWidget {
                               const SizedBox(
                                 width: kMargin6 + 1,
                               ),
-                              Container(
-                                color: kCartColor.withOpacity(0.4),
-                                height: 22,
-                                padding: const EdgeInsets.symmetric(horizontal: 5),
-                                child:  Center(
-                                  child: Text(
-                                    'Color Family: ${productVO?.colorName}',
-                                    style:const TextStyle(fontSize: kTextSmall),
+                              Expanded(
+                                child: Container(
+                                  color: kCartColor.withOpacity(0.4),
+                                  height: 22,
+                                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                                  child:  Center(
+                                    child: Text(
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      'Color Family: ${productVO?.colorName}',
+                                      style:const TextStyle(fontSize: kTextSmall),
+                                    ),
                                   ),
                                 ),
                               ),

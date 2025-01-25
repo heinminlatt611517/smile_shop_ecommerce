@@ -51,7 +51,7 @@ class UserVOAdapter extends TypeAdapter<UserVO> {
       userPhoto: fields[31] as String?,
       profileImage: fields[32] as String?,
       referCodeVO: fields[33] as ReferCodeVO?,
-      promotionPoints: fields[34] as int?,
+      promotionPoints: fields[34] as dynamic,
       showPopUp: fields[35] as int?,
     );
   }
@@ -186,7 +186,7 @@ UserVO _$UserVOFromJson(Map<String, dynamic> json) => UserVO(
       referCodeVO: json['refer_code'] == null
           ? null
           : ReferCodeVO.fromJson(json['refer_code'] as Map<String, dynamic>),
-      promotionPoints: (json['promotion_points'] as num?)?.toInt(),
+      promotionPoints: json['promotion_points'],
       showPopUp: (json['show_popup'] as num?)?.toInt(),
     );
 

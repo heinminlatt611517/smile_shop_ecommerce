@@ -29,6 +29,7 @@ class RechargeSuccessfulPage extends StatelessWidget {
               height: 20,
             ),
              Text(
+               textAlign: TextAlign.center,
               AppLocalizations.of(context)!.rechargeSuccessful,
               style:const TextStyle(fontSize: kTextRegular3x),
             ),

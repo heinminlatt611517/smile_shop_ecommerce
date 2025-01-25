@@ -142,15 +142,15 @@
       "goldPackage": "ရွှေရောင်အဆင့်",
       "diamondPackage": "စိန်ရောင်အဆင့်",
 
-  "next" : "Next",
-  "editMyAddress" : "Edit My Address",
-  "deleteAddress" : "Delete Address",
-    "productRefund" : "Product Refund",
-    "youNeedToSendYourRefundItem" : "You need to send your refund item to our address.",
-    "chooseRefundReason" : "Choose refund reason",
-    "uploadPhoto" : "Upload Photo",
-    "done" : "Done",
-    "yourOrderIsCanceled" : "Your order is canceled",
-    "yourOrderHasBeenDeliveredOn" : "Your order has been delivered on.",
-    "favourite" : "Favourite"
+  "next": "နောက်သို့",
+    "editMyAddress": "လိပ်စာကိုပြင်ဆင်ပါ",
+    "deleteAddress": "လိပ်စာကိုဖျက်ပါ",
+    "productRefund": "ကုန်ပစ္စည်းငွေပြန်အမ်းခြင်း",
+    "youNeedToSendYourRefundItem": "ငွေပြန်အမ်းမည့်ပစ္စည်းကို ပြန်လည်ပေးပို့ရပါမည်။",
+    "chooseRefundReason": "အကြောင်းပြချက် ရွေးပါ။",
+    "uploadPhoto": "ဓာတ်ပုံတင်ပါ",
+    "done": "ပြီးပြီ",
+    "yourOrderIsCanceled": "သင်၏အော်ဒါကိုဖျက်သိမ်းလိုက်ပါသည်",
+    "yourOrderHasBeenDeliveredOn": "သင်အော်ဒါကို [delivery date] တွင်ပေးပို့ပြီးပြီဖြစ်သည်။",
+    "favourite": "အနှစ်သက်ဆုံး"
 }

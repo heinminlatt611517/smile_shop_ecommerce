@@ -26,6 +26,7 @@ import 'data/vos/login_data_vo.dart';
 import 'data/vos/sub_category_vo.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'dart:async';
 
 Future<Locale> _getLocaleData() async {
   var prefs = await SharedPreferences.getInstance();
@@ -118,3 +119,4 @@ class SmileShopApp extends StatelessWidget {
     );
   }
 }
+

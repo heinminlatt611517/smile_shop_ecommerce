@@ -145,7 +145,7 @@ class UserVO {
 
   @JsonKey(name: 'promotion_points')
   @HiveField(34)
-  final int? promotionPoints;
+  final dynamic promotionPoints;
 
   @JsonKey(name: 'show_popup')
   @HiveField(35)

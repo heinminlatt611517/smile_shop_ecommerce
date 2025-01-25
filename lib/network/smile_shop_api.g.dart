@@ -14,7 +14,7 @@ class _SmileShopApi implements SmileShopApi {
     this.baseUrl,
     this.errorLogger,
   }) {
-    baseUrl ??= 'https://backend.saxdihtan.asia';
+    baseUrl ??= 'https://smileshopmm.com';
   }
 
   final Dio _dio;

@@ -29,6 +29,7 @@ class OrderSuccessfulPage extends StatelessWidget {
               height: 20,
             ),
              Text(
+               textAlign: TextAlign.center,
               AppLocalizations.of(context)!.thankForShoppingWithUs,
               style:const TextStyle(fontSize: kTextRegular3x),
             ),
@@ -36,6 +37,7 @@ class OrderSuccessfulPage extends StatelessWidget {
               height: 23,
             ),
              Text(
+               textAlign: TextAlign.center,
                AppLocalizations.of(context)!.weAppreciateYourSupportAndHope,),
             const SizedBox(
               height: 23,

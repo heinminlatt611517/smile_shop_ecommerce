@@ -470,7 +470,8 @@ class BannerSectionView extends StatelessWidget {
       builder: (context, banners, child) => Column(
         children: [
           ///Page Banner View
-          SizedBox(
+          if(banners.isNotEmpty)
+           SizedBox(
               height: kBannerHeight,
               child: PageView.builder(
                 controller: _bannerPageController,
