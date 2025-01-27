@@ -245,9 +245,9 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   }
 
   @override
-  Future<List<CategoryVO>> categories(String type) {
+  Future<List<CategoryVO>> categories(String type,String acceptLanguage,) {
     return mApi
-        .categories(type)
+        .categories(type,acceptLanguage)
         .asStream()
         .map((response) => response.data ?? [])
         .first

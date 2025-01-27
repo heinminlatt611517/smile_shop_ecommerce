@@ -185,8 +185,8 @@ class SmileShopModelImpl extends SmileShopModel {
   }
 
   @override
-  Future<List<CategoryVO>> categories(String type) {
-    return mDataAgent.categories(type);
+  Future<List<CategoryVO>> categories(String type,String acceptLanguage,) {
+    return mDataAgent.categories(type,acceptLanguage);
   }
 
   @override

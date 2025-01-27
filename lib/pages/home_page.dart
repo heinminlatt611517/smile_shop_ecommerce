@@ -546,7 +546,7 @@ class TrendingProductsView extends StatelessWidget {
               builder: (context, products, child) {
                 return products.isEmpty
                     ? const Center(
-                        child: CircularProgressIndicator(),
+                        child: CircularProgressIndicator(color: kPrimaryColor,),
                       )
                     : Selector<HomeBloc, bool>(
                         selector: (context, bloc) => bloc.isLoading,

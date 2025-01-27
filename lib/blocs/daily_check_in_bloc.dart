@@ -42,15 +42,17 @@ class DailyCheckInBloc extends ChangeNotifier {
       showSnackBar(context,'You have already checked in today!',Colors.red);
       return;
     }
-    var checkInRequest = CheckInRequest(1);
-    _showLoading();
+    else{
+      var checkInRequest = CheckInRequest(1);
+      _showLoading();
 
-    _smileShopModel
-        .postUserCheckIn(authToken, kAcceptLanguageEn, checkInRequest)
-        .then((response) {
-      setLastCheckInDate(currentDate);
-      getDailyCheckIn();
-    }).whenComplete(() => _hideLoading());
+      _smileShopModel
+          .postUserCheckIn(authToken, kAcceptLanguageEn, checkInRequest)
+          .then((response) {
+        setLastCheckInDate(currentDate);
+        getDailyCheckIn();
+      }).whenComplete(() => _hideLoading());
+    }
   }
 
   bool _isSameDay(DateTime date1, DateTime date2) {

@@ -88,6 +88,7 @@ abstract class SmileShopApi {
   @GET(kEndPointCategories)
   Future<CategoryResponse> categories(
     @Query(kParamType) String name,
+      @Header(kHeaderAcceptLanguage) String acceptLanguage,
   );
 
   @POST(kEndPointProducts)

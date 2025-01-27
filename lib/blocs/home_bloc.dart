@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smile_shop/data/model/smile_shop_model.dart';
 import 'package:smile_shop/data/model/smile_shop_model_impl.dart';
 import 'package:smile_shop/data/vos/banner_vo.dart';
@@ -28,8 +29,10 @@ class HomeBloc extends ChangeNotifier {
   bool isDisposed = false;
   bool isPopupLoading = false;
   UserVO? userProfile;
+  var currentLanguage = kAcceptLanguageEn;
 
   HomeBloc(BuildContext context) {
+    _loadLanguage();
     ///get data from database
     authToken =
         _smileShopModel.getLoginResponseFromDatabase()?.refreshToken ?? "";
@@ -55,6 +58,23 @@ class HomeBloc extends ChangeNotifier {
         }
       });
 
+  }
+
+  ///load language
+  Future<void> _loadLanguage() async {
+    var prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('language_code');
+    if (languageCode == null) {
+      currentLanguage = kAcceptLanguageEn;
+    } else if (languageCode == "my") {
+      currentLanguage = kAcceptLanguageMM;
+    } else if (languageCode == "zh") {
+      currentLanguage = kAcceptLanguageCh;
+    } else {
+      currentLanguage = kAcceptLanguageEn;
+    }
+    _notifySafely();
+
     ///get banner list
     _smileShopModel.banners(kAcceptLanguageEn).then((bannerResponse) {
       banners = bannerResponse;
@@ -62,7 +82,7 @@ class HomeBloc extends ChangeNotifier {
     });
 
     ///get categories list
-    _smileShopModel.categories("home").then((categoryResponse) {
+    _smileShopModel.categories("home",currentLanguage).then((categoryResponse) {
       categories = categoryResponse;
       _notifySafely();
     });
@@ -70,7 +90,7 @@ class HomeBloc extends ChangeNotifier {
     ///get product list
     _smileShopModel
         .products(
-            authToken, kAcceptLanguageEn, int.parse(endUserId), productPage)
+        authToken, currentLanguage, int.parse(endUserId), productPage)
         .then((productResponse) {
       productList = productResponse.products ?? [];
       _notifySafely();
@@ -84,6 +104,7 @@ class HomeBloc extends ChangeNotifier {
       _notifySafely();
     });
   }
+
 
   ///get home popup data
   void getHomePopupData(int userId,BuildContext context){
@@ -121,7 +142,7 @@ class HomeBloc extends ChangeNotifier {
 
     _smileShopModel
         .products(
-            authToken, kAcceptLanguageEn, int.parse(endUserId), productPage)
+            authToken, currentLanguage, int.parse(endUserId), productPage)
         .then((productResponse) {
       if (productResponse.products != null &&
           productResponse.products!.isNotEmpty) {

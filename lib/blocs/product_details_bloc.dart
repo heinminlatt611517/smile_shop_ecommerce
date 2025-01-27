@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smile_shop/data/model/smile_shop_model.dart';
 import 'package:smile_shop/data/model/smile_shop_model_impl.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
@@ -14,24 +15,16 @@ class ProductDetailsBloc extends ChangeNotifier {
   bool isLoading = false;
   bool isDisposed = false;
   VideoPlayerController? videoPlayerController;
+  var currentLanguage = kAcceptLanguageEn;
+  var endUserId = "";
+  var authToken = "";
+  var productId = "";
 
-  ProductDetailsBloc(String productId) {
+  ProductDetailsBloc(this.productId) {
+    _loadLanguage();
     ///get data from database
-    var authToken = _smileShopModel.getLoginResponseFromDatabase()?.refreshToken ?? "";
-    var endUserId = _smileShopModel.getLoginResponseFromDatabase()?.data?.id.toString() ?? "";
-
-    ///get brands and categories
-    _smileShopModel.getProductDetails(endUserId, productId, kAcceptLanguageEn, authToken).then((productDetailsResponse) {
-      productVO = productDetailsResponse;
-      if (productVO?.video?.isNotEmpty ?? false) {
-        videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(productVO?.video ?? ''))
-          ..initialize()
-          ..setLooping(true)
-          ..play();
-      }
-      //selectedColorName = productVO?.variantVO?.first.colorName ?? "";
-      notifyListeners();
-    });
+     authToken = _smileShopModel.getLoginResponseFromDatabase()?.refreshToken ?? "";
+     endUserId = _smileShopModel.getLoginResponseFromDatabase()?.data?.id.toString() ?? "";
   }
 
   void onTapAddToCart(BuildContext context, String selectedColorName, String selectedSize, int qtyCount, int totalPrice) {
@@ -51,6 +44,34 @@ class ProductDetailsBloc extends ChangeNotifier {
     } else {
       showSnackBar(context, 'Failed to add product to cart.', Colors.red);
     }
+  }
+
+  Future<void> _loadLanguage() async {
+    var prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('language_code');
+    if (languageCode == null) {
+      currentLanguage = kAcceptLanguageEn;
+    } else if (languageCode == "my") {
+      currentLanguage = kAcceptLanguageMM;
+    } else if (languageCode == "zh") {
+      currentLanguage = kAcceptLanguageCh;
+    } else {
+      currentLanguage = kAcceptLanguageEn;
+    }
+    _notifySafely();
+
+    ///get product details
+    _smileShopModel.getProductDetails(endUserId, productId, currentLanguage, authToken).then((productDetailsResponse) {
+      productVO = productDetailsResponse;
+      if (productVO?.video?.isNotEmpty ?? false) {
+        videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(productVO?.video ?? ''))
+          ..initialize()
+          ..setLooping(true)
+          ..play();
+      }
+      //selectedColorName = productVO?.variantVO?.first.colorName ?? "";
+      notifyListeners();
+    });
   }
 
   // void onTapColor(String colorName) {
