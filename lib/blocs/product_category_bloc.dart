@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smile_shop/data/model/smile_shop_model.dart';
 import 'package:smile_shop/data/model/smile_shop_model_impl.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
@@ -9,31 +10,54 @@ class ProductCategoryBloc extends ChangeNotifier {
 
   List<ProductVO> products = [];
   int? subCategoryId;
+  var currentLanguage = kAcceptLanguageEn;
+  var endUserId = "";
+  var authToken = "";
+  var isDisposed = false;
 
   ProductCategoryBloc(this.subCategoryId) {
     ///get data from database
-    var authToken =
+    authToken =
         _smileShopModel.getLoginResponseFromDatabase()?.refreshToken ?? "";
-    var endUserId =
+    endUserId =
         _smileShopModel.getLoginResponseFromDatabase()?.data?.id.toString() ??
             "";
 
-    ///get product list
-    _smileShopModel.searchProductsBySubCategoryId(authToken, kAcceptLanguageEn,endUserId,1,subCategoryId ?? 0).then((productResponse){
+    _loadLanguage();
+  }
+
+  Future<void> _loadLanguage() async {
+    var prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('language_code');
+    if (languageCode == null) {
+      currentLanguage = kAcceptLanguageEn;
+    } else if (languageCode == "my") {
+      currentLanguage = kAcceptLanguageMM;
+    } else if (languageCode == "zh") {
+      currentLanguage = kAcceptLanguageCh;
+    } else {
+      currentLanguage = kAcceptLanguageEn;
+    }
+    _notifySafely();
+    _smileShopModel
+        .searchProductsBySubCategoryId(
+            authToken, currentLanguage, endUserId, 1, subCategoryId ?? 0)
+        .then((productResponse) {
       products = productResponse;
       notifyListeners();
     });
   }
 
-  void onTapFavourite(ProductVO? product,BuildContext context){
+  void onTapFavourite(ProductVO? product, BuildContext context) {
     _smileShopModel.saveFavouriteProductToHive(
-        product?.copyWith(isFavourite: true) ??
-            ProductVO());
+        product?.copyWith(isFavourite: true) ?? ProductVO());
 
-    showSnackBar(context, '${product?.name} added to favourite successfully!',Colors.green);
+    showSnackBar(context, '${product?.name} added to favourite successfully!',
+        Colors.green);
   }
 
-  void showSnackBar(BuildContext context, String description,Color snackBarColor) {
+  void showSnackBar(
+      BuildContext context, String description, Color snackBarColor) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(description),
@@ -43,5 +67,15 @@ class ProductCategoryBloc extends ChangeNotifier {
     );
   }
 
-}
+  void _notifySafely() {
+    if (!isDisposed) {
+      notifyListeners();
+    }
+  }
 
+  @override
+  void dispose() {
+    isDisposed = true;
+    super.dispose();
+  }
+}

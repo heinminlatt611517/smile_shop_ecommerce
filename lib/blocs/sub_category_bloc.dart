@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smile_shop/data/model/smile_shop_model.dart';
 import 'package:smile_shop/data/model/smile_shop_model_impl.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
@@ -13,20 +14,40 @@ class SubCategoryBloc extends ChangeNotifier {
   List<ProductVO> products = [];
   bool isLoading = false;
   bool isDisposed = false;
+  var currentLanguage = kAcceptLanguageEn;
+  var authToken = "";
+  var endUserId = "";
+  int? categoryId;
 
-  SubCategoryBloc(int categoryId) {
+  SubCategoryBloc(this.categoryId) {
     ///get data from database
-    var authToken =
+     authToken =
         _smileShopModel.getLoginResponseFromDatabase()?.refreshToken ?? "";
-    var endUserId =
+     endUserId =
         _smileShopModel.getLoginResponseFromDatabase()?.data?.id.toString() ??
             "";
-    var subCategoryRequest = SubCategoryRequest(categoryId: categoryId);
+    _loadLanguage();
+  }
 
+  Future<void> _loadLanguage() async {
+    var prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('language_code');
+    if (languageCode == null) {
+      currentLanguage = kAcceptLanguageEn;
+    } else if (languageCode == "my") {
+      currentLanguage = kAcceptLanguageMM;
+    } else if (languageCode == "zh") {
+      currentLanguage = kAcceptLanguageCh;
+    } else {
+      currentLanguage = kAcceptLanguageEn;
+    }
+    _notifySafely();
+
+    var subCategoryRequest = SubCategoryRequest(categoryId: categoryId);
     _showLoading();
     ///get sub category list
     _smileShopModel
-        .subCategoryByCategory(authToken, kAcceptLanguageEn, subCategoryRequest)
+        .subCategoryByCategory(authToken, currentLanguage, subCategoryRequest)
         .then((subCategoriesResponse) {
       subCategories = subCategoriesResponse;
       notifyListeners();
@@ -35,12 +56,14 @@ class SubCategoryBloc extends ChangeNotifier {
     ///get product list
     _smileShopModel
         .searchProductsCategoryId(
-            authToken, kAcceptLanguageEn, endUserId, 1, categoryId)
+        authToken, currentLanguage, endUserId, 1, categoryId ?? 0)
         .then((productResponse) {
       products = productResponse;
       notifyListeners();
     }).whenComplete(()=> _hideLoading());
   }
+
+
 
   void onTapFavourite(ProductVO? product,BuildContext context){
     _smileShopModel.saveFavouriteProductToHive(
