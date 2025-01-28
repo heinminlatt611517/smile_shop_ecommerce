@@ -41,6 +41,7 @@ import 'package:smile_shop/network/responses/product_details_response.dart';
 import 'package:smile_shop/network/responses/product_response.dart';
 import 'package:smile_shop/network/responses/profile_response.dart';
 import 'package:smile_shop/network/responses/promotion_response.dart';
+import 'package:smile_shop/network/responses/refund_reason_response.dart';
 import 'package:smile_shop/network/responses/refund_response.dart';
 import 'package:smile_shop/network/responses/set_password_response.dart';
 import 'package:smile_shop/network/responses/state_response.dart';
@@ -463,4 +464,16 @@ abstract class SmileShopApi {
       @Field(kFieldConfirmPassword) String confirmPassword,
       @Field(kFieldPasswordType) String passwordType,
       );
+
+  @GET(kEndPointGetRefundReason)
+  Future<RefundReasonResponse> getRefundReasons(
+      @Header(kHeaderAuthorization) String token,
+      @Header(kHeaderAcceptLanguage) String acceptLanguage,
+      );
+
+  @GET(kEndPointAccountDelete)
+  Future<SuccessNetworkResponse> deleteAccount(
+      @Header(kHeaderAuthorization) String token,
+      );
+
 }

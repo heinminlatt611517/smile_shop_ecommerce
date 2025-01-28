@@ -22,6 +22,8 @@ import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/utils/images.dart';
 import 'package:smile_shop/utils/strings.dart';
 import 'package:smile_shop/widgets/common_dialog.dart';
+import 'package:smile_shop/widgets/delete_account_dialog_view.dart';
+import 'package:smile_shop/widgets/error_dialog_view.dart';
 import 'package:smile_shop/widgets/logout_dialog_view.dart';
 import 'package:smile_shop/widgets/svg_image_view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -319,8 +321,31 @@ class _ProfilePageState extends State<ProfilePage> {
           title: AppLocalizations.of(context)!.logout, assetImagePath: kLogoutIcon),
     ));
 
-    items.add(_buildProfileItem(context,
-        title: AppLocalizations.of(context)!.deleteAccount, assetImagePath: kDeleteIcon));
+    items.add(Consumer<ProfileBloc>(
+      builder: (context,bloc,child)=>
+       InkWell(
+        onTap: (){
+          showCommonDialog(context: context,dialogWidget: DeleteAccountDialogView(onTapConfirm: (){
+            bloc.deleteAccount().then((response){
+              if(response.status == 200){
+                _model.clearSaveLoginData();
+                Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                        builder: (builder) => const LoginPage()),
+                        (Route<dynamic> route) => false);
+              }
+            }).catchError((error) {
+                showCommonDialog(
+                  context: context,
+                  dialogWidget: ErrorDialogView(errorMessage: error),
+                );
+            });
+          }));
+        },
+        child: _buildProfileItem(context,
+            title: AppLocalizations.of(context)!.deleteAccount, assetImagePath: kDeleteIcon),
+      ),
+    ));
 
     return items;
   }

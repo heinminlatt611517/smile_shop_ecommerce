@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:smile_shop/data/vos/banner_vo.dart';
 import 'package:smile_shop/data/vos/brand_and_category_vo.dart';
 import 'package:smile_shop/data/vos/popup_data_vo.dart';
+import 'package:smile_shop/data/vos/refund_reason_vo.dart';
 import 'package:smile_shop/network/requests/pop_up_request.dart';
 import 'package:smile_shop/network/responses/campaign_history_response.dart';
 import 'package:smile_shop/data/vos/campaign_participant_vo.dart';
@@ -940,6 +941,30 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
         .changePassword(token, acceptLanguage, endUserId, oldPassword, newPassword, confirmPassword, passwordType)
         .asStream()
         .map((response) => response)
+        .first
+        .catchError((error) {
+      throw _createException(error);
+    });
+  }
+
+  @override
+  Future<SuccessNetworkResponse> deleteAccount(String token) {
+    return mApi
+        .deleteAccount('Bearer $token')
+        .asStream()
+        .map((response) => response)
+        .first
+        .catchError((error) {
+      throw _createException(error);
+    });
+  }
+
+  @override
+  Future<List<RefundReasonVO>> getRefundReasons(String acceptLanguage, String token) {
+    return mApi
+        .getRefundReasons('Bearer $token',acceptLanguage)
+        .asStream()
+        .map((response) => response.data ?? [])
         .first
         .catchError((error) {
       throw _createException(error);

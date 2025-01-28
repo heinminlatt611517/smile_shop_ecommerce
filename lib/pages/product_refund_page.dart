@@ -5,6 +5,7 @@ import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:smile_shop/blocs/product_refund_bloc.dart';
 import 'package:smile_shop/data/vos/order_vo.dart';
+import 'package:smile_shop/data/vos/refund_reason_vo.dart';
 import 'package:smile_shop/list_items/my_order_list_item_view.dart';
 import 'package:smile_shop/network/api_constants.dart';
 import 'package:smile_shop/pages/refund_page.dart';
@@ -26,7 +27,7 @@ class ProductRefundPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => ProductRefundBloc((int.parse(orderVO?.orderNo.toString() ?? ""))),
+      create: (context) => ProductRefundBloc(0),
       child: Scaffold(
         backgroundColor: kBackgroundColor,
         appBar: AppBar(
@@ -53,15 +54,15 @@ class ProductRefundPage extends StatelessWidget {
                       const SizedBox(
                         height: 30,
                       ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15),
+                       Padding(
+                        padding:const EdgeInsets.symmetric(horizontal: 15),
                         child: Row(
                           children: [
-                            Icon(
+                            const Icon(
                               Icons.location_pin,
                               color: kFillingFastColor,
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 24,
                             ),
                             Expanded(
@@ -71,25 +72,25 @@ class ProductRefundPage extends StatelessWidget {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(
+                                    const Text(
                                       'Smile Shop',
                                       style: TextStyle(fontSize: kTextRegular),
                                     ),
                                     Padding(
-                                      padding: EdgeInsets.only(right: 20),
+                                      padding:const EdgeInsets.only(right: 20),
                                       child: Text(
-                                        '09888888888',
-                                        style: TextStyle(fontSize: kTextRegular),
+                                        orderVO?.addressVO?.phone ?? "",
+                                        style:const TextStyle(fontSize: kTextRegular),
                                       ),
                                     ),
                                   ],
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 5,
                                 ),
                                 Text(
-                                  'No 34, Baho Road, Hlaing Township',
-                                  style: TextStyle(fontSize: kTextRegular),
+                                  orderVO?.addressVO?.address ?? "",
+                                  style:const TextStyle(fontSize: kTextRegular),
                                 ),
                               ],
                             ))
@@ -104,7 +105,9 @@ class ProductRefundPage extends StatelessWidget {
                         height: 20,
                       ),
                       //drop down
-                      const RefundDropDown(),
+                       Consumer<ProductRefundBloc>(
+                         builder: (context,bloc,child)=>
+                            RefundDropDown(refundReasonList: bloc.refundReason,)),
 
                       // upload photo
                       const SizedBox(
@@ -174,7 +177,8 @@ class ProductRefundPage extends StatelessWidget {
 
 ///dropdown
 class RefundDropDown extends StatefulWidget {
-  const RefundDropDown({super.key});
+  final List<RefundReasonVO> refundReasonList;
+  const RefundDropDown({super.key,required this.refundReasonList});
 
   @override
   @override
@@ -182,7 +186,7 @@ class RefundDropDown extends StatefulWidget {
 }
 
 class _RefundDropDownState extends State<RefundDropDown> {
-  String? _selectedValue; // Selected value, initially null.
+  String? _selectedValue;
 
   @override
   Widget build(BuildContext context) {
@@ -193,29 +197,33 @@ class _RefundDropDownState extends State<RefundDropDown> {
         const SizedBox(
           height: 15,
         ),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          width: double.infinity,
-          decoration: BoxDecoration(
-              color: kHintSearchLocationColor.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(10)),
-          child: DropdownButton<String>(
-            underline: const SizedBox.shrink(),
-            value: _selectedValue,
-            isExpanded: true,
-            hint: const Text('Choose One'),
-            items: <String>['Option 1', 'Option 2', 'Option 3']
-                .map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-            onChanged: (String? newValue) {
-              setState(() {
-                _selectedValue = newValue;
-              });
-            },
+        Consumer<ProductRefundBloc>(
+          builder: (context,bloc,child)=>
+           Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            width: double.infinity,
+            decoration: BoxDecoration(
+                color: kHintSearchLocationColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(10)),
+            child: DropdownButton<dynamic>(
+              underline: const SizedBox.shrink(),
+              value: _selectedValue,
+              isExpanded: true,
+              hint: const Text('Choose One'),
+              items: widget.refundReasonList
+                  .map<DropdownMenuItem<dynamic>>((dynamic value) {
+                return DropdownMenuItem<dynamic>(
+                  value: value,
+                  child: Text(value.name ?? ""),
+                );
+              }).toList(),
+              onChanged: (dynamic newValue) {
+                setState(() {
+                  _selectedValue = newValue;
+                  bloc.onChangedReasonId(newValue.id ?? 0);
+                });
+              },
+            ),
           ),
         ),
       ],

@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:smile_shop/data/vos/address_vo.dart';
+import 'package:smile_shop/data/vos/delivery_history_vo.dart';
 
 import 'order_product_vo.dart';
 
@@ -52,6 +53,9 @@ class OrderVO {
   @JsonKey(name: 'order_products')
   final List<OrderProductVO>? orderProducts;
 
+  @JsonKey(name: 'delivery_histories')
+  final List<DeliveryHistoryVO>? deliveryHistory;
+
   OrderVO({
     this.id,
     this.headId,
@@ -68,6 +72,7 @@ class OrderVO {
     this.image,
     this.addressVO,
     this.orderProducts,
+    this.deliveryHistory
   });
 
   factory OrderVO.fromJson(Map<String, dynamic> json) => _$OrderVOFromJson(json);

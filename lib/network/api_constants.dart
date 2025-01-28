@@ -57,7 +57,8 @@ const String kEndPointForgotPasswordOtpRequest = '/api/auth/forget-password/otp-
 const String kEndPointForgotPasswordOtpVerify = "/api/auth/forget-password/otp-verify";
 const String kEndPointForgotPasswordSetPassword = "/api/auth/forget-password/set-password";
 const String kEndPointChangePassword = "/api/change/password";
-
+const String kEndPointGetRefundReason = "/api/refund-reason";
+const String kEndPointAccountDelete = "/api/profile/delete-account";
 
 
 ///Parameters

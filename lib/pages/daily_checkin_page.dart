@@ -104,9 +104,9 @@ class DailyCheckInPage extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    checkInVO.totalCheckInPoint.toString() ==
+                                    checkInVO.currentCheckInDay.toString() ==
                                         "null" ? "0" : checkInVO
-                                        .totalCheckInPoint.toString(),
+                                        .currentCheckInDay.toString(),
                                     style: const TextStyle(
                                         fontSize: kMarginXLarge,
                                         color: kPrimaryColor),
@@ -190,11 +190,11 @@ class DailyCheckInPage extends StatelessWidget {
                                         crossAxisSpacing: 10),
                                     itemBuilder: (context, index) {
                                       Color bgColor = checkInVO
-                                          .totalCheckInPoint.toString() ==
+                                          .currentCheckInDay.toString() ==
                                           "null"
                                           ? Colors.grey
                                           : (index < int.parse(
-                                          checkInVO.totalCheckInPoint
+                                          checkInVO.currentCheckInDay
                                               .toString()))
                                           ? kPrimaryColor
                                           : Colors.grey;
@@ -238,10 +238,10 @@ class DailyCheckInPage extends StatelessWidget {
   }
 
   int _getItemCount(CheckInVO checkInVO) {
-    int totalCheckIn = checkInVO.totalCheckInPoint.toString() == "null" ||
-        checkInVO.totalCheckInPoint.toString() == "0"
+    int totalCheckIn = checkInVO.currentCheckInDay.toString() == "null" ||
+        checkInVO.currentCheckInDay.toString() == "0"
         ? 0
-        : int.parse(checkInVO.totalCheckInPoint.toString());
+        : int.parse(checkInVO.currentCheckInDay.toString());
     if (totalCheckIn <= 10) {
       return 10;
     }

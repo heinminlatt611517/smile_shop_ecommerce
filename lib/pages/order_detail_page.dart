@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:smile_shop/blocs/order_detail_bloc.dart';
+import 'package:smile_shop/data/vos/delivery_history_vo.dart';
 import 'package:smile_shop/list_items/my_order_list_item_view.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
@@ -12,10 +13,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class OrderDetailPage extends StatelessWidget {
   const OrderDetailPage(
-      {super.key, required this.orderNumber, required this.orderStatus});
+      {super.key, required this.orderNumber, required this.orderStatus,required this.deliveryHistory});
 
   final String orderStatus;
   final String orderNumber;
+  final List<DeliveryHistoryVO> deliveryHistory;
 
   @override
   Widget build(BuildContext context) {
@@ -176,7 +178,7 @@ class OrderDetailPage extends StatelessWidget {
         ),
         Visibility(
             visible: orderStatus == "ongoing" || orderStatus == "paid",
-            child: const DeliveryStepperView()),
+            child: DeliveryStepperView(deliveryList: deliveryHistory,)),
 
         const SizedBox(
           height: 50,

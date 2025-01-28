@@ -66,6 +66,7 @@ class PaymentMethodListItemView extends StatelessWidget {
             /// Sub payment view
             GridView.builder(
               shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
               itemCount: paymentVO?.subPaymentVO?.length,
               gridDelegate:
               const SliverGridDelegateWithFixedCrossAxisCount(

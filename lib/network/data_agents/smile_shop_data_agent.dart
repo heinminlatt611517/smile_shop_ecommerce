@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:smile_shop/data/vos/banner_vo.dart';
 import 'package:smile_shop/data/vos/brand_and_category_vo.dart';
 import 'package:smile_shop/data/vos/popup_data_vo.dart';
+import 'package:smile_shop/data/vos/refund_reason_vo.dart';
 import 'package:smile_shop/network/requests/pop_up_request.dart';
 import 'package:smile_shop/network/responses/campaign_history_response.dart';
 import 'package:smile_shop/data/vos/campaign_participant_vo.dart';
@@ -232,4 +233,10 @@ abstract class SmileShopDataAgent {
 
   Future<SuccessNetworkResponse> changePassword(
      String token, String acceptLanguage,int endUserId,String oldPassword,String newPassword,String confirmPassword,String passwordType);
+
+  Future<List<RefundReasonVO>> getRefundReasons(
+      String acceptLanguage,String token);
+
+  Future<SuccessNetworkResponse> deleteAccount(
+      String token);
 }

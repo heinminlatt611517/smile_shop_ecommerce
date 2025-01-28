@@ -44,6 +44,7 @@ import '../vos/payment_vo.dart';
 import '../vos/popup_data_vo.dart';
 import '../vos/product_response_data_vo.dart';
 import '../vos/promotion_vo.dart';
+import '../vos/refund_reason_vo.dart';
 import '../vos/refund_vo.dart';
 import '../vos/state_vo.dart';
 import '../vos/sub_category_vo.dart';
@@ -260,4 +261,10 @@ abstract class SmileShopModel {
 
   Future<SuccessNetworkResponse> changePassword(
       String token, String acceptLanguage,int endUserId,String oldPassword,String newPassword,String confirmPassword,String passwordType);
+
+  Future<List<RefundReasonVO>> getRefundReasons(
+      String acceptLanguage,String token);
+
+  Future<SuccessNetworkResponse> deleteAccount(
+      String token);
 }

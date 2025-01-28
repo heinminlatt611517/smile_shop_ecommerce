@@ -12,6 +12,7 @@ const kCampaignLabel = "Campaign";
 const kLetPracticeAndEnjoyLabel = "Let's practice and enjoy it.";
 const kStandardDelivery = 'Standard Delivery';
 const kSpecialDelivery = 'Special Delivery';
+const kDoWantToDeleteAccount = "Do you want to delete account?";
 
 
 ///hive

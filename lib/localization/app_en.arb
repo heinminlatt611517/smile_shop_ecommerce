@@ -152,5 +152,6 @@
   "done" : "Done",
   "yourOrderIsCanceled" : "Your order is canceled",
   "yourOrderHasBeenDeliveredOn" : "Your order has been delivered on.",
-  "favourite" : "Favourite"
+  "favourite" : "Favourite",
+  "doYouWantToDeleteAccount" : "Do you want to delete your account? This action cannot be undone"
   }

@@ -169,6 +169,7 @@ class _MyOrderPageState extends State<MyOrderPage>
                         builder: (_) => OrderDetailPage(
                               orderStatus: orderList[index].paymentStatus ?? "",
                               orderNumber: orderList[index].orderNo ?? '',
+                              deliveryHistory: orderList[index].deliveryHistory ?? [],
                             )));
                   }
                 },

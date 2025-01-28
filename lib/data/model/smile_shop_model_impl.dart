@@ -6,6 +6,7 @@ import 'package:smile_shop/data/model/smile_shop_model.dart';
 import 'package:smile_shop/data/vos/banner_vo.dart';
 import 'package:smile_shop/data/vos/brand_and_category_vo.dart';
 import 'package:smile_shop/data/vos/popup_data_vo.dart';
+import 'package:smile_shop/data/vos/refund_reason_vo.dart';
 import 'package:smile_shop/network/requests/pop_up_request.dart';
 import 'package:smile_shop/network/responses/campaign_history_response.dart';
 import 'package:smile_shop/data/vos/campaign_participant_vo.dart';
@@ -599,6 +600,16 @@ class SmileShopModelImpl extends SmileShopModel {
   Future<SuccessNetworkResponse> changePassword(String token, String acceptLanguage, int endUserId, String oldPassword, String newPassword, String confirmPassword, String passwordType) {
    return mDataAgent.changePassword(token, acceptLanguage, endUserId, oldPassword, newPassword, confirmPassword, passwordType
    );
+  }
+
+  @override
+  Future<SuccessNetworkResponse> deleteAccount(String token) {
+   return mDataAgent.deleteAccount(token);
+  }
+
+  @override
+  Future<List<RefundReasonVO>> getRefundReasons(String acceptLanguage, String token) {
+    return mDataAgent.getRefundReasons(acceptLanguage, token);
   }
 
 }

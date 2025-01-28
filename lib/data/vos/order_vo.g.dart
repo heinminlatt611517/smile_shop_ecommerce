@@ -26,6 +26,9 @@ OrderVO _$OrderVOFromJson(Map<String, dynamic> json) => OrderVO(
       orderProducts: (json['order_products'] as List<dynamic>?)
           ?.map((e) => OrderProductVO.fromJson(e as Map<String, dynamic>))
           .toList(),
+      deliveryHistory: (json['delivery_histories'] as List<dynamic>?)
+          ?.map((e) => DeliveryHistoryVO.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$OrderVOToJson(OrderVO instance) => <String, dynamic>{
@@ -44,4 +47,5 @@ Map<String, dynamic> _$OrderVOToJson(OrderVO instance) => <String, dynamic>{
       'image': instance.image,
       'address': instance.addressVO,
       'order_products': instance.orderProducts,
+      'delivery_histories': instance.deliveryHistory,
     };

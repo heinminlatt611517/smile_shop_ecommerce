@@ -29,7 +29,6 @@ class DailyCheckInBloc extends ChangeNotifier {
     _smileShopModel
         .getUserCheckIn(authToken, kAcceptLanguageEn)
         .then((checkInResponse) {
-          debugPrint("CheckInCount>>>>>>${checkInResponse.totalCheckInPoint}");
       checkInVO = checkInResponse;
       _notifySafely();
     });

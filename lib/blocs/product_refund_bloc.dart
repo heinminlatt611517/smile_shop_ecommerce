@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:smile_shop/data/vos/refund_reason_vo.dart';
 import 'package:smile_shop/network/api_constants.dart';
 
 import '../data/model/smile_shop_model.dart';
@@ -16,10 +17,23 @@ class ProductRefundBloc extends ChangeNotifier {
   int? orderId;
   int? reasonId;
   final nameController = TextEditingController();
+  List<RefundReasonVO> refundReason = [];
 
   ProductRefundBloc(this.orderId) {
     authToken =
         _smileShopModel.getLoginResponseFromDatabase()?.accessToken ?? "";
+
+    getRefundReasons();
+  }
+
+  void getRefundReasons() {
+    _showLoading();
+    _smileShopModel
+        .getRefundReasons(kAcceptLanguageEn, authToken)
+        .then((response) {
+      refundReason = response;
+      _notifySafely();
+    }).whenComplete(() => _hideLoading());
   }
 
   uploadImage() async {
@@ -39,7 +53,8 @@ class ProductRefundBloc extends ChangeNotifier {
   Future onTapDone() {
     _showLoading();
     return _smileShopModel
-        .postRefund(authToken, kAcceptLanguageEn, orderId ?? 0, reasonId ?? 0,imgFile)
+        .postRefund(
+            authToken, kAcceptLanguageEn, orderId ?? 0, reasonId ?? 0, imgFile)
         .whenComplete(() {
       _hideLoading();
     });

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:smile_shop/data/vos/delivery_history_vo.dart';
 
 import '../utils/colors.dart';
 import '../utils/dimens.dart';
@@ -6,9 +8,10 @@ import '../utils/images.dart';
 import 'dash_line_vertical_painter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
 class DeliveryStepperView extends StatefulWidget {
-  const DeliveryStepperView({super.key});
+  final List<DeliveryHistoryVO>? deliveryList;
+
+  const DeliveryStepperView({super.key, required this.deliveryList});
 
   @override
   State<DeliveryStepperView> createState() => _DeliveryStepperViewState();
@@ -71,8 +74,7 @@ class _DeliveryStepperViewState extends State<DeliveryStepperView> {
                         Container(
                           padding: const EdgeInsets.all(kMarginMedium),
                           decoration: const BoxDecoration(
-                              color: kPrimaryColor,
-                              shape: BoxShape.circle),
+                              color: kPrimaryColor, shape: BoxShape.circle),
                           child: Center(child: userInfoList[index]['icon']),
                         ),
                         if (index != userInfoList.length - 1)
@@ -88,10 +90,10 @@ class _DeliveryStepperViewState extends State<DeliveryStepperView> {
                           ),
                       ],
                     ),
-
                     Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.only(top: kMarginMedium,left: kMarginMedium),
+                        padding: const EdgeInsets.only(
+                            top: kMarginMedium, left: kMarginMedium),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -105,15 +107,26 @@ class _DeliveryStepperViewState extends State<DeliveryStepperView> {
                               ),
                             ),
                             const Spacer(),
-                            const Text(
-                              'Nov 30, 2024',
-                              maxLines: null,
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 15.0,
+                            if (widget.deliveryList?.isNotEmpty ?? true)
+                              Text(
+                                widget.deliveryList?[index].deliveryDate !=
+                                            null ||
+                                        widget.deliveryList?[index]
+                                                .deliveryDate !=
+                                            ''
+                                    ? DateFormat('MMMM dd, yyyy').format(
+                                        (DateTime.parse(widget
+                                                .deliveryList?[index]
+                                                .deliveryDate ??
+                                            DateTime.now().toString())))
+                                    : '',
+                                maxLines: null,
+                                style: const TextStyle(
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 15.0,
+                                ),
                               ),
-                            ),
                           ],
                         ),
                       ),
