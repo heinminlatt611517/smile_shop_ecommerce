@@ -23,6 +23,7 @@ class ProductDetailsBottomSheetBloc extends ChangeNotifier {
     selectedColor = allVariantListGroupByColor.values.isNotEmpty ? allVariantListGroupByColor.values.first.first.colorName ?? '' : '';
     selectedVariantListByColor = allVariantListGroupByColor[selectedColor];
     selectedVariant = selectedVariantListByColor?.first;
+    selectedSize = selectedVariant?.sizeVO?.value ?? '';
     calculateTotalPrice();
     notifyListeners();
   }

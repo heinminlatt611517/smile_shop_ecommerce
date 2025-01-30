@@ -20,6 +20,7 @@ class DailyCheckInPage extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => DailyCheckInBloc(),
       child: Scaffold(
+        backgroundColor: const Color(0xffF7E1C5),
         body: Selector<DailyCheckInBloc, bool>(
           selector: (context, bloc) => bloc.isLoading,
           builder: (context, isLoading, child) =>

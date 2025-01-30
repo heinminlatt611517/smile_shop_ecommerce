@@ -591,382 +591,384 @@ void showBuyNowOrAddToCartBottomSheet(
           width: double.infinity, // Ensures full width of the parent
           child: Padding(
             padding: const EdgeInsets.all(kMarginMedium2),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ///close button
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    icon: const Icon(Icons.clear),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ///close button
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      icon: const Icon(Icons.clear),
+                    ),
                   ),
-                ),
 
-                ///image , name , price view
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Selector<ProductDetailsBottomSheetBloc, String>(
-                      selector: (context, bloc) =>bloc.selectedVariant?.images.isNotEmpty ?? true ? bloc.selectedVariant?.images.first.url ?? '' : errorImageUrl,
-                      builder: (context, productImage, child) => ClipRRect(
-                        child: CachedNetworkImageView(
-                          imageHeight: 100,
-                          imageWidth: 100,
-                          // imageUrl: productImage.isNotEmpty ?? true ? productVO?.images?.first ?? errorImageUrl : errorImageUrl,
-                          imageUrl: productImage,
+                  ///image , name , price view
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Selector<ProductDetailsBottomSheetBloc, String>(
+                        selector: (context, bloc) =>bloc.selectedVariant?.images.isNotEmpty ?? true ? bloc.selectedVariant?.images.first.url ?? '' : errorImageUrl,
+                        builder: (context, productImage, child) => ClipRRect(
+                          child: CachedNetworkImageView(
+                            imageHeight: 100,
+                            imageWidth: 100,
+                            // imageUrl: productImage.isNotEmpty ?? true ? productVO?.images?.first ?? errorImageUrl : errorImageUrl,
+                            imageUrl: productImage,
+                          ),
                         ),
                       ),
-                    ),
-                    const SizedBox(
-                      width: kMarginMedium3,
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            productName,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontSize: kTextRegular2x,
-                              fontWeight: FontWeight.w600,
+                      const SizedBox(
+                        width: kMarginMedium3,
+                      ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              productName,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontSize: kTextRegular2x,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
-                          ),
-                          const SizedBox(
-                            height: kMargin10,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Consumer<ProductDetailsBottomSheetBloc>(
-                                builder: (context, bloc, child) => Text(
-                                  "Ks ${bloc.updateTotalPrice}",
-                                  style: const TextStyle(fontSize: kTextRegular2x),
-                                ),
-                              ),
-                              const SizedBox(
-                                width: kMargin30,
-                              ),
-                              PromotionPointView(
-                                point: variantVO?.isNotEmpty ?? true ? variantVO?.first.promotionPoint ?? 0 : 0,
-                              )
-                            ],
-                          ),
-
-                          const SizedBox(
-                            height: kMargin10,
-                          ),
-
-                          ///quality increase and decrease view
-                          Consumer<ProductDetailsBottomSheetBloc>(
-                            builder: (context, bloc, child) => Row(
+                            const SizedBox(
+                              height: kMargin10,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                ///increase and decrease
-                                TextButton(
-                                  style: TextButton.styleFrom(
-                                    minimumSize: Size.zero,
-                                    padding: EdgeInsets.zero,
-                                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                  ),
-                                  onPressed: () {
-                                    bloc.onTapMinus();
-                                  },
-                                  child: const Icon(
-                                    Icons.remove_circle,
-                                    color: kPrimaryColor,
-                                    size: 27,
+                                Consumer<ProductDetailsBottomSheetBloc>(
+                                  builder: (context, bloc, child) => Text(
+                                    "Ks ${bloc.updateTotalPrice}",
+                                    style: const TextStyle(fontSize: kTextRegular2x),
                                   ),
                                 ),
                                 const SizedBox(
-                                  width: kMarginMedium,
+                                  width: kMargin30,
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: kMarginMedium),
-                                  child: Text(bloc.quantityCount.toString()),
-                                ),
-                                const SizedBox(
-                                  width: kMarginMedium,
-                                ),
-                                TextButton(
-                                  style: TextButton.styleFrom(
-                                    minimumSize: Size.zero,
-                                    padding: EdgeInsets.zero,
-                                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                  ),
-                                  onPressed: () {
-                                    bloc.onTapAdd();
-                                  },
-                                  child: const Icon(
-                                    Icons.add_circle,
-                                    color: kPrimaryColor,
-                                    size: 27,
-                                  ),
-                                ),
+                                PromotionPointView(
+                                  point: variantVO?.isNotEmpty ?? true ? variantVO?.first.promotionPoint ?? 0 : 0,
+                                )
                               ],
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
 
-                ///spacer
-                const SizedBox(
-                  height: kMarginLarge,
-                ),
+                            const SizedBox(
+                              height: kMargin10,
+                            ),
 
-                ///color view
-                 Text(
-                   AppLocalizations.of(context)!.availableColor,
-                  style:const TextStyle(color: Colors.black, fontSize: kTextRegular2x),
-                ),
-
-                ///spacer
-                const SizedBox(
-                  height: kMarginSmall,
-                ),
-
-                ///selectable colors
-                Consumer<ProductDetailsBottomSheetBloc>(
-                  builder: (context, bloc, child) {
-                    return SizedBox(
-                      height: 24,
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: bloc.allVariantListGroupByColor.keys.length,
-                        itemBuilder: (context, index) {
-                          // bool isSelected = bloc.isSelected(index);
-                          String color = bloc.allVariantListGroupByColor.keys.toList()[index];
-                          bool isSelected = bloc.isSelectedColor(color);
-                          String colorName = bloc.allVariantListGroupByColor[color]?.first.colorName ?? '';
-
-                          return InkWell(
-                            onTap: () {
-                              bloc.selectColor(color);
-                              // bloc.toggleSelectionColor(index, variantVO?[index].colorName ?? "");
-                              // productDetailBloc.onTapColor(
-                              //     variantVO?[index].colorName ?? "");
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: kMarginMedium),
-                              child: Row(
+                            ///quality increase and decrease view
+                            Consumer<ProductDetailsBottomSheetBloc>(
+                              builder: (context, bloc, child) => Row(
                                 children: [
-                                  ClipRRect(
-                                    borderRadius: const BorderRadius.only(topLeft: Radius.circular(6), bottomLeft: Radius.circular(6)),
-                                    child: CachedNetworkImageView(imageHeight: 24, imageWidth: 24, imageUrl: variantVO?[index].image ?? errorImageUrl),
-                                  ),
-                                  Container(
-                                    decoration: BoxDecoration(borderRadius: const BorderRadius.only(topRight: Radius.circular(6), bottomRight: Radius.circular(6)), color: isSelected ? kPrimaryColor : Colors.white),
-                                    child: Center(
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: kMarginMedium),
-                                        child: Text(
-                                          // variantVO?[index].colorName ?? "",
-                                          colorName,
-                                          style: TextStyle(color: isSelected ? Colors.white : kPrimaryColor),
-                                        ),
-                                      ),
+                                  ///increase and decrease
+                                  TextButton(
+                                    style: TextButton.styleFrom(
+                                      minimumSize: Size.zero,
+                                      padding: EdgeInsets.zero,
+                                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                     ),
-                                  )
+                                    onPressed: () {
+                                      bloc.onTapMinus();
+                                    },
+                                    child: const Icon(
+                                      Icons.remove_circle,
+                                      color: kPrimaryColor,
+                                      size: 27,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: kMarginMedium,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: kMarginMedium),
+                                    child: Text(bloc.quantityCount.toString()),
+                                  ),
+                                  const SizedBox(
+                                    width: kMarginMedium,
+                                  ),
+                                  TextButton(
+                                    style: TextButton.styleFrom(
+                                      minimumSize: Size.zero,
+                                      padding: EdgeInsets.zero,
+                                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                    ),
+                                    onPressed: () {
+                                      bloc.onTapAdd();
+                                    },
+                                    child: const Icon(
+                                      Icons.add_circle,
+                                      color: kPrimaryColor,
+                                      size: 27,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
-                          );
-
-                          // return Padding(
-                          //   padding:
-                          //       const EdgeInsets.only(right: kMarginMedium),
-                          //   child: InkWell(
-                          //     onTap: () {
-                          //       bloc.toggleSelectionColor(
-                          //           index, variantVO?[index].colorName ?? "");
-                          //       var productDetailBloc =
-                          //           Provider.of<ProductDetailsBloc>(context,
-                          //               listen: false);
-                          //       productDetailBloc.onTapColor(
-                          //           variantVO?[index].colorName ?? "");
-                          //     },
-                          //     child: Container(
-                          //       width: 20,
-                          //       height: 20,
-                          //       decoration: BoxDecoration(
-                          //         shape: BoxShape.circle, // Circle shape
-                          //         color: hexToColor(
-                          //             variantVO?[index].colorVO?.value ?? ""),
-                          //         border: Border.all(
-                          //           color: isSelected
-                          //               ? kPrimaryColor
-                          //               : Colors.grey,
-                          //           width: 1,
-                          //         ),
-                          //       ),
-                          //     ),
-                          //   ),
-                          // );
-                        },
+                          ],
+                        ),
                       ),
-                    );
-                  },
-                ),
+                    ],
+                  ),
 
-                ///spacer
-                const SizedBox(
-                  height: kMarginLarge,
-                ),
+                  ///spacer
+                  const SizedBox(
+                    height: kMarginLarge,
+                  ),
 
-                ///color view
-                 Text(
-                     AppLocalizations.of(context)!.availableSize,
-                  style:const TextStyle(color: Colors.black, fontSize: kTextRegular2x),
-                ),
+                  ///color view
+                   Text(
+                     AppLocalizations.of(context)!.availableColor,
+                    style:const TextStyle(color: Colors.black, fontSize: kTextRegular2x),
+                  ),
 
-                ///spacer
-                const SizedBox(
-                  height: kMarginSmall,
-                ),
+                  ///spacer
+                  const SizedBox(
+                    height: kMarginSmall,
+                  ),
 
-                ///selectable size
-                Consumer<ProductDetailsBottomSheetBloc>(
-                  builder: (context, bloc, child) {
-                    return SizedBox(
-                      height: 24,
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: bloc.selectedVariantListByColor?.length,
-                        itemBuilder: (context, index) {
-                          // bool isSelected = bloc.isSelectedSize(index);
-                          List<VariantVO> variantList = bloc.selectedVariantListByColor ?? [];
-                          VariantVO vo = variantList.isNotEmpty ? variantList[index] : VariantVO();
+                  ///selectable colors
+                  Consumer<ProductDetailsBottomSheetBloc>(
+                    builder: (context, bloc, child) {
+                      return SizedBox(
+                        height: 24,
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: bloc.allVariantListGroupByColor.keys.length,
+                          itemBuilder: (context, index) {
+                            // bool isSelected = bloc.isSelected(index);
+                            String color = bloc.allVariantListGroupByColor.keys.toList()[index];
+                            bool isSelected = bloc.isSelectedColor(color);
+                            String colorName = bloc.allVariantListGroupByColor[color]?.first.colorName ?? '';
 
-                          bool isSelected = vo.id == bloc.selectedVariant?.id;
+                            return InkWell(
+                              onTap: () {
+                                bloc.selectColor(color);
+                                // bloc.toggleSelectionColor(index, variantVO?[index].colorName ?? "");
+                                // productDetailBloc.onTapColor(
+                                //     variantVO?[index].colorName ?? "");
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: kMarginMedium),
+                                child: Row(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: const BorderRadius.only(topLeft: Radius.circular(6), bottomLeft: Radius.circular(6)),
+                                      child: CachedNetworkImageView(imageHeight: 24, imageWidth: 24, imageUrl: variantVO?[index].image ?? errorImageUrl),
+                                    ),
+                                    Container(
+                                      decoration: BoxDecoration(borderRadius: const BorderRadius.only(topRight: Radius.circular(6), bottomRight: Radius.circular(6)), color: isSelected ? kPrimaryColor : Colors.white),
+                                      child: Center(
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: kMarginMedium),
+                                          child: Text(
+                                            // variantVO?[index].colorName ?? "",
+                                            colorName,
+                                            style: TextStyle(color: isSelected ? Colors.white : kPrimaryColor),
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            );
 
-                          return InkWell(
-                            onTap: () {
-                              bloc.selectSize(vo.id ?? -1);
-                              // bloc.toggleSelectionSize(index, variantVO?[index].sizeVO?.value ?? "");
-                              // productDetailBloc.onTapSize(
-                              //     variantVO?[index].sizeVO?.value ?? "");
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: kMarginMedium),
-                              child: Container(
-                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(6), color: isSelected ? kPrimaryColor : Colors.white),
-                                child: Center(
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: kMarginMedium),
-                                    child: Text(
-                                      // variantVO?[index].sizeVO?.value ?? "",
-                                      vo.sizeVO?.value ?? '',
-                                      style: TextStyle(color: isSelected ? Colors.white : kPrimaryColor),
+                            // return Padding(
+                            //   padding:
+                            //       const EdgeInsets.only(right: kMarginMedium),
+                            //   child: InkWell(
+                            //     onTap: () {
+                            //       bloc.toggleSelectionColor(
+                            //           index, variantVO?[index].colorName ?? "");
+                            //       var productDetailBloc =
+                            //           Provider.of<ProductDetailsBloc>(context,
+                            //               listen: false);
+                            //       productDetailBloc.onTapColor(
+                            //           variantVO?[index].colorName ?? "");
+                            //     },
+                            //     child: Container(
+                            //       width: 20,
+                            //       height: 20,
+                            //       decoration: BoxDecoration(
+                            //         shape: BoxShape.circle, // Circle shape
+                            //         color: hexToColor(
+                            //             variantVO?[index].colorVO?.value ?? ""),
+                            //         border: Border.all(
+                            //           color: isSelected
+                            //               ? kPrimaryColor
+                            //               : Colors.grey,
+                            //           width: 1,
+                            //         ),
+                            //       ),
+                            //     ),
+                            //   ),
+                            // );
+                          },
+                        ),
+                      );
+                    },
+                  ),
+
+                  ///spacer
+                  const SizedBox(
+                    height: kMarginLarge,
+                  ),
+
+                  ///color view
+                   Text(
+                       AppLocalizations.of(context)!.availableSize,
+                    style:const TextStyle(color: Colors.black, fontSize: kTextRegular2x),
+                  ),
+
+                  ///spacer
+                  const SizedBox(
+                    height: kMarginSmall,
+                  ),
+
+                  ///selectable size
+                  Consumer<ProductDetailsBottomSheetBloc>(
+                    builder: (context, bloc, child) {
+                      return SizedBox(
+                        height: 24,
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: bloc.selectedVariantListByColor?.length,
+                          itemBuilder: (context, index) {
+                            // bool isSelected = bloc.isSelectedSize(index);
+                            List<VariantVO> variantList = bloc.selectedVariantListByColor ?? [];
+                            VariantVO vo = variantList.isNotEmpty ? variantList[index] : VariantVO();
+
+                            bool isSelected = vo.id == bloc.selectedVariant?.id;
+
+                            return InkWell(
+                              onTap: () {
+                                bloc.selectSize(vo.id ?? -1);
+                                // bloc.toggleSelectionSize(index, variantVO?[index].sizeVO?.value ?? "");
+                                // productDetailBloc.onTapSize(
+                                //     variantVO?[index].sizeVO?.value ?? "");
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: kMarginMedium),
+                                child: Container(
+                                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(6), color: isSelected ? kPrimaryColor : Colors.white),
+                                  child: Center(
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: kMarginMedium),
+                                      child: Text(
+                                        // variantVO?[index].sizeVO?.value ?? "",
+                                        vo.sizeVO?.value ?? '',
+                                        style: TextStyle(color: isSelected ? Colors.white : kPrimaryColor),
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                          );
+                            );
+                          },
+                        ),
+                      );
+                    },
+                  ),
+
+                  ///spacer
+                  const SizedBox(
+                    height: kMarginLarge,
+                  ),
+
+                  ///buy now button
+                  Visibility(
+                    visible: isAddToCart == true ? false : true,
+                    child: Consumer<ProductDetailsBottomSheetBloc>(
+                      builder: (context, bloc, child) => CommonButtonView(
+                        label: AppLocalizations.of(context)!.buyNow,
+                        labelColor: Colors.white,
+                        bgColor: kPrimaryColor,
+                        onTapButton: () {
+                          if (bloc.selectedVariant != null) {
+                            Navigator.pop(context);
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (builder) => CheckoutPage(
+                                      isFromCartPage: false,
+                                      productList: [
+                                        productVO?.copyWith(colorName: bloc.selectedVariant?.colorName, size: bloc.selectedVariant?.sizeVO?.value, totalPrice: bloc.updateTotalPrice, qtyCount: bloc.quantityCount) ?? ProductVO()
+                                        // productVO?.copyWith(colorName: bloc.selectedColor, size: bloc.selectedSize, totalPrice: bloc.updateTotalPrice, qtyCount: bloc.quantityCount) ?? ProductVO()
+                                      ],
+                                    )));
+                          } else {
+                            showTopSnackBar(
+                              displayDuration: const Duration(milliseconds: 300),
+                              Overlay.of(context),
+                              const CustomSnackBar.error(
+                                message: "Please select both color and size.",
+                              ),
+                            );
+                          }
+
+                          // if (bloc.selectedColor != "" && bloc.selectedSize != "") {
+                          //   Navigator.pop(context);
+                          //   Navigator.of(context).push(MaterialPageRoute(
+                          //       builder: (builder) => CheckoutPage(
+                          //             isFromCartPage: false,
+                          //             productList: [
+                          //               productVO?.copyWith(colorName: bloc.selectedColor, size: bloc.selectedSize, totalPrice: bloc.updateTotalPrice, qtyCount: bloc.quantityCount) ?? ProductVO()
+                          //             ],
+                          //           )));
+                          // } else {
+                          //   showTopSnackBar(
+                          //     displayDuration: const Duration(milliseconds: 300),
+                          //     Overlay.of(context),
+                          //     const CustomSnackBar.error(
+                          //       message: "Please select both color and size.",
+                          //     ),
+                          //   );
+                          // }
                         },
                       ),
-                    );
-                  },
-                ),
-
-                ///spacer
-                const SizedBox(
-                  height: kMarginLarge,
-                ),
-
-                ///buy now button
-                Visibility(
-                  visible: isAddToCart == true ? false : true,
-                  child: Consumer<ProductDetailsBottomSheetBloc>(
-                    builder: (context, bloc, child) => CommonButtonView(
-                      label: AppLocalizations.of(context)!.buyNow,
-                      labelColor: Colors.white,
-                      bgColor: kPrimaryColor,
-                      onTapButton: () {
-                        if (bloc.selectedVariant != null) {
-                          Navigator.pop(context);
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (builder) => CheckoutPage(
-                                    isFromCartPage: false,
-                                    productList: [
-                                      productVO?.copyWith(colorName: bloc.selectedVariant?.colorName, size: bloc.selectedVariant?.sizeVO?.value, totalPrice: bloc.updateTotalPrice, qtyCount: bloc.quantityCount) ?? ProductVO()
-                                      // productVO?.copyWith(colorName: bloc.selectedColor, size: bloc.selectedSize, totalPrice: bloc.updateTotalPrice, qtyCount: bloc.quantityCount) ?? ProductVO()
-                                    ],
-                                  )));
-                        } else {
-                          showTopSnackBar(
-                            displayDuration: const Duration(milliseconds: 300),
-                            Overlay.of(context),
-                            const CustomSnackBar.error(
-                              message: "Please select both color and size.",
-                            ),
-                          );
-                        }
-
-                        // if (bloc.selectedColor != "" && bloc.selectedSize != "") {
-                        //   Navigator.pop(context);
-                        //   Navigator.of(context).push(MaterialPageRoute(
-                        //       builder: (builder) => CheckoutPage(
-                        //             isFromCartPage: false,
-                        //             productList: [
-                        //               productVO?.copyWith(colorName: bloc.selectedColor, size: bloc.selectedSize, totalPrice: bloc.updateTotalPrice, qtyCount: bloc.quantityCount) ?? ProductVO()
-                        //             ],
-                        //           )));
-                        // } else {
-                        //   showTopSnackBar(
-                        //     displayDuration: const Duration(milliseconds: 300),
-                        //     Overlay.of(context),
-                        //     const CustomSnackBar.error(
-                        //       message: "Please select both color and size.",
-                        //     ),
-                        //   );
-                        // }
-                      },
                     ),
                   ),
-                ),
 
-                ///add to cart button
-                Visibility(
-                  visible: isAddToCart == true ? true : false,
-                  child: Consumer<ProductDetailsBottomSheetBloc>(
-                    builder: (context, bloc, child) => CommonButtonView(
-                      label: AppLocalizations.of(context)!.addToCart,
-                      labelColor: Colors.white,
-                      bgColor: kPrimaryColor,
-                      onTapButton: () {
-                        if (bloc.selectedColor != "" && bloc.selectedSize != "") {
-                          productDetailBloc.onTapAddToCart(context, bloc.selectedVariant?.colorName ?? "", bloc.selectedVariant?.sizeVO?.value ?? "", bloc.quantityCount ?? 0, bloc.updateTotalPrice ?? 0);
-                          // productDetailBloc.onTapAddToCart(context, bloc.selectedColor, bloc.selectedSize, bloc.quantityCount ?? 0, bloc.updateTotalPrice ?? 0);
-                        } else {
-                          showTopSnackBar(
-                            displayDuration: const Duration(milliseconds: 300),
-                            Overlay.of(context),
-                            const CustomSnackBar.error(
-                              message: "Please select both color and size.",
-                            ),
-                          );
-                        }
-                      },
+                  ///add to cart button
+                  Visibility(
+                    visible: isAddToCart == true ? true : false,
+                    child: Consumer<ProductDetailsBottomSheetBloc>(
+                      builder: (context, bloc, child) => CommonButtonView(
+                        label: AppLocalizations.of(context)!.addToCart,
+                        labelColor: Colors.white,
+                        bgColor: kPrimaryColor,
+                        onTapButton: () {
+                          if (bloc.selectedColor != "" && bloc.selectedSize != "") {
+                            productDetailBloc.onTapAddToCart(context, bloc.selectedVariant?.colorName ?? "", bloc.selectedVariant?.sizeVO?.value ?? "", bloc.quantityCount ?? 0, bloc.updateTotalPrice ?? 0);
+                            // productDetailBloc.onTapAddToCart(context, bloc.selectedColor, bloc.selectedSize, bloc.quantityCount ?? 0, bloc.updateTotalPrice ?? 0);
+                          } else {
+                            showTopSnackBar(
+                              displayDuration: const Duration(milliseconds: 300),
+                              Overlay.of(context),
+                              const CustomSnackBar.error(
+                                message: "Please select both color and size.",
+                              ),
+                            );
+                          }
+                        },
+                      ),
                     ),
                   ),
-                ),
 
-                ///spacer
-                const SizedBox(
-                  height: kMarginLarge,
-                ),
-              ],
+                  ///spacer
+                  const SizedBox(
+                    height: kMarginLarge,
+                  ),
+                ],
+              ),
             ),
           ),
         ),

@@ -11,34 +11,37 @@ import '../utils/strings.dart';
 class ProductCategoryPage extends StatelessWidget {
   final String? categoryName;
   final int? subCategoryId;
-  const ProductCategoryPage({super.key,required this.categoryName,required this.subCategoryId});
+
+  const ProductCategoryPage(
+      {super.key, required this.categoryName, required this.subCategoryId});
 
   @override
   Widget build(BuildContext context) {
-    return  ChangeNotifierProvider(
-      create: (context)=>ProductCategoryBloc(subCategoryId ?? 0),
-      child:   Scaffold(
-        backgroundColor: kBackgroundColor,
-        appBar: CustomAppBarView(title: categoryName),
-        body: const Padding(
-          padding:EdgeInsets.all(kMarginMedium2),
-          child: CustomScrollView(
-            slivers: [
+    return ChangeNotifierProvider(
+      create: (context) => ProductCategoryBloc(subCategoryId ?? 0),
+      child: Scaffold(
+          backgroundColor: kBackgroundColor,
+          appBar: CustomAppBarView(title: categoryName),
+          body: Padding(
+            padding: const EdgeInsets.all(kMarginMedium2),
+            child: Consumer<ProductCategoryBloc>(
+              builder: (context, bloc, child) => CustomScrollView(
+                controller: bloc.scrollController,
+                slivers: const [
+                  ///search bar with back arrow view
+                  //SliverToBoxAdapter(child: SearchBarWithBackArrowView(),),
 
-             ///search bar with back arrow view
-              //SliverToBoxAdapter(child: SearchBarWithBackArrowView(),),
-      
-              ///spacer
-              //SliverToBoxAdapter(child: SizedBox(height: kMarginLarge,)),
-      
-              ///product view
-              SliverToBoxAdapter(child: ProductsView(),),
-      
-      
-            ],
-          ),
-        )
-      ),
+                  ///spacer
+                  //SliverToBoxAdapter(child: SizedBox(height: kMarginLarge,)),
+
+                  ///product view
+                  SliverToBoxAdapter(
+                    child: ProductsView(),
+                  ),
+                ],
+              ),
+            ),
+          )),
     );
   }
 }
@@ -52,7 +55,7 @@ class SearchBarWithBackArrowView extends StatelessWidget {
     return Row(
       children: [
         InkWell(
-            onTap: (){
+            onTap: () {
               Navigator.pop(context);
             },
             child: const Icon(Icons.keyboard_backspace)),
@@ -99,48 +102,46 @@ class SearchBarWithBackArrowView extends StatelessWidget {
   }
 }
 
-
 ///products view
 class ProductsView extends StatelessWidget {
   const ProductsView({super.key});
 
   @override
   Widget build(BuildContext context) {
-   return Selector<ProductCategoryBloc, List<ProductVO>>(
-        selector: (context, bloc) => bloc.products,
-        builder: (context, products, child) {
-          return products.isEmpty
-              ? const Center(
-            child: CircularProgressIndicator(),
-          )
-              : GridView.builder(
-            shrinkWrap: true,
-            padding: EdgeInsets.zero,
-            physics: const NeverScrollableScrollPhysics(),
-            
-            itemBuilder: (context, index) {
-              return TrendingProductListItemView(
-                productVO: products[index],
-                onTapFavourite: (product){
-                  var bloc = Provider.of<ProductCategoryBloc>(context,
-                      listen: false);
-                  bloc.onTapFavourite(product, context);
-                },
-              );
-            },
-            itemCount: products.length,
-            gridDelegate:
-            const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: 14.0,
-                crossAxisSpacing: 10.0,
-                childAspectRatio: 2 / 2.7),
-          );
-        });
+    return Consumer<ProductCategoryBloc>(
+      builder: (context, bloc, child) {
+        List<ProductVO> products = bloc.products;
+        return bloc.isLoading
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : products.isEmpty
+                ? const Center(
+                    child: Text("Empty Data"),
+                  )
+                : GridView.builder(
+                    shrinkWrap: true,
+                    padding: EdgeInsets.zero,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      return TrendingProductListItemView(
+                        productVO: products[index],
+                        onTapFavourite: (product) {
+                          var bloc = Provider.of<ProductCategoryBloc>(context,
+                              listen: false);
+                          bloc.onTapFavourite(product, context);
+                        },
+                      );
+                    },
+                    itemCount: products.length,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            mainAxisSpacing: 14.0,
+                            crossAxisSpacing: 10.0,
+                            childAspectRatio: 2 / 2.7),
+                  );
+      },
+    );
   }
 }
-
-
-
-
-

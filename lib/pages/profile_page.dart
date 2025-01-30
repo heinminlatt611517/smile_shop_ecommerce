@@ -135,26 +135,45 @@ class _ProfilePageState extends State<ProfilePage> {
               body: Padding(
                 padding: const EdgeInsets.symmetric(
                     horizontal: 16, vertical: kMargin40),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                     Text(AppLocalizations.of(context)!.myOrders,),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    GridView.count(
-                      crossAxisCount: 4,
-                      mainAxisSpacing: 0,
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                       Text(AppLocalizations.of(context)!.myOrders,),
+                      const SizedBox(
+                        height: 15,
+                      ),
 
-                      /// Vertical spacing between items
-                      crossAxisSpacing: 10,
+                      ///my order items
+                      Center(
+                        child: Container(
+                          color: Colors.grey.withOpacity(0.1),
+                          child: GridView.count(
+                            crossAxisCount: 4,
+                            mainAxisSpacing: 0,
+                            crossAxisSpacing: 10,
+                            shrinkWrap: true,
+                            padding: EdgeInsets.zero,
+                            physics: const NeverScrollableScrollPhysics(),
+                            children: _buildMyOrderItems(context),
+                          ),
+                        ),
+                      ),
 
-                      /// Horizontal spacing between items
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      children: _buildProfileItems(context),
-                    )
-                  ],
+                      GridView.count(
+                        crossAxisCount: 4,
+                        mainAxisSpacing: 0,
+
+                        /// Vertical spacing between items
+                        crossAxisSpacing: 10,
+
+                        /// Horizontal spacing between items
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        children: _buildProfileItems(context),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -176,8 +195,8 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  ///build profile item
-  _buildProfileItems(BuildContext context) {
+  ///build my order items
+  _buildMyOrderItems(BuildContext context) {
     List<Widget> items = [];
 
     items.add(InkWell(
@@ -216,6 +235,13 @@ class _ProfilePageState extends State<ProfilePage> {
           title: AppLocalizations.of(context)!.toReview, assetImagePath: kToReviewIcon),
     ));
 
+    return items;
+  }
+
+
+  ///build profile item
+  _buildProfileItems(BuildContext context) {
+    List<Widget> items = [];
     items.add(InkWell(
       onTap: () {
         Navigator.of(context)
@@ -243,7 +269,6 @@ class _ProfilePageState extends State<ProfilePage> {
           title: AppLocalizations.of(context)!.promotionPoint, assetImagePath: kPointIcon),
     ));
 
-    if (GetStorage().read(kBoxKeyLoginUserType) == kTypeDealer) {
       items.add(InkWell(
         onTap: () {
           Navigator.of(context)
@@ -252,7 +277,6 @@ class _ProfilePageState extends State<ProfilePage> {
         child: _buildProfileItem(context,
             title: AppLocalizations.of(context)!.package, assetImagePath: kPackageIcon),
       ));
-    }
 
     items.add(InkWell(
       onTap: () {
@@ -357,6 +381,8 @@ Widget _buildProfileItem(BuildContext context,
   return SizedBox(
     width: itemWidth,
     child: Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SvgImageView(imageName: assetImagePath,
           imageHeight: 20,

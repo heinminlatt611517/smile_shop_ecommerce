@@ -14,8 +14,18 @@ class ProductCategoryBloc extends ChangeNotifier {
   var endUserId = "";
   var authToken = "";
   var isDisposed = false;
+  int pageNumber = 1;
+  bool isLoading = false;
+  ScrollController scrollController = ScrollController();
 
   ProductCategoryBloc(this.subCategoryId) {
+    scrollController.addListener(
+          () {
+        if (scrollController.position.pixels == scrollController.position.maxScrollExtent) {
+          getProducts();
+        }
+      },
+    );
     ///get data from database
     authToken =
         _smileShopModel.getLoginResponseFromDatabase()?.refreshToken ?? "";
@@ -54,6 +64,24 @@ class ProductCategoryBloc extends ChangeNotifier {
 
     showSnackBar(context, '${product?.name} added to favourite successfully!',
         Colors.green);
+  }
+
+  void getProducts() async {
+    // isLoading = true;
+    // notifyListeners();
+
+    ///get data from database
+    var authToken = _smileShopModel.getLoginResponseFromDatabase()?.refreshToken ?? "";
+    var endUserId = _smileShopModel.getLoginResponseFromDatabase()?.data?.id.toString() ?? "";
+
+    ///get product list
+    await _smileShopModel.searchProductsBySubCategoryId(authToken, kAcceptLanguageEn, endUserId, pageNumber, subCategoryId ?? 0).then((productResponse) {
+      pageNumber += 1;
+      products.addAll(productResponse);
+    });
+
+    //isLoading = false;
+    notifyListeners();
   }
 
   void showSnackBar(

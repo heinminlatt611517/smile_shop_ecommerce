@@ -17,9 +17,18 @@ class SubCategoryBloc extends ChangeNotifier {
   var currentLanguage = kAcceptLanguageEn;
   var authToken = "";
   var endUserId = "";
-  int? categoryId;
+  final int categoryId;
+  int pageNumber = 1;
+  ScrollController scrollController = ScrollController();
 
   SubCategoryBloc(this.categoryId) {
+    scrollController.addListener(
+          () {
+        if (scrollController.position.pixels == scrollController.position.maxScrollExtent) {
+          getProducts();
+        }
+      },
+    );
     ///get data from database
      authToken =
         _smileShopModel.getLoginResponseFromDatabase()?.refreshToken ?? "";
@@ -27,6 +36,19 @@ class SubCategoryBloc extends ChangeNotifier {
         _smileShopModel.getLoginResponseFromDatabase()?.data?.id.toString() ??
             "";
     _loadLanguage();
+  }
+
+  Future<void> getProducts() async {
+    ///get data from database
+    var authToken = _smileShopModel.getLoginResponseFromDatabase()?.refreshToken ?? "";
+    var endUserId = _smileShopModel.getLoginResponseFromDatabase()?.data?.id.toString() ?? "";
+
+    ///get product list
+    return _smileShopModel.searchProductsCategoryId(authToken, kAcceptLanguageEn, endUserId, pageNumber, categoryId).then((productResponse) {
+      pageNumber += 1;
+      products.addAll(productResponse);
+      notifyListeners();
+    });
   }
 
   Future<void> _loadLanguage() async {

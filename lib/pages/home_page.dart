@@ -10,6 +10,7 @@ import 'package:smile_shop/list_items/trending_product_list_item_view.dart';
 import 'package:smile_shop/network/api_constants.dart';
 import 'package:smile_shop/pages/campaign_page.dart';
 import 'package:smile_shop/pages/daily_checkin_page.dart';
+import 'package:smile_shop/pages/my_team_page.dart';
 import 'package:smile_shop/pages/search_product_page.dart';
 import 'package:smile_shop/pages/sub_category_page.dart';
 import 'package:smile_shop/utils/colors.dart';
@@ -275,62 +276,68 @@ class CampaignDailyCheckInUserLevelView extends StatelessWidget {
                 ),
 
                 ///User Level view
-                Container(
-                  padding: const EdgeInsets.all(kMarginMedium2),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(kMarginMedium),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.3),
-                          spreadRadius: 0,
-                          blurRadius: 1,
-                          offset:const Offset(0, 3), // changes position of shadow
-                        ),
-                      ],
-                      gradient: const LinearGradient(
-                          begin: Alignment.centerLeft,
-                          end: Alignment.centerRight,
-                          colors: [
-                            kPrimaryColor,
-                            Color(0xFFF5F5F5),
-                          ])),
-                  child: Row(
-                    children: [
-                       Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            AppLocalizations.of(context)!.userLevel,
-                            style:const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: kTextRegular2x,
-                                color: Colors.black),
-                          ),
-                          Text(
-                            AppLocalizations.of(context)!.toClaimPointDaily,
-                            style:const TextStyle(
-                                fontWeight: FontWeight.normal,
-                                fontSize: kTextSmall,
-                                color: Colors.grey),
+                InkWell(
+                  onTap: (){
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (_) => const MyTeamPage()));
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(kMarginMedium2),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(kMarginMedium),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.3),
+                            spreadRadius: 0,
+                            blurRadius: 1,
+                            offset:const Offset(0, 3), // changes position of shadow
                           ),
                         ],
-                      ),
-                      const SizedBox(
-                        width: kMarginMedium,
-                      ),
-                      Container(
-                          padding: const EdgeInsets.all(kMarginMedium),
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius:
-                                  BorderRadius.circular(kMarginMedium)),
-                          child: Image.asset(
-                            kUserLevelIcon,
-                            height: 20,
-                            width: 20,
-                            fit: BoxFit.cover,
-                          ))
-                    ],
+                        gradient: const LinearGradient(
+                            begin: Alignment.centerLeft,
+                            end: Alignment.centerRight,
+                            colors: [
+                              kPrimaryColor,
+                              Color(0xFFF5F5F5),
+                            ])),
+                    child: Row(
+                      children: [
+                         Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              AppLocalizations.of(context)!.userLevel,
+                              style:const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: kTextRegular2x,
+                                  color: Colors.black),
+                            ),
+                            Text(
+                              AppLocalizations.of(context)!.toClaimPointDaily,
+                              style:const TextStyle(
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: kTextSmall,
+                                  color: Colors.grey),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          width: kMarginMedium,
+                        ),
+                        Container(
+                            padding: const EdgeInsets.all(kMarginMedium),
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius:
+                                    BorderRadius.circular(kMarginMedium)),
+                            child: Image.asset(
+                              kUserLevelIcon,
+                              height: 20,
+                              width: 20,
+                              fit: BoxFit.cover,
+                            ))
+                      ],
+                    ),
                   ),
                 )
               ],
