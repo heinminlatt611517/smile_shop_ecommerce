@@ -40,13 +40,14 @@ class ProductVOAdapter extends TypeAdapter<ProductVO> {
       detailImages: (fields[23] as List?)?.cast<String>(),
       video: fields[22] as String?,
       specificationList: (fields[21] as List?)?.cast<SpecificationVO>(),
+      isFavouriteProduct: fields[24] as bool?,
     )..isAddedToCartProduct = fields[19] as bool?;
   }
 
   @override
   void write(BinaryWriter writer, ProductVO obj) {
     writer
-      ..writeByte(24)
+      ..writeByte(25)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -94,7 +95,9 @@ class ProductVOAdapter extends TypeAdapter<ProductVO> {
       ..writeByte(22)
       ..write(obj.video)
       ..writeByte(23)
-      ..write(obj.detailImages);
+      ..write(obj.detailImages)
+      ..writeByte(24)
+      ..write(obj.isFavouriteProduct);
   }
 
   @override
@@ -141,6 +144,7 @@ ProductVO _$ProductVOFromJson(Map<String, dynamic> json) => ProductVO(
       specificationList: (json['specifications'] as List<dynamic>?)
           ?.map((e) => SpecificationVO.fromJson(e as Map<String, dynamic>))
           .toList(),
+      isFavouriteProduct: json['is_favourite'] as bool?,
     );
 
 Map<String, dynamic> _$ProductVOToJson(ProductVO instance) => <String, dynamic>{
@@ -161,4 +165,5 @@ Map<String, dynamic> _$ProductVOToJson(ProductVO instance) => <String, dynamic>{
       'specifications': instance.specificationList,
       'video': instance.video,
       'details_images': instance.detailImages,
+      'is_favourite': instance.isFavouriteProduct,
     };

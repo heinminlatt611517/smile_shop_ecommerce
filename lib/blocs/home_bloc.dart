@@ -7,6 +7,7 @@ import 'package:smile_shop/data/vos/brand_and_category_vo.dart';
 import 'package:smile_shop/data/vos/category_vo.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
 import 'package:smile_shop/network/api_constants.dart';
+import 'package:smile_shop/network/requests/favourite_product_request.dart';
 import 'package:smile_shop/network/requests/pop_up_request.dart';
 import 'package:smile_shop/widgets/session_expired_dialog_view.dart';
 import 'package:smile_shop/widgets/welcome_dialog_view.dart';
@@ -33,6 +34,7 @@ class HomeBloc extends ChangeNotifier {
 
   HomeBloc(BuildContext context) {
     _loadLanguage();
+
     ///get data from database
     authToken =
         _smileShopModel.getLoginResponseFromDatabase()?.refreshToken ?? "";
@@ -43,21 +45,22 @@ class HomeBloc extends ChangeNotifier {
             "";
 
     ///get user profile data
-      _smileShopModel.userProfile(accessToken, kAcceptLanguageEn).then((response){
-        userProfile = response;
-        if(response.showPopUp == 0){
-          getHomePopupData(response.id ?? 0,context);
-        }
-        _notifySafely();
-      }).catchError((error){
-        if (error.toString().toLowerCase() == 'unauthenticated') {
-          showCommonDialog(
-            context: context,
-            dialogWidget: SessionExpiredDialogView(),
-          );
-        }
-      });
-
+    _smileShopModel
+        .userProfile(accessToken, kAcceptLanguageEn)
+        .then((response) {
+      userProfile = response;
+      if (response.showPopUp == 0) {
+        getHomePopupData(response.id ?? 0, context);
+      }
+      _notifySafely();
+    }).catchError((error) {
+      if (error.toString().toLowerCase() == 'unauthenticated') {
+        showCommonDialog(
+          context: context,
+          dialogWidget: SessionExpiredDialogView(),
+        );
+      }
+    });
   }
 
   ///load language
@@ -82,17 +85,19 @@ class HomeBloc extends ChangeNotifier {
     });
 
     ///get categories list
-    _smileShopModel.categories("home",currentLanguage).then((categoryResponse) {
+    _smileShopModel
+        .categories("home", currentLanguage)
+        .then((categoryResponse) {
       categories = categoryResponse;
       _notifySafely();
     });
 
     ///get product list
     _smileShopModel
-        .products(
-        authToken, currentLanguage, int.parse(endUserId), productPage)
+        .products(authToken, currentLanguage, int.parse(endUserId), productPage)
         .then((productResponse) {
       productList = productResponse.products ?? [];
+      debugPrint("Length>>>>>>>${productList.length}");
       _notifySafely();
     });
 
@@ -105,32 +110,39 @@ class HomeBloc extends ChangeNotifier {
     });
   }
 
-
   ///get home popup data
-  void getHomePopupData(int userId,BuildContext context){
+  void getHomePopupData(int userId, BuildContext context) {
     var popUpRequest = PopupRequest(userId);
-    _smileShopModel.getHomePopUpData(kAcceptLanguageEn, accessToken, popUpRequest).then((response){
+    _smileShopModel
+        .getHomePopUpData(kAcceptLanguageEn, accessToken, popUpRequest)
+        .then((response) {
       ///welcome pop up
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        showCommonDialog(context: context, dialogWidget: WelcomeDialogView(
-          showLoading: isPopupLoading,
-          title: response.title ?? "",
-          message: response.message ?? "",
-          onPressOk: () {
-          updateHomePopupData(userId, context);
-        },),isDismissible: false);
+        showCommonDialog(
+            context: context,
+            dialogWidget: WelcomeDialogView(
+              showLoading: isPopupLoading,
+              title: response.title ?? "",
+              message: response.message ?? "",
+              onPressOk: () {
+                updateHomePopupData(userId, context);
+              },
+            ),
+            isDismissible: false);
       });
     });
   }
 
-  void updateHomePopupData(int userId,BuildContext context){
+  void updateHomePopupData(int userId, BuildContext context) {
     _showPopupLoading();
     var popUpRequest = PopupRequest(userId);
-    _smileShopModel.updateHomePopUp(kAcceptLanguageEn, accessToken, popUpRequest).then((response){
-      if(response.status == 200){
+    _smileShopModel
+        .updateHomePopUp(kAcceptLanguageEn, accessToken, popUpRequest)
+        .then((response) {
+      if (response.status == 200) {
         Navigator.pop(context);
       }
-    }).whenComplete(()=> _hidePopupLoading());
+    }).whenComplete(() => _hidePopupLoading());
   }
 
   void getProducts() {
@@ -141,8 +153,7 @@ class HomeBloc extends ChangeNotifier {
     debugPrint("GetProducts for page $productPage");
 
     _smileShopModel
-        .products(
-            authToken, currentLanguage, int.parse(endUserId), productPage)
+        .products(authToken, currentLanguage, int.parse(endUserId), productPage)
         .then((productResponse) {
       if (productResponse.products != null &&
           productResponse.products!.isNotEmpty) {
@@ -152,15 +163,45 @@ class HomeBloc extends ChangeNotifier {
         _hideLoading();
       }
     });
+
   }
 
   void onTapFavourite(ProductVO? product, BuildContext context) {
-    _smileShopModel.saveFavouriteProductToHive(
-        product?.copyWith(isFavourite: true, colorName: product.colorName) ??
-            ProductVO());
+    _showLoading();
+    var favoriteProductRequest = FavouriteProductRequest(
+        productId: product?.id,
+        status:
+            product?.isFavouriteProduct == true ? 'unfavourite' : 'favourite');
+    _smileShopModel.addFavouriteProduct(accessToken, kAcceptLanguageEn, favoriteProductRequest).then((response){
+      if(response.status == 200){
+        getProductsWhileOnTapFavourite();
+        showSnackBar(context, '${product?.name} added to favourite successfully!',
+            Colors.green);
+      }
+      debugPrint("Length>>>>>>>${productList.length}");
+    });
 
-    showSnackBar(context, '${product?.name} added to favourite successfully!',
-        Colors.green);
+    ////save to database logic
+    // _smileShopModel.saveFavouriteProductToHive(
+    //     product?.copyWith(isFavourite: true, colorName: product.colorName) ??
+    //         ProductVO());
+
+  }
+
+  void getProductsWhileOnTapFavourite() {
+    productList.clear();
+    productPage = 1;
+    _smileShopModel
+        .products(authToken, currentLanguage, int.parse(endUserId), 1)
+        .then((productResponse) {
+      if (productResponse.products != null &&
+          productResponse.products!.isNotEmpty) {
+        productList.addAll(productResponse.products!);
+        _hideLoading();
+      } else {
+        _hideLoading();
+      }
+    });
   }
 
   void showSnackBar(
@@ -173,7 +214,6 @@ class HomeBloc extends ChangeNotifier {
       ),
     );
   }
-
 
   void _showPopupLoading() {
     isPopupLoading = true;

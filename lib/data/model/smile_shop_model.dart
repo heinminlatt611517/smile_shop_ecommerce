@@ -22,6 +22,7 @@ import '../../network/requests/campaign_join_request.dart';
 import '../../network/requests/checkIn_request.dart';
 import '../../network/requests/check_wallet_amount_request.dart';
 import '../../network/requests/check_wallet_password_request.dart';
+import '../../network/requests/favourite_product_request.dart';
 import '../../network/requests/login_request.dart';
 import '../../network/requests/order_cancel_request.dart';
 import '../../network/requests/order_status_request.dart';
@@ -267,4 +268,7 @@ abstract class SmileShopModel {
 
   Future<SuccessNetworkResponse> deleteAccount(
       String token);
+
+  Future<SuccessNetworkResponse> addFavouriteProduct(
+      String token,String acceptLanguage,FavouriteProductRequest request);
 }

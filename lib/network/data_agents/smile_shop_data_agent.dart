@@ -4,6 +4,7 @@ import 'package:smile_shop/data/vos/banner_vo.dart';
 import 'package:smile_shop/data/vos/brand_and_category_vo.dart';
 import 'package:smile_shop/data/vos/popup_data_vo.dart';
 import 'package:smile_shop/data/vos/refund_reason_vo.dart';
+import 'package:smile_shop/network/requests/favourite_product_request.dart';
 import 'package:smile_shop/network/requests/pop_up_request.dart';
 import 'package:smile_shop/network/responses/campaign_history_response.dart';
 import 'package:smile_shop/data/vos/campaign_participant_vo.dart';
@@ -239,4 +240,7 @@ abstract class SmileShopDataAgent {
 
   Future<SuccessNetworkResponse> deleteAccount(
       String token);
+
+  Future<SuccessNetworkResponse> addFavouriteProduct(
+      String token,String acceptLanguage,FavouriteProductRequest request);
 }

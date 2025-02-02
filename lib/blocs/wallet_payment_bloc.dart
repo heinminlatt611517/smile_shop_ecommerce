@@ -67,17 +67,17 @@ class WalletPaymentBloc extends ChangeNotifier {
           .then((response) {
         if (response.data?.responseType == 'url') {
           launchUrl(Uri.parse(response.data?.response)).then((val) {
-            startPollingOrderStatus(response.data?.orderNo, context);
+            startPollingOrderStatus(response.data?.orderId, context);
           });
         } else if (response.data?.responseType == 'qr') {
           showCommonDialog(
                   context: context,
                   dialogWidget:
                       QrDialogView(qrCodeString: response.data?.response));
-          startPollingOrderStatus(response.data?.orderNo, context);
+          startPollingOrderStatus(response.data?.orderId, context);
 
         } else if (response.data?.responseType == 'pin') {
-          startPollingOrderStatus(response.data?.orderNo, context);
+          startPollingOrderStatus(response.data?.orderId, context);
         } else {
           Navigator.of(context).push(MaterialPageRoute(
               builder: (builder) => const RechargeSuccessfulPage()));

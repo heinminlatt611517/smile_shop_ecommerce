@@ -108,6 +108,10 @@ class ProductVO {
   @HiveField(23)
   List<String>? detailImages;
 
+  @JsonKey(name: 'is_favourite')
+  @HiveField(24)
+  bool? isFavouriteProduct;
+
   ProductVO({
     this.id,
     this.name,
@@ -132,6 +136,7 @@ class ProductVO {
     this.detailImages,
     this.video,
     this.specificationList,
+    this.isFavouriteProduct
   });
 
   factory ProductVO.fromJson(Map<String, dynamic> json) => _$ProductVOFromJson(json);
@@ -160,6 +165,7 @@ class ProductVO {
     String? colorName,
     bool? isFavourite,
     String? size,
+    bool? isFavouriteProduct,
   }) {
     return ProductVO(
       id: id ?? this.id,
@@ -182,6 +188,7 @@ class ProductVO {
       colorName: colorName ?? this.colorName,
       isFavourite: isFavourite ?? this.isFavourite,
       size: size ?? this.size,
+      isFavouriteProduct: isFavouriteProduct ?? this.isFavouriteProduct,
     );
   }
 

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:retrofit/error_logger.dart';
 import 'package:retrofit/http.dart';
+import 'package:smile_shop/network/requests/favourite_product_request.dart';
 import 'package:smile_shop/network/requests/pop_up_request.dart';
 import 'package:smile_shop/network/responses/campaign_history_response.dart';
 import 'package:smile_shop/network/requests/address_request.dart';
@@ -475,5 +476,11 @@ abstract class SmileShopApi {
   Future<SuccessNetworkResponse> deleteAccount(
       @Header(kHeaderAuthorization) String token,
       );
+
+  @POST(kEndPointAddFavouriteProduct)
+  Future<SuccessNetworkResponse> addFavouriteProduct(
+      @Header(kHeaderAuthorization) String token,
+      @Header(kHeaderAcceptLanguage) String acceptLanguage,
+      @Body() FavouriteProductRequest request);
 
 }

@@ -26,7 +26,7 @@ class CartPage extends StatelessWidget {
           foregroundColor: Colors.black,
           centerTitle: true,
           title: Text(
-            AppLocalizations.of(context)?.chat ?? '',
+            AppLocalizations.of(context)?.cart ?? '',
             style:const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
         ),
