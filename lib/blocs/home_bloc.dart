@@ -167,25 +167,40 @@ class HomeBloc extends ChangeNotifier {
   }
 
   void onTapFavourite(ProductVO? product, BuildContext context) {
-    _showLoading();
+    if (product == null) return;
     var favoriteProductRequest = FavouriteProductRequest(
-        productId: product?.id,
-        status:
-            product?.isFavouriteProduct == true ? 'unfavourite' : 'favourite');
-    _smileShopModel.addFavouriteProduct(accessToken, kAcceptLanguageEn, favoriteProductRequest).then((response){
-      if(response.status == 200){
-        getProductsWhileOnTapFavourite();
-        showSnackBar(context, '${product?.name} added to favourite successfully!',
-            Colors.green);
+      productId: product.id,
+      status: product.isFavouriteProduct == true ? 'unfavourite' : 'favourite',
+    );
+
+    _smileShopModel
+        .addFavouriteProduct(
+      accessToken,
+      kAcceptLanguageEn,
+      favoriteProductRequest,
+    )
+        .then((response) {
+      if (response.status == 200) {
+        final updatedProduct = product.copyWith(
+          isFavouriteProduct: !(product.isFavouriteProduct ?? false),
+        );
+
+        final productIndex = productList.indexWhere((p) => p.id == product.id);
+        if (productIndex != -1) {
+          productList[productIndex] = updatedProduct;
+        }
+
+        _notifySafely();
+
+        showSnackBar(
+          context,
+          '${product.name} ${updatedProduct.isFavouriteProduct ?? true ? 'added to' : 'removed from'} favourites!',
+          updatedProduct.isFavouriteProduct ?? true ? Colors.green : Colors.red,
+        );
       }
-      debugPrint("Length>>>>>>>${productList.length}");
+    }).catchError((error) {
+      showSnackBar(context, 'Error updating favourite status', Colors.red);
     });
-
-    ////save to database logic
-    // _smileShopModel.saveFavouriteProductToHive(
-    //     product?.copyWith(isFavourite: true, colorName: product.colorName) ??
-    //         ProductVO());
-
   }
 
   void getProductsWhileOnTapFavourite() {

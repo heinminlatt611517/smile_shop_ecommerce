@@ -128,62 +128,7 @@ class PaymentMethodPage extends StatelessWidget {
                                         )),
                           ),
                           const SizedBox(
-                            height: kMargin80,
-                          ),
-                          Consumer<PaymentBloc>(
-                            builder: (context, bloc, child) => CommonButtonView(
-                                label: AppLocalizations.of(context)?.checkOut ?? '',
-                                labelColor: Colors.white,
-                                bgColor: kPrimaryColor,
-                                onTapButton: () {
-                                  ///for make payment api
-                                  if (isFromMyOrderPage == true) {
-                                    if (bloc.formKey.currentState!.validate()) {
-                                      if (bloc.paymentData.isEmpty) {
-                                        showCommonDialog(
-                                            context: context,
-                                            dialogWidget: const ErrorDialogView(
-                                                errorMessage:
-                                                    'Please select payment'));
-                                      } else {
-                                        bloc.makePayment(orderNumber ?? "",
-                                            orderSubTotal ?? "", context);
-                                      }
-                                    }
-                                  }
-
-                                  ///for post order api
-                                  else {
-                                    if (bloc.formKey.currentState!.validate()) {
-                                      List<OrderVariantVO> orderVariants = [];
-                                      for (var product in productList ?? []) {
-                                        
-                                        var subOrderVariantVo = OrderVariantVO(
-                                            qty: product.qtyCount,
-                                            colorName: product.colorName,
-                                            variantAttributeValueId: 1,
-                                            variantProductId:
-                                                product.variantVO.first.id,
-                                            productId: product.id);
-                                        orderVariants.add(subOrderVariantVo);
-                                      }
-                                      if (bloc.paymentData.isEmpty) {
-                                        showCommonDialog(
-                                            context: context,
-                                            dialogWidget: const ErrorDialogView(
-                                                errorMessage:
-                                                    'Please select payment'));
-                                      } else {
-                                        bloc.onTapCheckout(
-                                            promotionPoint ?? 0,
-                                            productSubTotalPrice ?? 0,
-                                            orderVariants,
-                                            context,
-                                            isFromCartPage);
-                                      }
-                                    }
-                                  }
-                                }),
+                            height: 100,
                           ),
                         ],
                       ),
@@ -204,6 +149,65 @@ class PaymentMethodPage extends StatelessWidget {
                   ),
                 ),
             ],
+          ),
+        ),
+        bottomNavigationBar: Container(
+          margin: const EdgeInsets.only(bottom: 30, left: 16, right: 16),
+          height: 40,
+          child: Consumer<PaymentBloc>(
+            builder: (context, bloc, child) => CommonButtonView(
+                label: AppLocalizations.of(context)?.checkOut ?? '',
+                labelColor: Colors.white,
+                bgColor: kPrimaryColor,
+                onTapButton: () {
+                  ///for make payment api
+                  if (isFromMyOrderPage == true) {
+                    if (bloc.formKey.currentState!.validate()) {
+                      if (bloc.paymentData.isEmpty) {
+                        showCommonDialog(
+                            context: context,
+                            dialogWidget: const ErrorDialogView(
+                                errorMessage:
+                                'Please select payment'));
+                      } else {
+                        bloc.makePayment(orderNumber ?? "",
+                            orderSubTotal ?? "", context);
+                      }
+                    }
+                  }
+
+                  ///for post order api
+                  else {
+                    if (bloc.formKey.currentState!.validate()) {
+                      List<OrderVariantVO> orderVariants = [];
+                      for (var product in productList ?? []) {
+
+                        var subOrderVariantVo = OrderVariantVO(
+                            qty: product.qtyCount,
+                            colorName: product.colorName,
+                            variantAttributeValueId: 1,
+                            variantProductId:
+                            product.variantVO.first.id,
+                            productId: product.id);
+                        orderVariants.add(subOrderVariantVo);
+                      }
+                      if (bloc.paymentData.isEmpty) {
+                        showCommonDialog(
+                            context: context,
+                            dialogWidget: const ErrorDialogView(
+                                errorMessage:
+                                'Please select payment'));
+                      } else {
+                        bloc.onTapCheckout(
+                            promotionPoint ?? 0,
+                            productSubTotalPrice ?? 0,
+                            orderVariants,
+                            context,
+                            isFromCartPage);
+                      }
+                    }
+                  }
+                }),
           ),
         ),
       ),

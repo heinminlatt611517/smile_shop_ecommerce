@@ -7,6 +7,8 @@ import 'package:smile_shop/data/vos/sub_category_vo.dart';
 import 'package:smile_shop/network/api_constants.dart';
 import 'package:smile_shop/network/requests/sub_category_request.dart';
 
+import '../network/requests/favourite_product_request.dart';
+
 class SubCategoryBloc extends ChangeNotifier {
   final SmileShopModel _smileShopModel = SmileShopModelImpl();
 
@@ -17,6 +19,7 @@ class SubCategoryBloc extends ChangeNotifier {
   var currentLanguage = kAcceptLanguageEn;
   var authToken = "";
   var endUserId = "";
+  var accessToken = "";
   final int categoryId;
   int pageNumber = 1;
   ScrollController scrollController = ScrollController();
@@ -32,6 +35,8 @@ class SubCategoryBloc extends ChangeNotifier {
     ///get data from database
      authToken =
         _smileShopModel.getLoginResponseFromDatabase()?.refreshToken ?? "";
+    accessToken =
+        _smileShopModel.getLoginResponseFromDatabase()?.accessToken ?? "";
      endUserId =
         _smileShopModel.getLoginResponseFromDatabase()?.data?.id.toString() ??
             "";
@@ -86,13 +91,41 @@ class SubCategoryBloc extends ChangeNotifier {
   }
 
 
+  void onTapFavourite(ProductVO? product, BuildContext context) {
+    if (product == null) return;
+    var favoriteProductRequest = FavouriteProductRequest(
+      productId: product.id,
+      status: product.isFavouriteProduct == true ? 'unfavourite' : 'favourite',
+    );
 
-  void onTapFavourite(ProductVO? product,BuildContext context){
-    _smileShopModel.saveFavouriteProductToHive(
-        product?.copyWith(isFavourite: true) ??
-            ProductVO());
+    _smileShopModel
+        .addFavouriteProduct(
+      accessToken,
+      kAcceptLanguageEn,
+      favoriteProductRequest,
+    )
+        .then((response) {
+      if (response.status == 200) {
+        final updatedProduct = product.copyWith(
+          isFavouriteProduct: !(product.isFavouriteProduct ?? false),
+        );
 
-    showSnackBar(context, '${product?.name} added to favourite successfully!',Colors.green);
+        final productIndex = products.indexWhere((p) => p.id == product.id);
+        if (productIndex != -1) {
+          products[productIndex] = updatedProduct;
+        }
+
+        _notifySafely();
+
+        showSnackBar(
+          context,
+          '${product.name} ${updatedProduct.isFavouriteProduct ?? true ? 'added to' : 'removed from'} favourites!',
+          updatedProduct.isFavouriteProduct ?? true ? Colors.green : Colors.red,
+        );
+      }
+    }).catchError((error) {
+      showSnackBar(context, 'Error updating favourite status', Colors.red);
+    });
   }
 
   void showSnackBar(BuildContext context, String description,Color snackBarColor) {
@@ -118,5 +151,11 @@ class SubCategoryBloc extends ChangeNotifier {
     if (!isDisposed) {
       notifyListeners();
     }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    isDisposed = true;
   }
 }

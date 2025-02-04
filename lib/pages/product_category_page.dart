@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:smile_shop/blocs/product_category_bloc.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
@@ -7,6 +8,7 @@ import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/widgets/custom_app_bar_view.dart';
 import '../list_items/trending_product_list_item_view.dart';
 import '../utils/strings.dart';
+import '../widgets/loading_view.dart';
 
 class ProductCategoryPage extends StatelessWidget {
   final String? categoryName;
@@ -22,25 +24,45 @@ class ProductCategoryPage extends StatelessWidget {
       child: Scaffold(
           backgroundColor: kBackgroundColor,
           appBar: CustomAppBarView(title: categoryName),
-          body: Padding(
-            padding: const EdgeInsets.all(kMarginMedium2),
-            child: Consumer<ProductCategoryBloc>(
-              builder: (context, bloc, child) => CustomScrollView(
-                controller: bloc.scrollController,
-                slivers: const [
-                  ///search bar with back arrow view
-                  //SliverToBoxAdapter(child: SearchBarWithBackArrowView(),),
+          body: Selector<ProductCategoryBloc,bool>(
+              selector: (context, bloc) => bloc.isLoading,
+              builder: (BuildContext context, isLoading, Widget? child) =>
+             Stack(
+               children: [
+                 Padding(
+                  padding: const EdgeInsets.all(kMarginMedium2),
+                  child: Consumer<ProductCategoryBloc>(
+                    builder: (context, bloc, child) => CustomScrollView(
+                      controller: bloc.scrollController,
+                      slivers: const [
+                        ///search bar with back arrow view
+                        //SliverToBoxAdapter(child: SearchBarWithBackArrowView(),),
 
-                  ///spacer
-                  //SliverToBoxAdapter(child: SizedBox(height: kMarginLarge,)),
+                        ///spacer
+                        //SliverToBoxAdapter(child: SizedBox(height: kMarginLarge,)),
 
-                  ///product view
-                  SliverToBoxAdapter(
-                    child: ProductsView(),
+                        ///product view
+                        SliverToBoxAdapter(
+                          child: ProductsView(),
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
-            ),
+                             ),
+
+                 ///loading view
+                 if (isLoading)
+                   Container(
+                     color: Colors.black12,
+                     child: const Center(
+                       child: LoadingView(
+                         indicatorColor: kPrimaryColor,
+                         indicator: Indicator.ballSpinFadeLoader,
+                       ),
+                     ),
+                   ),
+               ],
+             ),
           )),
     );
   }

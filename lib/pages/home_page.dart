@@ -535,73 +535,76 @@ class TrendingProductsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(kMarginMedium2),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-           Text(
-             AppLocalizations.of(context)!.trendingProducts,
-            style:const TextStyle(
-                fontWeight: FontWeight.bold, fontSize: kTextRegular3x),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Selector<HomeBloc, List<ProductVO>>(
-              selector: (context, bloc) => bloc.productList,
-              builder: (context, products, child) {
-                return products.isEmpty
-                    ? const Center(
-                        child: CircularProgressIndicator(color: kPrimaryColor,),
-                      )
-                    : Selector<HomeBloc, bool>(
-                        selector: (context, bloc) => bloc.isLoading,
-                        builder: (context, isLoading, child) {
-                          return Column(
-                            children: [
-                              GridView.builder(
-                                shrinkWrap: true,
-                                padding: EdgeInsets.zero,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemBuilder: (context, index) {
-                                  return TrendingProductListItemView(
-                                    productVO: products[index],
-                                    onTapFavourite: (product) {
-                                      var bloc = Provider.of<HomeBloc>(context,
-                                          listen: false);
-                                      bloc.onTapFavourite(product, context);
-                                    },
-                                  );
-                                },
-                                itemCount: products.length,
-                                gridDelegate:
-                                    const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  mainAxisSpacing: 14.0,
-                                  crossAxisSpacing: 10.0,
-                                  childAspectRatio: 2 / 2.7,
+    return Consumer<HomeBloc>(
+      builder: (context,bloc,child)=>
+       Padding(
+        padding: const EdgeInsets.all(kMarginMedium2),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+             Text(
+               AppLocalizations.of(context)!.trendingProducts,
+              style:const TextStyle(
+                  fontWeight: FontWeight.bold, fontSize: kTextRegular3x),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Selector<HomeBloc, List<ProductVO>>(
+                selector: (context, bloc) => bloc.productList,
+                builder: (context, products, child) {
+                  return products.isEmpty
+                      ? const Center(
+                          child: CircularProgressIndicator(color: kPrimaryColor,),
+                        )
+                      : Selector<HomeBloc, bool>(
+                          selector: (context, bloc) => bloc.isLoading,
+                          builder: (context, isLoading, child) {
+                            return Column(
+                              children: [
+                                GridView.builder(
+                                  shrinkWrap: true,
+                                  padding: EdgeInsets.zero,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemBuilder: (context, index) {
+                                    return TrendingProductListItemView(
+                                      productVO: products[index],
+                                      onTapFavourite: (product) {
+                                        var bloc = Provider.of<HomeBloc>(context,
+                                            listen: false);
+                                        bloc.onTapFavourite(product, context);
+                                      },
+                                    );
+                                  },
+                                  itemCount: products.length,
+                                  gridDelegate:
+                                      const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    mainAxisSpacing: 14.0,
+                                    crossAxisSpacing: 10.0,
+                                    childAspectRatio: 2 / 2.7,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 30,
-                              ),
-                              Visibility(
-                                  visible: isLoading,
-                                  child: const Center(
-                                    child: CircularProgressIndicator(
-                                      color: kPrimaryColor,
-                                    ),
-                                  )),
-                              const SizedBox(
-                                height: 40,
-                              )
-                            ],
-                          );
-                        },
-                      );
-              }),
-        ],
+                                const SizedBox(
+                                  height: 30,
+                                ),
+                                Visibility(
+                                    visible: isLoading,
+                                    child: const Center(
+                                      child: CircularProgressIndicator(
+                                        color: kPrimaryColor,
+                                      ),
+                                    )),
+                                const SizedBox(
+                                  height: 40,
+                                )
+                              ],
+                            );
+                          },
+                        );
+                }),
+          ],
+        ),
       ),
     );
   }

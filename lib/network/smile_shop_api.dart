@@ -29,6 +29,7 @@ import 'package:smile_shop/network/responses/campaign_participant_response.dart'
 import 'package:smile_shop/network/responses/campaign_response.dart';
 import 'package:smile_shop/network/responses/category_response.dart';
 import 'package:smile_shop/network/responses/checkIn_response.dart';
+import 'package:smile_shop/network/responses/favourite_product_response.dart';
 import 'package:smile_shop/network/responses/home_popup_data_response.dart';
 import 'package:smile_shop/network/responses/login_response.dart';
 import 'package:smile_shop/network/responses/my_team_response.dart';
@@ -482,5 +483,11 @@ abstract class SmileShopApi {
       @Header(kHeaderAuthorization) String token,
       @Header(kHeaderAcceptLanguage) String acceptLanguage,
       @Body() FavouriteProductRequest request);
+
+  @GET(kEndPointGetFavouriteProduct)
+  Future<FavouriteProductResponse> getFavouriteProduct(
+      @Header(kHeaderAuthorization) String token,
+      @Header(kHeaderAcceptLanguage) String acceptLanguage,
+      );
 
 }

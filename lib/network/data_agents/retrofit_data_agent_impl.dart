@@ -983,6 +983,18 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
       throw _createException(error);
     });
   }
+
+  @override
+  Future<List<ProductVO>> getFavouriteProducts(String token, String acceptLanguage) {
+    return mApi
+        .getFavouriteProduct('Bearer $token',acceptLanguage)
+        .asStream()
+        .map((response) => response.data ?? [])
+        .first
+        .catchError((error) {
+      throw _createException(error);
+    });
+  }
 }
 
 ///custom exception

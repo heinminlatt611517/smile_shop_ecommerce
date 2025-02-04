@@ -243,4 +243,7 @@ abstract class SmileShopDataAgent {
 
   Future<SuccessNetworkResponse> addFavouriteProduct(
       String token,String acceptLanguage,FavouriteProductRequest request);
+
+  Future<List<ProductVO>> getFavouriteProducts(
+      String token,String acceptLanguage);
 }

@@ -618,4 +618,9 @@ class SmileShopModelImpl extends SmileShopModel {
    return mDataAgent.addFavouriteProduct(token, acceptLanguage, request);
   }
 
+  @override
+  Future<List<ProductVO>> getFavouriteProducts(String token, String acceptLanguage) {
+   return mDataAgent.getFavouriteProducts(token, acceptLanguage);
+  }
+
 }

@@ -135,26 +135,7 @@ class WalletPaymentMethodPage extends StatelessWidget {
                                     )),
                           ),
                           const SizedBox(
-                            height: kMargin80,
-                          ),
-                          Consumer<WalletPaymentBloc>(
-                            builder: (context, bloc, child) => CommonButtonView(
-                                label: AppLocalizations.of(context)?.confirm ?? '',
-                                labelColor: Colors.white,
-                                bgColor: kPrimaryColor,
-                                onTapButton: () {
-                                  if (bloc.formKey.currentState!.validate()) {
-                                    if (bloc.paymentData.isEmpty) {
-                                      showCommonDialog(
-                                          context: context,
-                                          dialogWidget: const ErrorDialogView(
-                                              errorMessage:
-                                                  'Please select payment'));
-                                    } else {
-                                      bloc.onTapConfirm(context);
-                                    }
-                                  }
-                                }),
+                            height: 100,
                           ),
                         ],
                       ),
@@ -175,6 +156,29 @@ class WalletPaymentMethodPage extends StatelessWidget {
                   ),
                 ),
             ],
+          ),
+        ),
+        bottomNavigationBar: Container(
+          margin: const EdgeInsets.only(bottom: 30, left: 16, right: 16),
+          height: 40,
+          child: Consumer<WalletPaymentBloc>(
+            builder: (context, bloc, child) => CommonButtonView(
+                label: AppLocalizations.of(context)?.confirm ?? '',
+                labelColor: Colors.white,
+                bgColor: kPrimaryColor,
+                onTapButton: () {
+                  if (bloc.formKey.currentState!.validate()) {
+                    if (bloc.paymentData.isEmpty) {
+                      showCommonDialog(
+                          context: context,
+                          dialogWidget: const ErrorDialogView(
+                              errorMessage:
+                              'Please select payment'));
+                    } else {
+                      bloc.onTapConfirm(context);
+                    }
+                  }
+                }),
           ),
         ),
       ),

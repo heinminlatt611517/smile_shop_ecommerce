@@ -5,6 +5,8 @@ import 'package:smile_shop/data/model/smile_shop_model_impl.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
 import 'package:smile_shop/network/api_constants.dart';
 
+import '../network/requests/favourite_product_request.dart';
+
 class ProductCategoryBloc extends ChangeNotifier {
   final SmileShopModel _smileShopModel = SmileShopModelImpl();
 
@@ -13,6 +15,7 @@ class ProductCategoryBloc extends ChangeNotifier {
   var currentLanguage = kAcceptLanguageEn;
   var endUserId = "";
   var authToken = "";
+  var accessToken = "";
   var isDisposed = false;
   int pageNumber = 1;
   bool isLoading = false;
@@ -20,15 +23,19 @@ class ProductCategoryBloc extends ChangeNotifier {
 
   ProductCategoryBloc(this.subCategoryId) {
     scrollController.addListener(
-          () {
-        if (scrollController.position.pixels == scrollController.position.maxScrollExtent) {
+      () {
+        if (scrollController.position.pixels ==
+            scrollController.position.maxScrollExtent) {
           getProducts();
         }
       },
     );
+
     ///get data from database
     authToken =
         _smileShopModel.getLoginResponseFromDatabase()?.refreshToken ?? "";
+    accessToken =
+        _smileShopModel.getLoginResponseFromDatabase()?.accessToken ?? "";
     endUserId =
         _smileShopModel.getLoginResponseFromDatabase()?.data?.id.toString() ??
             "";
@@ -49,39 +56,71 @@ class ProductCategoryBloc extends ChangeNotifier {
       currentLanguage = kAcceptLanguageEn;
     }
     _notifySafely();
+    _showLoading();
     _smileShopModel
         .searchProductsBySubCategoryId(
             authToken, currentLanguage, endUserId, 1, subCategoryId ?? 0)
         .then((productResponse) {
       products = productResponse;
-      notifyListeners();
-    });
+      _notifySafely();
+    }).whenComplete(() => _hideLoading());
   }
 
   void onTapFavourite(ProductVO? product, BuildContext context) {
-    _smileShopModel.saveFavouriteProductToHive(
-        product?.copyWith(isFavourite: true) ?? ProductVO());
+    if (product == null) return;
+    var favoriteProductRequest = FavouriteProductRequest(
+      productId: product.id,
+      status: product.isFavouriteProduct == true ? 'unfavourite' : 'favourite',
+    );
 
-    showSnackBar(context, '${product?.name} added to favourite successfully!',
-        Colors.green);
+    _smileShopModel
+        .addFavouriteProduct(
+      accessToken,
+      kAcceptLanguageEn,
+      favoriteProductRequest,
+    )
+        .then((response) {
+      if (response.status == 200) {
+        final updatedProduct = product.copyWith(
+          isFavouriteProduct: !(product.isFavouriteProduct ?? false),
+        );
+
+        final productIndex = products.indexWhere((p) => p.id == product.id);
+        if (productIndex != -1) {
+          products[productIndex] = updatedProduct;
+        }
+
+        _notifySafely();
+
+        showSnackBar(
+          context,
+          '${product.name} ${updatedProduct.isFavouriteProduct ?? true ? 'added to' : 'removed from'} favourites!',
+          updatedProduct.isFavouriteProduct ?? true ? Colors.green : Colors.red,
+        );
+      }
+    }).catchError((error) {
+      showSnackBar(context, 'Error updating favourite status', Colors.red);
+    });
   }
 
-  void getProducts() async {
-    // isLoading = true;
-    // notifyListeners();
-
+  Future<void> getProducts() async {
     ///get data from database
-    var authToken = _smileShopModel.getLoginResponseFromDatabase()?.refreshToken ?? "";
-    var endUserId = _smileShopModel.getLoginResponseFromDatabase()?.data?.id.toString() ?? "";
+    var authToken =
+        _smileShopModel.getLoginResponseFromDatabase()?.refreshToken ?? "";
+    var endUserId =
+        _smileShopModel.getLoginResponseFromDatabase()?.data?.id.toString() ??
+            "";
 
     ///get product list
-    await _smileShopModel.searchProductsBySubCategoryId(authToken, kAcceptLanguageEn, endUserId, pageNumber, subCategoryId ?? 0).then((productResponse) {
+    await _smileShopModel
+        .searchProductsBySubCategoryId(authToken, kAcceptLanguageEn, endUserId,
+            pageNumber, subCategoryId ?? 0)
+        .then((productResponse) {
       pageNumber += 1;
       products.addAll(productResponse);
     });
 
-    //isLoading = false;
-    notifyListeners();
+    _notifySafely();
   }
 
   void showSnackBar(
@@ -99,6 +138,16 @@ class ProductCategoryBloc extends ChangeNotifier {
     if (!isDisposed) {
       notifyListeners();
     }
+  }
+
+  void _showLoading() {
+    isLoading = true;
+    _notifySafely();
+  }
+
+  void _hideLoading() {
+    isLoading = false;
+    _notifySafely();
   }
 
   @override

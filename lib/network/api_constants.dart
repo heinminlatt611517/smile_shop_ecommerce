@@ -60,6 +60,7 @@ const String kEndPointChangePassword = "/api/change/password";
 const String kEndPointGetRefundReason = "/api/refund-reason";
 const String kEndPointAccountDelete = "/api/profile/delete-account";
 const String kEndPointAddFavouriteProduct = "/api/toggle-favourite-product";
+const String kEndPointGetFavouriteProduct= "/api/favourite-products";
 
 
 ///Parameters
