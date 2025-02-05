@@ -189,7 +189,8 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> with SingleTick
                                   var bloc = Provider.of<ProductDetailsBloc>(context, listen: false);
                                   bloc.onTapFavourite(product, context);
                                 },
-                                icon: Icons.favorite_outline,
+                                iconColor:product?.isFavouriteProduct == true ? kPrimaryColor : null,
+                                icon:product?.isFavouriteProduct == true ? Icons.favorite_outlined  : Icons.favorite_outline,
                                 label: AppLocalizations.of(context)!.favourite,
                               ),
 

@@ -21,113 +21,119 @@ class MyAddressPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => MyAddressBloc(),
-      child: Scaffold(
-        backgroundColor: kBackgroundColor,
-        appBar: CustomAppBarView(title: AppLocalizations.of(context)?.myAddress ?? ''),
-        body: Selector<MyAddressBloc, bool>(
-          selector: (context, bloc) => bloc.isLoading,
-          builder: (context, isLoading, child) => Stack(
-            children: [
-              ///body view
-              SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(kMarginMedium2),
-                  child: Column(
-                    children: [
-                      const SizedBox(
-                        height: 13,
-                      ),
+      child: WillPopScope(
+        onWillPop: () async {
+          Navigator.pop(context,true);
+          return true;
+         },
+        child: Scaffold(
+          backgroundColor: kBackgroundColor,
+          appBar: CustomAppBarView(title: AppLocalizations.of(context)?.myAddress ?? ''),
+          body: Selector<MyAddressBloc, bool>(
+            selector: (context, bloc) => bloc.isLoading,
+            builder: (context, isLoading, child) => Stack(
+              children: [
+                ///body view
+                SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(kMarginMedium2),
+                    child: Column(
+                      children: [
+                        const SizedBox(
+                          height: 13,
+                        ),
 
-                      ///add address view
-                      InkWell(
-                        onTap: () async {
-                          final bool? isUpdated =
-                              await Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (builder) => const AddNewAddressPage(),
+                        ///add address view
+                        InkWell(
+                          onTap: () async {
+                            final bool? isUpdated =
+                                await Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (builder) => const AddNewAddressPage(),
+                              ),
+                            );
+                            if (isUpdated == true) {
+                              context.read<MyAddressBloc>().refreshAddress();
+                            }
+                          },
+                          child: Container(
+                            height: 100,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: kPrimaryColor, width: 1),
+                              borderRadius: BorderRadius.circular(kMarginMedium2),
                             ),
-                          );
-                          if (isUpdated == true) {
-                            context.read<MyAddressBloc>().refreshAddress();
-                          }
-                        },
-                        child: Container(
-                          height: 100,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: kPrimaryColor, width: 1),
-                            borderRadius: BorderRadius.circular(kMarginMedium2),
-                          ),
-                          child:  Center(
-                            child: Text(
-                              AppLocalizations.of(context)?.addAddress ?? '',
-                              style: const TextStyle(fontSize: kTextRegular2x),
+                            child:  Center(
+                              child: Text(
+                                AppLocalizations.of(context)?.addAddress ?? '',
+                                style: const TextStyle(fontSize: kTextRegular2x),
+                              ),
                             ),
                           ),
                         ),
-                      ),
 
-                      const SizedBox(
-                        height: 13,
-                      ),
+                        const SizedBox(
+                          height: 13,
+                        ),
 
-                      ///address list item view
-                      Selector<MyAddressBloc, List<AddressVO>>(
-                        selector: (context, bloc) => bloc.addressList,
-                        builder: (context, addressList, child) =>
-                            ListView.separated(
-                          itemCount: addressList.length,
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) {
-                            return InkWell(
-                              onTap: () {
-                                Navigator.pop(context,
-                                    '${addressList[index].townshipVO?.name},${addressList[index].stateVO?.name}');
-                              },
-                              child: AddressListItemView(
-                                  addressVO: addressList[index],
-                                  onTapEdit: () async {
-                                    final bool? isUpdated =
-                                        await Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (builder) => EditAddressPage(
-                                          addressVO: addressList[index],
+                        ///address list item view
+                        Selector<MyAddressBloc, List<AddressVO>>(
+                          selector: (context, bloc) => bloc.addressList,
+                          builder: (context, addressList, child) =>
+                              ListView.separated(
+                            itemCount: addressList.length,
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) {
+                              return InkWell(
+                                onTap: () {
+                                  // Navigator.pop(context,
+                                  //     '${addressList[index].townshipVO?.name},${addressList[index].stateVO?.name}');
+                                },
+                                child: AddressListItemView(
+                                    addressVO: addressList[index],
+                                    onTapEdit: () async {
+                                      final bool? isUpdated =
+                                          await Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (builder) => EditAddressPage(
+                                            addressVO: addressList[index],
+                                          ),
                                         ),
-                                      ),
-                                    );
-                                    if (isUpdated == true) {
-                                      context
-                                          .read<MyAddressBloc>()
-                                          .refreshAddress();
-                                    }
-                                  }),
-                            );
-                          },
-                          separatorBuilder: (context, index) {
-                            return Container(
-                              height: 1,
-                              width: double.infinity,
-                              color: Colors.grey,
-                            );
-                          },
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-
-              ///loading view
-              if (isLoading)
-                Container(
-                  color: kBackgroundColor,
-                  child: const Center(
-                    child: LoadingView(
-                      indicatorColor: kPrimaryColor,
-                      indicator: Indicator.ballSpinFadeLoader,
+                                      );
+                                      if (isUpdated == true) {
+                                        context
+                                            .read<MyAddressBloc>()
+                                            .refreshAddress();
+                                      }
+                                    }),
+                              );
+                            },
+                            separatorBuilder: (context, index) {
+                              return Container(
+                                height: 1,
+                                width: double.infinity,
+                                color: Colors.grey,
+                              );
+                            },
+                          ),
+                        )
+                      ],
                     ),
                   ),
                 ),
-            ],
+
+                ///loading view
+                if (isLoading)
+                  Container(
+                    color: kBackgroundColor,
+                    child: const Center(
+                      child: LoadingView(
+                        indicatorColor: kPrimaryColor,
+                        indicator: Indicator.ballSpinFadeLoader,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           ),
         ),
       ),

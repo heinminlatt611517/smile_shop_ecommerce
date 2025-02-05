@@ -19,6 +19,9 @@ class AddressVO {
   @JsonKey(name: "address")
   final String? address;
 
+  @JsonKey(name: "name")
+  final String? name;
+
   @JsonKey(name: "is_default")
   final int? isDefault;
 
@@ -53,6 +56,7 @@ class AddressVO {
     this.id,
     this.enduserId,
     this.phone,
+    this.name,
     this.address,
     this.isDefault,
     this.categoryId,

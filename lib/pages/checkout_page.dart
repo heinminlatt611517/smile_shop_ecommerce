@@ -1,6 +1,7 @@
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:smile_shop/blocs/checkout_bloc.dart';
 import 'package:smile_shop/data/vos/address_vo.dart';
@@ -16,9 +17,9 @@ import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 import '../data/vos/product_vo.dart';
 import '../widgets/cached_network_image_view.dart';
+import '../widgets/loading_view.dart';
 import 'payment_method_page.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 
 class CheckoutPage extends StatelessWidget {
   final List<ProductVO>? productList;
@@ -30,63 +31,85 @@ class CheckoutPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => CheckOutBloc(productList ?? [],context),
+      create: (context) => CheckOutBloc(productList ?? [], context),
       child: Scaffold(
         backgroundColor: kBackgroundColor,
-        appBar: CustomAppBarView(title: AppLocalizations.of(context)?.checkOut ?? ''),
-        body: Selector<CheckOutBloc, List<AddressVO>>(
-          selector: (context, bloc) => bloc.addressList,
-          builder: (context, addressList, child) => SingleChildScrollView(
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 13,
-                ),
+        appBar: CustomAppBarView(
+            title: AppLocalizations.of(context)?.checkOut ?? ''),
+        body: Selector<CheckOutBloc, bool>(
+          selector: (context, bloc) => bloc.isLoading,
+          builder: (context, isLoading, child) => Stack(
+            children: [
+              ///content view
+              Selector<CheckOutBloc, List<AddressVO>>(
+                selector: (context, bloc) => bloc.addressList,
+                builder: (context, addressList, child) => SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      const SizedBox(
+                        height: 13,
+                      ),
 
-                ///product
-                ListView.builder(
-                    itemCount: productList?.length,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      return CartListItemView(
-                        isCheckout: true,
-                        productVO: productList?[index],
-                      );
-                    }),
+                      ///product
+                      ListView.builder(
+                          itemCount: productList?.length,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            return CartListItemView(
+                              isCheckout: true,
+                              productVO: productList?[index],
+                            );
+                          }),
 
-                ///address view
-                _BuildAddressView(
-                  addressList: addressList,
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
+                      ///address view
+                      _BuildAddressView(
+                        addressList: addressList,
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
 
-                ///delivery option view
-                const _BuildDeliveryOptionView(),
-                const SizedBox(
-                  height: 20,
-                ),
+                      ///delivery option view
+                      const _BuildDeliveryOptionView(),
+                      const SizedBox(
+                        height: 20,
+                      ),
 
-                ///promotion point view
-                Consumer<CheckOutBloc>(
-                  builder: (context, bloc, child) => _BuildPromotionPointView(
-                    productVO: productList?.first,
-                    bloc: bloc,
+                      ///promotion point view
+                      Consumer<CheckOutBloc>(
+                        builder: (context, bloc, child) =>
+                            _BuildPromotionPointView(
+                          productVO: productList?.first,
+                          bloc: bloc,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+
+                      ///order summary view
+                      const _BuildOrderSummaryView(),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
+              ),
 
-                ///order summary view
-                const _BuildOrderSummaryView(),
-                const SizedBox(
-                  height: 20,
+              ///loading view
+              if (isLoading)
+                Container(
+                  color: Colors.black12,
+                  child: const Center(
+                    child: LoadingView(
+                      indicatorColor: kPrimaryColor,
+                      indicator: Indicator.ballSpinFadeLoader,
+                    ),
+                  ),
                 ),
-              ],
-            ),
+            ],
           ),
         ),
 
@@ -94,28 +117,26 @@ class CheckoutPage extends StatelessWidget {
         bottomNavigationBar: Consumer<CheckOutBloc>(
           builder: (context, bloc, child) => GestureDetector(
             onTap: () {
-              if(bloc.addressForShow == ""){
+              if (bloc.defaultAddressVO == null) {
                 showTopSnackBar(
-                  displayDuration:const Duration(milliseconds: 300),
+                  displayDuration: const Duration(milliseconds: 300),
                   Overlay.of(context),
                   const CustomSnackBar.error(
-                    message:
-                    "Please select address",
+                    message: "Please select address",
                   ),
                 );
-              }
-              else {
+              } else {
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (builder) => PaymentMethodPage(
-                      productSubTotalPrice: bloc.totalSummaryProductPrice,
-                      isFromCartPage: isFromCartPage,
-                      productList: productList,
-                      promotionPoint: bloc.isSelectedUsePromotion == true
-                          ? GetStorage().read(kBoxKeyPromotionPoint)
-                          : 0, isFromMyOrderPage: false,
-                    )));
+                          productSubTotalPrice: bloc.totalSummaryProductPrice,
+                          isFromCartPage: isFromCartPage,
+                          productList: productList,
+                          promotionPoint: bloc.isSelectedUsePromotion == true
+                              ? GetStorage().read(kBoxKeyPromotionPoint)
+                              : 0,
+                          isFromMyOrderPage: false,
+                        )));
               }
-
             },
             child: Container(
               margin: const EdgeInsets.only(bottom: 30, left: 16, right: 16),
@@ -146,13 +167,20 @@ class _BuildAddressView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<CheckOutBloc>(
-      builder: (context,bloc,child)=>
-       InkWell(
-        onTap: () async{
-          final String? addressName = await Navigator.of(context).push(
-              MaterialPageRoute(builder: (builder) => const MyAddressPage()));
-          if (addressName != null) {
-            bloc.onChangedAddressForShow(addressName);
+      builder: (context, bloc, child) => InkWell(
+        onTap: () async {
+          // final String? addressName = await Navigator.of(context).push(
+          //     MaterialPageRoute(builder: (builder) => const MyAddressPage()));
+          // if (addressName != null) {
+          //   bloc.onChangedAddressForShow(addressName);
+          // }
+          final bool? isUpdated = await Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (builder) => const MyAddressPage(),
+            ),
+          );
+          if (isUpdated == true) {
+            context.read<CheckOutBloc>().refreshAddress();
           }
         },
         child: Container(
@@ -174,7 +202,8 @@ class _BuildAddressView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Flexible(
-                        child: Text(bloc.addressForShow,
+                        child: Text(
+                     bloc.defaultAddressVO != null ? '${bloc.defaultAddressVO?.townshipVO?.name},${bloc.defaultAddressVO?.stateVO?.name}' : '',
                       overflow: TextOverflow.ellipsis,
                     )),
                     const SizedBox(
@@ -283,7 +312,10 @@ class _BuildOrderSummaryView extends StatelessWidget {
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text(AppLocalizations.of(context)?.delivery ?? ''), const Text('Ks 0')],
+            children: [
+              Text(AppLocalizations.of(context)?.delivery ?? ''),
+              const Text('Ks 0')
+            ],
           ),
           const SizedBox(
             height: 20,
@@ -416,11 +448,14 @@ Widget deliveryOptionModalSheet(BuildContext context, CheckOutBloc bloc) {
                     width: 1),
                 color: kFillingFastColor.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(10)),
-            child:  Padding(
+            child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: kMarginMedium),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [Text(AppLocalizations.of(context)?.standardDelivery ?? ''), Text('Free')],
+                children: [
+                  Text(AppLocalizations.of(context)?.standardDelivery ?? ''),
+                  Text('Free')
+                ],
               ),
             ),
           ),
@@ -445,11 +480,14 @@ Widget deliveryOptionModalSheet(BuildContext context, CheckOutBloc bloc) {
                     width: 1),
                 color: kFillingFastColor.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(10)),
-            child:  Padding(
+            child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: kMarginMedium),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [Text(AppLocalizations.of(context)?.specialDelivery ?? ''), Text('Ks 3500')],
+                children: [
+                  Text(AppLocalizations.of(context)?.specialDelivery ?? ''),
+                  Text('Ks 3500')
+                ],
               ),
             ),
           ),

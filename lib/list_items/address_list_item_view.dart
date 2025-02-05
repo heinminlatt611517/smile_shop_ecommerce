@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smile_shop/data/vos/address_vo.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AddressListItemView extends StatelessWidget {
   final Function() onTapEdit;
@@ -31,9 +32,9 @@ class AddressListItemView extends StatelessWidget {
               ///name and phone number
                Row(
                 children: [
-                  const Text(
-                    'Customer Name',
-                    style: TextStyle(fontSize: kTextRegular),
+                   Text(
+                    addressVO?.name ?? "",
+                    style:const TextStyle(fontSize: kTextRegular),
                   ),
                   const SizedBox(width: kMarginMedium2,),
                   Text(
@@ -54,15 +55,18 @@ class AddressListItemView extends StatelessWidget {
               const SizedBox(height: kMarginMedium,),
 
               ///home or office button
-              IntrinsicWidth(
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: Colors.grey.withOpacity(0.5),
-                      borderRadius: BorderRadius.circular(kMarginMedium)),
-                  child:  Center(
-                    child: Padding(
-                      padding:const EdgeInsets.symmetric(horizontal: 4,vertical: 2),
-                      child: Text(addressVO?.categoryVO?.name ?? ""),
+              Visibility(
+                visible: addressVO?.categoryVO != null,
+                child: IntrinsicWidth(
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.grey.withOpacity(0.5),
+                        borderRadius: BorderRadius.circular(kMarginMedium)),
+                    child:  Center(
+                      child: Padding(
+                        padding:const EdgeInsets.symmetric(horizontal: 4,vertical: 2),
+                        child: Text(addressVO?.categoryVO?.name ?? ""),
+                      ),
                     ),
                   ),
                 ),
@@ -73,9 +77,9 @@ class AddressListItemView extends StatelessWidget {
           ///edit
           InkWell(
               onTap: onTapEdit,
-              child: const Text(
-                'Edit',
-                style: TextStyle(
+              child:  Text(
+                AppLocalizations.of(context)?.edit ?? '',
+                style:const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: kTextRegular, color: kPrimaryColor),
               )),

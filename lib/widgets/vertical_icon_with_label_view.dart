@@ -4,12 +4,14 @@ class VerticalIconWithLabelView extends StatelessWidget {
   final IconData icon;
   final String label;
   final Function() onTap;
+  final Color? iconColor;
 
   const VerticalIconWithLabelView(
       {super.key,
       required this.icon,
       required this.label,
-      required this.onTap});
+      required this.onTap,
+      this.iconColor});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +22,7 @@ class VerticalIconWithLabelView extends StatelessWidget {
         children: [
           Icon(
             icon,
-            color: Colors.black,
+            color:iconColor ?? Colors.black,
             size: 20,
           ),
           const SizedBox(

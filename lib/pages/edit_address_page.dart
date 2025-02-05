@@ -278,7 +278,7 @@ class NameAndPhoneInputView extends StatelessWidget {
           Consumer<EditAddressBloc>(
             builder: (context, bloc, child) => TextFieldWithLabelInputView(
                 hint: name,
-                label: 'Name',
+                label: AppLocalizations.of(context)?.name ?? '',
                 onChanged: (value) {
                   bloc.onNameChanged(value);
                 }),
@@ -289,7 +289,7 @@ class NameAndPhoneInputView extends StatelessWidget {
           Consumer<EditAddressBloc>(
             builder: (context, bloc, child) => TextFieldWithLabelInputView(
                 hint: phone,
-                label: 'Phone',
+                label: AppLocalizations.of(context)?.phone ?? '',
                 onChanged: (value) {
                   bloc.onPhoneNumberChanged(value);
                 }),
@@ -336,7 +336,7 @@ class StateTownshipAndMapDropdownView extends StatelessWidget {
                 return DynamicDropDownWidget(
                     initValue: states.isEmpty ? null : foundState,
                     hintText: 'Select state',
-                    label: 'State',
+                    label: AppLocalizations.of(context)?.state ?? '',
                     items: states,
                     onSelect: (value) {
                       bloc.onStateIdChanged(value.id);
@@ -354,7 +354,7 @@ class StateTownshipAndMapDropdownView extends StatelessWidget {
                 if (isLoading) {
                   return DynamicDropDownWidget(
                       hintText: 'Select township',
-                      label: 'Township',
+                      label: AppLocalizations.of(context)?.township ?? '',
                       items: [],
                       onSelect: (value) {});
                 } else {
@@ -375,7 +375,7 @@ class StateTownshipAndMapDropdownView extends StatelessWidget {
                         return DynamicDropDownWidget(
                             initValue: townships.isEmpty ? null : foundTownship,
                             hintText: 'Select township',
-                            label: 'Township',
+                            label: AppLocalizations.of(context)?.township ?? '',
                             items: townships,
                             onSelect: (value) {
                               bloc.onTownshipIdChanged(value.id);

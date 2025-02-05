@@ -19,7 +19,7 @@ class CustomAppBarView extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: Colors.white,
       title:  Row(children: [InkWell(
         onTap: (){
-          Navigator.pop(context);
+          Navigator.pop(context,true);
         },
         child:const SvgImageView(
           imageName: kBackSvgIcon,

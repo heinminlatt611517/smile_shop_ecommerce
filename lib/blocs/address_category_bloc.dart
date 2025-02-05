@@ -13,7 +13,6 @@ class AddressCategoryBloc extends ChangeNotifier {
   final SmileShopModel _smileShopModel = SmileShopModelImpl();
 
   AddressCategoryBloc(int index) {
-    debugPrint("Index:::$index");
     setInitialSelectedIndex(index);
     accessToken =
         _smileShopModel.getLoginResponseFromDatabase()?.accessToken ?? "";
@@ -21,6 +20,7 @@ class AddressCategoryBloc extends ChangeNotifier {
     ///get address categories list
     _smileShopModel.addressCategories(accessToken).then((addressCategoryResponse) {
       addressCategories = addressCategoryResponse;
+      debugPrint("AddressCategoryLength>>>>>>${addressCategories.length}");
       _notifySafely();
     });
   }

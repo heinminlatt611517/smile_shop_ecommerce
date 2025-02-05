@@ -114,9 +114,9 @@ class PromotionPointPage extends StatelessWidget {
                           children: [
                             bloc.selectedSegment == 0
                                 ? _buildIncomeAndOutcomePointListView(
-                                    promotions, 'Income Points')
+                                    promotions, AppLocalizations.of(context)?.incomePoints ?? '')
                                 : _buildIncomeAndOutcomePointListView(
-                                    promotions, 'Outcome Points'),
+                                    promotions, AppLocalizations.of(context)?.outcomePoints ?? ''),
                             // Loading view
                             if (isLoading)
                               const Padding(

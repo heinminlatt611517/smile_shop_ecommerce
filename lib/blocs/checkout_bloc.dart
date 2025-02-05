@@ -20,7 +20,9 @@ class CheckOutBloc extends ChangeNotifier {
   int deliveryFeePrice = 0;
   List<int> subTotalPrice = [];
   List<AddressVO> addressList = [];
+  AddressVO? defaultAddressVO;
   bool isDisposed = false;
+  bool isLoading = false;
   bool isSelectedStandardDelivery = true;
   bool isSelectedSpecialDelivery = false;
   BuildContext? context;
@@ -39,6 +41,7 @@ class CheckOutBloc extends ChangeNotifier {
 
   /// Call the API to load the address
   void _loadAddress() {
+    _showLoading();
     var accessToken =
         _smileShopModel.getLoginResponseFromDatabase()?.accessToken ?? "";
 
@@ -46,7 +49,13 @@ class CheckOutBloc extends ChangeNotifier {
         .address(accessToken, kAcceptLanguageEn)
         .then((addressResponse) {
       addressList = addressResponse.data?.addressVO ?? [];
-      notifyListeners();
+      if(addressList.isNotEmpty){
+        defaultAddressVO = addressList.firstWhere((e)=> e.isDefault == 1);
+      }
+      else {
+        defaultAddressVO = null;
+      }
+      _notifySafely();
     }).catchError((error){
       if (error.toString().toLowerCase() == 'unauthenticated') {
         showCommonDialog(
@@ -54,7 +63,7 @@ class CheckOutBloc extends ChangeNotifier {
           dialogWidget: SessionExpiredDialogView(),
         );
       }
-    });
+    }).whenComplete(()=>_hideLoading());
   }
 
   void onChangedAddressForShow(String newAddress){
@@ -63,7 +72,6 @@ class CheckOutBloc extends ChangeNotifier {
   }
 
   void refreshAddress() {
-    debugPrint("RefreshAddress");
     _loadAddress();
   }
 
@@ -112,6 +120,15 @@ class CheckOutBloc extends ChangeNotifier {
     if (!isDisposed) {
       notifyListeners();
     }
+  }
+  void _showLoading() {
+    isLoading = true;
+    _notifySafely();
+  }
+
+  void _hideLoading() {
+    isLoading = false;
+    _notifySafely();
   }
 
   @override
