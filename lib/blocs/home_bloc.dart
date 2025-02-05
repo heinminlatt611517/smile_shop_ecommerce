@@ -94,7 +94,7 @@ class HomeBloc extends ChangeNotifier {
 
     ///get product list
     _smileShopModel
-        .products(authToken, currentLanguage, int.parse(endUserId), productPage)
+        .products(accessToken, currentLanguage, int.parse(endUserId), productPage)
         .then((productResponse) {
       productList = productResponse.products ?? [];
       debugPrint("Length>>>>>>>${productList.length}");
@@ -153,7 +153,7 @@ class HomeBloc extends ChangeNotifier {
     debugPrint("GetProducts for page $productPage");
 
     _smileShopModel
-        .products(authToken, currentLanguage, int.parse(endUserId), productPage)
+        .products(accessToken, currentLanguage, int.parse(endUserId), productPage)
         .then((productResponse) {
       if (productResponse.products != null &&
           productResponse.products!.isNotEmpty) {

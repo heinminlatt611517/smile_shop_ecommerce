@@ -9,6 +9,7 @@ import 'package:smile_shop/network/api_constants.dart';
 
 import '../data/model/smile_shop_model.dart';
 import '../data/model/smile_shop_model_impl.dart';
+import '../network/requests/favourite_product_request.dart';
 
 class SearchProductBloc extends ChangeNotifier {
   ///model
@@ -27,6 +28,7 @@ class SearchProductBloc extends ChangeNotifier {
   bool isShowRatingView = false;
   bool isShowPriceView = false;
   var authToken = "";
+  var accessToken = "";
   var endUserId = "";
   int? minRange;
   int? maxRange;
@@ -40,6 +42,8 @@ class SearchProductBloc extends ChangeNotifier {
     ///get data from database
     authToken =
         _smileShopModel.getLoginResponseFromDatabase()?.refreshToken ?? "";
+    accessToken =
+        _smileShopModel.getLoginResponseFromDatabase()?.accessToken ?? "";
     endUserId =
         _smileShopModel.getLoginResponseFromDatabase()?.data?.id.toString() ??
             "";
@@ -91,7 +95,7 @@ class SearchProductBloc extends ChangeNotifier {
       String query, String authToken, String acceptLanguage, String endUserId) {
     _showLoading();
     _smileShopModel
-        .searchProductsByName(authToken, acceptLanguage, endUserId, 1, query)
+        .searchProductsByName(accessToken, acceptLanguage, endUserId, 1, query)
         .whenComplete(() => _hideLoading())
         .then((searchResults) {
       query = query;
@@ -115,7 +119,7 @@ class SearchProductBloc extends ChangeNotifier {
   searchProductByDynamicParam() {
     _showLoading();
     _smileShopModel
-        .searchProductsWithDynamicParam(authToken, kAcceptLanguageEn, endUserId,
+        .searchProductsWithDynamicParam(accessToken, kAcceptLanguageEn, endUserId,
             1, queryString, ratingValue, minRange, maxRange)
         .whenComplete(() => _hideLoading())
         .then((searchResults) {
@@ -148,11 +152,45 @@ class SearchProductBloc extends ChangeNotifier {
   }
 
   void onTapFavourite(ProductVO? product, BuildContext context) {
-    _smileShopModel.saveFavouriteProductToHive(
-        product?.copyWith(isFavourite: true) ?? ProductVO());
+    // _smileShopModel.saveFavouriteProductToHive(
+    //     product?.copyWith(isFavourite: true) ?? ProductVO());
+    //
+    // showSnackBar(context, '${product?.name} added to favourite successfully!',
+    //     Colors.green);
+    if (product == null) return;
+    var favoriteProductRequest = FavouriteProductRequest(
+      productId: product.id,
+      status: product.isFavouriteProduct == true ? 'unfavourite' : 'favourite',
+    );
 
-    showSnackBar(context, '${product?.name} added to favourite successfully!',
-        Colors.green);
+    _smileShopModel
+        .addFavouriteProduct(
+      accessToken,
+      kAcceptLanguageEn,
+      favoriteProductRequest,
+    )
+        .then((response) {
+      if (response.status == 200) {
+        final updatedProduct = product.copyWith(
+          isFavouriteProduct: !(product.isFavouriteProduct ?? false),
+        );
+
+        final productIndex = products.indexWhere((p) => p.id == product.id);
+        if (productIndex != -1) {
+          products[productIndex] = updatedProduct;
+        }
+
+        _notifySafely();
+
+        showSnackBar(
+          context,
+          '${product.name} ${updatedProduct.isFavouriteProduct ?? true ? 'added to' : 'removed from'} favourites!',
+          updatedProduct.isFavouriteProduct ?? true ? Colors.green : Colors.red,
+        );
+      }
+    }).catchError((error) {
+      showSnackBar(context, 'Error updating favourite status', Colors.red);
+    });
   }
 
   void showSnackBar(

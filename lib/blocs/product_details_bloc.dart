@@ -19,7 +19,6 @@ class ProductDetailsBloc extends ChangeNotifier {
   VideoPlayerController? videoPlayerController;
   var currentLanguage = kAcceptLanguageEn;
   var endUserId = "";
-  var authToken = "";
   var accessToken = "";
   var productId = "";
 
@@ -27,8 +26,6 @@ class ProductDetailsBloc extends ChangeNotifier {
     _loadLanguage();
 
     ///get data from database
-    authToken =
-        _smileShopModel.getLoginResponseFromDatabase()?.refreshToken ?? "";
     accessToken =
         _smileShopModel.getLoginResponseFromDatabase()?.accessToken ?? "";
     endUserId =
@@ -84,7 +81,7 @@ class ProductDetailsBloc extends ChangeNotifier {
 
     ///get product details
     _smileShopModel
-        .getProductDetails(endUserId, productId, currentLanguage, authToken)
+        .getProductDetails(endUserId, productId, currentLanguage, accessToken)
         .then((productDetailsResponse) {
       productVO = productDetailsResponse;
       if (productVO?.video?.isNotEmpty ?? false) {
@@ -136,7 +133,7 @@ class ProductDetailsBloc extends ChangeNotifier {
       if (response.status == 200) {
         _showLoading();
         _smileShopModel
-            .getProductDetails(endUserId, productId, currentLanguage, authToken)
+            .getProductDetails(endUserId, productId, currentLanguage, accessToken)
             .then((productDetailsResponse) {
           productVO = productDetailsResponse;
           if (productVO?.video?.isNotEmpty ?? false) {
@@ -146,13 +143,13 @@ class ProductDetailsBloc extends ChangeNotifier {
               ..setLooping(true)
               ..play();
           }
+          showSnackBar(
+            context,
+            '${productVO?.name} ${productVO?.isFavouriteProduct ?? true ? 'added to' : 'removed from'} favourites!',
+            productVO?.isFavouriteProduct ?? true ? Colors.green : Colors.red,
+          );
           _notifySafely();
         }).whenComplete(() => _hideLoading());
-        showSnackBar(
-          context,
-          '${product.name} ${product.isFavouriteProduct ?? true ? 'added to' : 'removed from'} favourites!',
-          product.isFavouriteProduct ?? true ? Colors.green : Colors.red,
-        );
       }
     }).catchError((error) {
       showSnackBar(context, 'Error updating favourite status', Colors.red);

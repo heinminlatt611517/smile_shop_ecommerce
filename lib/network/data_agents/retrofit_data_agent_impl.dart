@@ -114,7 +114,7 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   Future<ProductResponseDataVO> products(
       String token, String acceptLanguage, int endUserId, int page) {
     return mApi
-        .products(token, acceptLanguage, endUserId, page)
+        .products('Bearer $token', acceptLanguage, endUserId, page)
         .asStream()
         .map((response) => response.data ?? ProductResponseDataVO())
         .first
@@ -127,7 +127,7 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   Future<ProductVO> getProductDetails(
       String endUserId, String productId, String acceptLanguage, String token) {
     return mApi
-        .productDetail(token, acceptLanguage, endUserId, int.parse(productId))
+        .productDetail('Bearer $token', acceptLanguage, endUserId, int.parse(productId))
         .asStream()
         .map((response) => response.data ?? ProductVO())
         .first
@@ -191,7 +191,7 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
       String acceptLanguage, String endUserId, int pageNo, String name) {
     return mApi
         .searchProductsByName(
-            token, acceptLanguage, int.parse(endUserId), pageNo, name)
+            'Bearer $token', acceptLanguage, int.parse(endUserId), pageNo, name)
         .asStream()
         .map((response) => response.data?.products ?? [])
         .first
@@ -348,7 +348,7 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   Future<List<SubcategoryVO>> subCategoryByCategory(String token,
       String acceptLanguage, SubCategoryRequest subCategoryRequest) {
     return mApi
-        .subCategoryByCategory(token, acceptLanguage, subCategoryRequest)
+        .subCategoryByCategory('Bearer $token', acceptLanguage, subCategoryRequest)
         .asStream()
         .map((response) => response.data ?? [])
         .first
@@ -415,7 +415,7 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
       String acceptLanguage, String endUserId, int pageNo, int subCategoryId) {
     return mApi
         .searchProductsBySubCategoryId(
-            token, acceptLanguage, int.parse(endUserId), pageNo, subCategoryId)
+            'Bearer $token', acceptLanguage, int.parse(endUserId), pageNo, subCategoryId)
         .asStream()
         .map((response) => response.data?.products ?? [])
         .first
@@ -429,7 +429,7 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
       String acceptLanguage, String endUserId, int pageNo, int categoryId) {
     return mApi
         .searchProductsByCategoryId(
-            token, acceptLanguage, int.parse(endUserId), pageNo, categoryId)
+            "Bearer $token", acceptLanguage, int.parse(endUserId), pageNo, categoryId)
         .asStream()
         .map((response) => response.data?.products ?? [])
         .first
@@ -449,7 +449,7 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
       int? minRange,
       int? maxRange) {
     return mApi
-        .searchWithDynamic(token, acceptLanguage, int.parse(endUserId), pageNo,
+        .searchWithDynamic('Bearer $token', acceptLanguage, int.parse(endUserId), pageNo,
             name, rating, minRange, maxRange)
         .asStream()
         .map((response) => response.data?.products ?? [])

@@ -59,7 +59,7 @@ class ProductCategoryBloc extends ChangeNotifier {
     _showLoading();
     _smileShopModel
         .searchProductsBySubCategoryId(
-            authToken, currentLanguage, endUserId, 1, subCategoryId ?? 0)
+        accessToken, currentLanguage, endUserId, 1, subCategoryId ?? 0)
         .then((productResponse) {
       products = productResponse;
       _notifySafely();
@@ -113,7 +113,7 @@ class ProductCategoryBloc extends ChangeNotifier {
 
     ///get product list
     await _smileShopModel
-        .searchProductsBySubCategoryId(authToken, kAcceptLanguageEn, endUserId,
+        .searchProductsBySubCategoryId(accessToken, kAcceptLanguageEn, endUserId,
             pageNumber, subCategoryId ?? 0)
         .then((productResponse) {
       pageNumber += 1;

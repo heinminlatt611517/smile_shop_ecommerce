@@ -49,7 +49,7 @@ class SubCategoryBloc extends ChangeNotifier {
     var endUserId = _smileShopModel.getLoginResponseFromDatabase()?.data?.id.toString() ?? "";
 
     ///get product list
-    return _smileShopModel.searchProductsCategoryId(authToken, kAcceptLanguageEn, endUserId, pageNumber, categoryId).then((productResponse) {
+    return _smileShopModel.searchProductsCategoryId(accessToken, kAcceptLanguageEn, endUserId, pageNumber, categoryId).then((productResponse) {
       pageNumber += 1;
       products.addAll(productResponse);
       notifyListeners();
@@ -74,7 +74,7 @@ class SubCategoryBloc extends ChangeNotifier {
     _showLoading();
     ///get sub category list
     _smileShopModel
-        .subCategoryByCategory(authToken, currentLanguage, subCategoryRequest)
+        .subCategoryByCategory(accessToken, currentLanguage, subCategoryRequest)
         .then((subCategoriesResponse) {
       subCategories = subCategoriesResponse;
       notifyListeners();
@@ -83,7 +83,7 @@ class SubCategoryBloc extends ChangeNotifier {
     ///get product list
     _smileShopModel
         .searchProductsCategoryId(
-        authToken, currentLanguage, endUserId, 1, categoryId ?? 0)
+        accessToken, currentLanguage, endUserId, 1, categoryId ?? 0)
         .then((productResponse) {
       products = productResponse;
       notifyListeners();
