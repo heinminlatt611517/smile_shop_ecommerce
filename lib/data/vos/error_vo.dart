@@ -39,6 +39,9 @@ class ErrorVO {
     if (errorData?.password != null) {
       errors.add(errorData!.password!);
     }
+    if (errorData?.isDefaultAddress != null) {
+      errors.add(errorData!.isDefaultAddress!);
+    }
     if (errorData?.type != null) {
       errors.add(errorData!.type!);
     }

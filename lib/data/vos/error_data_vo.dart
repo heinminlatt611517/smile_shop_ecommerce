@@ -7,6 +7,9 @@ class ErrorDataVO {
   @JsonKey(name: 'password')
   final String? password;
 
+  @JsonKey(name: 'is_default')
+  final String? isDefaultAddress;
+
   @JsonKey(name: 'type')
   final String? type;
 
@@ -16,7 +19,7 @@ class ErrorDataVO {
   @JsonKey(name: 'phone')
   final String? phone;
 
-  ErrorDataVO({this.password, this.type,this.message,this.phone});
+  ErrorDataVO({this.password,this.isDefaultAddress, this.type,this.message,this.phone});
 
   factory ErrorDataVO.fromJson(Map<String, dynamic> json) =>
       _$ErrorDataVOFromJson(json);

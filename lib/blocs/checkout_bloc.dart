@@ -50,7 +50,7 @@ class CheckOutBloc extends ChangeNotifier {
         .then((addressResponse) {
       addressList = addressResponse.data?.addressVO ?? [];
       if(addressList.isNotEmpty){
-        defaultAddressVO = addressList.firstWhere((e)=> e.isDefault == 1);
+        defaultAddressVO = addressList.firstWhere((e)=> e.isDefault == 1,orElse:() => addressList.first);
       }
       else {
         defaultAddressVO = null;
