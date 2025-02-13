@@ -122,7 +122,7 @@ class ProductRefundPage extends StatelessWidget {
                         builder: (context, bloc, child) => GestureDetector(
                           onTap: () {
                             bloc.onTapDone().then((value) {
-                              if (value.statusCode == 200) {
+                              if (value.status == 200) {
                                 Navigator.of(context).push(MaterialPageRoute(builder: (builder) => const RefundPage()));
                               }
                             }).catchError((error) {

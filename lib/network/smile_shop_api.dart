@@ -392,6 +392,7 @@ abstract class SmileShopApi {
       @Header(kHeaderAuthorization) String token,
       @Part(name:  "order_no") String orderNo,
       @Part(name: "reason_id") String reasonId,
+      @Part(name: "user_id") String userId,
       @Part(fileName: "image") File image);
 
   @GET(kEndPointGetRefunds)

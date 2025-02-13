@@ -470,8 +470,8 @@ class SmileShopModelImpl extends SmileShopModel {
   }
 
   @override
-  Future<SuccessNetworkResponse> postRefund(String token, String acceptLanguage, String orderNo, int reasonId, File? image) {
-    return mDataAgent.postRefund(token, acceptLanguage, orderNo, reasonId, image);
+  Future<SuccessNetworkResponse> postRefund(String token, String acceptLanguage, String orderNo, int reasonId, int userId, File? image) {
+    return mDataAgent.postRefund(token, acceptLanguage, orderNo, reasonId, userId, image);
   }
 
   @override

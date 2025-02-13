@@ -2072,6 +2072,7 @@ class _SmileShopApi implements SmileShopApi {
     String token,
     String orderNo,
     String reasonId,
+    String userId,
     File image,
   ) async {
     final _extra = <String, dynamic>{};
@@ -2090,6 +2091,10 @@ class _SmileShopApi implements SmileShopApi {
       'reason_id',
       reasonId,
     ));
+    _data.fields.add(MapEntry(
+      'user_id',
+      userId,
+    ));
     _data.files.add(MapEntry(
       'image',
       MultipartFile.fromFileSync(
@@ -2097,7 +2102,6 @@ class _SmileShopApi implements SmileShopApi {
         filename: 'image',
       ),
     ));
-    print("DATA ==========> ${_data.fields}");
     final _options = _setStreamType<SuccessNetworkResponse>(Options(
       method: 'POST',
       headers: _headers,
