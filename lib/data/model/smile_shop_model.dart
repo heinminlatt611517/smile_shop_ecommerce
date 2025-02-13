@@ -228,7 +228,7 @@ abstract class SmileShopModel {
       String paymentType,String paymentData,String orderNo,String appType);
 
   Future<SuccessNetworkResponse> postRefund(
-      String token, String acceptLanguage,int orderNo,int reasonId,File? image);
+      String token, String acceptLanguage,String orderNo,int reasonId,File? image);
 
   Future<List<RefundVO>> getRefunds(
       String token, String acceptLanguage);

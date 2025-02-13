@@ -390,9 +390,9 @@ abstract class SmileShopApi {
   Future<SuccessNetworkResponse> postRefund(
       @Header(kHeaderAcceptLanguage) String acceptLanguage,
       @Header(kHeaderAuthorization) String token,
-      @Part() int orderNo,
-      @Part() int reasonId,
-      @Part() File image);
+      @Part(name:  "order_no") String orderNo,
+      @Part(name: "reason_id") String reasonId,
+      @Part(fileName: "image") File image);
 
   @GET(kEndPointGetRefunds)
   Future<RefundResponse> getRefunds(

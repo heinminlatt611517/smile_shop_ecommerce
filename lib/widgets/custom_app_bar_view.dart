@@ -7,31 +7,35 @@ import '../utils/images.dart';
 
 class CustomAppBarView extends StatelessWidget implements PreferredSizeWidget {
   final String? title;
-  const CustomAppBarView({super.key,required this.title});
+  final Color? backgroundColor;
+  const CustomAppBarView({super.key, required this.title, this.backgroundColor});
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
       centerTitle: true,
-      surfaceTintColor: kBackgroundColor,
+      surfaceTintColor: backgroundColor ?? kBackgroundColor,
       automaticallyImplyLeading: false,
       leadingWidth: 40,
-      backgroundColor: Colors.white,
-      title:  Row(children: [InkWell(
-        onTap: (){
-          Navigator.pop(context,true);
-        },
-        child:const SvgImageView(
-          imageName: kBackSvgIcon,
-          imageHeight: 20,
-          imageWidth: 20,
-        ),
+      backgroundColor:  kBackgroundColor,
+      title: Row(
+        children: [
+          InkWell(
+            onTap: () {
+              Navigator.pop(context, true);
+            },
+            child: const SvgImageView(
+              imageName: kBackSvgIcon,
+              imageHeight: 26,
+              imageWidth: 26,
+            ),
+          ),
+          const Spacer(),
+          Text(title ?? ""),
+          const Spacer(),
+          const Text(''),
+        ],
       ),
-        const Spacer(),
-        Text(title ?? ""),
-        const Spacer(),
-        const Text(''),
-      ],),
     );
   }
 

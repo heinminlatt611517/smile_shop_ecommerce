@@ -46,18 +46,18 @@ class EditAddressPage extends StatelessWidget {
                       ),
 
                       ///address category view
-                      AddressCategoryView(
-                        addressVO: addressVO,
-                      ),
+                      // AddressCategoryView(
+                      //   addressVO: addressVO,
+                      // ),
 
-                      const SizedBox(
-                        height: kMarginLarge,
-                      ),
+                      // const SizedBox(
+                      //   height: kMarginLarge,
+                      // ),
 
                       ///name and phone number input view
                       NameAndPhoneInputView(
                         phone: addressVO?.phone ?? "",
-                        name: addressVO?.address ?? "",
+                        name: addressVO?.name ?? "",
                       ),
 
                       const SizedBox(
@@ -81,23 +81,19 @@ class EditAddressPage extends StatelessWidget {
                           children: [
                             Consumer<EditAddressBloc>(
                               builder: (context, bloc, child) => Checkbox(
-                                materialTapTargetSize:
-                                    MaterialTapTargetSize.shrinkWrap,
+                                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                 value: bloc.isChecked,
                                 checkColor: Colors.white,
                                 activeColor: kPrimaryColor,
                                 onChanged: (v) {
-                                  var bloc = Provider.of<EditAddressBloc>(
-                                      context,
-                                      listen: false);
+                                  var bloc = Provider.of<EditAddressBloc>(context, listen: false);
                                   bloc.onCheckChange();
                                 },
                               ),
                             ),
-                             Text(
+                            Text(
                               AppLocalizations.of(context)!.setAsDefaultAddress,
-                              style:const TextStyle(
-                                  fontSize: kTextRegular, color: Colors.black),
+                              style: const TextStyle(fontSize: kTextRegular, color: Colors.black),
                             )
                           ],
                         ),
@@ -110,20 +106,15 @@ class EditAddressPage extends StatelessWidget {
                       ///delete button
                       Consumer<EditAddressBloc>(
                         builder: (context, bloc, child) => CommonButtonView(
-                            label:  AppLocalizations.of(context)!.deleteAddress,
+                            label: AppLocalizations.of(context)!.deleteAddress,
                             isShowBorder: true,
                             labelColor: Colors.black,
                             bgColor: Colors.transparent,
                             onTapButton: () {
-                              bloc
-                                  .onTapDeleteAddress(addressVO?.id ?? 0)
-                                  .then((value) {
+                              bloc.onTapDeleteAddress(addressVO?.id ?? 0).then((value) {
                                 Navigator.pop(context, true);
                               }).catchError((error) {
-                                showCommonDialog(
-                                    context: context,
-                                    dialogWidget: ErrorDialogView(
-                                        errorMessage: error.toString()));
+                                showCommonDialog(context: context, dialogWidget: ErrorDialogView(errorMessage: error.toString()));
                               });
                             }),
                       ),
@@ -135,17 +126,15 @@ class EditAddressPage extends StatelessWidget {
                       ///save button
                       Consumer<EditAddressBloc>(
                         builder: (context, bloc, child) => CommonButtonView(
-                            label:  AppLocalizations.of(context)!.save,
+                            label: AppLocalizations.of(context)!.save,
                             labelColor: Colors.white,
                             bgColor: kPrimaryColor,
+                            isShowBorder: false,
                             onTapButton: () {
                               bloc.onTapSave(addressVO?.id ?? 0).then((value) {
                                 Navigator.pop(context, true);
                               }).catchError((error) {
-                                showCommonDialog(
-                                    context: context,
-                                    dialogWidget: ErrorDialogView(
-                                        errorMessage: error.toString()));
+                                showCommonDialog(context: context, dialogWidget: ErrorDialogView(errorMessage: error.toString()));
                               });
                             }),
                       )
@@ -185,9 +174,9 @@ class AddressCategoryView extends StatelessWidget {
       create: (context) => AddressCategoryBloc(addressVO?.categoryId ?? 0),
       child: Row(
         children: [
-           Text(
-             AppLocalizations.of(context)!.addressCategory,
-            style:const TextStyle(fontSize: kTextRegular2x),
+          Text(
+            AppLocalizations.of(context)!.addressCategory,
+            style: const TextStyle(fontSize: kTextRegular2x),
           ),
           const SizedBox(
             width: kMarginMedium2,
@@ -196,8 +185,7 @@ class AddressCategoryView extends StatelessWidget {
             height: 30,
             child: Selector<AddressCategoryBloc, List<CategoryVO>>(
               selector: (context, bloc) => bloc.addressCategories,
-              builder: (context, addressCategories, child) =>
-                  Consumer<AddressCategoryBloc>(
+              builder: (context, addressCategories, child) => Consumer<AddressCategoryBloc>(
                 builder: (context, bloc, child) => ListView.builder(
                   shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
@@ -210,36 +198,26 @@ class AddressCategoryView extends StatelessWidget {
                       child: InkWell(
                         onTap: () {
                           bloc.toggleSelectionAddressCategory(index);
-                          var addNewAddressBloc = Provider.of<EditAddressBloc>(
-                              context,
-                              listen: false);
-                          addNewAddressBloc.onTapAddressCategory(
-                              addressCategories[index].id ?? 0);
+                          var addNewAddressBloc = Provider.of<EditAddressBloc>(context, listen: false);
+                          addNewAddressBloc.onTapAddressCategory(addressCategories[index].id ?? 0);
                         },
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(4),
-                            color:
-                                isSelected ? kPrimaryColor : Colors.transparent,
+                            color: isSelected ? kPrimaryColor : Colors.transparent,
                             border: Border.all(
-                              color: isSelected
-                                  ? Colors.transparent
-                                  : kPrimaryColor,
+                              color: isSelected ? Colors.transparent : kPrimaryColor,
                               width: 1,
                             ),
                           ),
                           child: Center(
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: kMarginMedium),
+                              padding: const EdgeInsets.symmetric(horizontal: kMarginMedium),
                               child: Text(
                                 addressCategories[index].name ?? "",
                                 style: TextStyle(
-                                  color:
-                                      isSelected ? Colors.white : kPrimaryColor,
-                                  fontWeight: isSelected
-                                      ? FontWeight.bold
-                                      : FontWeight.normal,
+                                  color: isSelected ? Colors.white : kPrimaryColor,
+                                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                                 ),
                               ),
                             ),
@@ -263,16 +241,13 @@ class NameAndPhoneInputView extends StatelessWidget {
   final String name;
   final String phone;
 
-  const NameAndPhoneInputView(
-      {super.key, required this.phone, required this.name});
+  const NameAndPhoneInputView({super.key, required this.phone, required this.name});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(kMarginLarge),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(kMarginMedium),
-          color: Colors.grey.withOpacity(0.3)),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(kMarginMedium), color: kAddressContainerColor),
       child: Column(
         children: [
           Consumer<EditAddressBloc>(
@@ -305,17 +280,14 @@ class StateTownshipAndMapDropdownView extends StatelessWidget {
   final StateVO? stateVO;
   final TownshipVO? townshipVO;
 
-  const StateTownshipAndMapDropdownView(
-      {super.key, required this.stateVO, required this.townshipVO});
+  const StateTownshipAndMapDropdownView({super.key, required this.stateVO, required this.townshipVO});
 
   @override
   Widget build(BuildContext context) {
     debugPrint("TownshipID>>>>>>>>${townshipVO?.id}");
     return Container(
       padding: const EdgeInsets.all(kMarginLarge),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(kMarginMedium),
-          color: Colors.grey.withOpacity(0.3)),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(kMarginMedium), color: kAddressContainerColor),
       child: Column(
         children: [
           ///state dropdown
@@ -352,11 +324,7 @@ class StateTownshipAndMapDropdownView extends StatelessWidget {
               selector: (context, bloc) => bloc.isTownshipLoading,
               builder: (context, isLoading, child) {
                 if (isLoading) {
-                  return DynamicDropDownWidget(
-                      hintText: 'Select township',
-                      label: AppLocalizations.of(context)?.township ?? '',
-                      items: [],
-                      onSelect: (value) {});
+                  return DynamicDropDownWidget(hintText: 'Select township', label: AppLocalizations.of(context)?.township ?? '', items: [], onSelect: (value) {});
                 } else {
                   return Selector<EditAddressBloc, List<TownshipVO>>(
                       selector: (context, bloc) => bloc.townships,
@@ -368,10 +336,8 @@ class StateTownshipAndMapDropdownView extends StatelessWidget {
                             orElse: () => townships.first,
                           );
                         }
-                        foundTownship ??=
-                            townships.isNotEmpty ? townshipVO : null;
-                        var bloc = Provider.of<EditAddressBloc>(context,
-                            listen: false);
+                        foundTownship ??= townships.isNotEmpty ? townshipVO : null;
+                        var bloc = Provider.of<EditAddressBloc>(context, listen: false);
                         return DynamicDropDownWidget(
                             initValue: townships.isEmpty ? null : foundTownship,
                             hintText: 'Select township',

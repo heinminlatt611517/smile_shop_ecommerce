@@ -310,7 +310,7 @@ class _ProfilePageState extends State<ProfilePage> {
     items.add(InkWell(
       onTap: () {
         Navigator.of(context)
-            .push(MaterialPageRoute(builder: (_) => const MyAddressPage()));
+            .push(MaterialPageRoute(builder: (_) => const MyAddressPage(needReturnValue: false,)));
       },
       child: _buildProfileItem(context,
           title: AppLocalizations.of(context)!.address, assetImagePath: kAddressIcon),

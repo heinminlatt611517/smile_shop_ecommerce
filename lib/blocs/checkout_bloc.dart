@@ -30,7 +30,7 @@ class CheckOutBloc extends ChangeNotifier {
   bool isSelectedUsePromotion = true;
   bool isSelectedNoPromotion = false;
 
-  CheckOutBloc(List<ProductVO> productList,this.context) {
+  CheckOutBloc(List<ProductVO> productList, this.context) {
     if (productList.isNotEmpty) {
       calculateTotalProductPrice(productList);
     }
@@ -42,31 +42,27 @@ class CheckOutBloc extends ChangeNotifier {
   /// Call the API to load the address
   void _loadAddress() {
     _showLoading();
-    var accessToken =
-        _smileShopModel.getLoginResponseFromDatabase()?.accessToken ?? "";
+    var accessToken = _smileShopModel.getLoginResponseFromDatabase()?.accessToken ?? "";
 
-    _smileShopModel
-        .address(accessToken, kAcceptLanguageEn)
-        .then((addressResponse) {
+    _smileShopModel.address(accessToken, kAcceptLanguageEn).then((addressResponse) {
       addressList = addressResponse.data?.addressVO ?? [];
-      if(addressList.isNotEmpty){
-        defaultAddressVO = addressList.firstWhere((e)=> e.isDefault == 1,orElse:() => addressList.first);
-      }
-      else {
+      if (addressList.isNotEmpty) {
+        defaultAddressVO = addressList.firstWhere((e) => e.isDefault == 1, orElse: () => addressList.first);
+      } else {
         defaultAddressVO = null;
       }
       _notifySafely();
-    }).catchError((error){
+    }).catchError((error) {
       if (error.toString().toLowerCase() == 'unauthenticated') {
         showCommonDialog(
           context: context!,
           dialogWidget: SessionExpiredDialogView(),
         );
       }
-    }).whenComplete(()=>_hideLoading());
+    }).whenComplete(() => _hideLoading());
   }
 
-  void onChangedAddressForShow(String newAddress){
+  void onChangedAddressForShow(String newAddress) {
     addressForShow = newAddress;
     _notifySafely();
   }
@@ -78,8 +74,7 @@ class CheckOutBloc extends ChangeNotifier {
   void calculateTotalProductPrice(List<ProductVO> productList) {
     if (productList.isNotEmpty) {
       subTotalPrice = productList.map((e) => e.totalPrice!).toList();
-      totalProductPrice =
-          subTotalPrice.reduce((first, second) => first + second);
+      totalProductPrice = subTotalPrice.reduce((first, second) => first + second);
       totalSummaryProductPrice = (totalProductPrice! + deliveryFeePrice);
       _notifySafely();
     } else {
@@ -88,13 +83,13 @@ class CheckOutBloc extends ChangeNotifier {
     }
   }
 
-  void showSnackBar(BuildContext context, String message,Color snackBarColor) {
+  void showSnackBar(BuildContext context, String message, Color snackBarColor) {
     final scaffold = ScaffoldMessenger.of(context);
 
     final snackBar = SnackBar(
       content: Text(message),
       duration: const Duration(seconds: 2),
-      backgroundColor:snackBarColor,
+      backgroundColor: snackBarColor,
       behavior: SnackBarBehavior.floating,
       margin: const EdgeInsets.only(top: 80.0, left: 20.0, right: 20.0),
       shape: RoundedRectangleBorder(
@@ -104,13 +99,18 @@ class CheckOutBloc extends ChangeNotifier {
     scaffold.showSnackBar(snackBar);
   }
 
+  void changeAddress(AddressVO addressVo) {
+    defaultAddressVO = addressVo;
+    _notifySafely();
+  }
+
   void onTapAddStandardDelivery() {
     isSelectedStandardDelivery = !isSelectedStandardDelivery;
     isSelectedSpecialDelivery = !isSelectedSpecialDelivery;
     notifyListeners();
   }
 
-  void onTapUsePromotion(){
+  void onTapUsePromotion() {
     isSelectedNoPromotion = !isSelectedNoPromotion;
     isSelectedUsePromotion = !isSelectedUsePromotion;
     notifyListeners();
@@ -121,6 +121,7 @@ class CheckOutBloc extends ChangeNotifier {
       notifyListeners();
     }
   }
+
   void _showLoading() {
     isLoading = true;
     _notifySafely();

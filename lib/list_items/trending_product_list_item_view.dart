@@ -12,8 +12,7 @@ class TrendingProductListItemView extends StatelessWidget {
   final String? imageUrl;
   final Function(ProductVO? productVO) onTapFavourite;
 
-  const TrendingProductListItemView(
-      {super.key, this.productVO, this.imageUrl, required this.onTapFavourite});
+  const TrendingProductListItemView({super.key, this.productVO, this.imageUrl, required this.onTapFavourite});
 
   @override
   Widget build(BuildContext context) {
@@ -22,17 +21,14 @@ class TrendingProductListItemView extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) =>
-                ProductDetailsPage(productId: productVO?.id.toString() ?? ""),
+            builder: (context) => ProductDetailsPage(productId: productVO?.id.toString() ?? ""),
           ),
         );
       },
       child: Container(
         height: 208,
-        padding: const EdgeInsets.symmetric(
-            vertical: kMarginMedium, horizontal: kMarginMedium),
-        decoration: BoxDecoration(
-            color: Colors.white, borderRadius: BorderRadius.circular(8)),
+        padding: const EdgeInsets.symmetric(vertical: kMarginMedium, horizontal: kMarginMedium),
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -53,29 +49,18 @@ class TrendingProductListItemView extends StatelessWidget {
                         onTap: () {
                           onTapFavourite(productVO);
                         },
-                        child: Icon(
-                            productVO?.isFavouriteProduct == true
-                                ? Icons.favorite_outlined
-                                : Icons.favorite_outline,
-                            color: kSecondaryColor))),
+                        child: Icon(productVO?.isFavouriteProduct == true ? Icons.favorite_outlined : Icons.favorite_outline, color: kSecondaryColor))),
               ],
             ),
             Text(
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               productVO?.name ?? "",
-              style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: kTextRegular,
-                  height: 3),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: kTextRegular, height: 3),
             ),
             Text(
               productVO?.subcategory?.name ?? "",
-              style: const TextStyle(
-                  fontWeight: FontWeight.normal,
-                  fontSize: kTextSmall,
-                  color: Colors.grey,
-                  height: 1),
+              style: const TextStyle(fontWeight: FontWeight.normal, fontSize: kTextSmall, color: Colors.grey, height: 1),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -89,9 +74,9 @@ class TrendingProductListItemView extends StatelessWidget {
                     color: kPrimaryColor,
                   ),
                 ),
-                const Text(
-                  '100 pt',
-                  style: TextStyle(
+                Text(
+                  '${productVO?.variantVO?.first.redeemPoint ?? 0} pt',
+                  style:const TextStyle(
                     height: 3,
                     fontWeight: FontWeight.normal,
                     fontSize: kTextRegular,

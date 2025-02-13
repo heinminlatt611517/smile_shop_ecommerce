@@ -23,46 +23,35 @@ class ProductDetailsBloc extends ChangeNotifier {
   var productId = "";
 
   ProductDetailsBloc(this.productId) {
-    _loadLanguage();
+    loadData();
 
     ///get data from database
-    accessToken =
-        _smileShopModel.getLoginResponseFromDatabase()?.accessToken ?? "";
-    endUserId =
-        _smileShopModel.getLoginResponseFromDatabase()?.data?.id.toString() ??
-            "";
+    accessToken = _smileShopModel.getLoginResponseFromDatabase()?.accessToken ?? "";
+    endUserId = _smileShopModel.getLoginResponseFromDatabase()?.data?.id.toString() ?? "";
   }
 
-  void onTapAddToCart(BuildContext context, String selectedColorName,
-      String selectedSize, int qtyCount, int totalPrice) {
+  void onTapAddToCart(BuildContext context, String selectedColorName, String selectedSize, int qtyCount, int totalPrice) {
     if (productVO != null) {
-      var oldProduct =
-          _smileShopModel.getProductByIdFromDatabase(productVO?.id ?? 0);
+      var oldProduct = _smileShopModel.getProductByIdFromDatabase(productVO?.id ?? 0);
       if (oldProduct == null) {
-        _smileShopModel.saveProductToHive(productVO?.copyWith(
-                totalPrice: totalPrice,
-                qtyCount: qtyCount,
-                colorName: selectedColorName,
-                size: selectedSize) ??
-            ProductVO());
+        _smileShopModel.saveProductToHive(productVO?.copyWith(totalPrice: totalPrice, qtyCount: qtyCount, colorName: selectedColorName, size: selectedSize) ?? ProductVO());
 
-        showSuccessTopSnackBar(
-            context, '${productVO?.name} added to cart successfully!');
+        showSuccessTopSnackBar(context, '${productVO?.name} added to cart successfully!');
       } else {
         int initialPrice = oldProduct.variantVO?.first.price ?? 0;
-        var newProductVO =
-            oldProduct.copyWith(qtyCount: oldProduct.qtyCount! + qtyCount);
+        var newProductVO = oldProduct.copyWith(qtyCount: oldProduct.qtyCount! + qtyCount);
         var updatedTotalPrice = newProductVO.qtyCount! * (initialPrice);
-        _smileShopModel.saveProductToHive(newProductVO.copyWith(
-            totalPrice: updatedTotalPrice,
-            colorName: selectedColorName,
-            size: selectedSize));
-        showSuccessTopSnackBar(
-            context, '${productVO?.name} added to cart successfully!');
+        _smileShopModel.saveProductToHive(newProductVO.copyWith(totalPrice: updatedTotalPrice, colorName: selectedColorName, size: selectedSize));
+        showSuccessTopSnackBar(context, '${productVO?.name} added to cart successfully!');
       }
     } else {
       showSnackBar(context, 'Failed to add product to cart.', Colors.red);
     }
+  }
+
+  Future<void> loadData() async {
+    _loadLanguage();
+    _getItemDetail();
   }
 
   Future<void> _loadLanguage() async {
@@ -78,21 +67,20 @@ class ProductDetailsBloc extends ChangeNotifier {
       currentLanguage = kAcceptLanguageEn;
     }
     _notifySafely();
+  }
 
+  Future<void> _getItemDetail() async {
     ///get product details
-    _smileShopModel
-        .getProductDetails(endUserId, productId, currentLanguage, accessToken)
-        .then((productDetailsResponse) {
+    _smileShopModel.getProductDetails(endUserId, productId, currentLanguage, accessToken).then((productDetailsResponse) {
       productVO = productDetailsResponse;
       if (productVO?.video?.isNotEmpty ?? false) {
-        videoPlayerController =
-            VideoPlayerController.networkUrl(Uri.parse(productVO?.video ?? ''))
-              ..initialize()
-              ..setLooping(true)
-              ..play();
+        videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(productVO?.video ?? ''))
+          ..initialize()
+          ..setLooping(true)
+          ..play();
       }
       //selectedColorName = productVO?.variantVO?.first.colorName ?? "";
-      notifyListeners();
+      _notifySafely();
     });
   }
 
@@ -132,13 +120,10 @@ class ProductDetailsBloc extends ChangeNotifier {
         .then((response) {
       if (response.status == 200) {
         _showLoading();
-        _smileShopModel
-            .getProductDetails(endUserId, productId, currentLanguage, accessToken)
-            .then((productDetailsResponse) {
+        _smileShopModel.getProductDetails(endUserId, productId, currentLanguage, accessToken).then((productDetailsResponse) {
           productVO = productDetailsResponse;
           if (productVO?.video?.isNotEmpty ?? false) {
-            videoPlayerController = VideoPlayerController.networkUrl(
-                Uri.parse(productVO?.video ?? ''))
+            videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(productVO?.video ?? ''))
               ..initialize()
               ..setLooping(true)
               ..play();
@@ -163,8 +148,7 @@ class ProductDetailsBloc extends ChangeNotifier {
     // showSnackBar(context, '${product?.name} added to favourite successfully!', Colors.green);
   }
 
-  void showSnackBar(
-      BuildContext context, String description, Color snackBarColor) {
+  void showSnackBar(BuildContext context, String description, Color snackBarColor) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(description),

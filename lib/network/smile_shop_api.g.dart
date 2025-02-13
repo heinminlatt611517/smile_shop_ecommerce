@@ -92,8 +92,7 @@ class _SmileShopApi implements SmileShopApi {
   }
 
   @override
-  Future<SetPasswordResponse> setPassword(
-      SetPasswordRequest setPasswordRequest) async {
+  Future<SetPasswordResponse> setPassword(SetPasswordRequest setPasswordRequest) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -169,7 +168,9 @@ class _SmileShopApi implements SmileShopApi {
   Future<BannerResponse> banners(String acceptLanguage) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'Accept-Language': acceptLanguage};
+    final _headers = <String, dynamic>{
+      r'Accept-Language': acceptLanguage
+    };
     _headers.removeWhere((k, v) => v == null);
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<BannerResponse>(Options(
@@ -205,8 +206,12 @@ class _SmileShopApi implements SmileShopApi {
     String acceptLanguage,
   ) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'type': name};
-    final _headers = <String, dynamic>{r'Accept-Language': acceptLanguage};
+    final queryParameters = <String, dynamic>{
+      r'type': name
+    };
+    final _headers = <String, dynamic>{
+      r'Accept-Language': acceptLanguage
+    };
     _headers.removeWhere((k, v) => v == null);
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<CategoryResponse>(Options(
@@ -294,7 +299,9 @@ class _SmileShopApi implements SmileShopApi {
       r'Accept-Language': acceptLanguage,
     };
     _headers.removeWhere((k, v) => v == null);
-    final _data = {'enduser_id': endUserId};
+    final _data = {
+      'enduser_id': endUserId
+    };
     final _options = _setStreamType<BrandsAndCategoriesResponse>(Options(
       method: 'POST',
       headers: _headers,
@@ -430,8 +437,7 @@ class _SmileShopApi implements SmileShopApi {
   }
 
   @override
-  Future<dynamic> forgotPasswordVerifyOtp(
-      OtpVerifyRequest otpVerifyRequest) async {
+  Future<dynamic> forgotPasswordVerifyOtp(OtpVerifyRequest otpVerifyRequest) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -493,8 +499,7 @@ class _SmileShopApi implements SmileShopApi {
   }
 
   @override
-  Future<SetPasswordResponse> forgotPasswordSetPassword(
-      SetPasswordRequest setPasswordRequest) async {
+  Future<SetPasswordResponse> forgotPasswordSetPassword(SetPasswordRequest setPasswordRequest) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -536,7 +541,9 @@ class _SmileShopApi implements SmileShopApi {
     String name,
   ) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'name': name};
+    final queryParameters = <String, dynamic>{
+      r'name': name
+    };
     final _headers = <String, dynamic>{
       r'Authorization': token,
       r'Accept-Language': acceptLanguage,
@@ -582,7 +589,9 @@ class _SmileShopApi implements SmileShopApi {
     double rating,
   ) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'rating': rating};
+    final queryParameters = <String, dynamic>{
+      r'rating': rating
+    };
     final _headers = <String, dynamic>{
       r'Authorization': token,
       r'Accept-Language': acceptLanguage,
@@ -628,7 +637,9 @@ class _SmileShopApi implements SmileShopApi {
     int categoryID,
   ) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'category_id': categoryID};
+    final queryParameters = <String, dynamic>{
+      r'category_id': categoryID
+    };
     final _headers = <String, dynamic>{
       r'Authorization': token,
       r'Accept-Language': acceptLanguage,
@@ -729,7 +740,9 @@ class _SmileShopApi implements SmileShopApi {
     int subcategoryID,
   ) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'subcategory_id': subcategoryID};
+    final queryParameters = <String, dynamic>{
+      r'subcategory_id': subcategoryID
+    };
     final _headers = <String, dynamic>{
       r'Authorization': token,
       r'Accept-Language': acceptLanguage,
@@ -963,7 +976,9 @@ class _SmileShopApi implements SmileShopApi {
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'Authorization': token};
+    final _headers = <String, dynamic>{
+      r'Authorization': token
+    };
     _headers.removeWhere((k, v) => v == null);
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<TownshipResponse>(Options(
@@ -1001,7 +1016,9 @@ class _SmileShopApi implements SmileShopApi {
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'Authorization': token};
+    final _headers = <String, dynamic>{
+      r'Authorization': token
+    };
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
     _data.addAll(addressRequest.toJson());
@@ -1036,7 +1053,9 @@ class _SmileShopApi implements SmileShopApi {
   Future<AddressCategoriesResponse> addressCategories(String token) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'Authorization': token};
+    final _headers = <String, dynamic>{
+      r'Authorization': token
+    };
     _headers.removeWhere((k, v) => v == null);
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<AddressCategoriesResponse>(Options(
@@ -1217,7 +1236,9 @@ class _SmileShopApi implements SmileShopApi {
     String action,
   ) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'action': action};
+    final queryParameters = <String, dynamic>{
+      r'action': action
+    };
     final _headers = <String, dynamic>{
       r'Authorization': token,
       r'Accept-Language': acceptLanguage,
@@ -1338,7 +1359,9 @@ class _SmileShopApi implements SmileShopApi {
     String orderType,
   ) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'order_type': orderType};
+    final queryParameters = <String, dynamic>{
+      r'order_type': orderType
+    };
     final _headers = <String, dynamic>{
       r'Authorization': token,
       r'Accept-Language': acceptLanguage,
@@ -1480,7 +1503,9 @@ class _SmileShopApi implements SmileShopApi {
       r'Accept-Language': acceptLanguage,
     };
     _headers.removeWhere((k, v) => v == null);
-    final _data = {'name': name};
+    final _data = {
+      'name': name
+    };
     final _options = _setStreamType<ProfileResponse>(Options(
       method: 'POST',
       headers: _headers,
@@ -2045,8 +2070,8 @@ class _SmileShopApi implements SmileShopApi {
   Future<SuccessNetworkResponse> postRefund(
     String acceptLanguage,
     String token,
-    int orderNo,
-    int reasonId,
+    String orderNo,
+    String reasonId,
     File image,
   ) async {
     final _extra = <String, dynamic>{};
@@ -2058,20 +2083,21 @@ class _SmileShopApi implements SmileShopApi {
     _headers.removeWhere((k, v) => v == null);
     final _data = FormData();
     _data.fields.add(MapEntry(
-      'orderNo',
-      orderNo.toString(),
+      'order_no',
+      orderNo,
     ));
     _data.fields.add(MapEntry(
-      'reasonId',
-      reasonId.toString(),
+      'reason_id',
+      reasonId,
     ));
     _data.files.add(MapEntry(
       'image',
       MultipartFile.fromFileSync(
         image.path,
-        filename: image.path.split(Platform.pathSeparator).last,
+        filename: 'image',
       ),
     ));
+    print("DATA ==========> ${_data.fields}");
     final _options = _setStreamType<SuccessNetworkResponse>(Options(
       method: 'POST',
       headers: _headers,
@@ -2147,7 +2173,9 @@ class _SmileShopApi implements SmileShopApi {
     int status,
   ) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'status': status};
+    final queryParameters = <String, dynamic>{
+      r'status': status
+    };
     final _headers = <String, dynamic>{
       r'Accept-Language': acceptLanguage,
       r'Authorization': token,
@@ -2188,7 +2216,9 @@ class _SmileShopApi implements SmileShopApi {
     String status,
   ) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'log_type': status};
+    final queryParameters = <String, dynamic>{
+      r'log_type': status
+    };
     final _headers = <String, dynamic>{
       r'Accept-Language': acceptLanguage,
       r'Authorization': token,
@@ -2604,7 +2634,9 @@ class _SmileShopApi implements SmileShopApi {
   Future<SuccessNetworkResponse> deleteAccount(String token) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'Authorization': token};
+    final _headers = <String, dynamic>{
+      r'Authorization': token
+    };
     _headers.removeWhere((k, v) => v == null);
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<SuccessNetworkResponse>(Options(
@@ -2717,9 +2749,7 @@ class _SmileShopApi implements SmileShopApi {
   }
 
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
-    if (T != dynamic &&
-        !(requestOptions.responseType == ResponseType.bytes ||
-            requestOptions.responseType == ResponseType.stream)) {
+    if (T != dynamic && !(requestOptions.responseType == ResponseType.bytes || requestOptions.responseType == ResponseType.stream)) {
       if (T == String) {
         requestOptions.responseType = ResponseType.plain;
       } else {

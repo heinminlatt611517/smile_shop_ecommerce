@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:smile_shop/data/vos/delivery_history_vo.dart';
+import 'package:smile_shop/utils/extensions.dart';
 
 import '../utils/colors.dart';
 import '../utils/dimens.dart';
@@ -19,6 +20,25 @@ class DeliveryStepperView extends StatefulWidget {
 
 class _DeliveryStepperViewState extends State<DeliveryStepperView> {
   bool isEditing = false;
+
+  Map<String, Widget> getIconAccordingToDeliveryStatus = {
+    'on going': const Icon(
+      Icons.local_shipping,
+      color: Colors.white,
+      size: 40,
+    ),
+    'start delivery': Image.asset(
+      kBoxIcon,
+      fit: BoxFit.contain,
+      height: 20,
+      width: 20,
+    ),
+    'delivered': const Icon(
+      Icons.store,
+      size: 40,
+      color: Colors.white,
+    ),
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -52,92 +72,85 @@ class _DeliveryStepperViewState extends State<DeliveryStepperView> {
       },
     ];
     return SingleChildScrollView(
-      child: ListView.builder(
-        itemCount: userInfoList.length,
+      child: ListView.separated(
+        itemCount: widget.deliveryList?.length ?? 0,
         physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
-        itemBuilder: (BuildContext content, int index) {
+        separatorBuilder: (context, index) {
           return Padding(
-            padding: const EdgeInsets.only(bottom: 5.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+            padding: const EdgeInsets.only(left: 25),
+            child: SizedBox(
+              height: 50,
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: CustomPaint(
+                  size: const Size(1, double.infinity),
+                  painter: DashedLineVerticalPainter(),
+                ),
+              ),
+            ),
+          );
+        },
+        itemBuilder: (BuildContext content, int index) {
+          DeliveryHistoryVO vo = widget.deliveryList?[index] ?? DeliveryHistoryVO();
+          print("STATUS ===============> ${vo.deliveryStatus}");
+          Widget icon = getIconAccordingToDeliveryStatus[(vo.deliveryStatus ?? '').toLowerCase()] ??
+              const Icon(
+                Icons.local_shipping,
+                color: Colors.white,
+              );
+          return Row(
+            children: [
+              Container(
+                width: 50,
+                height: 50,
+                decoration: const BoxDecoration(shape: BoxShape.circle, color: kPrimaryColor),
+                child: icon,
+              ),
+              const SizedBox(
+                width: kMarginMedium,
+              ),
+              Expanded(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Column(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(kMarginMedium),
-                          decoration: const BoxDecoration(
-                              color: kPrimaryColor, shape: BoxShape.circle),
-                          child: Center(child: userInfoList[index]['icon']),
-                        ),
-                        if (index != userInfoList.length - 1)
-                          SizedBox(
-                            height: 50,
-                            child: Align(
-                              alignment: Alignment.center,
-                              child: CustomPaint(
-                                size: const Size(1, double.infinity),
-                                painter: DashedLineVerticalPainter(),
-                              ),
-                            ),
-                          ),
-                      ],
+                    Text(
+                      vo.deliveryStatus ?? "",
+                      style: const TextStyle(fontSize: kTextRegular2x, fontWeight: FontWeight.w400),
                     ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            top: kMarginMedium, left: kMarginMedium),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              userInfoList[index]['title'],
-                              maxLines: null,
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 16.0,
-                              ),
-                            ),
-                            const Spacer(),
-                            if (widget.deliveryList?.isNotEmpty ?? true)
-                              Text(
-                                widget.deliveryList?[index].deliveryDate !=
-                                            null ||
-                                        widget.deliveryList?[index]
-                                                .deliveryDate !=
-                                            ''
-                                    ? DateFormat('MMMM dd, yyyy').format(
-                                        (DateTime.parse(widget
-                                                .deliveryList?[index]
-                                                .deliveryDate ??
-                                            DateTime.now().toString())))
-                                    : '',
-                                maxLines: null,
-                                style: const TextStyle(
-                                  color: Colors.grey,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 15.0,
-                                ),
-                              ),
-                          ],
-                        ),
+                    Visibility(
+                      visible: (vo.comment != null) && (vo.comment?.isNotEmpty ?? false),
+                      child: Text(
+                        vo.comment ?? "",
+                        style: const TextStyle(fontSize: kTextSmall, fontWeight: FontWeight.w400),
                       ),
-                    ),
+                    )
                   ],
                 ),
-              ],
-            ),
+              ),
+              const SizedBox(
+                width: kMarginMedium,
+              ),
+              Text(
+                (DateTime.tryParse(vo.deliveryDate ?? '') ?? DateTime.now()).format(formatType: "MMM d, yyyy").toString(),
+                style: const TextStyle(fontSize: kTextRegular2x, fontWeight: FontWeight.w400, color: Colors.grey),
+              ),
+            ],
           );
         },
       ),
     );
   }
 }
+
+
+// SizedBox(
+//                             height: 50,
+//                             child: Align(
+//                               alignment: Alignment.center,
+//                               child: CustomPaint(
+//                                 size: const Size(1, double.infinity),
+//                                 painter: DashedLineVerticalPainter(),
+//                               ),
+//                             ),
+//                           ),

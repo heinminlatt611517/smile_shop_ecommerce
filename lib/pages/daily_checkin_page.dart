@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:smile_shop/blocs/daily_check_in_bloc.dart';
@@ -39,8 +40,10 @@ class DailyCheckInPage extends StatelessWidget {
                         toolbarHeight:400,
                         surfaceTintColor: Colors.transparent,
                         flexibleSpace: Stack(children: [
+                          // Background
                           SizedBox(
                               width: double.infinity,
+                              height: double.infinity,
                               child: Image.asset(
                                 kDailyCheckInImage,
                                 fit: BoxFit.fill,
@@ -61,11 +64,11 @@ class DailyCheckInPage extends StatelessWidget {
                                     children: [
                                       InkWell(
                                         onTap: () => Navigator.pop(context),
-                                        child: Image.asset(
-                                          kBackIcon,
+                                        child: SvgPicture.asset(
+                                          kBackSvgIcon,
                                           fit: BoxFit.contain,
-                                          height: 20,
-                                          width: 20,
+                                          height: 26,
+                                          width: 26,
                                         ),
                                       ),
                                        Text(

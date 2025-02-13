@@ -14,7 +14,7 @@ class ProductRefundBloc extends ChangeNotifier {
   bool isLoading = false;
   bool isDisposed = false;
   var authToken = "";
-  int? orderId;
+  String? orderId;
   int? reasonId;
   final nameController = TextEditingController();
   List<RefundReasonVO> refundReason = [];
@@ -54,7 +54,7 @@ class ProductRefundBloc extends ChangeNotifier {
     _showLoading();
     return _smileShopModel
         .postRefund(
-            authToken, kAcceptLanguageEn, orderId ?? 0, reasonId ?? 0, imgFile)
+            authToken, kAcceptLanguageEn, orderId ?? '0', reasonId ?? 0, imgFile)
         .whenComplete(() {
       _hideLoading();
     });

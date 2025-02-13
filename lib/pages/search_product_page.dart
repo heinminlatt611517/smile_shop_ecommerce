@@ -326,8 +326,8 @@ class SearchBarWithBackArrowView extends StatelessWidget {
             },
             child: const SvgImageView(
               imageName: kBackSvgIcon,
-              imageHeight: 20,
-              imageWidth: 20,
+              imageHeight: 26,
+              imageWidth: 26,
             ),
           ),
           const SizedBox(
@@ -366,8 +366,7 @@ class SearchBarWithBackArrowView extends StatelessWidget {
                         border: InputBorder.none,
                         hintText: AppLocalizations.of(context)!.searchHere,
                         hintStyle:const TextStyle(
-                            fontSize: kTextRegular,
-                            fontWeight: FontWeight.bold)),
+                            fontSize: kTextRegular)),
                   ),
                 ),
               ],

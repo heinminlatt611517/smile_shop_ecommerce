@@ -56,24 +56,15 @@ class OrderVO {
   @JsonKey(name: 'delivery_histories')
   final List<DeliveryHistoryVO>? deliveryHistory;
 
-  OrderVO({
-    this.id,
-    this.headId,
-    this.enduserId,
-    this.orderNo,
-    this.subtotal,
-    this.paymentType,
-    this.paymentStatus,
-    this.userType,
-    this.enduserAddressId,
-    this.deliveryStatus,
-    this.createdAt,
-    this.updatedAt,
-    this.image,
-    this.addressVO,
-    this.orderProducts,
-    this.deliveryHistory
-  });
+  String getStatus() {
+    if (paymentStatus == "cancel" || paymentStatus == "paid") {
+      return paymentStatus!;
+    }else {
+      return deliveryStatus ?? '';
+    }
+  }
+
+  OrderVO({this.id, this.headId, this.enduserId, this.orderNo, this.subtotal, this.paymentType, this.paymentStatus, this.userType, this.enduserAddressId, this.deliveryStatus, this.createdAt, this.updatedAt, this.image, this.addressVO, this.orderProducts, this.deliveryHistory});
 
   factory OrderVO.fromJson(Map<String, dynamic> json) => _$OrderVOFromJson(json);
 

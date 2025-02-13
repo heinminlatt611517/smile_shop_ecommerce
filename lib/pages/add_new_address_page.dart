@@ -48,7 +48,7 @@ class AddNewAddressPage extends StatelessWidget {
                       ),
 
                       ///address category view
-                      const AddressCategoryView(),
+                      // const AddressCategoryView(),
 
                       const SizedBox(
                         height: kMarginLarge,

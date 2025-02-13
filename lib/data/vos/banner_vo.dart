@@ -12,18 +12,17 @@ class BannerVO {
   @JsonKey(name: "status")
   final int? status;
 
-  @JsonKey(name: "image")
-  final String? image;
+  @JsonKey(name: "url")
+  final String? sourceUrl;
 
-  BannerVO({
-    this.id,
-    this.sort,
-    this.status,
-    this.image
-  });
+  @JsonKey(name: "media_type")
+  final String? mediaType;
 
-  factory BannerVO.fromJson(Map<String, dynamic> json) =>
-      _$BannerVOFromJson(json);
+  bool isImage() => mediaType == "image";
+
+  BannerVO({this.id, this.sort, this.status, this.sourceUrl, this.mediaType});
+
+  factory BannerVO.fromJson(Map<String, dynamic> json) => _$BannerVOFromJson(json);
 
   Map<String, dynamic> toJson() => _$BannerVOToJson(this);
 }

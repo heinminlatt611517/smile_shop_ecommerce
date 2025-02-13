@@ -1,5 +1,5 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:json_annotation/json_annotation.dart';
-
 
 part 'profile_vo.g.dart';
 
@@ -147,4 +147,9 @@ class ProfileVO {
   factory ProfileVO.fromJson(Map<String, dynamic> json) => _$ProfileVOFromJson(json);
 
   Map<String, dynamic> toJson() => _$ProfileVOToJson(this);
+
+  @override
+  String toString() {
+    return 'ProfileVO(id: $id, name: $name, memberName: $memberName, paymentPassword: $paymentPassword, enduserIp: $enduserIp, levelId: $levelId, level: $level, phone: $phone, balance: $balance, payRecommenderId: $payRecommenderId, sourceRecommender: $sourceRecommender, recommender: $recommender, recommenderId: $recommenderId, rechargeAmount: $rechargeAmount, rechargeAmountUnder: $rechargeAmountUnder, withdrawAmount: $withdrawAmount, withdrawAmountUnder: $withdrawAmountUnder, teamPerformance: $teamPerformance, registrationTime: $registrationTime, activationTime: $activationTime, registrationSourceId: $registrationSourceId, registrationSource: $registrationSource, stateId: $stateId, state: $state, isLimit: $isLimit, profileName: $profileName, profile: $profile, inviteCode: $inviteCode, isHead: $isHead, createdAt: $createdAt, updatedAt: $updatedAt, freeze: $freeze, userPhoto: $userPhoto, profileImage: $profileImage)';
+  }
 }

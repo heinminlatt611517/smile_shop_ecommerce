@@ -6,12 +6,12 @@ import 'package:smile_shop/blocs/retund_bloc.dart';
 import 'package:smile_shop/data/vos/refund_vo.dart';
 import 'package:smile_shop/list_items/refund_list_item_view.dart';
 import 'package:smile_shop/utils/colors.dart';
+import 'package:smile_shop/utils/dimens.dart';
 
 import '../utils/images.dart';
 import '../widgets/loading_view.dart';
 import '../widgets/svg_image_view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 
 class RefundPage extends StatefulWidget {
   const RefundPage({super.key});
@@ -20,8 +20,7 @@ class RefundPage extends StatefulWidget {
   State<RefundPage> createState() => _RefundPageState();
 }
 
-class _RefundPageState extends State<RefundPage>
-    with SingleTickerProviderStateMixin {
+class _RefundPageState extends State<RefundPage> with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -47,21 +46,30 @@ class _RefundPageState extends State<RefundPage>
           centerTitle: true,
           toolbarHeight: 60,
           automaticallyImplyLeading: false,
-          title:  Row(
+          title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [InkWell(
-            onTap: (){
-              Navigator.pop(context);
-            },
-            child:const SvgImageView(
-              imageName: kBackSvgIcon,
-              imageHeight: 26,
-              imageWidth: 26,
-            ),
-          ),
-              Text(AppLocalizations.of(context)?.refund ?? ''),
+            children: [
+              InkWell(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: const SvgImageView(
+                  imageName: kBackSvgIcon,
+                  imageHeight: 26,
+                  imageWidth: 26,
+                ),
+              ),
+              Text(
+                AppLocalizations.of(context)?.refund ?? '',
+                style: const TextStyle(
+                  fontSize: kTextRegular3x,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
               const SizedBox()
-          ],),
+            ],
+          ),
           bottom: PreferredSize(
               preferredSize: const Size(double.infinity, 50),
               child: Consumer<RefundBloc>(
@@ -91,7 +99,7 @@ class _RefundPageState extends State<RefundPage>
                         bloc.getRefundListByStatus(2);
                       }
                     },
-                    tabs:  [
+                    tabs: [
                       Text(AppLocalizations.of(context)?.all ?? ''),
                       Text(AppLocalizations.of(context)?.pending ?? ''),
                       Text(AppLocalizations.of(context)?.approved ?? ''),
@@ -101,34 +109,32 @@ class _RefundPageState extends State<RefundPage>
         ),
         body: Selector<RefundBloc, bool>(
           selector: (context, bloc) => bloc.isLoading,
-          builder: (context, isLoading, child) =>
-              Stack(
-                children: [
-                  ///body view
-                  Selector<RefundBloc, List<RefundVO>>(
-                              selector: (context, bloc) => bloc.refundList,
-                              builder: (context, refunds, child) =>
-                    TabBarView(controller: _tabController, children: [
+          builder: (context, isLoading, child) => Stack(
+            children: [
+              ///body view
+              Selector<RefundBloc, List<RefundVO>>(
+                selector: (context, bloc) => bloc.refundList,
+                builder: (context, refunds, child) => TabBarView(controller: _tabController, children: [
                   _refundView(refundList: refunds),
                   _refundView(refundList: refunds),
                   _refundView(refundList: refunds),
                   _refundView(refundList: refunds),
-                              ]),
-                            ),
-
-                  ///loading view
-                  if (isLoading)
-                    Container(
-                      color: Colors.black12,
-                      child: const Center(
-                        child: LoadingView(
-                          indicatorColor: kPrimaryColor,
-                          indicator: Indicator.ballSpinFadeLoader,
-                        ),
-                      ),
-                    ),
-                ],
+                ]),
               ),
+
+              ///loading view
+              if (isLoading)
+                Container(
+                  color: Colors.black12,
+                  child: const Center(
+                    child: LoadingView(
+                      indicatorColor: kPrimaryColor,
+                      indicator: Indicator.ballSpinFadeLoader,
+                    ),
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );
@@ -140,7 +146,9 @@ class _RefundPageState extends State<RefundPage>
       child: ListView.builder(
           itemCount: refundList.length,
           itemBuilder: (context, index) {
-            return RefundListItemView(refundVO: refundList[index],);
+            return RefundListItemView(
+              refundVO: refundList[index],
+            );
           }),
     );
   }
