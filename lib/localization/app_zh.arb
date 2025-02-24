@@ -154,5 +154,6 @@
   "yourOrderIsCanceled" : "您的订单已取消",
   "yourOrderHasBeenDeliveredOn" : "您的订单已于以下日期送达。",
   "favourite" : "收藏",
-  "doYouWantToDeleteAccount" : "您想删除您的帐户吗？此操作无法撤消。"
+  "doYouWantToDeleteAccount" : "您想删除您的帐户吗？此操作无法撤消。", 
+  "notification" : "通知"
 }

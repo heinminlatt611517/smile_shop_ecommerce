@@ -13,7 +13,10 @@ class LoginRequest {
   @JsonKey(name: "password")
   String? password;
 
-  LoginRequest(this.phone,this.type, this.password);
+  @JsonKey(name: "fcm_token")
+  String? fcmToken;
+
+  LoginRequest(this.phone,this.type, this.password,this.fcmToken);
 
   factory LoginRequest.fromJson(Map<String, dynamic> json) =>
       _$LoginRequestFromJson(json);

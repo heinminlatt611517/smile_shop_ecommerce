@@ -59,10 +59,12 @@ class OrderVO {
   String getStatus() {
     if (paymentStatus == "cancel" || paymentStatus == "paid") {
       return paymentStatus!;
-    }else {
+    } else {
       return deliveryStatus ?? '';
     }
   }
+
+  bool isCOD() => (paymentType?.toString() == "cod" || paymentType?.toString() == "cod");
 
   OrderVO({this.id, this.headId, this.enduserId, this.orderNo, this.subtotal, this.paymentType, this.paymentStatus, this.userType, this.enduserAddressId, this.deliveryStatus, this.createdAt, this.updatedAt, this.image, this.addressVO, this.orderProducts, this.deliveryHistory});
 

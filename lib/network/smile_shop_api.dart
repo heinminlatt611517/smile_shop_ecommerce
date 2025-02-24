@@ -33,6 +33,7 @@ import 'package:smile_shop/network/responses/favourite_product_response.dart';
 import 'package:smile_shop/network/responses/home_popup_data_response.dart';
 import 'package:smile_shop/network/responses/login_response.dart';
 import 'package:smile_shop/network/responses/my_team_response.dart';
+import 'package:smile_shop/network/responses/notification_list_response.dart';
 import 'package:smile_shop/network/responses/order_details_response.dart';
 import 'package:smile_shop/network/responses/order_response.dart';
 import 'package:smile_shop/network/responses/otp_response.dart';
@@ -71,8 +72,7 @@ abstract class SmileShopApi {
   Future<LoginResponse> dealerLogin(@Body() DealerLoginRequest loginRequest);
 
   @POST(kEndPointSetPassword)
-  Future<SetPasswordResponse> setPassword(
-      @Body() SetPasswordRequest setPasswordRequest);
+  Future<SetPasswordResponse> setPassword(@Body() SetPasswordRequest setPasswordRequest);
 
   @POST(kEndPointRegister)
   Future register(
@@ -91,7 +91,7 @@ abstract class SmileShopApi {
   @GET(kEndPointCategories)
   Future<CategoryResponse> categories(
     @Query(kParamType) String name,
-      @Header(kHeaderAcceptLanguage) String acceptLanguage,
+    @Header(kHeaderAcceptLanguage) String acceptLanguage,
   );
 
   @POST(kEndPointProducts)
@@ -110,11 +110,7 @@ abstract class SmileShopApi {
   );
 
   @POST(kEndPointProductDetails)
-  Future<ProductDetailsResponse> productDetail(
-      @Header(kHeaderAuthorization) String token,
-      @Header(kHeaderAcceptLanguage) String acceptLanguage,
-      @Field(kFieldEndUserId) String endUserId,
-      @Field(kFieldProductId) int productId);
+  Future<ProductDetailsResponse> productDetail(@Header(kHeaderAuthorization) String token, @Header(kHeaderAcceptLanguage) String acceptLanguage, @Field(kFieldEndUserId) String endUserId, @Field(kFieldProductId) int productId);
 
   @POST(kEndPointOtpVerify)
   Future verifyOtp(@Body() OtpVerifyRequest otpVerifyRequest);
@@ -129,8 +125,7 @@ abstract class SmileShopApi {
   Future<OtpResponse> forgotPasswordRequestOtp(@Body() OtpRequest otpRequest);
 
   @POST(kEndPointForgotPasswordSetPassword)
-  Future<SetPasswordResponse> forgotPasswordSetPassword(
-      @Body() SetPasswordRequest setPasswordRequest);
+  Future<SetPasswordResponse> forgotPasswordSetPassword(@Body() SetPasswordRequest setPasswordRequest);
 
   @POST(kEndPointSearchProducts)
   Future<ProductResponse> searchProductsByName(
@@ -191,10 +186,7 @@ abstract class SmileShopApi {
   );
 
   @POST(kEndPointAddNewAddress)
-  Future<void> addNewAddress(
-      @Header(kHeaderAuthorization) String token,
-      @Header(kHeaderAcceptLanguage) String acceptLanguage,
-      @Body() AddressRequest addressRequest);
+  Future<void> addNewAddress(@Header(kHeaderAuthorization) String token, @Header(kHeaderAcceptLanguage) String acceptLanguage, @Body() AddressRequest addressRequest);
 
   @GET(kEndPointStates)
   Future<StateResponse> states();
@@ -217,10 +209,7 @@ abstract class SmileShopApi {
   );
 
   @POST("$kEndPointEditAddress/{address_id}")
-  Future<TownshipResponse> editAddress(
-      @Header(kHeaderAuthorization) String token,
-      @Path("address_id") int addressId,
-      @Body() AddressRequest addressRequest);
+  Future<TownshipResponse> editAddress(@Header(kHeaderAuthorization) String token, @Path("address_id") int addressId, @Body() AddressRequest addressRequest);
 
   @GET(kEndPointAddressCategory)
   Future<AddressCategoriesResponse> addressCategories(
@@ -228,10 +217,7 @@ abstract class SmileShopApi {
   );
 
   @POST(kEndPointSubCategoryByCategory)
-  Future<SubCategoryResponse> subCategoryByCategory(
-      @Header(kHeaderAuthorization) String token,
-      @Header(kHeaderAcceptLanguage) String acceptLanguage,
-      @Body() SubCategoryRequest subCategoryRequest);
+  Future<SubCategoryResponse> subCategoryByCategory(@Header(kHeaderAuthorization) String token, @Header(kHeaderAcceptLanguage) String acceptLanguage, @Body() SubCategoryRequest subCategoryRequest);
 
   @POST(kEndPointOrder)
   Future<SuccessPaymentResponse> postOrder(
@@ -247,13 +233,13 @@ abstract class SmileShopApi {
 
   @POST(kEndPointMakePayment)
   Future<SuccessPaymentResponse> makePayment(
-      @Header(kHeaderAuthorization) String token,
-      @Header(kHeaderAcceptLanguage) String acceptLanguage,
-      @Field(kFieldPaymentType) String paymentType,
-      @Field(kFieldPaymentData) String paymentData,
-      @Field(kFieldOrderNo) String orderNo,
-      @Field(kFieldAppType) String appType,
-      );
+    @Header(kHeaderAuthorization) String token,
+    @Header(kHeaderAcceptLanguage) String acceptLanguage,
+    @Field(kFieldPaymentType) String paymentType,
+    @Field(kFieldPaymentData) String paymentData,
+    @Field(kFieldOrderNo) String orderNo,
+    @Field(kFieldAppType) String appType,
+  );
 
   @GET(kEndPointPayments)
   Future<PaymentResponse> payments(
@@ -290,11 +276,7 @@ abstract class SmileShopApi {
 
   @MultiPart()
   @POST(kEndPointUpdateProfile)
-  Future<ProfileResponse> updateProfile(
-      @Header(kHeaderAuthorization) String token,
-      @Header(kHeaderAcceptLanguage) String acceptLanguage,
-      @Part() String name,
-      @Part() File image);
+  Future<ProfileResponse> updateProfile(@Header(kHeaderAuthorization) String token, @Header(kHeaderAcceptLanguage) String acceptLanguage, @Part() String name, @Part() File image);
 
   @POST(kEndPointUpdateProfile)
   Future<ProfileResponse> updateProfileName(
@@ -310,28 +292,16 @@ abstract class SmileShopApi {
   );
 
   @POST(kEndPointWalletTransitionLogs)
-  Future<WalletTransactionResponse> getWalletTransitionLogs(
-      @Header(kHeaderAuthorization) String token,
-      @Header(kHeaderAcceptLanguage) String acceptLanguage,
-      @Body() WalletTransitionRequest walletTransitionRequest);
+  Future<WalletTransactionResponse> getWalletTransitionLogs(@Header(kHeaderAuthorization) String token, @Header(kHeaderAcceptLanguage) String acceptLanguage, @Body() WalletTransitionRequest walletTransitionRequest);
 
   @POST(kEndPointCheckWalletAmount)
-  Future checkWalletAmount(
-      @Header(kHeaderAuthorization) String token,
-      @Header(kHeaderAcceptLanguage) String acceptLanguage,
-      @Body() CheckWalletAmountRequest checkWalletRequest);
+  Future checkWalletAmount(@Header(kHeaderAuthorization) String token, @Header(kHeaderAcceptLanguage) String acceptLanguage, @Body() CheckWalletAmountRequest checkWalletRequest);
 
   @POST(kEndPointCheckWalletPassword)
-  Future<SuccessNetworkResponse> checkWalletPassword(
-      @Header(kHeaderAuthorization) String token,
-      @Header(kHeaderAcceptLanguage) String acceptLanguage,
-      @Body() CheckWalletPasswordRequest checkWalletPassword);
+  Future<SuccessNetworkResponse> checkWalletPassword(@Header(kHeaderAuthorization) String token, @Header(kHeaderAcceptLanguage) String acceptLanguage, @Body() CheckWalletPasswordRequest checkWalletPassword);
 
   @POST(kEndPointSetWalletPassword)
-  Future<SuccessNetworkResponse> setWalletPassword(
-      @Header(kHeaderAuthorization) String token,
-      @Header(kHeaderAcceptLanguage) String acceptLanguage,
-      @Body() SetWalletPasswordRequest setWalletRequest);
+  Future<SuccessNetworkResponse> setWalletPassword(@Header(kHeaderAuthorization) String token, @Header(kHeaderAcceptLanguage) String acceptLanguage, @Body() SetWalletPasswordRequest setWalletRequest);
 
   @POST(kEndPointRechargeWallet)
   Future<SuccessPaymentResponse> rechargeWallet(
@@ -350,145 +320,103 @@ abstract class SmileShopApi {
   );
 
   @POST(kEndPointPostUserCheckIn)
-  Future<SuccessNetworkResponse> postUserCheck(
-      @Header(kHeaderAuthorization) String token,
-      @Header(kHeaderAcceptLanguage) String acceptLanguage,
-      @Body() CheckInRequest checkInRequest);
+  Future<SuccessNetworkResponse> postUserCheck(@Header(kHeaderAuthorization) String token, @Header(kHeaderAcceptLanguage) String acceptLanguage, @Body() CheckInRequest checkInRequest);
 
   @GET(kEndPointCampaign)
   Future<CampaignResponse> getCampaign(
-      @Header(kHeaderAcceptLanguage) String acceptLanguage,
+    @Header(kHeaderAcceptLanguage) String acceptLanguage,
     @Header(kHeaderAuthorization) String token,
   );
 
   @POST(kEndPointCampaignDetail)
-  Future<CampaignDetailResponse> getCampaignDetail(
-      @Header(kHeaderAcceptLanguage) String acceptLanguage,
-      @Header(kHeaderAuthorization) String token,
-      @Body() CampaignDetailRequest request);
+  Future<CampaignDetailResponse> getCampaignDetail(@Header(kHeaderAcceptLanguage) String acceptLanguage, @Header(kHeaderAuthorization) String token, @Body() CampaignDetailRequest request);
 
   @POST(kEndPointCampaignJoin)
-  Future<void> joinCampaign(
-      @Header(kHeaderAcceptLanguage) String acceptLanguage,
-      @Header(kHeaderAuthorization) String token,
-      @Body() CampaignJoinRequest request);
+  Future<void> joinCampaign(@Header(kHeaderAcceptLanguage) String acceptLanguage, @Header(kHeaderAuthorization) String token, @Body() CampaignJoinRequest request);
 
   @POST(kEndPointCampaignParticipant)
-  Future<CampaignParticipantResponse> getCampaignParticipants(
-      @Header(kHeaderAcceptLanguage) String acceptLanguage,
-      @Header(kHeaderAuthorization) String token,
-      @Body() CampaignDetailRequest request);
+  Future<CampaignParticipantResponse> getCampaignParticipants(@Header(kHeaderAcceptLanguage) String acceptLanguage, @Header(kHeaderAuthorization) String token, @Body() CampaignDetailRequest request);
 
   @POST(kEndPointOrderCancel)
-  Future<SuccessNetworkResponse> orderCancel(
-      @Header(kHeaderAcceptLanguage) String acceptLanguage,
-      @Header(kHeaderAuthorization) String token,
-      @Body() OrderCancelRequest request);
+  Future<SuccessNetworkResponse> orderCancel(@Header(kHeaderAcceptLanguage) String acceptLanguage, @Header(kHeaderAuthorization) String token, @Body() OrderCancelRequest request);
 
   @MultiPart()
   @POST(kEndPointPostRefund)
-  Future<SuccessNetworkResponse> postRefund(
-      @Header(kHeaderAcceptLanguage) String acceptLanguage,
-      @Header(kHeaderAuthorization) String token,
-      @Part(name:  "order_no") String orderNo,
-      @Part(name: "reason_id") String reasonId,
-      @Part(name: "user_id") String userId,
-      @Part(fileName: "image") File image);
+  Future<SuccessNetworkResponse> postRefund(@Header(kHeaderAcceptLanguage) String acceptLanguage, @Header(kHeaderAuthorization) String token, @Part(name: "order_no") String orderNo, @Part(name: "reason_id") String reasonId, @Part(name: "user_id") String userId, @Part(fileName: "image") File image);
 
   @GET(kEndPointGetRefunds)
   Future<RefundResponse> getRefunds(
-      @Header(kHeaderAcceptLanguage) String acceptLanguage,
-      @Header(kHeaderAuthorization) String token,
-      );
+    @Header(kHeaderAcceptLanguage) String acceptLanguage,
+    @Header(kHeaderAuthorization) String token,
+  );
 
   @GET(kEndPointGetRefunds)
-  Future<RefundResponse> getRefundsByStatus(
-      @Header(kHeaderAcceptLanguage) String acceptLanguage,
-      @Header(kHeaderAuthorization) String token,
-      @Query(kParamStatus) int status
-      );
+  Future<RefundResponse> getRefundsByStatus(@Header(kHeaderAcceptLanguage) String acceptLanguage, @Header(kHeaderAuthorization) String token, @Query(kParamStatus) int status);
 
   @GET(kEndPointGetPromotionLogs)
-  Future<PromotionResponse> getPromotionLogByStatus(
-      @Header(kHeaderAcceptLanguage) String acceptLanguage,
-      @Header(kHeaderAuthorization) String token,
-      @Query(kParamLogType) String status
-      );
+  Future<PromotionResponse> getPromotionLogByStatus(@Header(kHeaderAcceptLanguage) String acceptLanguage, @Header(kHeaderAuthorization) String token, @Query(kParamLogType) String status);
 
   @GET(kEndPointGetMyTeams)
   Future<MyTeamResponse> getMyTeams(
-      @Header(kHeaderAcceptLanguage) String acceptLanguage,
-      @Header(kHeaderAuthorization) String token,
-      );
+    @Header(kHeaderAcceptLanguage) String acceptLanguage,
+    @Header(kHeaderAuthorization) String token,
+  );
 
   @GET(kEndPointGetPackages)
   Future<PackagesResponse> getPackages(
-      @Header(kHeaderAuthorization) String token,
-      @Header(kHeaderAcceptLanguage) String acceptLanguage,
-      );
+    @Header(kHeaderAuthorization) String token,
+    @Header(kHeaderAcceptLanguage) String acceptLanguage,
+  );
 
   @GET("$kEndPointGetPackages/{id}")
-  Future<PackageDetailsResponse> getPackageDetails(
-      @Header(kHeaderAuthorization) String token,
-      @Header(kHeaderAcceptLanguage) String acceptLanguage,
-      @Path("id") int id
-      );
+  Future<PackageDetailsResponse> getPackageDetails(@Header(kHeaderAuthorization) String token, @Header(kHeaderAcceptLanguage) String acceptLanguage, @Path("id") int id);
 
   @POST(kEndPointCheckOrderStatus)
-  Future<SuccessNetworkResponse> checkOrderStatus(
-      @Header(kHeaderAcceptLanguage) String acceptLanguage,
-      @Header(kHeaderAuthorization) String token,
-      @Body() OrderStatusRequest request);
+  Future<SuccessNetworkResponse> checkOrderStatus(@Header(kHeaderAcceptLanguage) String acceptLanguage, @Header(kHeaderAuthorization) String token, @Body() OrderStatusRequest request);
 
   @GET(kEndPointCampaignHistory)
-  Future<CampaignHistoryResponse> getCampaignHistory(
-      @Header(kHeaderAcceptLanguage) String acceptLanguage,
-      @Header(kHeaderAuthorization) String token);
+  Future<CampaignHistoryResponse> getCampaignHistory(@Header(kHeaderAcceptLanguage) String acceptLanguage, @Header(kHeaderAuthorization) String token);
 
   @POST(kEndPointUpdateHomePagePopupData)
-  Future<SuccessNetworkResponse> updateHomePagePopup(
-      @Header(kHeaderAcceptLanguage) String acceptLanguage,
-      @Header(kHeaderAuthorization) String token,
-      @Body() PopupRequest request);
+  Future<SuccessNetworkResponse> updateHomePagePopup(@Header(kHeaderAcceptLanguage) String acceptLanguage, @Header(kHeaderAuthorization) String token, @Body() PopupRequest request);
 
   @POST(kEndPointGetHomePagePopupData)
-  Future<HomePopupDataResponse> getHomePagePopup(
-      @Header(kHeaderAcceptLanguage) String acceptLanguage,
-      @Header(kHeaderAuthorization) String token,
-      @Body() PopupRequest request);
+  Future<HomePopupDataResponse> getHomePagePopup(@Header(kHeaderAcceptLanguage) String acceptLanguage, @Header(kHeaderAuthorization) String token, @Body() PopupRequest request);
 
   @POST(kEndPointChangePassword)
   Future<SuccessNetworkResponse> changePassword(
-      @Header(kHeaderAuthorization) String token,
-      @Header(kHeaderAcceptLanguage) String acceptLanguage,
-      @Field(kFieldEndUserId) int endUserId,
-      @Field(kFieldOldPassword) String oldPassword,
-      @Field(kFieldNewPassword) String newPassword,
-      @Field(kFieldConfirmPassword) String confirmPassword,
-      @Field(kFieldPasswordType) String passwordType,
-      );
+    @Header(kHeaderAuthorization) String token,
+    @Header(kHeaderAcceptLanguage) String acceptLanguage,
+    @Field(kFieldEndUserId) int endUserId,
+    @Field(kFieldOldPassword) String oldPassword,
+    @Field(kFieldNewPassword) String newPassword,
+    @Field(kFieldConfirmPassword) String confirmPassword,
+    @Field(kFieldPasswordType) String passwordType,
+  );
 
   @GET(kEndPointGetRefundReason)
   Future<RefundReasonResponse> getRefundReasons(
-      @Header(kHeaderAuthorization) String token,
-      @Header(kHeaderAcceptLanguage) String acceptLanguage,
-      );
+    @Header(kHeaderAuthorization) String token,
+    @Header(kHeaderAcceptLanguage) String acceptLanguage,
+  );
 
   @GET(kEndPointAccountDelete)
   Future<SuccessNetworkResponse> deleteAccount(
-      @Header(kHeaderAuthorization) String token,
-      );
+    @Header(kHeaderAuthorization) String token,
+  );
 
   @POST(kEndPointAddFavouriteProduct)
-  Future<SuccessNetworkResponse> addFavouriteProduct(
-      @Header(kHeaderAuthorization) String token,
-      @Header(kHeaderAcceptLanguage) String acceptLanguage,
-      @Body() FavouriteProductRequest request);
+  Future<SuccessNetworkResponse> addFavouriteProduct(@Header(kHeaderAuthorization) String token, @Header(kHeaderAcceptLanguage) String acceptLanguage, @Body() FavouriteProductRequest request);
 
   @GET(kEndPointGetFavouriteProduct)
   Future<FavouriteProductResponse> getFavouriteProduct(
-      @Header(kHeaderAuthorization) String token,
-      @Header(kHeaderAcceptLanguage) String acceptLanguage,
-      );
+    @Header(kHeaderAuthorization) String token,
+    @Header(kHeaderAcceptLanguage) String acceptLanguage,
+  );
 
+  @GET(kEndPointNews)
+  Future<NotificationListResponse> getNotificationList(
+    @Header(kHeaderAuthorization) String token,
+    @Header(kHeaderAcceptLanguage) String acceptLanguage,
+  );
 }

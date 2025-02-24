@@ -13,6 +13,7 @@ import 'package:smile_shop/pages/my_address_page.dart';
 import 'package:smile_shop/pages/my_favourite_page.dart';
 import 'package:smile_shop/pages/my_order_page.dart';
 import 'package:smile_shop/pages/my_team_page.dart';
+import 'package:smile_shop/pages/notification_page.dart';
 import 'package:smile_shop/pages/packages_page.dart';
 import 'package:smile_shop/pages/referral_code_page.dart';
 import 'package:smile_shop/pages/refund_page.dart';
@@ -134,11 +135,12 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               body: Padding(
                 padding: const EdgeInsets.symmetric(
-                    horizontal: 16, vertical: kMargin40),
+                    horizontal: 16,),
                 child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      const SizedBox(height: kMarginMedium,),
                        Text(AppLocalizations.of(context)!.myOrders,),
                       const SizedBox(
                         height: 15,
@@ -160,17 +162,20 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                       ),
 
-                      GridView.count(
-                        crossAxisCount: 4,
-                        mainAxisSpacing: 0,
-
-                        /// Vertical spacing between items
-                        crossAxisSpacing: 10,
-
-                        /// Horizontal spacing between items
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        children: _buildProfileItems(context),
+                      Selector<ProfileBloc, bool>(
+                        selector: (context, bloc) => bloc.isNewNotiExist,
+                        builder: (context, isNewNoti, child) => GridView.count(
+                          crossAxisCount: 4,
+                          mainAxisSpacing: 0,
+                        
+                          /// Vertical spacing between items
+                          crossAxisSpacing: 10,
+                        
+                          /// Horizontal spacing between items
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          children: _buildProfileItems(context, isNewNoti),
+                        ),
                       )
                     ],
                   ),
@@ -240,7 +245,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
 
   ///build profile item
-  _buildProfileItems(BuildContext context) {
+  _buildProfileItems(BuildContext context, bool isNewNoti) {
     List<Widget> items = [];
     items.add(InkWell(
       onTap: () {
@@ -319,6 +324,16 @@ class _ProfilePageState extends State<ProfilePage> {
     items.add(InkWell(
       onTap: () {
         Navigator.of(context)
+            .push(MaterialPageRoute(builder: (_) => const NotificationPage()));
+      },
+      child: _buildProfileItem(context,
+      showBadge: isNewNoti,
+          title: AppLocalizations.of(context)!.notification, assetImagePath: kNotiSvgIcon),
+    ));
+
+    items.add(InkWell(
+      onTap: () {
+        Navigator.of(context)
             .push(MaterialPageRoute(builder: (_) => const ReferralCodePage()));
       },
       child: _buildProfileItem(context,
@@ -376,7 +391,7 @@ class _ProfilePageState extends State<ProfilePage> {
 }
 
 Widget _buildProfileItem(BuildContext context,
-    {required String title, required String assetImagePath}) {
+    {required String title, required String assetImagePath,  bool showBadge = false}) {
   double itemWidth = (MediaQuery.of(context).size.width - 30) / 4;
   return SizedBox(
     width: itemWidth,
@@ -384,9 +399,13 @@ Widget _buildProfileItem(BuildContext context,
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SvgImageView(imageName: assetImagePath,
-          imageHeight: 20,
-          imageWidth: 20,
+        Badge(
+          smallSize:showBadge ? 8 : 0,
+          largeSize: showBadge ? 8 : 0,
+          child: SvgImageView(imageName: assetImagePath,
+            imageHeight: 20,
+            imageWidth: 20,
+          ),
         ),
         const SizedBox(
           height: 7,

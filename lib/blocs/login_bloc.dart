@@ -4,6 +4,7 @@ import 'package:smile_shop/data/model/smile_shop_model_impl.dart';
 import 'package:smile_shop/data/vos/firebase_user_vo.dart';
 import 'package:smile_shop/network/api_constants.dart';
 import 'package:smile_shop/network/requests/dealer_login_request.dart';
+import 'package:smile_shop/service/notification_service.dart';
 
 import '../network/firebase_api.dart';
 import '../network/requests/login_request.dart';
@@ -23,29 +24,27 @@ class LogInBloc extends ChangeNotifier {
   final SmileShopModel _smileShopModel = SmileShopModelImpl();
 
   ///sign in
-  Future<LoginResponse> onTapSign() {
-    var loginRequest = LoginRequest(phone, kTypeEndUser, password);
+  Future<LoginResponse> onTapSign() async {
+    String? fcmToken = await NotificationService.instance.getFCMToken();
+    var loginRequest = LoginRequest(phone, kTypeEndUser, password, fcmToken);
     _showLoading();
-    return _smileShopModel
-        .login(loginRequest)
-        .whenComplete(() => _hideLoading());
+    return _smileShopModel.login(loginRequest).whenComplete(() => _hideLoading());
   }
 
   ///sign in
-  Future<LoginResponse> onTapDealerSign() {
-    var loginRequest = DealerLoginRequest(email, kTypeDealer, password);
+  Future<LoginResponse> onTapDealerSign() async {
+    String? fcmToken = await NotificationService.instance.getFCMToken();
+    var loginRequest = DealerLoginRequest(email, kTypeDealer, password, fcmToken);
     _showLoading();
-    return _smileShopModel
-        .dealerLogin(loginRequest)
-        .whenComplete(() => _hideLoading());
+    return _smileShopModel.dealerLogin(loginRequest).whenComplete(() => _hideLoading());
   }
 
-  void crateFirebaseChatUser(
-      {required int id,
-      required String name,
-      required String phone,
-      }) async {
-    var firebaseUser = FirebaseUserVo(id: id,name: name,phone: phone,role: 'user');
+  void crateFirebaseChatUser({
+    required int id,
+    required String name,
+    required String phone,
+  }) async {
+    var firebaseUser = FirebaseUserVo(id: id, name: name, phone: phone, role: 'user');
     await _api.createUser(firebaseUser);
   }
 
@@ -57,10 +56,10 @@ class LogInBloc extends ChangeNotifier {
     this.password = password;
   }
 
-  void onChangedEmail(String newValue){
+  void onChangedEmail(String newValue) {
     email = newValue;
     _notifySafely();
-}
+  }
 
   void _showLoading() {
     isLoading = true;

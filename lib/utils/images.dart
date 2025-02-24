@@ -37,6 +37,7 @@ const kFavouriteIcon = 'assets/images/favourite.svg';
 const kLogoutIcon = 'assets/images/logout.svg';
 const kWelcomeIcon = 'assets/images/welcome.png';
 const kWelcomeSvgIcon = 'assets/images/welcome.svg';
+const kNotiSvgIcon = 'assets/images/noti.svg';
 
 const kCampaignIcon = 'assets/images/campaign.png';
 const kDailyCheckInIcon = 'assets/images/daily_check_in.png';

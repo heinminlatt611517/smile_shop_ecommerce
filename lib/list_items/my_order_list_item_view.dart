@@ -7,7 +7,16 @@ import '../utils/dimens.dart';
 import '../widgets/cached_network_image_view.dart';
 
 class MyOrderListItemView extends StatelessWidget {
-  const MyOrderListItemView({super.key, required this.isRefundView, this.onTapRefund, this.onTapReview, this.orderVO, this.onTapCancel, this.onTapPayment});
+  const MyOrderListItemView({
+    super.key,
+    required this.isRefundView,
+    this.onTapRefund,
+    this.onTapReview,
+    this.orderVO,
+    this.onTapCancel,
+    this.onTapPayment,
+    this.hideButton = false,
+  });
 
   final bool isRefundView;
   final Function(OrderVO? orderVo)? onTapRefund;
@@ -15,6 +24,7 @@ class MyOrderListItemView extends StatelessWidget {
   final Function(int orderId, int subTotal)? onTapPayment;
   final Function(String orderId)? onTapCancel;
   final OrderVO? orderVO;
+  final bool hideButton;
 
   @override
   Widget build(BuildContext context) {
@@ -33,15 +43,18 @@ class MyOrderListItemView extends StatelessWidget {
               ),
               const Spacer(),
               Visibility(
-                visible: orderVO?.paymentType?.toString() == "cod" || orderVO?.paymentType?.toString() == "cod",
+                visible: orderVO?.isCOD() ?? false,
                 child: const Text(
-                  "Cash on Delivery | ",
+                  "Cash on Delivery",
                   style: TextStyle(fontSize: kTextRegular, color: kFillingFastColor),
                 ),
               ),
-              Text(
-                getStatusMessage(orderVO?.paymentStatus ?? ""),
-                style: const TextStyle(color: kFillingFastColor),
+              Visibility(
+                visible: !(orderVO?.isCOD() ?? false),
+                child: Text(
+                  getStatusMessage(orderVO?.paymentStatus ?? ""),
+                  style: const TextStyle(color: kFillingFastColor),
+                ),
               ),
             ],
           ),
@@ -108,7 +121,8 @@ class MyOrderListItemView extends StatelessWidget {
                       height: 15,
                     ),
                     Visibility(
-                      visible: orderVO?.paymentStatus == "ongoing",
+                      // visible: orderVO?.deliveryStatus == "ongoing",
+                      visible:  false,
                       child: Row(
                         children: [
                           const Spacer(),
@@ -152,7 +166,7 @@ class MyOrderListItemView extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Visibility(
-                          visible: orderVO?.deliveryStatus == "delivered",
+                          visible: (!hideButton) && (orderVO?.deliveryStatus == "delivered"),
                           child: InkWell(
                             onTap: () {
                               onTapRefund!(orderVO);
@@ -174,7 +188,7 @@ class MyOrderListItemView extends StatelessWidget {
                           width: 15,
                         ),
                         Visibility(
-                          visible: orderVO?.paymentStatus != "paid" && orderVO?.paymentStatus != 'cancel',
+                          visible: orderVO?.paymentStatus != "paid" && orderVO?.paymentStatus != 'cancel' &&  !(orderVO?.isCOD() ?? false),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [

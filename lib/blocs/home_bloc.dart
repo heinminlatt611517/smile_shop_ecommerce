@@ -88,6 +88,19 @@ class HomeBloc extends ChangeNotifier {
     _loadData();
   }
 
+  String getCurrentLanguageFormatted() {
+    switch (currentLanguage) {
+      case kAcceptLanguageEn:
+        return kEnglish;
+      case kAcceptLanguageMM:
+        return kMyanmar;
+      case kAcceptLanguageCh:
+        return kChinese;
+      default:
+        return '';
+    }
+  }
+
   Future<void> _loadData() async {
     ///get banner list
     _smileShopModel.banners(kAcceptLanguageEn).then((bannerResponse) {

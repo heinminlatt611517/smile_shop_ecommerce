@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:smile_shop/data/vos/banner_vo.dart';
 import 'package:smile_shop/data/vos/brand_and_category_vo.dart';
+import 'package:smile_shop/data/vos/notification_vo.dart';
 import 'package:smile_shop/data/vos/popup_data_vo.dart';
 import 'package:smile_shop/data/vos/refund_reason_vo.dart';
 import 'package:smile_shop/network/requests/favourite_product_request.dart';
@@ -714,6 +715,13 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   @override
   Future<List<ProductVO>> getFavouriteProducts(String token, String acceptLanguage) {
     return mApi.getFavouriteProduct('Bearer $token', acceptLanguage).asStream().map((response) => response.data ?? []).first.catchError((error) {
+      throw _createException(error);
+    });
+  }
+
+  @override
+  Future<List<NotificationVO>> getNotificationList(String token, String acceptLanguage) {
+    return mApi.getNotificationList('Bearer $token', acceptLanguage).asStream().map((response) => response.data ?? []).first.catchError((error) {
       throw _createException(error);
     });
   }

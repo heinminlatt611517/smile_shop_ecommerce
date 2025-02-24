@@ -13,10 +13,12 @@ class DealerLoginRequest {
   @JsonKey(name: "password")
   String? password;
 
-  DealerLoginRequest(this.email,this.type, this.password);
+  @JsonKey(name: "fcm_token")
+  String? fcmToken;
 
-  factory DealerLoginRequest.fromJson(Map<String, dynamic> json) =>
-      _$DealerLoginRequestFromJson(json);
+  DealerLoginRequest(this.email, this.type, this.password, this.fcmToken);
+
+  factory DealerLoginRequest.fromJson(Map<String, dynamic> json) => _$DealerLoginRequestFromJson(json);
 
   Map<String, dynamic> toJson() => _$DealerLoginRequestToJson(this);
 }

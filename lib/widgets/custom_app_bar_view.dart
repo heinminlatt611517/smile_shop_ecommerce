@@ -17,7 +17,7 @@ class CustomAppBarView extends StatelessWidget implements PreferredSizeWidget {
       surfaceTintColor: backgroundColor ?? kBackgroundColor,
       automaticallyImplyLeading: false,
       leadingWidth: 40,
-      backgroundColor:  kBackgroundColor,
+      backgroundColor: backgroundColor ?? kBackgroundColor,
       title: Row(
         children: [
           InkWell(

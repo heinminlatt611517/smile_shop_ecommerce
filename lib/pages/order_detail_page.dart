@@ -151,7 +151,7 @@ class OrderDetailPage extends StatelessWidget {
                         ),
 
                         Visibility(
-                          visible: bloc.orderDetails?.paymentType?.toString() == "cod" || bloc.orderDetails?.paymentType?.toString() == "cod",
+                          visible: bloc.orderDetails?.paymentType?.toString() == "cod" || bloc.orderDetails?.paymentType?.toLowerCase() == "cash on delivery",
                           child: const Padding(
                             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                             child: Row(
@@ -175,8 +175,9 @@ class OrderDetailPage extends StatelessWidget {
                           height: 30,
                         ),
                         MyOrderListItemView(
-                          isRefundView: true,
+                          isRefundView: false,
                           orderVO: bloc.orderDetails,
+                          hideButton: true,
                           onTapRefund: (orderNo) {},
                           onTapReview: (orderNo) {},
                         ),

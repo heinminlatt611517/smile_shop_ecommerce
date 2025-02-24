@@ -21,7 +21,7 @@ class PromotionPointView extends StatelessWidget {
          Text(
           '$point pt',
           style:const TextStyle(
-              fontSize: kTextSmall,
+              fontSize: kTextRegular,
               fontWeight: FontWeight.bold,
               color: kSecondaryColor),
         )

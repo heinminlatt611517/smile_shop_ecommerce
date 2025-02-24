@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:smile_shop/data/vos/user_vo.dart';
 import 'package:smile_shop/network/api_constants.dart';
 import 'package:smile_shop/network/responses/success_network_response.dart';
+import 'package:smile_shop/persistence/noti_status.dart';
 
 import '../data/model/smile_shop_model.dart';
 import '../data/model/smile_shop_model_impl.dart';
@@ -15,12 +16,24 @@ class ProfileBloc extends ChangeNotifier {
   UserVO? userProfile;
   bool isLoading = false;
   bool isDisposed = false;
+  bool isNewNotiExist = false;
   var authToken = "";
 
   ProfileBloc(BuildContext context) {
-    authToken =
-        _smileShopModel.getLoginResponseFromDatabase()?.accessToken ?? "";
+    authToken = _smileShopModel.getLoginResponseFromDatabase()?.accessToken ?? "";
     getProfile(context);
+    listenNotification();
+  }
+
+  void listenNotification() async {
+    NotiStatus notiStatus = NotiStatus();
+    isNewNotiExist = await notiStatus.getNotificationStatus();
+    notiStatus.notificationStatusStream.listen(
+      (event) async {
+        isNewNotiExist = await notiStatus.getNotificationStatus();
+        _notifySafely();
+      },
+    );
   }
 
   void getProfile(BuildContext context) {
@@ -42,9 +55,9 @@ class ProfileBloc extends ChangeNotifier {
         });
   }
 
- Future<SuccessNetworkResponse> deleteAccount() {
+  Future<SuccessNetworkResponse> deleteAccount() {
     _showLoading();
-   return _smileShopModel.deleteAccount(authToken).whenComplete(() => _hideLoading());
+    return _smileShopModel.deleteAccount(authToken).whenComplete(() => _hideLoading());
   }
 
   void _showLoading() {

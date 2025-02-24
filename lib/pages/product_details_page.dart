@@ -91,7 +91,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> with SingleTick
                               /// Spacer
                               const SliverToBoxAdapter(
                                 child: SizedBox(
-                                  height: kMarginMedium,
+                                  height: kMarginMedium2,
                                 ),
                               ),
 
@@ -105,8 +105,17 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> with SingleTick
                                     labelColor: kPrimaryColor,
                                     indicatorWeight: 1,
                                     dividerColor: Colors.transparent,
-                                    indicatorSize: TabBarIndicatorSize.label,
-                                    labelPadding: const EdgeInsets.symmetric(horizontal: 10),
+                                    // indicator: const UnderlineTabIndicator(
+                                    //   borderRadius: BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5)),
+                                    //   borderSide: BorderSide(width: 3.0, color: kPrimaryColor),
+                                    //   insets: EdgeInsets.symmetric(horizontal: 16.0),
+                                    // ),
+
+                                    indicatorSize: TabBarIndicatorSize.tab,
+                                    labelStyle: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    labelPadding: const EdgeInsets.only(bottom: 8),
                                     tabs: [
                                       Text(AppLocalizations.of(context)!.productDetails, textAlign: TextAlign.center),
                                       Text(AppLocalizations.of(context)!.productSpecifications, textAlign: TextAlign.center),
@@ -361,10 +370,13 @@ class ProductSpecificationView extends StatelessWidget {
           return Padding(
             padding: const EdgeInsets.only(bottom: kMarginMedium),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(vo.key ?? ''),
-                Text(vo.value ?? '')
+                Expanded(child: Text(vo.key ?? '')),
+                const SizedBox(
+                  width: kMarginMedium2,
+                ),
+                Expanded(child: Text(vo.value ?? ''))
               ],
             ),
           );
@@ -484,7 +496,7 @@ class CategoryAndReturnPointView extends StatelessWidget {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: kMarginMedium, horizontal: kMarginMedium),
+          padding: const EdgeInsets.symmetric(vertical: kMarginMedium, horizontal: kMarginMedium2),
           child: Row(
             children: [
               Expanded(
@@ -500,12 +512,12 @@ class CategoryAndReturnPointView extends StatelessWidget {
               ),
               const Icon(
                 Icons.star,
-                color: kPrimaryColor,
+                color: Colors.black,
                 size: 20,
               ),
               Text(
                 productVO?.rating.toString() ?? "0",
-                style: const TextStyle(fontSize: kTextRegular, fontWeight: FontWeight.bold, color: kPrimaryColor),
+                style: const TextStyle(fontSize: kTextSmall, fontWeight: FontWeight.bold, color: Colors.black),
               ),
               const SizedBox(
                 width: 20,
@@ -514,7 +526,7 @@ class CategoryAndReturnPointView extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: kMarginMedium, horizontal: kMarginMedium),
+          padding: const EdgeInsets.symmetric(vertical: kMarginMedium, horizontal: kMarginMedium2),
           child: Row(
             children: [
               Text(
@@ -526,7 +538,7 @@ class CategoryAndReturnPointView extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: kMarginMedium, horizontal: kMarginMedium),
+          padding: const EdgeInsets.symmetric(vertical: kMarginMedium, horizontal: kMarginMedium2),
           child: Row(
             children: [
               // const Text(
@@ -545,13 +557,15 @@ class CategoryAndReturnPointView extends StatelessWidget {
         ),
         Container(
           decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(kMarginMedium)),
-          margin: const EdgeInsets.symmetric(vertical: kMarginMedium, horizontal: kMarginMedium),
-          padding: const EdgeInsets.symmetric(vertical: kMarginMedium, horizontal: kMarginMedium),
+          margin: const EdgeInsets.symmetric(vertical: kMarginMedium, horizontal: kMarginMedium2),
+          padding: const EdgeInsets.symmetric(vertical: kMarginMedium2, horizontal: kMarginMedium3),
           child: Row(
             children: [
               const Text(
                 'Return Points',
-                style: TextStyle(fontSize: kTextRegular2x, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: kTextRegular,
+                ),
               ),
               const Spacer(),
               PromotionPointView(

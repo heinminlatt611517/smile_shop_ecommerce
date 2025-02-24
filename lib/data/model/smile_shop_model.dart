@@ -4,6 +4,7 @@ import 'package:smile_shop/data/vos/banner_vo.dart';
 import 'package:smile_shop/data/vos/campaign_vo.dart';
 import 'package:smile_shop/data/vos/category_vo.dart';
 import 'package:smile_shop/data/vos/login_data_vo.dart';
+import 'package:smile_shop/data/vos/notification_vo.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
 import 'package:smile_shop/data/vos/promotion_data_vo.dart';
 import 'package:smile_shop/data/vos/search_product_vo.dart';
@@ -222,4 +223,6 @@ abstract class SmileShopModel {
   Future<SuccessNetworkResponse> addFavouriteProduct(String token, String acceptLanguage, FavouriteProductRequest request);
 
   Future<List<ProductVO>> getFavouriteProducts(String token, String acceptLanguage);
+
+  Future<List<NotificationVO>> getNotificationList(String token, String acceptLanguage);
 }
