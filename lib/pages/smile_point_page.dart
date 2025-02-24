@@ -14,7 +14,6 @@ import '../utils/images.dart';
 import '../widgets/svg_image_view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
 class SmilePointPage extends StatelessWidget {
   const SmilePointPage({super.key});
 
@@ -29,21 +28,38 @@ class SmilePointPage extends StatelessWidget {
           backgroundColor: kSecondaryColor,
           surfaceTintColor: kSecondaryColor,
           automaticallyImplyLeading: false,
-          title:  Row(children: [InkWell(
-            onTap: (){
-              Navigator.pop(context);
-            },
-            child:const SvgImageView(
-              imageName: kBackSvgIcon,
-              imageHeight: 26,
-              imageWidth: 26,
+          leading: Padding(
+            padding: const EdgeInsets.only(left: kMarginMedium2),
+            child: Row(
+              children: [
+                Container(
+                  width: 26,
+                  height: 26,
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: const SvgImageView(
+                      imageName: kBackSvgIcon,
+                      imageHeight: 26,
+                      imageWidth: 26,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-            const Spacer(),
-            Text(AppLocalizations.of(context)?.smilePoint ?? ''),
-            const Spacer(),
-            const Text(''),
-          ],),
+          title: Row(
+            children: [
+              const Spacer(),
+              Text(
+                AppLocalizations.of(context)?.smilePoint ?? '',
+                style: const TextStyle(fontSize: kTextRegular3x, color: Colors.black, fontWeight: FontWeight.w500),
+              ),
+              const Spacer(),
+              const Text(''),
+            ],
+          ),
           actions: [
             Padding(
               padding: const EdgeInsets.only(right: kMarginMedium),
@@ -51,12 +67,11 @@ class SmilePointPage extends StatelessWidget {
                 alignment: Alignment.centerRight,
                 child: IntrinsicWidth(
                   child: InkWell(
-                    onTap:(){
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (builder) =>const WalletPasswordPage()));
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(builder: (builder) => const WalletPasswordPage()));
                     },
                     child: Container(
-                      padding:const EdgeInsets.symmetric(vertical: kMarginSmall,horizontal: kMarginMedium),
+                      padding: const EdgeInsets.symmetric(vertical: kMarginSmall, horizontal: kMarginMedium),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(kMarginMedium),
                           border: Border.all(
@@ -66,7 +81,10 @@ class SmilePointPage extends StatelessWidget {
                         child: Column(
                           children: [
                             Icon(Icons.lock),
-                            Text('Password',style: TextStyle(fontSize: kTextSmall),),
+                            Text(
+                              'Password',
+                              style: TextStyle(fontSize: kTextSmall),
+                            ),
                           ],
                         ),
                       ),
@@ -78,150 +96,136 @@ class SmilePointPage extends StatelessWidget {
           ],
         ),
         body: Column(
-         children: [
-           Selector<SmileWalletBloc,WalletVO?>(
-             selector: (context,bloc)=>bloc.walletVO,
-             builder: (context,walletData,child)=>
-              Container(
-               width: double.infinity,
-               color: kSecondaryColor,
-               child: Column(
-                 children: [
-                   const Text(
-                     'You                  ',
-                     style: TextStyle(
-                         fontSize: kTextRegular, color: kBackgroundColor),
-                   ),
-                   const SizedBox(
-                     height: 7,
-                   ),
+          children: [
+            Selector<SmileWalletBloc, WalletVO?>(
+              selector: (context, bloc) => bloc.walletVO,
+              builder: (context, walletData, child) => Container(
+                width: double.infinity,
+                color: kSecondaryColor,
+                child: Column(
+                  children: [
+                    const Text(
+                      'You                  ',
+                      style: TextStyle(fontSize: kTextRegular, color: Colors.white, fontWeight: FontWeight.w500),
+                    ),
+                    const SizedBox(
+                      height: 7,
+                    ),
                     Text(
-                     walletData?.amount.toString() ?? "",
-                     style:const TextStyle(
-                         fontSize: 32,
-                         color: Colors.black,
-                         fontWeight: FontWeight.bold),
-                   ),
-                   const Text(
-                     '                You have',
-                     style: TextStyle(
-                         fontSize: kTextRegular, color: kBackgroundColor),
-                   ),
-                   const SizedBox(
-                     height: 20,
-                   ),
-                   GestureDetector(
-                     onTap: () {
-                       Navigator.of(context).push(MaterialPageRoute(
-                           builder: (builder) =>const WalletPaymentMethodPage()));
-                     },
-                     child: IntrinsicWidth(
-                       child: Container(
-                         height: 28,
-                         decoration: BoxDecoration(
-                             color: kFillingFastColor,
-                             borderRadius: BorderRadius.circular(4)),
-                         child:  Center(
-                           child: Text(
-                             AppLocalizations
-                             .of(context)?.recharge ?? '',
-                             style: const TextStyle(color: kBackgroundColor),
-                           ),
-                         ),
-                       ),
-                     ),
-                   ),
-                   const SizedBox(
-                     height: 18,
-                   ),
-                   Consumer<SmileWalletBloc>(
-                     builder: (context,bloc,child)=>
-                      Visibility(
-                        visible: bloc.isShowSetPasswordText,
-                       child: Container(
-                         width: MediaQuery.of(context).size.width - 60,
-                         padding: const EdgeInsets.all(2),
-                         decoration: BoxDecoration(
-                             borderRadius: BorderRadius.circular(2),
-                             border: Border.all(color: kBackgroundColor)),
-                         child: const Center(
-                           child: Text(
-                             'Please set password to secure your smile point.',
-                             style: TextStyle(color: Colors.white),
-                           ),
-                         ),
-                       ),
-                     ),
-                   ),
-                   const SizedBox(
-                     height: 14,
-                   )
-                 ],
-               ),
-             ),
-           ),
-      Consumer<SmileWalletBloc>(
-        builder: (context, bloc, child) => Expanded(
-          child: Container(
-            decoration: const BoxDecoration(
-              color: kBackgroundColor,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(50),
-                topRight: Radius.circular(50),
-              ),
-            ),
-            width: double.infinity,
-            child: Column(
-              children: [
-                const SizedBox(height: 35),
-                CupertinoSlidingSegmentedControl(
-                  children: {
-                    0: Container(
-                      margin: const EdgeInsets.symmetric(vertical: 10),
-                      child:  Text(AppLocalizations.of(context)?.incomePoints ?? ''),
+                      walletData?.amount.toString() ?? "",
+                      style: const TextStyle(fontSize: 32, color: Colors.black, fontWeight: FontWeight.bold),
                     ),
-                    1: Container(
-                      margin: const EdgeInsets.symmetric(vertical: 10),
-                      child: Text(AppLocalizations.of(context)?.outcomePoints ?? ''),
+                    const Text(
+                      '                smile points',
+                      style: TextStyle(fontSize: kTextRegular, color: Colors.white, fontWeight: FontWeight.w500),
                     ),
-                  },
-                  thumbColor: kSecondaryColor,
-                  groupValue: bloc.selectedSegment,
-                  onValueChanged: (value) {
-                    bloc.onChangedSegmentedControl(value ?? 0);
-                  },
-                ),
-                Expanded(
-                  child: Selector<SmileWalletBloc, List<WalletTransactionVO>>(
-                    selector: (context, bloc) => bloc.walletTransactions,
-                    builder: (context, walletTransactions, child) =>
-                        Selector<SmileWalletBloc, bool>(
-                          selector: (context, bloc) => bloc.isLoading,
-                          builder: (context, isLoading, child) => Stack(
-                            children: [
-                              bloc.selectedSegment == 0
-                                  ? _buildIncomeAndOutcomePointListView(walletTransactions, AppLocalizations.of(context)?.incomePoints ?? '')
-                                  : _buildIncomeAndOutcomePointListView(walletTransactions, AppLocalizations.of(context)?.outcomePoints ?? ''),
-                              // Loading view
-                              if (isLoading)
-                                const Padding(
-                                  padding: EdgeInsets.only(top: 20),
-                                  child: Center(
-                                    child: CircularProgressIndicator(color: kPrimaryColor,)
-                                  ),
-                                ),
-                            ],
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(builder: (builder) => const WalletPaymentMethodPage()));
+                      },
+                      child: IntrinsicWidth(
+                        child: Container(
+                          // height: 28,
+                          decoration: BoxDecoration(color: kFillingFastColor, borderRadius: BorderRadius.circular(4)),
+                          padding: const EdgeInsets.symmetric(horizontal: kMarginMedium2, vertical: kMarginMedium),
+                          child: Center(
+                            child: Text(
+                              AppLocalizations.of(context)?.recharge ?? '',
+                              style: const TextStyle(color: kBackgroundColor, fontSize: kTextRegular),
+                            ),
                           ),
                         ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 18,
+                    ),
+                    Consumer<SmileWalletBloc>(
+                      builder: (context, bloc, child) => Visibility(
+                        visible: bloc.isShowSetPasswordText,
+                        child: Container(
+                          width: MediaQuery.of(context).size.width - 60,
+                          padding: const EdgeInsets.all(2),
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(2), border: Border.all(color: kBackgroundColor)),
+                          child: const Center(
+                            child: Text(
+                              'Please set password to secure your smile point.',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 14,
+                    )
+                  ],
+                ),
+              ),
+            ),
+            Consumer<SmileWalletBloc>(
+              builder: (context, bloc, child) => Expanded(
+                child: Container(
+                  decoration: const BoxDecoration(
+                    color: kBackgroundColor,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(50),
+                      topRight: Radius.circular(50),
+                    ),
+                  ),
+                  width: double.infinity,
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 35),
+                      CupertinoSlidingSegmentedControl(
+                        children: {
+                          0: Container(
+                            margin: const EdgeInsets.symmetric(vertical: 10),
+                            child: Text(AppLocalizations.of(context)?.incomePoints ?? ''),
+                          ),
+                          1: Container(
+                            margin: const EdgeInsets.symmetric(vertical: 10),
+                            child: Text(AppLocalizations.of(context)?.outcomePoints ?? ''),
+                          ),
+                        },
+                        thumbColor: kSecondaryColor,
+                        groupValue: bloc.selectedSegment,
+                        onValueChanged: (value) {
+                          bloc.onChangedSegmentedControl(value ?? 0);
+                        },
+                      ),
+                      Expanded(
+                        child: Selector<SmileWalletBloc, List<WalletTransactionVO>>(
+                          selector: (context, bloc) => bloc.walletTransactions,
+                          builder: (context, walletTransactions, child) => Selector<SmileWalletBloc, bool>(
+                            selector: (context, bloc) => bloc.isLoading,
+                            builder: (context, isLoading, child) => Stack(
+                              children: [
+                                bloc.selectedSegment == 0 ? _buildIncomeAndOutcomePointListView(walletTransactions, AppLocalizations.of(context)?.incomePoints ?? '') : _buildIncomeAndOutcomePointListView(walletTransactions, AppLocalizations.of(context)?.outcomePoints ?? ''),
+                                // Loading view
+                                if (isLoading)
+                                  const Padding(
+                                    padding: EdgeInsets.only(top: 20),
+                                    child: Center(
+                                        child: CircularProgressIndicator(
+                                      color: kPrimaryColor,
+                                    )),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
-          ),
+              ),
+            )
+          ],
         ),
-      )
-      ],
-                  ),
       ),
     );
   }
@@ -263,7 +267,7 @@ Widget _pointItemView(String pointLabel, WalletTransactionVO walletTransactionVO
                         style: const TextStyle(fontSize: kTextSmall),
                       ),
                       Text(
-                        pointLabel == 'Outcome Points'? '-${walletTransactionVO.points} Points' : '+${walletTransactionVO.points} Points',
+                        pointLabel == 'Outcome Points' ? '-${walletTransactionVO.points} Points' : '+${walletTransactionVO.points} Points',
                         style: const TextStyle(fontSize: kTextRegular2x, color: kSecondaryColor),
                       ),
                     ],
@@ -271,9 +275,9 @@ Widget _pointItemView(String pointLabel, WalletTransactionVO walletTransactionVO
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                       Text(
-                        pointLabel == 'Outcome Points'? 'Discharge' :'Recharge',
-                        style:const TextStyle(fontSize: kTextRegular2x),
+                      Text(
+                        pointLabel == 'Outcome Points' ? 'Discharge' : 'Recharge',
+                        style: const TextStyle(fontSize: kTextRegular2x),
                       ),
                       Text(
                         DateFormat('MMM dd, yyyy/HH').format(DateTime.parse(walletTransactionVO.date.toString())),
@@ -290,4 +294,3 @@ Widget _pointItemView(String pointLabel, WalletTransactionVO walletTransactionVO
     ),
   );
 }
-

@@ -13,10 +13,17 @@ class SubPaymentVO {
   @JsonKey(name: "method")
   final String? method;
 
+  String getCodeFormatted() {
+    if (code == "KBZ Direct Pay") {
+      return "KBZ Mobile Banking";
+    } else {
+      return code ?? '';
+    }
+  }
+
   SubPaymentVO({this.code, this.image, this.method});
 
-  factory SubPaymentVO.fromJson(Map<String, dynamic> json) =>
-      _$SubPaymentVOFromJson(json);
+  factory SubPaymentVO.fromJson(Map<String, dynamic> json) => _$SubPaymentVOFromJson(json);
 
   Map<String, dynamic> toJson() => _$SubPaymentVOToJson(this);
 }

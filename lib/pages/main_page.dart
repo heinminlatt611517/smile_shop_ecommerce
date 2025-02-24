@@ -53,7 +53,7 @@ class _MainPageState extends State<MainPage> {
           color: Colors.white,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            mainAxisSize: MainAxisSize.min,  // Ensures row only takes up required space
+            mainAxisSize: MainAxisSize.min, // Ensures row only takes up required space
             children: [
               _buildNavItem(kHomeIcon, AppLocalizations.of(context)!.home, 0),
               _buildNavItem(kCartIcon, AppLocalizations.of(context)!.cart, 1),
@@ -75,10 +75,11 @@ class _MainPageState extends State<MainPage> {
     return FutureBuilder<SharedPreferences>(
       future: SharedPreferences.getInstance(),
       builder: (context, snapshot) {
-        var prefs = snapshot.data!;
-        var alignment = prefs.getString('language_code') == "my"
-            ? MainAxisAlignment.start
-            : MainAxisAlignment.center;
+        MainAxisAlignment alignment = MainAxisAlignment.center;
+        if (snapshot.data != null) {
+          var prefs = snapshot.data;
+          alignment = prefs?.getString('language_code') == "my" ? MainAxisAlignment.start : MainAxisAlignment.center;
+        }
 
         return Expanded(
           child: InkWell(
@@ -110,9 +111,7 @@ class _MainPageState extends State<MainPage> {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 12,
-                        fontWeight: currentIndex == index
-                            ? FontWeight.bold
-                            : FontWeight.normal,
+                        fontWeight: currentIndex == index ? FontWeight.bold : FontWeight.normal,
                         color: labelColor,
                       ),
                     ),

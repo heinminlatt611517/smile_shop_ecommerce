@@ -23,13 +23,14 @@ class LoginResponseAdapter extends TypeAdapter<LoginDataVO> {
       accessToken: fields[2] as String?,
       expire: fields[3] as dynamic,
       refreshToken: fields[4] as String?,
+      type: fields[6] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, LoginDataVO obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.status)
       ..writeByte(1)
@@ -41,7 +42,9 @@ class LoginResponseAdapter extends TypeAdapter<LoginDataVO> {
       ..writeByte(4)
       ..write(obj.refreshToken)
       ..writeByte(5)
-      ..write(obj.data);
+      ..write(obj.data)
+      ..writeByte(6)
+      ..write(obj.type);
   }
 
   @override
@@ -68,6 +71,7 @@ LoginDataVO _$LoginDataVOFromJson(Map<String, dynamic> json) => LoginDataVO(
       accessToken: json['access_token'] as String?,
       expire: json['expires_in'],
       refreshToken: json['refresh_token'] as String?,
+      type: json['type'] as String?,
     );
 
 Map<String, dynamic> _$LoginDataVOToJson(LoginDataVO instance) =>
@@ -78,4 +82,5 @@ Map<String, dynamic> _$LoginDataVOToJson(LoginDataVO instance) =>
       'expires_in': instance.expire,
       'refresh_token': instance.refreshToken,
       'user': instance.data,
+      'type': instance.type,
     };

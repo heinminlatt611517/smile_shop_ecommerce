@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:smile_shop/blocs/campaign_bloc.dart';
@@ -21,6 +22,7 @@ class CampaignPage extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (_)=> CampaignBloc(),
       child: Scaffold(
+        backgroundColor: kBackgroundColor,
         appBar: AppBar(
           scrolledUnderElevation: 0,
           forceMaterialTransparency: true,
@@ -44,7 +46,7 @@ class CampaignPage extends StatelessWidget {
                       children: [
                         InkWell(
                             onTap: ()=> Navigator.of(context).pop(),
-                            child: Image.asset(kBackIcon)),
+                            child: SvgPicture.asset(kBackSvgIcon, width: 26, height: 26,)),
                          Row(
                           children: [
                             InkWell(

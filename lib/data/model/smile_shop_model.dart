@@ -4,6 +4,7 @@ import 'package:smile_shop/data/vos/banner_vo.dart';
 import 'package:smile_shop/data/vos/campaign_vo.dart';
 import 'package:smile_shop/data/vos/category_vo.dart';
 import 'package:smile_shop/data/vos/login_data_vo.dart';
+import 'package:smile_shop/data/vos/notification_vo.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
 import 'package:smile_shop/data/vos/promotion_data_vo.dart';
 import 'package:smile_shop/data/vos/search_product_vo.dart';
@@ -58,18 +59,18 @@ abstract class SmileShopModel {
 
   Future<LoginResponse> dealerLogin(DealerLoginRequest loginRequest);
 
-  Future register(String invitationCode, String name, String phone,
-      String loginPassword, String paymentPassword);
+  Future register(String invitationCode, String name, String phone, String loginPassword, String paymentPassword);
 
   Future<List<BannerVO>> banners(String acceptLanguage);
 
-  Future<List<CategoryVO>> categories(String type,String acceptLanguage,);
+  Future<List<CategoryVO>> categories(
+    String type,
+    String acceptLanguage,
+  );
 
-  Future<ProductResponseDataVO> products(
-      String token, String acceptLanguage, int endUserId, int page);
+  Future<ProductResponseDataVO> products(String token, String acceptLanguage, int endUserId, int page);
 
-  Future<ProductVO> getProductDetails(
-      String endUserId, String productId, String acceptLanguage, String token);
+  Future<ProductVO> getProductDetails(String endUserId, String productId, String acceptLanguage, String token);
 
   Future verifyOtp(OtpVerifyRequest otpVerifyRequest);
 
@@ -79,8 +80,7 @@ abstract class SmileShopModel {
 
   Future forgotPasswordVerifyOtp(OtpVerifyRequest otpVerifyRequest);
 
-  Future<SetPasswordResponse> forgotPasswordSetPassword(
-      SetPasswordRequest setPasswordRequest);
+  Future<SetPasswordResponse> forgotPasswordSetPassword(SetPasswordRequest setPasswordRequest);
 
   Future<OtpResponse> forgotPasswordRequestOtp(OtpRequest otpRequest);
 
@@ -90,27 +90,15 @@ abstract class SmileShopModel {
     String endUserId,
   );
 
-  Future<List<ProductVO>> searchProductsByName(String token,
-      String acceptLanguage, String endUserId, int pageNo, String name);
+  Future<List<ProductVO>> searchProductsByName(String token, String acceptLanguage, String endUserId, int pageNo, String name);
 
-  Future<List<ProductVO>> searchProductsByRating(String token,
-      String acceptLanguage, String endUserId, int pageNo, double rating);
+  Future<List<ProductVO>> searchProductsByRating(String token, String acceptLanguage, String endUserId, int pageNo, double rating);
 
-  Future<List<ProductVO>> searchProductsByPrice(String token,
-      String acceptLanguage, String endUserId, int pageNo, int price,String operator);
+  Future<List<ProductVO>> searchProductsByPrice(String token, String acceptLanguage, String endUserId, int pageNo, int price, String operator);
 
-  Future<List<ProductVO>> searchProductsWithDynamicParam(
-      String token,
-      String acceptLanguage,
-      String endUserId,
-      int pageNo,
-      String? name,
-      double? rating,
-      int? minRange,
-      int? maxRange);
+  Future<List<ProductVO>> searchProductsWithDynamicParam(String token, String acceptLanguage, String endUserId, int pageNo, String? name, double? rating, int? minRange, int? maxRange);
 
-  Future addNewAddress(
-      String accessToken, String acceptLanguage, AddressRequest addressRequest);
+  Future addNewAddress(String accessToken, String acceptLanguage, AddressRequest addressRequest);
 
   Future<List<StateVO>> states();
 
@@ -120,13 +108,11 @@ abstract class SmileShopModel {
 
   Future deleteAddress(String accessToken, int addressId);
 
-  Future editAddress(
-      String accessToken, int addressId, AddressRequest addressRequest);
+  Future editAddress(String accessToken, int addressId, AddressRequest addressRequest);
 
   Future<List<CategoryVO>> addressCategories(String accessToken);
 
-  Future<List<SubcategoryVO>> subCategoryByCategory(String token,
-      String acceptLanguage, SubCategoryRequest subCategoryRequest);
+  Future<List<SubcategoryVO>> subCategoryByCategory(String token, String acceptLanguage, SubCategoryRequest subCategoryRequest);
 
   ///get data from database
   LoginDataVO? getLoginResponseFromDatabase();
@@ -151,20 +137,12 @@ abstract class SmileShopModel {
 
   void addSingleSearchProductToDatabase(SearchProductVO searchProductVO);
 
-  Future<SuccessPaymentResponse> postOrder(String token,
-      String acceptLanguage,
-      int subTotal,
-      String paymentType,
-      String itemList,
-      String appType,
-      String paymentData,int usedPoint);
+  Future<SuccessPaymentResponse> postOrder(String token, String acceptLanguage, int subTotal, String paymentType, String itemList, String appType, String paymentData, int usedPoint);
 
-  Future<List<PaymentVO>> payments(String token, String acceptLanguage,String action);
-  Future<List<ProductVO>> searchProductsCategoryId(String token,
-      String acceptLanguage, String endUserId, int pageNo, int categoryId);
+  Future<List<PaymentVO>> payments(String token, String acceptLanguage, String action);
+  Future<List<ProductVO>> searchProductsCategoryId(String token, String acceptLanguage, String endUserId, int pageNo, int categoryId);
 
-  Future<List<ProductVO>> searchProductsBySubCategoryId(String token,
-      String acceptLanguage, String endUserId, int pageNo, int subCategoryId);
+  Future<List<ProductVO>> searchProductsBySubCategoryId(String token, String acceptLanguage, String endUserId, int pageNo, int subCategoryId);
 
   ///for cart list
   List<ProductVO> firstTimeGetProductFromDatabase();
@@ -179,99 +157,72 @@ abstract class SmileShopModel {
   void deleteFavouriteProductById(int productId);
   Stream<List<ProductVO>> getFavouriteProductFromDatabase();
 
-  Future<List<OrderVO>> orderList(String token,String acceptLanguage);
-  Future<List<OrderVO>> getOrderListByOrderType(String token,String acceptLanguage,String orderType);
-  Future<OrderVO> orderDetails(String token,String acceptLanguage,String orderId);
-  Future<UserVO> userProfile(String token,String acceptLanguage);
-  Future<ProfileResponse> updateProfile(String token,String acceptLanguage,String name,File? image);
-  Future<ProfileResponse> updateProfileName(String token,String acceptLanguage,String name);
+  Future<List<OrderVO>> orderList(String token, String acceptLanguage);
+  Future<List<OrderVO>> getOrderListByOrderType(String token, String acceptLanguage, String orderType);
+  Future<OrderVO> orderDetails(String token, String acceptLanguage, String orderId);
+  Future<UserVO> userProfile(String token, String acceptLanguage);
+  Future<ProfileResponse> updateProfile(String token, String acceptLanguage, String name, File? image);
+  Future<ProfileResponse> updateProfileName(String token, String acceptLanguage, String name);
 
-  Future<WalletVO> getWallet(String token,String acceptLanguage);
+  Future<WalletVO> getWallet(String token, String acceptLanguage);
 
-  Future checkWalletAmount(String token, String acceptLanguage,
-      CheckWalletAmountRequest checkWalletAmountRequest);
+  Future checkWalletAmount(String token, String acceptLanguage, CheckWalletAmountRequest checkWalletAmountRequest);
 
-  Future<SuccessNetworkResponse> checkWalletPassword(String token, String acceptLanguage,
-      CheckWalletPasswordRequest checkWalletPasswordRequest);
+  Future<SuccessNetworkResponse> checkWalletPassword(String token, String acceptLanguage, CheckWalletPasswordRequest checkWalletPasswordRequest);
 
-  Future<SuccessNetworkResponse> setWalletPassword(String token, String acceptLanguage,
-      SetWalletPasswordRequest setWalletPasswordRequest);
+  Future<SuccessNetworkResponse> setWalletPassword(String token, String acceptLanguage, SetWalletPasswordRequest setWalletPasswordRequest);
 
-  Future<SuccessPaymentResponse> rechargeWallet(String token, String acceptLanguage,
-      int total,String paymentType,String appType,String paymentData );
+  Future<SuccessPaymentResponse> rechargeWallet(String token, String acceptLanguage, int total, String paymentType, String appType, String paymentData);
 
-  Future<List<WalletTransactionVO>> getWalletTransactions(
-      String token, String acceptLanguage, WalletTransitionRequest walletTransactionRequest);
+  Future<List<WalletTransactionVO>> getWalletTransactions(String token, String acceptLanguage, WalletTransitionRequest walletTransactionRequest);
 
-  Future<CheckInVO> getUserCheckIn(
-      String token, String acceptLanguage);
+  Future<CheckInVO> getUserCheckIn(String token, String acceptLanguage);
 
-  Future<SuccessNetworkResponse> postUserCheckIn(
-      String token, String acceptLanguage, CheckInRequest checkInRequest);
+  Future<SuccessNetworkResponse> postUserCheckIn(String token, String acceptLanguage, CheckInRequest checkInRequest);
 
-  Future<List<CampaignVo>> getCampaign(
-      String token,String acceptLanguage);
+  Future<List<CampaignVo>> getCampaign(String token, String acceptLanguage);
 
-  Future<CampaignVo> getCampaignDetail(
-      String token,String acceptLanguage,CampaignDetailRequest request);
+  Future<CampaignVo> getCampaignDetail(String token, String acceptLanguage, CampaignDetailRequest request);
 
-  Future<void> joinCampaign(
-      String token,String acceptLanguage,CampaignJoinRequest request);
+  Future<void> joinCampaign(String token, String acceptLanguage, CampaignJoinRequest request);
 
-  Future<List<CampaignParticipantVo>> getCampaignParticipants(
-      String token,String acceptLanguage,CampaignDetailRequest request);
+  Future<List<CampaignParticipantVo>> getCampaignParticipants(String token, String acceptLanguage, CampaignDetailRequest request);
 
-  Future<SuccessNetworkResponse> cancelOrder(
-      String token, String acceptLanguage, OrderCancelRequest request);
+  Future<SuccessNetworkResponse> cancelOrder(String token, String acceptLanguage, OrderCancelRequest request);
 
-  Future<SuccessPaymentResponse> makePayment(String token, String acceptLanguage,
-      String paymentType,String paymentData,String orderNo,String appType);
+  Future<SuccessPaymentResponse> makePayment(String token, String acceptLanguage, String paymentType, String paymentData, String orderNo, String appType);
 
-  Future<SuccessNetworkResponse> postRefund(
-      String token, String acceptLanguage,int orderNo,int reasonId,File? image);
+  Future<SuccessNetworkResponse> postRefund(String token, String acceptLanguage, String orderNo, int reasonId, int userId, File? image);
 
-  Future<List<RefundVO>> getRefunds(
-      String token, String acceptLanguage);
+  Future<List<RefundVO>> getRefunds(String token, String acceptLanguage);
 
-  Future<List<RefundVO>> getRefundsByStatus(
-      String token, String acceptLanguage,int status);
+  Future<List<RefundVO>> getRefundsByStatus(String token, String acceptLanguage, int status);
 
-  Future<PromotionDataVO> getPromotionLogsByStatus(
-      String token, String acceptLanguage,String status);
+  Future<PromotionDataVO> getPromotionLogsByStatus(String token, String acceptLanguage, String status);
 
-  Future<List<MyTeamVO>> getMyTeams(
-      String token, String acceptLanguage);
+  Future<List<MyTeamVO>> getMyTeams(String token, String acceptLanguage);
 
-  Future<List<PackageVO>> getPackages(
-      String token, String acceptLanguage);
+  Future<List<PackageVO>> getPackages(String token, String acceptLanguage);
 
-  Future<PackageVO> getPackageDetails(
-      String token, String acceptLanguage,int id);
+  Future<PackageVO> getPackageDetails(String token, String acceptLanguage, int id);
 
-  Future<SuccessNetworkResponse> checkOrderStatus(
-      String acceptLanguage,String token,OrderStatusRequest request);
+  Future<SuccessNetworkResponse> checkOrderStatus(String acceptLanguage, String token, OrderStatusRequest request);
 
-  Future<CampaignHistoryResponse> getCampaignHistory(
-      String acceptLanguage,String token);
+  Future<CampaignHistoryResponse> getCampaignHistory(String acceptLanguage, String token);
 
-  Future<SuccessNetworkResponse> updateHomePopUp(
-      String acceptLanguage,String token,PopupRequest request);
+  Future<SuccessNetworkResponse> updateHomePopUp(String acceptLanguage, String token, PopupRequest request);
 
-  Future<PopupDataVO> getHomePopUpData(
-      String acceptLanguage,String token,PopupRequest request);
+  Future<PopupDataVO> getHomePopUpData(String acceptLanguage, String token, PopupRequest request);
 
-  Future<SuccessNetworkResponse> changePassword(
-      String token, String acceptLanguage,int endUserId,String oldPassword,String newPassword,String confirmPassword,String passwordType);
+  Future<SuccessNetworkResponse> changePassword(String token, String acceptLanguage, int endUserId, String oldPassword, String newPassword, String confirmPassword, String passwordType);
 
-  Future<List<RefundReasonVO>> getRefundReasons(
-      String acceptLanguage,String token);
+  Future<List<RefundReasonVO>> getRefundReasons(String acceptLanguage, String token);
 
-  Future<SuccessNetworkResponse> deleteAccount(
-      String token);
+  Future<SuccessNetworkResponse> deleteAccount(String token);
 
-  Future<SuccessNetworkResponse> addFavouriteProduct(
-      String token,String acceptLanguage,FavouriteProductRequest request);
+  Future<SuccessNetworkResponse> addFavouriteProduct(String token, String acceptLanguage, FavouriteProductRequest request);
 
-  Future<List<ProductVO>> getFavouriteProducts(
-      String token,String acceptLanguage);
+  Future<List<ProductVO>> getFavouriteProducts(String token, String acceptLanguage);
+
+  Future<List<NotificationVO>> getNotificationList(String token, String acceptLanguage);
 }

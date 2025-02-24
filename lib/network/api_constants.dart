@@ -128,6 +128,8 @@ const kTypeDealer = "dealer";
 const kTypeEndUser = "enduser";
 const kStatusIncome = "income";
 const kStatusOutCome = "outcome";
-
+const kEnglish = "Eng";
+const kMyanmar = "MM";
+const kChinese = "Ch";
 
 const errorImageUrl = "https://i0.wp.com/www.bishoprook.com/wp-content/uploads/2021/05/placeholder-image-gray-16x9-1.png?ssl=1";

@@ -17,7 +17,6 @@ import '../utils/strings.dart';
 import '../widgets/loading_view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
 class SearchProductPage extends StatelessWidget {
   const SearchProductPage({super.key});
 
@@ -26,8 +25,7 @@ class SearchProductPage extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => SearchProductBloc(),
       child: Consumer<SearchProductBloc>(
-        builder: (context,bloc,child)=>
-         Scaffold(
+        builder: (context, bloc, child) => Scaffold(
             backgroundColor: kBackgroundColor,
             body: Selector<SearchProductBloc, bool>(
               selector: (context, bloc) => bloc.isLoading,
@@ -43,10 +41,7 @@ class SearchProductPage extends StatelessWidget {
 
                       SliverToBoxAdapter(
                         child: Container(
-                          decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.only(
-                                  bottomRight: Radius.circular(kMarginMedium2),
-                                  bottomLeft: Radius.circular(kMarginMedium2))),
+                          decoration: const BoxDecoration(borderRadius: BorderRadius.only(bottomRight: Radius.circular(kMarginMedium2), bottomLeft: Radius.circular(kMarginMedium2))),
                           child: Column(
                             children: [
                               ///search bar with back arrow view
@@ -60,44 +55,32 @@ class SearchProductPage extends StatelessWidget {
                               ///search history view
                               Selector<SearchProductBloc, List<ProductVO>>(
                                 selector: (context, bloc) => bloc.products,
-                                builder: (context, products, child) => Selector<
-                                    SearchProductBloc, List<SearchProductVO>>(
-                                  selector: (context, bloc) =>
-                                      bloc.searchProducts,
+                                builder: (context, products, child) => Selector<SearchProductBloc, List<SearchProductVO>>(
+                                  selector: (context, bloc) => bloc.searchProducts,
                                   builder: (context, snapshot, child) {
                                     if (snapshot.isNotEmpty) {
                                       return products.isEmpty
                                           ? Column(
                                               children: [
                                                 Padding(
-                                                  padding:
-                                                      const EdgeInsets.symmetric(
-                                                          horizontal:
-                                                              kMarginMedium2),
+                                                  padding: const EdgeInsets.symmetric(horizontal: kMarginMedium2),
                                                   child: Row(
                                                     children: [
-                                                       Text(
+                                                      Text(
                                                         AppLocalizations.of(context)!.searchHistory,
-                                                        style:const TextStyle(
-                                                            fontSize:
-                                                                kTextRegular),
+                                                        style: const TextStyle(fontSize: kTextRegular),
                                                       ),
                                                       const Spacer(),
                                                       InkWell(
                                                         onTap: () {
-                                                          var bloc = context.read<
-                                                              SearchProductBloc>();
+                                                          var bloc = context.read<SearchProductBloc>();
                                                           bloc.onTapClearAll();
                                                         },
-                                                        child:  Row(
+                                                        child: Row(
                                                           children: [
                                                             Text(
                                                               AppLocalizations.of(context)!.clearAll,
-                                                              style:const TextStyle(
-                                                                  fontSize:
-                                                                      kTextRegular,
-                                                                  color: Colors
-                                                                      .grey),
+                                                              style: const TextStyle(fontSize: kTextRegular, color: Colors.grey),
                                                             ),
                                                             const SizedBox(
                                                               width: kMarginSmall,
@@ -115,20 +98,11 @@ class SearchProductPage extends StatelessWidget {
                                                 ),
                                                 ListView.builder(
                                                   shrinkWrap: true,
-                                                  padding:
-                                                      const EdgeInsets.symmetric(
-                                                          vertical:
-                                                              kMarginMedium2,
-                                                          horizontal:
-                                                              kMarginLarge),
+                                                  padding: const EdgeInsets.symmetric(vertical: kMarginMedium2, horizontal: kMarginLarge),
                                                   itemCount: snapshot.length,
                                                   itemBuilder: (context, index) {
-                                                    var bloc = context.read<
-                                                        SearchProductBloc>();
-                                                    return SearchProductHistoryListItemView(
-                                                        searchProductVO:
-                                                            snapshot[index],
-                                                        bloc: bloc);
+                                                    var bloc = context.read<SearchProductBloc>();
+                                                    return SearchProductHistoryListItemView(searchProductVO: snapshot[index], bloc: bloc);
                                                   },
                                                 ),
 
@@ -161,23 +135,16 @@ class SearchProductPage extends StatelessWidget {
                                 children: [
                                   ///rating and price view
                                   Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: kMarginMedium2),
+                                    padding: const EdgeInsets.only(left: kMarginMedium2),
                                     child: Row(
                                       children: [
                                         ///rating
                                         InkWell(
                                           onTap: () {
-                                            showRatingAndPriceGeneralDialog(
-                                                context,bloc);
+                                            showRatingAndPriceGeneralDialog(context, bloc);
                                           },
                                           child: Container(
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        kMarginSmall),
-                                                color: Colors.black
-                                                    .withOpacity(0.1)),
+                                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(kMarginSmall), color: Colors.black.withOpacity(0.1)),
                                             child: const Row(
                                               children: [
                                                 SizedBox(
@@ -196,16 +163,10 @@ class SearchProductPage extends StatelessWidget {
                                         ///Price
                                         InkWell(
                                           onTap: () {
-                                            showRatingAndPriceGeneralDialog(
-                                                context,bloc);
+                                            showRatingAndPriceGeneralDialog(context, bloc);
                                           },
                                           child: Container(
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        kMarginSmall),
-                                                color: Colors.black
-                                                    .withOpacity(0.1)),
+                                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(kMarginSmall), color: Colors.black.withOpacity(0.1)),
                                             child: const Row(
                                               children: [
                                                 SizedBox(
@@ -229,60 +190,47 @@ class SearchProductPage extends StatelessWidget {
                                     child: GridView.builder(
                                       shrinkWrap: true,
                                       padding: EdgeInsets.zero,
-                                      physics:
-                                          const NeverScrollableScrollPhysics(),
+                                      physics: const NeverScrollableScrollPhysics(),
                                       itemBuilder: (context, index) {
                                         return TrendingProductListItemView(
                                           productVO: products[index],
                                           onTapFavourite: (product) {
-                                            var bloc =
-                                                Provider.of<SearchProductBloc>(
-                                                    context,
-                                                    listen: false);
+                                            var bloc = Provider.of<SearchProductBloc>(context, listen: false);
                                             bloc.onTapFavourite(product, context);
                                           },
                                         );
                                       },
                                       itemCount: products.length,
-                                      gridDelegate:
-                                          const SliverGridDelegateWithFixedCrossAxisCount(
-                                              crossAxisCount: 2,
-                                              mainAxisSpacing: 14.0,
-                                              crossAxisSpacing: 10.0,
-                                              childAspectRatio: 2 / 2.7),
+                                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, mainAxisSpacing: 14.0, crossAxisSpacing: 10.0, childAspectRatio: 2 / 2.7),
                                     ),
                                   ),
                                 ],
                               );
                             } else {
                               return Selector<SearchProductBloc, bool>(
-                                  selector: (context, bloc) =>
-                                      bloc.isScreenLaunch,
-                                  builder: (context, isFirstTimeScreenLaunch,
-                                          child) =>
-                                      isFirstTimeScreenLaunch == true
-                                          ? const SizedBox.shrink()
-                                          : Center(
-                                              child: Column(
-                                                children: [
-                                                  const SizedBox(
-                                                    height: 100,
-                                                  ),
-                                                  Image.asset(
-                                                    kNoResultImage,
-                                                    fit: BoxFit.contain,
-                                                    height: kSplashAppLogoHeight,
-                                                    width: kSplashAppLogoWidth,
-                                                  ),
-                                                  const Text(
-                                                    textAlign: TextAlign.center,
-                                                    'There were no result\nTry a new search.',
-                                                    style: TextStyle(
-                                                        fontSize: kTextSmall),
-                                                  ),
-                                                ],
+                                  selector: (context, bloc) => bloc.isScreenLaunch,
+                                  builder: (context, isFirstTimeScreenLaunch, child) => isFirstTimeScreenLaunch == true
+                                      ? const SizedBox.shrink()
+                                      : Center(
+                                          child: Column(
+                                            children: [
+                                              const SizedBox(
+                                                height: 100,
                                               ),
-                                            ));
+                                              Image.asset(
+                                                kNoResultImage,
+                                                fit: BoxFit.contain,
+                                                height: kSplashAppLogoHeight,
+                                                width: kSplashAppLogoWidth,
+                                              ),
+                                              const Text(
+                                                textAlign: TextAlign.center,
+                                                'There were no result\nTry a new search.',
+                                                style: TextStyle(fontSize: kTextSmall),
+                                              ),
+                                            ],
+                                          ),
+                                        ));
                             }
                           },
                         ),
@@ -316,9 +264,9 @@ class SearchBarWithBackArrowView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(kMarginMedium2),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      padding: const EdgeInsets.symmetric(horizontal: kMarginMedium2),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           InkWell(
             onTap: () {
@@ -326,51 +274,47 @@ class SearchBarWithBackArrowView extends StatelessWidget {
             },
             child: const SvgImageView(
               imageName: kBackSvgIcon,
-              imageHeight: 20,
-              imageWidth: 20,
+              imageHeight: 26,
+              imageWidth: 26,
             ),
           ),
           const SizedBox(
-            height: kMarginMedium2,
+            width: kMarginMedium2,
           ),
-          Container(
-            width: double.infinity, // Adjust the width as needed
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            decoration: BoxDecoration(
-              color: kSearchBackgroundColor,
-              borderRadius: BorderRadius.circular(8.0),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.2),
-                  spreadRadius: 1,
-                  blurRadius: 5,
-                  offset: const Offset(0, 3), // changes position of shadow
-                ),
-              ],
-            ),
-            child: Row(
-              children: [
-                const Icon(Icons.search),
-                const SizedBox(width: 8.0),
-                // Space between the icon and text field
-                Expanded(
-                  child: TextField(
-                    enabled: true,
-                    onChanged: (value) {
-                      var bloc = Provider.of<SearchProductBloc>(context,
-                          listen: false);
-                      bloc.queryStreamController.sink.add(value);
-                    },
-                    cursorColor: kPrimaryColor,
-                    decoration:  InputDecoration(
-                        border: InputBorder.none,
-                        hintText: AppLocalizations.of(context)!.searchHere,
-                        hintStyle:const TextStyle(
-                            fontSize: kTextRegular,
-                            fontWeight: FontWeight.bold)),
+          Expanded(
+            child: Container(
+              width: double.infinity, // Adjust the width as needed
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              decoration: BoxDecoration(
+                color: kSearchBackgroundColor,
+                borderRadius: BorderRadius.circular(8.0),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.2),
+                    spreadRadius: 1,
+                    blurRadius: 5,
+                    offset: const Offset(0, 3), // changes position of shadow
                   ),
-                ),
-              ],
+                ],
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.search),
+                  const SizedBox(width: 8.0),
+                  // Space between the icon and text field
+                  Expanded(
+                    child: TextField(
+                      enabled: true,
+                      onChanged: (value) {
+                        var bloc = Provider.of<SearchProductBloc>(context, listen: false);
+                        bloc.queryStreamController.sink.add(value);
+                      },
+                      cursorColor: kPrimaryColor,
+                      decoration: InputDecoration(border: InputBorder.none, hintText: AppLocalizations.of(context)!.searchHere, hintStyle: const TextStyle(fontSize: kTextRegular)),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -382,7 +326,7 @@ class SearchBarWithBackArrowView extends StatelessWidget {
 ///rating and price view
 class RatingAndPriceView extends StatelessWidget {
   final SearchProductBloc bloc;
-  const RatingAndPriceView({super.key,required this.bloc});
+  const RatingAndPriceView({super.key, required this.bloc});
 
   @override
   Widget build(BuildContext context) {
@@ -418,9 +362,7 @@ class RatingAndPriceView extends StatelessWidget {
                     Navigator.pop(context);
                   },
                   child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(kMarginMedium),
-                        color: Colors.black.withOpacity(0.1)),
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(kMarginMedium), color: Colors.black.withOpacity(0.1)),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -440,11 +382,7 @@ class RatingAndPriceView extends StatelessWidget {
                 );
               },
               itemCount: ratingDummyData.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 5,
-                  mainAxisSpacing: 10.0,
-                  crossAxisSpacing: 10.0,
-                  childAspectRatio: 3 / 1.4),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 5, mainAxisSpacing: 10.0, crossAxisSpacing: 10.0, childAspectRatio: 3 / 1.4),
             ),
             Container(
               margin: const EdgeInsets.symmetric(vertical: kMarginLarge),
@@ -457,9 +395,8 @@ class RatingAndPriceView extends StatelessWidget {
             ),
             _PriceRangeSlider(onPriceRangeChanged: (minRange, maxRange) {
               Navigator.pop(context);
-             bloc.onChangedMinMaxRange(
-                 minRange, maxRange);
-                          })
+              bloc.onChangedMinMaxRange(minRange, maxRange);
+            })
           ],
         ),
       ),
@@ -467,7 +404,7 @@ class RatingAndPriceView extends StatelessWidget {
   }
 }
 
-void showRatingAndPriceGeneralDialog(BuildContext context,SearchProductBloc bloc) {
+void showRatingAndPriceGeneralDialog(BuildContext context, SearchProductBloc bloc) {
   showGeneralDialog(
     context: context,
     barrierDismissible: true,
@@ -484,7 +421,9 @@ void showRatingAndPriceGeneralDialog(BuildContext context,SearchProductBloc bloc
               color: Colors.white,
               borderRadius: BorderRadius.circular(12),
             ),
-            child: RatingAndPriceView(bloc: bloc,),
+            child: RatingAndPriceView(
+              bloc: bloc,
+            ),
           ),
         ),
       );
@@ -595,4 +534,3 @@ class _PriceRangeSliderState extends State<_PriceRangeSlider> {
     );
   }
 }
-

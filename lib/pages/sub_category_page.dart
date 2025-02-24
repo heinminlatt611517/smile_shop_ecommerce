@@ -38,30 +38,30 @@ class SubCategoryPage extends StatelessWidget {
                       SubCategoryBloc bloc = Provider.of<SubCategoryBloc>(context, listen: false);
                       return subCategories.isNotEmpty
                           ? Padding(
-                        padding: const EdgeInsets.all(kMarginMedium2),
-                        child: CustomScrollView(
-                          controller: bloc.scrollController,
-                          slivers: [
-                            ///sub category view
-                            SliverToBoxAdapter(
-                              child: SubCategoryView(
-                                subCategories: subCategories,
+                              padding: const EdgeInsets.all(kMarginMedium2),
+                              child: CustomScrollView(
+                                controller: bloc.scrollController,
+                                slivers: [
+                                  ///sub category view
+                                  SliverToBoxAdapter(
+                                    child: SubCategoryView(
+                                      subCategories: subCategories,
+                                    ),
+                                  ),
+
+                                  ///spacer
+                                  const SliverToBoxAdapter(
+                                      child: SizedBox(
+                                    height: kMarginMedium2,
+                                  )),
+
+                                  ///product view
+                                  const SliverToBoxAdapter(
+                                    child: ProductsView(),
+                                  ),
+                                ],
                               ),
-                            ),
-
-                            ///spacer
-                            const SliverToBoxAdapter(
-                                child: SizedBox(
-                                  height: kMarginMedium2,
-                                )),
-
-                            ///product view
-                            const SliverToBoxAdapter(
-                              child: ProductsView(),
-                            ),
-                          ],
-                        ),
-                      )
+                            )
                           : const SizedBox.shrink();
                     }),
 
@@ -134,21 +134,26 @@ class ProductsView extends StatelessWidget {
         List<ProductVO> products = bloc.products;
         return products.isNotEmpty
             ? GridView.builder(
-          shrinkWrap: true,
-          padding: EdgeInsets.zero,
-          physics: const NeverScrollableScrollPhysics(),
-          itemBuilder: (context, index) {
-            return TrendingProductListItemView(
-              productVO: products[index],
-              onTapFavourite: (product) {
-                var bloc = Provider.of<SubCategoryBloc>(context, listen: false);
-                bloc.onTapFavourite(product, context);
-              },
-            );
-          },
-          itemCount: products.length,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, mainAxisSpacing: 14.0, crossAxisSpacing: 10.0, childAspectRatio: 2 / 2.7),
-        )
+                shrinkWrap: true,
+                padding: EdgeInsets.zero,
+                physics: const NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  return TrendingProductListItemView(
+                    productVO: products[index],
+                    onTapFavourite: (product) {
+                      var bloc = Provider.of<SubCategoryBloc>(context, listen: false);
+                      bloc.onTapFavourite(product, context);
+                    },
+                  );
+                },
+                itemCount: products.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 14.0,
+                  crossAxisSpacing: 10.0,
+                  childAspectRatio: 2 / 2.7,
+                ),
+              )
             : const SizedBox.shrink();
       },
     );

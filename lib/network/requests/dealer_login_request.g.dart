@@ -11,6 +11,7 @@ DealerLoginRequest _$DealerLoginRequestFromJson(Map<String, dynamic> json) =>
       json['email'] as String?,
       json['type'] as String?,
       json['password'] as String?,
+      json['fcm_token'] as String?,
     );
 
 Map<String, dynamic> _$DealerLoginRequestToJson(DealerLoginRequest instance) =>
@@ -18,4 +19,5 @@ Map<String, dynamic> _$DealerLoginRequestToJson(DealerLoginRequest instance) =>
       'email': instance.email,
       'type': instance.type,
       'password': instance.password,
+      'fcm_token': instance.fcmToken,
     };

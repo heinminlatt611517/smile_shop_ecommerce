@@ -13,9 +13,9 @@ import '../widgets/loading_view.dart';
 import 'add_new_address_page.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
 class MyAddressPage extends StatelessWidget {
-  const MyAddressPage({super.key});
+  final bool needReturnValue;
+  const MyAddressPage({super.key, required this.needReturnValue});
 
   @override
   Widget build(BuildContext context) {
@@ -23,9 +23,9 @@ class MyAddressPage extends StatelessWidget {
       create: (context) => MyAddressBloc(),
       child: WillPopScope(
         onWillPop: () async {
-          Navigator.pop(context,true);
+          Navigator.pop(context, true);
           return true;
-         },
+        },
         child: Scaffold(
           backgroundColor: kBackgroundColor,
           appBar: CustomAppBarView(title: AppLocalizations.of(context)?.myAddress ?? ''),
@@ -46,8 +46,7 @@ class MyAddressPage extends StatelessWidget {
                         ///add address view
                         InkWell(
                           onTap: () async {
-                            final bool? isUpdated =
-                                await Navigator.of(context).push(
+                            final bool? isUpdated = await Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (builder) => const AddNewAddressPage(),
                               ),
@@ -62,7 +61,7 @@ class MyAddressPage extends StatelessWidget {
                               border: Border.all(color: kPrimaryColor, width: 1),
                               borderRadius: BorderRadius.circular(kMarginMedium2),
                             ),
-                            child:  Center(
+                            child: Center(
                               child: Text(
                                 AppLocalizations.of(context)?.addAddress ?? '',
                                 style: const TextStyle(fontSize: kTextRegular2x),
@@ -78,21 +77,21 @@ class MyAddressPage extends StatelessWidget {
                         ///address list item view
                         Selector<MyAddressBloc, List<AddressVO>>(
                           selector: (context, bloc) => bloc.addressList,
-                          builder: (context, addressList, child) =>
-                              ListView.separated(
+                          builder: (context, addressList, child) => ListView.separated(
                             itemCount: addressList.length,
                             shrinkWrap: true,
                             itemBuilder: (context, index) {
                               return InkWell(
-                                onTap: () {
-                                  // Navigator.pop(context,
-                                  //     '${addressList[index].townshipVO?.name},${addressList[index].stateVO?.name}');
-                                },
+                                onTap: needReturnValue
+                                    ? () {
+                                        // Navigator.pop(context, '${addressList[index].townshipVO?.name},${addressList[index].stateVO?.name}');
+                                        Navigator.pop(context, addressList[index]);
+                                      }
+                                    : null,
                                 child: AddressListItemView(
                                     addressVO: addressList[index],
                                     onTapEdit: () async {
-                                      final bool? isUpdated =
-                                          await Navigator.of(context).push(
+                                      final bool? isUpdated = await Navigator.of(context).push(
                                         MaterialPageRoute(
                                           builder: (builder) => EditAddressPage(
                                             addressVO: addressList[index],
@@ -100,9 +99,7 @@ class MyAddressPage extends StatelessWidget {
                                         ),
                                       );
                                       if (isUpdated == true) {
-                                        context
-                                            .read<MyAddressBloc>()
-                                            .refreshAddress();
+                                        context.read<MyAddressBloc>().refreshAddress();
                                       }
                                     }),
                               );

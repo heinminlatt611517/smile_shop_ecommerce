@@ -17,14 +17,17 @@ dependencies:
   envied: ^0.5.4+1
   envied_generator: ^0.5.4+1
   firebase_core: ^3.8.1
+  firebase_messaging: ^15.2.2
   firebase_storage: ^12.3.7
   flutter:
     sdk: flutter
+  flutter_launcher_icons: ^0.14.3
+  flutter_local_notifications: ^18.0.1
   flutter_localizations:
     sdk: flutter
   flutter_spinkit: ^5.2.1
   flutter_svg: ^2.0.10+1
-  flutter_widget_from_html: ^0.15.3
+  flutter_widget_from_html: ^0.16.0
   geocoding: ^3.0.0
   get_storage: ^2.1.1
   google_maps_flutter: ^2.10.0
@@ -51,7 +54,6 @@ dependencies:
   url_launcher: ^6.3.1
   video_player: ^2.9.2
   voice_message_package: ^2.2.1
-
 
 dev_dependencies:
   build_runner: ^2.4.11

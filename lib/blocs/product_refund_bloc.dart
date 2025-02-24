@@ -3,7 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:smile_shop/data/vos/refund_reason_vo.dart';
+import 'package:smile_shop/data/vos/user_vo.dart';
 import 'package:smile_shop/network/api_constants.dart';
+import 'package:smile_shop/network/responses/success_network_response.dart';
+import 'package:smile_shop/persistence/user_data_dao.dart';
 
 import '../data/model/smile_shop_model.dart';
 import '../data/model/smile_shop_model_impl.dart';
@@ -14,23 +17,20 @@ class ProductRefundBloc extends ChangeNotifier {
   bool isLoading = false;
   bool isDisposed = false;
   var authToken = "";
-  int? orderId;
+  String? orderId;
   int? reasonId;
   final nameController = TextEditingController();
   List<RefundReasonVO> refundReason = [];
 
   ProductRefundBloc(this.orderId) {
-    authToken =
-        _smileShopModel.getLoginResponseFromDatabase()?.accessToken ?? "";
+    authToken = _smileShopModel.getLoginResponseFromDatabase()?.accessToken ?? "";
 
     getRefundReasons();
   }
 
   void getRefundReasons() {
     _showLoading();
-    _smileShopModel
-        .getRefundReasons(kAcceptLanguageEn, authToken)
-        .then((response) {
+    _smileShopModel.getRefundReasons(kAcceptLanguageEn, authToken).then((response) {
       refundReason = response;
       _notifySafely();
     }).whenComplete(() => _hideLoading());
@@ -39,8 +39,7 @@ class ProductRefundBloc extends ChangeNotifier {
   uploadImage() async {
     try {
       final ImagePicker picker = ImagePicker();
-      var pickFile =
-          await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
+      var pickFile = await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
       if (pickFile != null) {
         imgFile = File(pickFile.path ?? '');
         _notifySafely();
@@ -50,11 +49,18 @@ class ProductRefundBloc extends ChangeNotifier {
     }
   }
 
-  Future onTapDone() {
+  Future<SuccessNetworkResponse> onTapDone() {
     _showLoading();
+    UserVO userVO = UserDataDao().getUserData() ?? UserVO();
     return _smileShopModel
         .postRefund(
-            authToken, kAcceptLanguageEn, orderId ?? 0, reasonId ?? 0, imgFile)
+      authToken,
+      kAcceptLanguageEn,
+      orderId ?? '0',
+      reasonId ?? 0,
+      userVO.id ?? 0,
+      imgFile,
+    )
         .whenComplete(() {
       _hideLoading();
     });

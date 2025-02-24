@@ -19,43 +19,41 @@ import '../widgets/error_dialog_view.dart';
 import '../widgets/loading_view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
 class ProductRefundPage extends StatelessWidget {
   final OrderVO? orderVO;
-  const ProductRefundPage({super.key,this.orderVO});
+  const ProductRefundPage({super.key, this.orderVO});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => ProductRefundBloc(0),
+      create: (context) => ProductRefundBloc(orderVO?.orderNo),
       child: Scaffold(
         backgroundColor: kBackgroundColor,
         appBar: AppBar(
           backgroundColor: Colors.white,
           centerTitle: true,
           toolbarHeight: 60,
-          title:  Text(AppLocalizations.of(context)!.productRefund),
+          title: Text(AppLocalizations.of(context)!.productRefund),
         ),
-        body: Selector<ProductRefundBloc,bool>(
-            selector: (context, bloc) => bloc.isLoading,
-            builder: (context, isLoading, child) =>
-           Stack(
-             children: [
-               Padding(
+        body: Selector<ProductRefundBloc, bool>(
+          selector: (context, bloc) => bloc.isLoading,
+          builder: (context, isLoading, child) => Stack(
+            children: [
+              Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                 child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                       Text(
-                         AppLocalizations.of(context)!.youNeedToSendYourRefundItem,
-                        style:const TextStyle(fontSize: kTextRegular),
+                      Text(
+                        AppLocalizations.of(context)!.youNeedToSendYourRefundItem,
+                        style: const TextStyle(fontSize: kTextRegular),
                       ),
                       const SizedBox(
                         height: 30,
                       ),
-                       Padding(
-                        padding:const EdgeInsets.symmetric(horizontal: 15),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
                         child: Row(
                           children: [
                             const Icon(
@@ -77,10 +75,10 @@ class ProductRefundPage extends StatelessWidget {
                                       style: TextStyle(fontSize: kTextRegular),
                                     ),
                                     Padding(
-                                      padding:const EdgeInsets.only(right: 20),
+                                      padding: const EdgeInsets.only(right: 20),
                                       child: Text(
                                         orderVO?.addressVO?.phone ?? "",
-                                        style:const TextStyle(fontSize: kTextRegular),
+                                        style: const TextStyle(fontSize: kTextRegular),
                                       ),
                                     ),
                                   ],
@@ -90,7 +88,7 @@ class ProductRefundPage extends StatelessWidget {
                                 ),
                                 Text(
                                   orderVO?.addressVO?.address ?? "",
-                                  style:const TextStyle(fontSize: kTextRegular),
+                                  style: const TextStyle(fontSize: kTextRegular),
                                 ),
                               ],
                             ))
@@ -105,9 +103,10 @@ class ProductRefundPage extends StatelessWidget {
                         height: 20,
                       ),
                       //drop down
-                       Consumer<ProductRefundBloc>(
-                         builder: (context,bloc,child)=>
-                            RefundDropDown(refundReasonList: bloc.refundReason,)),
+                      Consumer<ProductRefundBloc>(
+                          builder: (context, bloc, child) => RefundDropDown(
+                                refundReasonList: bloc.refundReason,
+                              )),
 
                       // upload photo
                       const SizedBox(
@@ -120,32 +119,25 @@ class ProductRefundPage extends StatelessWidget {
                       ),
 
                       Consumer<ProductRefundBloc>(
-                        builder: (context,bloc,child)=>
-                         GestureDetector(
+                        builder: (context, bloc, child) => GestureDetector(
                           onTap: () {
                             bloc.onTapDone().then((value) {
-                              if (value.statusCode == 200) {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (builder) => const RefundPage()));
+                              if (value.status == 200) {
+                                Navigator.of(context).push(MaterialPageRoute(builder: (builder) => const RefundPage()));
                               }
                             }).catchError((error) {
-                              showCommonDialog(
-                                  context: context,
-                                  dialogWidget: ErrorDialogView(
-                                      errorMessage: error.toString()));
+                              showCommonDialog(context: context, dialogWidget: ErrorDialogView(errorMessage: error.toString()));
                             });
                           },
                           child: Container(
                             height: 40,
                             margin: const EdgeInsets.symmetric(horizontal: 10),
                             width: double.infinity,
-                            decoration: BoxDecoration(
-                                color: kPrimaryColor,
-                                borderRadius: BorderRadius.circular(4)),
-                            child:  Center(
+                            decoration: BoxDecoration(color: kPrimaryColor, borderRadius: BorderRadius.circular(4)),
+                            child: Center(
                               child: Text(
                                 AppLocalizations.of(context)!.done,
-                                style:const TextStyle(color: kBackgroundColor),
+                                style: const TextStyle(color: kBackgroundColor),
                               ),
                             ),
                           ),
@@ -154,21 +146,21 @@ class ProductRefundPage extends StatelessWidget {
                     ],
                   ),
                 ),
-                         ),
+              ),
 
-               ///loading view
-               if (isLoading)
-                 Container(
-                   color: Colors.black12,
-                   child: const Center(
-                     child: LoadingView(
-                       indicatorColor: kPrimaryColor,
-                       indicator: Indicator.ballSpinFadeLoader,
-                     ),
-                   ),
-                 ),
-             ],
-           ),
+              ///loading view
+              if (isLoading)
+                Container(
+                  color: Colors.black12,
+                  child: const Center(
+                    child: LoadingView(
+                      indicatorColor: kPrimaryColor,
+                      indicator: Indicator.ballSpinFadeLoader,
+                    ),
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );
@@ -176,52 +168,42 @@ class ProductRefundPage extends StatelessWidget {
 }
 
 ///dropdown
-class RefundDropDown extends StatefulWidget {
+class RefundDropDown extends StatelessWidget {
   final List<RefundReasonVO> refundReasonList;
-  const RefundDropDown({super.key,required this.refundReasonList});
-
-  @override
-  @override
-  State<RefundDropDown> createState() => _RefundDropDownState();
-}
-
-class _RefundDropDownState extends State<RefundDropDown> {
-  String? _selectedValue;
+  const RefundDropDown({super.key, required this.refundReasonList});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-         Text(AppLocalizations.of(context)!.chooseRefundReason,style:const TextStyle(fontSize: kTextRegular2x),),
+        Text(
+          AppLocalizations.of(context)!.chooseRefundReason,
+          style: const TextStyle(fontSize: kTextRegular2x),
+        ),
         const SizedBox(
           height: 15,
         ),
         Consumer<ProductRefundBloc>(
-          builder: (context,bloc,child)=>
-           Container(
+          builder: (context, bloc, child) => Container(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             width: double.infinity,
-            decoration: BoxDecoration(
-                color: kHintSearchLocationColor.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(10)),
-            child: DropdownButton<dynamic>(
+            decoration: BoxDecoration(color: kHintSearchLocationColor.withOpacity(0.1), borderRadius: BorderRadius.circular(10)),
+            child: DropdownButton<int>(
               underline: const SizedBox.shrink(),
-              value: _selectedValue,
+              value: bloc.reasonId,
               isExpanded: true,
               hint: const Text('Choose One'),
-              items: widget.refundReasonList
-                  .map<DropdownMenuItem<dynamic>>((dynamic value) {
-                return DropdownMenuItem<dynamic>(
-                  value: value,
+              items: refundReasonList.map<DropdownMenuItem<int>>((RefundReasonVO value) {
+                return DropdownMenuItem<int>(
+                  value: value.id ?? 0,
                   child: Text(value.name ?? ""),
                 );
               }).toList(),
-              onChanged: (dynamic newValue) {
-                setState(() {
-                  _selectedValue = newValue;
-                  bloc.onChangedReasonId(newValue.id ?? 0);
-                });
+              onChanged: (int? newValue) {
+                if (newValue != null) {
+                  bloc.onChangedReasonId(newValue);
+                }
               },
             ),
           ),
@@ -243,55 +225,54 @@ class _UploadPhotoViewState extends State<UploadPhotoView> {
   @override
   Widget build(BuildContext context) {
     return Consumer<ProductRefundBloc>(
-      builder: (context,bloc,child)=>
-      bloc.imgFile == null ?
-       InkWell(
-         onTap: (){
-           bloc.uploadImage();
-         },
-         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-             Text(AppLocalizations.of(context)!.uploadPhoto),
-            const SizedBox(
-              height: 20,
-            ),
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                SizedBox(
-                  height: 100,
-                  width: double.infinity,
-                  child: Image.asset(kPhotoFrameImage),
-                ),
-                const Icon(Icons.add)
-              ],
+      builder: (context, bloc, child) => bloc.imgFile == null
+          ? InkWell(
+              onTap: () {
+                bloc.uploadImage();
+              },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(AppLocalizations.of(context)!.uploadPhoto),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      SizedBox(
+                        height: 100,
+                        width: double.infinity,
+                        child: Image.asset(kPhotoFrameImage),
+                      ),
+                      const Icon(Icons.add)
+                    ],
+                  )
+                ],
+              ),
             )
-          ],
-               ),
-       ) : ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: Image.file(
-          height: 100,
-          width: double.infinity,
-          bloc.imgFile ?? File(""),
-          fit: BoxFit.cover,
-        ),
-      ),
+          : ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: Image.file(
+                height: 100,
+                width: double.infinity,
+                bloc.imgFile ?? File(""),
+                fit: BoxFit.cover,
+              ),
+            ),
     );
   }
 }
 
 class OrderProductView extends StatelessWidget {
   final OrderVO? orderVO;
-  const OrderProductView({super.key,required this.orderVO});
+  const OrderProductView({super.key, required this.orderVO});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
-      decoration: BoxDecoration(
-          color: Colors.white, borderRadius: BorderRadius.circular(20)),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20)),
       width: double.infinity,
       child: Column(
         children: [
@@ -315,8 +296,7 @@ class OrderProductView extends StatelessWidget {
                 child: CachedNetworkImageView(
                   imageHeight: 80,
                   imageWidth: 80,
-                  imageUrl: orderVO?.orderProducts?.first.product?.image ??
-                      errorImageUrl,
+                  imageUrl: orderVO?.orderProducts?.first.product?.image ?? errorImageUrl,
                 ),
               ),
               const SizedBox(
@@ -330,9 +310,7 @@ class OrderProductView extends StatelessWidget {
                       orderVO?.orderProducts?.first.product?.name ?? '',
                       overflow: TextOverflow.ellipsis,
                       softWrap: true,
-                      style: const TextStyle(
-                          fontSize: kTextRegular2x,
-                          fontWeight: FontWeight.w600),
+                      style: const TextStyle(fontSize: kTextRegular2x, fontWeight: FontWeight.w600),
                     ),
                     const SizedBox(
                       height: kMargin10,
@@ -379,4 +357,3 @@ class OrderProductView extends StatelessWidget {
     );
   }
 }
-

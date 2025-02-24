@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 const Color kBackgroundColor = Color(0xFFF5F5F5);
 const Color kPrimaryColor = Color(0xFFFF8800);
 const Color kSecondaryColor = Color(0xFFFDCC03);
+const Color kAddressContainerColor = Color(0xFFEBEBEB);
 const Color kBottomNavigationUnSelectedColor = Color(0xFF888888);
 const Color kInactiveColor = Color(0xFF323232);
 const Color kSearchBackgroundColor = Color(0xFFEAEEF1);
@@ -31,7 +32,7 @@ const Color kCheckoutContainerStartColor = Color(0xFF444444);
 const Color kCheckoutContainerEndColor = Color(0xFF444444);
 const Color kCheckoutContainerCenterColor = Color(0xFF222222);
 const Color kTicketInformationPolicyButtonColor = Color(0xFFFF6B00);
-const Color kCancelBookingColor = Color.fromRGBO(255,46,0,1);
+const Color kCancelBookingColor = Color.fromRGBO(255, 46, 0, 1);
 const Color kRefundAmountColor = Color(0xFFFF2E00);
 const Color kMovieAnimationTypeColor = Color.fromRGBO(85, 85, 85, 1);
 const Color kFillingFastColor = Color(0xFFFF7A00);
@@ -51,5 +52,3 @@ const Color kSearchContainerCenterColor = Color.fromRGBO(85, 85, 85, 0.40);
 const Color kSearchContainerEndColor = Color.fromRGBO(85, 85, 85, 0.40);
 const Color kLoginOrSignUpContainerBgColor = Color.fromRGBO(0, 255, 106, 0.10);
 const Color kSearchAppBarBackgroundColor = Color.fromRGBO(0, 0, 0, 0.50);
-
-

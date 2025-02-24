@@ -32,16 +32,17 @@ class LoginDataVO {
   @HiveField(5)
   final UserVO? data;
 
-  LoginDataVO(
-      {this.status,
-        this.message,
-        this.data,
-        this.accessToken,
-        this.expire,
-        this.refreshToken});
+  @JsonKey(name: "type")
+  @HiveField(6)
+  final String? type;
 
-  factory LoginDataVO.fromJson(Map<String, dynamic> json) =>
-      _$LoginDataVOFromJson(json);
+  bool isEndUser() {
+    return type?.toLowerCase() == "enduser";
+  }
+
+  LoginDataVO({this.status, this.message, this.data, this.accessToken, this.expire, this.refreshToken, this.type});
+
+  factory LoginDataVO.fromJson(Map<String, dynamic> json) => _$LoginDataVOFromJson(json);
 
   Map<String, dynamic> toJson() => _$LoginDataVOToJson(this);
 }

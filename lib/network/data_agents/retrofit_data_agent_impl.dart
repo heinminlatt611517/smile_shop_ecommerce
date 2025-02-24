@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:smile_shop/data/vos/banner_vo.dart';
 import 'package:smile_shop/data/vos/brand_and_category_vo.dart';
+import 'package:smile_shop/data/vos/notification_vo.dart';
 import 'package:smile_shop/data/vos/popup_data_vo.dart';
 import 'package:smile_shop/data/vos/refund_reason_vo.dart';
 import 'package:smile_shop/network/requests/favourite_product_request.dart';
@@ -76,328 +77,184 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
 
   @override
   Future<LoginResponse> login(LoginRequest loginRequest) {
-    return mApi
-        .login(loginRequest)
-        .asStream()
-        .map((response) => response)
-        .first
-        .catchError((error) {
+    return mApi.login(loginRequest).asStream().map((response) => response).first.catchError((error) {
       throw _createException(error);
     });
   }
 
   @override
   Future<LoginResponse> dealerLogin(DealerLoginRequest loginRequest) {
-    return mApi
-        .dealerLogin(loginRequest)
-        .asStream()
-        .map((response) => response)
-        .first
-        .catchError((error) {
+    return mApi.dealerLogin(loginRequest).asStream().map((response) => response).first.catchError((error) {
       throw _createException(error);
     });
   }
 
   @override
   Future<List<BannerVO>> banners(String acceptLanguage) {
-    return mApi
-        .banners(acceptLanguage)
-        .asStream()
-        .map((response) => response.data ?? [])
-        .first
-        .catchError((error) {
+    return mApi.banners(acceptLanguage).asStream().map((response) => response.data ?? []).first.catchError((error) {
       throw _createException(error);
     });
   }
 
   @override
-  Future<ProductResponseDataVO> products(
-      String token, String acceptLanguage, int endUserId, int page) {
-    return mApi
-        .products('Bearer $token', acceptLanguage, endUserId, page)
-        .asStream()
-        .map((response) => response.data ?? ProductResponseDataVO())
-        .first
-        .catchError((error) {
+  Future<ProductResponseDataVO> products(String token, String acceptLanguage, int endUserId, int page) {
+    return mApi.products('Bearer $token', acceptLanguage, endUserId, page).asStream().map((response) => response.data ?? ProductResponseDataVO()).first.catchError((error) {
       throw _createException(error);
     });
   }
 
   @override
-  Future<ProductVO> getProductDetails(
-      String endUserId, String productId, String acceptLanguage, String token) {
-    return mApi
-        .productDetail('Bearer $token', acceptLanguage, endUserId, int.parse(productId))
-        .asStream()
-        .map((response) => response.data ?? ProductVO())
-        .first
-        .catchError((error) {
+  Future<ProductVO> getProductDetails(String endUserId, String productId, String acceptLanguage, String token) {
+    return mApi.productDetail('Bearer $token', acceptLanguage, endUserId, int.parse(productId)).asStream().map((response) => response.data ?? ProductVO()).first.catchError((error) {
       throw _createException(error);
     });
   }
 
   @override
   Future verifyOtp(OtpVerifyRequest otpVerifyRequest) {
-    return mApi
-        .verifyOtp(otpVerifyRequest)
-        .asStream()
-        .map((response) => response)
-        .first
-        .catchError((error) {
+    return mApi.verifyOtp(otpVerifyRequest).asStream().map((response) => response).first.catchError((error) {
       throw _createException(error);
     });
   }
 
   @override
   Future<OtpResponse> requestOtp(OtpRequest otpRequest) {
-    return mApi
-        .requestOtp(otpRequest)
-        .asStream()
-        .map((response) => response)
-        .first
-        .catchError((error) {
+    return mApi.requestOtp(otpRequest).asStream().map((response) => response).first.catchError((error) {
       throw _createException(error);
     });
   }
 
   @override
-  Future register(String invitationCode, String name, String phone,
-      String loginPassword, String paymentPassword) {
-    return mApi
-        .register(invitationCode, name, phone, loginPassword, paymentPassword)
-        .asStream()
-        .map((response) => response)
-        .first
-        .catchError((error) {
+  Future register(String invitationCode, String name, String phone, String loginPassword, String paymentPassword) {
+    return mApi.register(invitationCode, name, phone, loginPassword, paymentPassword).asStream().map((response) => response).first.catchError((error) {
       throw _createException(error);
     });
   }
 
   @override
-  Future<BrandAndCategoryVO> getBrandsAndCategories(
-      String token, String acceptLanguage, String endUserId) {
-    return mApi
-        .getBrandsAndCategories(token, acceptLanguage, endUserId)
-        .asStream()
-        .map((response) => response.data ?? BrandAndCategoryVO())
-        .first
-        .catchError((error) {
+  Future<BrandAndCategoryVO> getBrandsAndCategories(String token, String acceptLanguage, String endUserId) {
+    return mApi.getBrandsAndCategories(token, acceptLanguage, endUserId).asStream().map((response) => response.data ?? BrandAndCategoryVO()).first.catchError((error) {
       throw _createException(error);
     });
   }
 
   @override
-  Future<List<ProductVO>> searchProductsByName(String token,
-      String acceptLanguage, String endUserId, int pageNo, String name) {
-    return mApi
-        .searchProductsByName(
-            'Bearer $token', acceptLanguage, int.parse(endUserId), pageNo, name)
-        .asStream()
-        .map((response) => response.data?.products ?? [])
-        .first
-        .catchError((error) {
+  Future<List<ProductVO>> searchProductsByName(String token, String acceptLanguage, String endUserId, int pageNo, String name) {
+    return mApi.searchProductsByName('Bearer $token', acceptLanguage, int.parse(endUserId), pageNo, name).asStream().map((response) => response.data?.products ?? []).first.catchError((error) {
       throw _createException(error);
     });
   }
 
   @override
-  Future<List<ProductVO>> searchProductsByRating(String token,
-      String acceptLanguage, String endUserId, int pageNo, double rating) {
-    return mApi
-        .searchProductsByRating(
-            token, acceptLanguage, int.parse(endUserId), pageNo, rating)
-        .asStream()
-        .map((response) => response.data?.products ?? [])
-        .first
-        .catchError((error) {
+  Future<List<ProductVO>> searchProductsByRating(String token, String acceptLanguage, String endUserId, int pageNo, double rating) {
+    return mApi.searchProductsByRating(token, acceptLanguage, int.parse(endUserId), pageNo, rating).asStream().map((response) => response.data?.products ?? []).first.catchError((error) {
       throw _createException(error);
     });
   }
 
   @override
-  Future<List<ProductVO>> searchProductsByPrice(
-      String token,
-      String acceptLanguage,
-      String endUserId,
-      int pageNo,
-      int price,
-      String operator) {
-    return mApi
-        .searchProductsByPrice(token, acceptLanguage, int.parse(endUserId),
-            pageNo, price, operator)
-        .asStream()
-        .map((response) => response.data?.products ?? [])
-        .first
-        .catchError((error) {
+  Future<List<ProductVO>> searchProductsByPrice(String token, String acceptLanguage, String endUserId, int pageNo, int price, String operator) {
+    return mApi.searchProductsByPrice(token, acceptLanguage, int.parse(endUserId), pageNo, price, operator).asStream().map((response) => response.data?.products ?? []).first.catchError((error) {
       throw _createException(error);
     });
   }
 
   @override
-  Future<SetPasswordResponse> setPassword(
-      SetPasswordRequest setPasswordRequest) {
-    return mApi
-        .setPassword(setPasswordRequest)
-        .asStream()
-        .map((response) => response)
-        .first
-        .catchError((error) {
+  Future<SetPasswordResponse> setPassword(SetPasswordRequest setPasswordRequest) {
+    return mApi.setPassword(setPasswordRequest).asStream().map((response) => response).first.catchError((error) {
       throw _createException(error);
     });
   }
 
   @override
-  Future<List<CategoryVO>> categories(String type,String acceptLanguage,) {
-    return mApi
-        .categories(type,acceptLanguage)
-        .asStream()
-        .map((response) => response.data ?? [])
-        .first
-        .catchError((error) {
+  Future<List<CategoryVO>> categories(
+    String type,
+    String acceptLanguage,
+  ) {
+    return mApi.categories(type, acceptLanguage).asStream().map((response) => response.data ?? []).first.catchError((error) {
       throw _createException(error);
     });
   }
 
   @override
-  Future addNewAddress(String accessToken, String acceptLanguage,
-      AddressRequest addressRequest) {
-    return mApi
-        .addNewAddress('Bearer $accessToken', acceptLanguage, addressRequest)
-        .asStream()
-        .map((response) => response)
-        .first
-        .catchError((error) {
+  Future addNewAddress(String accessToken, String acceptLanguage, AddressRequest addressRequest) {
+    return mApi.addNewAddress('Bearer $accessToken', acceptLanguage, addressRequest).asStream().map((response) => response).first.catchError((error) {
       throw _createException(error);
     });
   }
 
   @override
   Future<List<StateVO>> states() {
-    return mApi
-        .states()
-        .asStream()
-        .map((response) => response.data ?? [])
-        .first
-        .catchError((error) {
+    return mApi.states().asStream().map((response) => response.data ?? []).first.catchError((error) {
       throw _createException(error);
     });
   }
 
   @override
   Future<TownshipDataVO> townships(int stateId) {
-    return mApi
-        .townships(stateId)
-        .asStream()
-        .map((response) => response.townshipDataVO ?? TownshipDataVO())
-        .first
-        .catchError((error) {
+    return mApi.townships(stateId).asStream().map((response) => response.townshipDataVO ?? TownshipDataVO()).first.catchError((error) {
       throw _createException(error);
     });
   }
 
   @override
   Future<AddressResponse> address(String accessToken, String acceptLanguage) {
-    return mApi
-        .address("Bearer $accessToken", acceptLanguage)
-        .asStream()
-        .map((response) => response)
-        .first
-        .catchError((error) {
+    return mApi.address("Bearer $accessToken", acceptLanguage).asStream().map((response) => response).first.catchError((error) {
       throw _createException(error);
     });
   }
 
   @override
   Future deleteAddress(String accessToken, int addressId) {
-    return mApi
-        .deleteAddress("Bearer $accessToken", addressId)
-        .asStream()
-        .map((response) => response)
-        .first
-        .catchError((error) {
+    return mApi.deleteAddress("Bearer $accessToken", addressId).asStream().map((response) => response).first.catchError((error) {
       throw _createException(error);
     });
   }
 
   @override
-  Future editAddress(
-      String accessToken, int addressId, AddressRequest addressRequest) {
-    return mApi
-        .editAddress("Bearer $accessToken", addressId, addressRequest)
-        .asStream()
-        .map((response) => response)
-        .first
-        .catchError((error) {
+  Future editAddress(String accessToken, int addressId, AddressRequest addressRequest) {
+    return mApi.editAddress("Bearer $accessToken", addressId, addressRequest).asStream().map((response) => response).first.catchError((error) {
       throw _createException(error);
     });
   }
 
   @override
   Future<List<CategoryVO>> addressCategories(String accessToken) {
-    return mApi
-        .addressCategories(accessToken)
-        .asStream()
-        .map((response) => response.data ?? [])
-        .first
-        .catchError((error) {
+    return mApi.addressCategories(accessToken).asStream().map((response) => response.data ?? []).first.catchError((error) {
       throw _createException(error);
     });
   }
 
   @override
-  Future<List<SubcategoryVO>> subCategoryByCategory(String token,
-      String acceptLanguage, SubCategoryRequest subCategoryRequest) {
-    return mApi
-        .subCategoryByCategory('Bearer $token', acceptLanguage, subCategoryRequest)
-        .asStream()
-        .map((response) => response.data ?? [])
-        .first
-        .catchError((error) {
+  Future<List<SubcategoryVO>> subCategoryByCategory(String token, String acceptLanguage, SubCategoryRequest subCategoryRequest) {
+    return mApi.subCategoryByCategory('Bearer $token', acceptLanguage, subCategoryRequest).asStream().map((response) => response.data ?? []).first.catchError((error) {
       throw _createException(error);
     });
   }
 
   @override
-  Future<List<PaymentVO>> payments(
-      String token, String acceptLanguage, String action) {
-    return mApi
-        .payments('Bearer $token', acceptLanguage, action)
-        .asStream()
-        .map((response) => response.data ?? [])
-        .first
-        .catchError((error) {
+  Future<List<PaymentVO>> payments(String token, String acceptLanguage, String action) {
+    return mApi.payments('Bearer $token', acceptLanguage, action).asStream().map((response) => response.data ?? []).first.catchError((error) {
       throw _createException(error);
     });
   }
 
   @override
-  Future<OrderVO> orderDetails(
-      String token, String acceptLanguage, String orderId) {
-    return mApi
-        .orderDetails('Bearer $token', acceptLanguage, orderId)
-        .asStream()
-        .map((response) => response.data ?? OrderVO())
-        .first
-        .catchError((error) {
+  Future<OrderVO> orderDetails(String token, String acceptLanguage, String orderId) {
+    return mApi.orderDetails('Bearer $token', acceptLanguage, orderId).asStream().map((response) => response.data ?? OrderVO()).first.catchError((error) {
       throw _createException(error);
     });
   }
 
   @override
   Future<List<OrderVO>> orderList(String token, String acceptLanguage) {
-    return mApi
-        .orders("Bearer $token", acceptLanguage)
-        .asStream()
-        .map((response) => response.data ?? [])
-        .first
-        .catchError((error) {
+    return mApi.orders("Bearer $token", acceptLanguage).asStream().map((response) => response.data ?? []).first.catchError((error) {
       throw _createException(error);
     });
   }
 
   @override
-  Future<List<OrderVO>> getOrderListByOrderType(
-      String token, String acceptLanguage, String orderType) {
+  Future<List<OrderVO>> getOrderListByOrderType(String token, String acceptLanguage, String orderType) {
     return mApi
         .ordersByOrderType('Bearer $token', acceptLanguage, orderType)
         .asStream()
@@ -411,50 +268,22 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   }
 
   @override
-  Future<List<ProductVO>> searchProductsBySubCategoryId(String token,
-      String acceptLanguage, String endUserId, int pageNo, int subCategoryId) {
-    return mApi
-        .searchProductsBySubCategoryId(
-            'Bearer $token', acceptLanguage, int.parse(endUserId), pageNo, subCategoryId)
-        .asStream()
-        .map((response) => response.data?.products ?? [])
-        .first
-        .catchError((error) {
+  Future<List<ProductVO>> searchProductsBySubCategoryId(String token, String acceptLanguage, String endUserId, int pageNo, int subCategoryId) {
+    return mApi.searchProductsBySubCategoryId('Bearer $token', acceptLanguage, int.parse(endUserId), pageNo, subCategoryId).asStream().map((response) => response.data?.products ?? []).first.catchError((error) {
       throw _createException(error);
     });
   }
 
   @override
-  Future<List<ProductVO>> searchProductsCategoryId(String token,
-      String acceptLanguage, String endUserId, int pageNo, int categoryId) {
-    return mApi
-        .searchProductsByCategoryId(
-            "Bearer $token", acceptLanguage, int.parse(endUserId), pageNo, categoryId)
-        .asStream()
-        .map((response) => response.data?.products ?? [])
-        .first
-        .catchError((error) {
+  Future<List<ProductVO>> searchProductsCategoryId(String token, String acceptLanguage, String endUserId, int pageNo, int categoryId) {
+    return mApi.searchProductsByCategoryId("Bearer $token", acceptLanguage, int.parse(endUserId), pageNo, categoryId).asStream().map((response) => response.data?.products ?? []).first.catchError((error) {
       throw _createException(error);
     });
   }
 
   @override
-  Future<List<ProductVO>> searchProductsWithDynamicParam(
-      String token,
-      String acceptLanguage,
-      String endUserId,
-      int pageNo,
-      String? name,
-      double? rating,
-      int? minRange,
-      int? maxRange) {
-    return mApi
-        .searchWithDynamic('Bearer $token', acceptLanguage, int.parse(endUserId), pageNo,
-            name, rating, minRange, maxRange)
-        .asStream()
-        .map((response) => response.data?.products ?? [])
-        .first
-        .catchError((error) {
+  Future<List<ProductVO>> searchProductsWithDynamicParam(String token, String acceptLanguage, String endUserId, int pageNo, String? name, double? rating, int? minRange, int? maxRange) {
+    return mApi.searchWithDynamic('Bearer $token', acceptLanguage, int.parse(endUserId), pageNo, name, rating, minRange, maxRange).asStream().map((response) => response.data?.products ?? []).first.catchError((error) {
       throw _createException(error);
     });
   }
@@ -474,8 +303,7 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   }
 
   @override
-  Future<ProfileResponse> updateProfile(
-      String token, String acceptLanguage, String name, File? image) {
+  Future<ProfileResponse> updateProfile(String token, String acceptLanguage, String name, File? image) {
     return mApi
         .updateProfile('Bearer $token', acceptLanguage, name, image!)
         .asStream()
@@ -489,8 +317,7 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   }
 
   @override
-  Future<ProfileResponse> updateProfileName(
-      String token, String acceptLanguage, String name) {
+  Future<ProfileResponse> updateProfileName(String token, String acceptLanguage, String name) {
     return mApi
         .updateProfileName(
           'Bearer $token',
@@ -522,11 +349,9 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   }
 
   @override
-  Future checkWalletAmount(String token, String acceptLanguage,
-      CheckWalletAmountRequest checkWalletAmountRequest) {
+  Future checkWalletAmount(String token, String acceptLanguage, CheckWalletAmountRequest checkWalletAmountRequest) {
     return mApi
-        .checkWalletAmount(
-            'Bearer $token', acceptLanguage, checkWalletAmountRequest)
+        .checkWalletAmount('Bearer $token', acceptLanguage, checkWalletAmountRequest)
         .asStream()
         .map((response) {
           return response;
@@ -538,11 +363,9 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   }
 
   @override
-  Future<SuccessNetworkResponse> checkWalletPassword(String token, String acceptLanguage,
-      CheckWalletPasswordRequest checkWalletPasswordRequest) {
+  Future<SuccessNetworkResponse> checkWalletPassword(String token, String acceptLanguage, CheckWalletPasswordRequest checkWalletPasswordRequest) {
     return mApi
-        .checkWalletPassword(
-            'Bearer $token', acceptLanguage, checkWalletPasswordRequest)
+        .checkWalletPassword('Bearer $token', acceptLanguage, checkWalletPasswordRequest)
         .asStream()
         .map((response) {
           return response;
@@ -554,13 +377,9 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   }
 
   @override
-  Future<SuccessNetworkResponse> setWalletPassword(
-      String token,
-      String acceptLanguage,
-      SetWalletPasswordRequest setWalletPasswordRequest) {
+  Future<SuccessNetworkResponse> setWalletPassword(String token, String acceptLanguage, SetWalletPasswordRequest setWalletPasswordRequest) {
     return mApi
-        .setWalletPassword(
-            'Bearer $token', acceptLanguage, setWalletPasswordRequest)
+        .setWalletPassword('Bearer $token', acceptLanguage, setWalletPasswordRequest)
         .asStream()
         .map((response) {
           return response;
@@ -572,32 +391,16 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   }
 
   @override
-  Future<SuccessPaymentResponse> postOrder(
-      String token,
-      String acceptLanguage,
-      int subTotal,
-      String paymentType,
-      String itemList,
-      String appType,
-      String paymentData,
-      int usedPoint) {
-    return mApi
-        .postOrder("Bearer $token", acceptLanguage, subTotal, paymentType,
-            itemList, appType, paymentData, usedPoint)
-        .asStream()
-        .map((response) => response)
-        .first
-        .catchError((error) {
+  Future<SuccessPaymentResponse> postOrder(String token, String acceptLanguage, int subTotal, String paymentType, String itemList, String appType, String paymentData, int usedPoint) {
+    return mApi.postOrder("Bearer $token", acceptLanguage, subTotal, paymentType, itemList, appType, paymentData, usedPoint).asStream().map((response) => response).first.catchError((error) {
       throw _createException(error);
     });
   }
 
   @override
-  Future<List<WalletTransactionVO>> getWalletTransactions(String token,
-      String acceptLanguage, WalletTransitionRequest walletTransactionRequest) {
+  Future<List<WalletTransactionVO>> getWalletTransactions(String token, String acceptLanguage, WalletTransitionRequest walletTransactionRequest) {
     return mApi
-        .getWalletTransitionLogs(
-            'Bearer $token', acceptLanguage, walletTransactionRequest)
+        .getWalletTransitionLogs('Bearer $token', acceptLanguage, walletTransactionRequest)
         .asStream()
         .map((response) {
           return response.data?.walletTransactions ?? [];
@@ -609,16 +412,9 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   }
 
   @override
-  Future<SuccessPaymentResponse> rechargeWallet(
-      String token,
-      String acceptLanguage,
-      int total,
-      String paymentType,
-      String appType,
-      String paymentData) {
+  Future<SuccessPaymentResponse> rechargeWallet(String token, String acceptLanguage, int total, String paymentType, String appType, String paymentData) {
     return mApi
-        .rechargeWallet('Bearer $token', acceptLanguage, total, paymentType,
-            appType, paymentData)
+        .rechargeWallet('Bearer $token', acceptLanguage, total, paymentType, appType, paymentData)
         .asStream()
         .map((response) {
           return response;
@@ -644,8 +440,7 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   }
 
   @override
-  Future<SuccessNetworkResponse> postUserCheckIn(
-      String token, String acceptLanguage, CheckInRequest checkInRequest) {
+  Future<SuccessNetworkResponse> postUserCheckIn(String token, String acceptLanguage, CheckInRequest checkInRequest) {
     return mApi
         .postUserCheck('Bearer $token', acceptLanguage, checkInRequest)
         .asStream()
@@ -660,58 +455,34 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
 
   @override
   Future<List<CampaignVo>> getCampaign(String token, String acceptLanguage) {
-    return mApi
-        .getCampaign(acceptLanguage, 'Bearer $token')
-        .asStream()
-        .map((response) => response.data ?? [])
-        .first
-        .catchError((error) {
+    return mApi.getCampaign(acceptLanguage, 'Bearer $token').asStream().map((response) => response.data ?? []).first.catchError((error) {
       throw _createException(error);
     });
   }
 
   @override
-  Future<CampaignVo> getCampaignDetail(
-      String token, String acceptLanguage, CampaignDetailRequest request) {
-    return mApi
-        .getCampaignDetail(acceptLanguage, 'Bearer $token', request)
-        .asStream()
-        .map((response) => response.data as CampaignVo)
-        .first
-        .catchError((error) {
+  Future<CampaignVo> getCampaignDetail(String token, String acceptLanguage, CampaignDetailRequest request) {
+    return mApi.getCampaignDetail(acceptLanguage, 'Bearer $token', request).asStream().map((response) => response.data as CampaignVo).first.catchError((error) {
       throw _createException(error);
     });
   }
 
   @override
-  Future<void> joinCampaign(
-      String token, String acceptLanguage, CampaignJoinRequest request) {
-    return mApi
-        .joinCampaign(acceptLanguage, 'Bearer $token', request)
-        .asStream()
-        .map((response) => response)
-        .first
-        .catchError((error) {
+  Future<void> joinCampaign(String token, String acceptLanguage, CampaignJoinRequest request) {
+    return mApi.joinCampaign(acceptLanguage, 'Bearer $token', request).asStream().map((response) => response).first.catchError((error) {
       throw _createException(error);
     });
   }
 
   @override
-  Future<List<CampaignParticipantVo>> getCampaignParticipants(
-      String token, String acceptLanguage, CampaignDetailRequest request) {
-    return mApi
-        .getCampaignParticipants(acceptLanguage, 'Bearer $token', request)
-        .asStream()
-        .map((response) => response.data ?? [])
-        .first
-        .catchError((error) {
+  Future<List<CampaignParticipantVo>> getCampaignParticipants(String token, String acceptLanguage, CampaignDetailRequest request) {
+    return mApi.getCampaignParticipants(acceptLanguage, 'Bearer $token', request).asStream().map((response) => response.data ?? []).first.catchError((error) {
       throw _createException(error);
     });
   }
 
   @override
-  Future<SuccessNetworkResponse> cancelOrder(
-      String token, String acceptLanguage, OrderCancelRequest request) {
+  Future<SuccessNetworkResponse> cancelOrder(String token, String acceptLanguage, OrderCancelRequest request) {
     return mApi
         .orderCancel('Bearer $token', acceptLanguage, request)
         .asStream()
@@ -725,16 +496,9 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   }
 
   @override
-  Future<SuccessPaymentResponse> makePayment(
-      String token,
-      String acceptLanguage,
-      String paymentType,
-      String paymentData,
-      String orderNo,
-      String appType) {
+  Future<SuccessPaymentResponse> makePayment(String token, String acceptLanguage, String paymentType, String paymentData, String orderNo, String appType) {
     return mApi
-        .makePayment('Bearer $token', acceptLanguage, paymentType, paymentData,
-            orderNo, appType)
+        .makePayment('Bearer $token', acceptLanguage, paymentType, paymentData, orderNo, appType)
         .asStream()
         .map((response) {
           return response;
@@ -746,10 +510,9 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   }
 
   @override
-  Future<SuccessNetworkResponse> postRefund(String token, String acceptLanguage,
-      int orderNo, int reasonId, File? image) {
+  Future<SuccessNetworkResponse> postRefund(String token, String acceptLanguage, String orderNo, int reasonId, int userId, File? image) {
     return mApi
-        .postRefund('Bearer $token', acceptLanguage, orderNo, reasonId, image!)
+        .postRefund('Bearer $token', acceptLanguage, orderNo, reasonId.toString(), userId.toString(), image!)
         .asStream()
         .map((response) {
           return response;
@@ -763,7 +526,7 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   @override
   Future<List<RefundVO>> getRefunds(String token, String acceptLanguage) {
     return mApi
-        .getRefunds(acceptLanguage,'Bearer $token')
+        .getRefunds(acceptLanguage, 'Bearer $token')
         .asStream()
         .map((response) {
           return response.data ?? [];
@@ -775,223 +538,190 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   }
 
   @override
-  Future<List<RefundVO>> getRefundsByStatus(String token, String acceptLanguage,int status) {
+  Future<List<RefundVO>> getRefundsByStatus(String token, String acceptLanguage, int status) {
     return mApi
-        .getRefundsByStatus(acceptLanguage,'Bearer $token',status)
+        .getRefundsByStatus(acceptLanguage, 'Bearer $token', status)
         .asStream()
         .map((response) {
-      return response.data ?? [];
-    })
+          return response.data ?? [];
+        })
         .first
         .catchError((error) {
-      throw _createException(error);
-    });
+          throw _createException(error);
+        });
   }
 
   @override
   Future<PromotionDataVO> getPromotionLogsByStatus(String token, String acceptLanguage, String status) {
     return mApi
-        .getPromotionLogByStatus(acceptLanguage,'Bearer $token',status)
+        .getPromotionLogByStatus(acceptLanguage, 'Bearer $token', status)
         .asStream()
         .map((response) {
-      return response.data ?? PromotionDataVO();
-    })
+          return response.data ?? PromotionDataVO();
+        })
         .first
         .catchError((error) {
-      throw _createException(error);
-    });
+          throw _createException(error);
+        });
   }
 
   @override
   Future<List<MyTeamVO>> getMyTeams(String token, String acceptLanguage) {
     return mApi
-        .getMyTeams(acceptLanguage,'Bearer $token')
+        .getMyTeams(acceptLanguage, 'Bearer $token')
         .asStream()
         .map((response) {
-      return response.data ?? [];
-    })
+          return response.data ?? [];
+        })
         .first
         .catchError((error) {
-      throw _createException(error);
-    });
+          throw _createException(error);
+        });
   }
 
   @override
   Future<PackageVO> getPackageDetails(String token, String acceptLanguage, int id) {
     return mApi
-        .getPackageDetails('Bearer $token',acceptLanguage,id)
+        .getPackageDetails('Bearer $token', acceptLanguage, id)
         .asStream()
         .map((response) {
-      return response.data ?? PackageVO();
-    })
+          return response.data ?? PackageVO();
+        })
         .first
         .catchError((error) {
-      throw _createException(error);
-    });
+          throw _createException(error);
+        });
   }
 
   @override
   Future<List<PackageVO>> getPackages(String token, String acceptLanguage) {
     return mApi
-        .getPackages('Bearer $token',acceptLanguage)
+        .getPackages('Bearer $token', acceptLanguage)
         .asStream()
         .map((response) {
-      return response.data ?? [];
-    })
+          return response.data ?? [];
+        })
         .first
         .catchError((error) {
-      throw _createException(error);
-    });
+          throw _createException(error);
+        });
   }
 
   @override
   Future<SuccessNetworkResponse> checkOrderStatus(String acceptLanguage, String token, OrderStatusRequest request) {
     return mApi
-        .checkOrderStatus(acceptLanguage,'Bearer $token',request)
+        .checkOrderStatus(acceptLanguage, 'Bearer $token', request)
         .asStream()
         .map((response) {
-      return response;
-    })
+          return response;
+        })
         .first
         .catchError((error) {
-      throw _createException(error);
-    });
+          throw _createException(error);
+        });
   }
 
   @override
   Future<CampaignHistoryResponse> getCampaignHistory(String acceptLanguage, String token) {
     return mApi
-        .getCampaignHistory(acceptLanguage,'Bearer $token')
+        .getCampaignHistory(acceptLanguage, 'Bearer $token')
         .asStream()
         .map((response) {
-      return response;
-    })
+          return response;
+        })
         .first
         .catchError((error) {
-      throw _createException(error);
-    });
+          throw _createException(error);
+        });
   }
 
   @override
   Future<PopupDataVO> getHomePopUpData(String acceptLanguage, String token, PopupRequest request) {
     return mApi
-        .getHomePagePopup(acceptLanguage,'Bearer $token',request)
+        .getHomePagePopup(acceptLanguage, 'Bearer $token', request)
         .asStream()
         .map((response) {
-      return response.data ?? PopupDataVO();
-    })
+          return response.data ?? PopupDataVO();
+        })
         .first
         .catchError((error) {
-      throw _createException(error);
-    });
+          throw _createException(error);
+        });
   }
 
   @override
   Future<SuccessNetworkResponse> updateHomePopUp(String acceptLanguage, String token, PopupRequest request) {
     return mApi
-        .updateHomePagePopup(acceptLanguage,'Bearer $token',request)
+        .updateHomePagePopup(acceptLanguage, 'Bearer $token', request)
         .asStream()
         .map((response) {
-      return response;
-    })
+          return response;
+        })
         .first
         .catchError((error) {
-      throw _createException(error);
-    });
+          throw _createException(error);
+        });
   }
 
   @override
   Future<OtpResponse> forgotPasswordRequestOtp(OtpRequest otpRequest) {
-    return mApi
-        .forgotPasswordRequestOtp(otpRequest)
-        .asStream()
-        .map((response) => response)
-        .first
-        .catchError((error) {
+    return mApi.forgotPasswordRequestOtp(otpRequest).asStream().map((response) => response).first.catchError((error) {
       throw _createException(error);
     });
   }
 
   @override
   Future<SetPasswordResponse> forgotPasswordSetPassword(SetPasswordRequest setPasswordRequest) {
-    return mApi
-        .forgotPasswordSetPassword(setPasswordRequest)
-        .asStream()
-        .map((response) => response)
-        .first
-        .catchError((error) {
+    return mApi.forgotPasswordSetPassword(setPasswordRequest).asStream().map((response) => response).first.catchError((error) {
       throw _createException(error);
     });
   }
 
   @override
   Future forgotPasswordVerifyOtp(OtpVerifyRequest otpVerifyRequest) {
-    return mApi
-        .forgotPasswordVerifyOtp(otpVerifyRequest)
-        .asStream()
-        .map((response) => response)
-        .first
-        .catchError((error) {
+    return mApi.forgotPasswordVerifyOtp(otpVerifyRequest).asStream().map((response) => response).first.catchError((error) {
       throw _createException(error);
     });
   }
 
   @override
   Future<SuccessNetworkResponse> changePassword(String token, String acceptLanguage, int endUserId, String oldPassword, String newPassword, String confirmPassword, String passwordType) {
-    return mApi
-        .changePassword(token, acceptLanguage, endUserId, oldPassword, newPassword, confirmPassword, passwordType)
-        .asStream()
-        .map((response) => response)
-        .first
-        .catchError((error) {
+    return mApi.changePassword(token, acceptLanguage, endUserId, oldPassword, newPassword, confirmPassword, passwordType).asStream().map((response) => response).first.catchError((error) {
       throw _createException(error);
     });
   }
 
   @override
   Future<SuccessNetworkResponse> deleteAccount(String token) {
-    return mApi
-        .deleteAccount('Bearer $token')
-        .asStream()
-        .map((response) => response)
-        .first
-        .catchError((error) {
+    return mApi.deleteAccount('Bearer $token').asStream().map((response) => response).first.catchError((error) {
       throw _createException(error);
     });
   }
 
   @override
   Future<List<RefundReasonVO>> getRefundReasons(String acceptLanguage, String token) {
-    return mApi
-        .getRefundReasons('Bearer $token',acceptLanguage)
-        .asStream()
-        .map((response) => response.data ?? [])
-        .first
-        .catchError((error) {
+    return mApi.getRefundReasons('Bearer $token', acceptLanguage).asStream().map((response) => response.data ?? []).first.catchError((error) {
       throw _createException(error);
     });
   }
 
   @override
   Future<SuccessNetworkResponse> addFavouriteProduct(String token, String acceptLanguage, FavouriteProductRequest request) {
-    return mApi
-        .addFavouriteProduct('Bearer $token',acceptLanguage,request)
-        .asStream()
-        .map((response) => response)
-        .first
-        .catchError((error) {
+    return mApi.addFavouriteProduct('Bearer $token', acceptLanguage, request).asStream().map((response) => response).first.catchError((error) {
       throw _createException(error);
     });
   }
 
   @override
   Future<List<ProductVO>> getFavouriteProducts(String token, String acceptLanguage) {
-    return mApi
-        .getFavouriteProduct('Bearer $token',acceptLanguage)
-        .asStream()
-        .map((response) => response.data ?? [])
-        .first
-        .catchError((error) {
+    return mApi.getFavouriteProduct('Bearer $token', acceptLanguage).asStream().map((response) => response.data ?? []).first.catchError((error) {
+      throw _createException(error);
+    });
+  }
+
+  @override
+  Future<List<NotificationVO>> getNotificationList(String token, String acceptLanguage) {
+    return mApi.getNotificationList('Bearer $token', acceptLanguage).asStream().map((response) => response.data ?? []).first.catchError((error) {
       throw _createException(error);
     });
   }

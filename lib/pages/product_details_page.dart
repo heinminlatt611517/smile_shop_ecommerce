@@ -91,7 +91,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> with SingleTick
                               /// Spacer
                               const SliverToBoxAdapter(
                                 child: SizedBox(
-                                  height: kMarginMedium,
+                                  height: kMarginMedium2,
                                 ),
                               ),
 
@@ -105,9 +105,18 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> with SingleTick
                                     labelColor: kPrimaryColor,
                                     indicatorWeight: 1,
                                     dividerColor: Colors.transparent,
-                                    indicatorSize: TabBarIndicatorSize.label,
-                                    labelPadding: const EdgeInsets.symmetric(horizontal: 10),
-                                    tabs:  [
+                                    // indicator: const UnderlineTabIndicator(
+                                    //   borderRadius: BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5)),
+                                    //   borderSide: BorderSide(width: 3.0, color: kPrimaryColor),
+                                    //   insets: EdgeInsets.symmetric(horizontal: 16.0),
+                                    // ),
+
+                                    indicatorSize: TabBarIndicatorSize.tab,
+                                    labelStyle: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    labelPadding: const EdgeInsets.only(bottom: 8),
+                                    tabs: [
                                       Text(AppLocalizations.of(context)!.productDetails, textAlign: TextAlign.center),
                                       Text(AppLocalizations.of(context)!.productSpecifications, textAlign: TextAlign.center),
                                       // Text('After Sale',
@@ -155,7 +164,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> with SingleTick
                         color: Colors.white,
                         height: 80,
                         width: double.infinity,
-                        padding:const EdgeInsets.symmetric(horizontal: kMarginSmall),
+                        padding: const EdgeInsets.symmetric(horizontal: kMarginSmall),
                         child: Center(
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -189,8 +198,8 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> with SingleTick
                                   var bloc = Provider.of<ProductDetailsBloc>(context, listen: false);
                                   bloc.onTapFavourite(product, context);
                                 },
-                                iconColor:product?.isFavouriteProduct == true ? kPrimaryColor : null,
-                                icon:product?.isFavouriteProduct == true ? Icons.favorite_outlined  : Icons.favorite_outline,
+                                iconColor: product?.isFavouriteProduct == true ? kPrimaryColor : null,
+                                icon: product?.isFavouriteProduct == true ? Icons.favorite_outlined : Icons.favorite_outline,
                                 label: AppLocalizations.of(context)!.favourite,
                               ),
 
@@ -216,15 +225,15 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> with SingleTick
                                                     kSecondaryColor,
                                                     kPrimaryColor.withOpacity(0.7),
                                                   ])),
-                                              child:  Padding(
-                                                padding:const EdgeInsets.all(8.0),
+                                              child: Padding(
+                                                padding: const EdgeInsets.all(8.0),
                                                 child: Text(
                                                   maxLines: 1,
                                                   softWrap: true,
                                                   overflow: TextOverflow.ellipsis,
                                                   textAlign: TextAlign.center,
                                                   AppLocalizations.of(context)!.addToCart,
-                                                  style:const TextStyle(color: kBackgroundColor, fontWeight: FontWeight.w600,fontSize: 12),
+                                                  style: const TextStyle(color: kBackgroundColor, fontWeight: FontWeight.w600, fontSize: 12),
                                                 ),
                                               ),
                                             ),
@@ -251,15 +260,15 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> with SingleTick
                                                 borderRadius: BorderRadius.only(topRight: Radius.circular(6), bottomRight: Radius.circular(6)),
                                                 color: kPrimaryColor,
                                               ),
-                                              child:  Padding(
-                                                padding:const EdgeInsets.all(8.0),
+                                              child: Padding(
+                                                padding: const EdgeInsets.all(8.0),
                                                 child: Text(
                                                   maxLines: 1,
                                                   softWrap: true,
                                                   overflow: TextOverflow.ellipsis,
                                                   textAlign: TextAlign.center,
                                                   AppLocalizations.of(context)!.buyNow,
-                                                  style:const TextStyle(color: kBackgroundColor, fontWeight: FontWeight.w600,fontSize: 12),
+                                                  style: const TextStyle(color: kBackgroundColor, fontWeight: FontWeight.w600, fontSize: 12),
                                                 ),
                                               ),
                                             ),
@@ -334,6 +343,7 @@ class ProductDetailsView extends StatelessWidget {
               imageHeight: 340,
               imageWidth: double.infinity,
               imageUrl: images[index],
+              canView: true,
             ),
           );
         },
@@ -360,10 +370,13 @@ class ProductSpecificationView extends StatelessWidget {
           return Padding(
             padding: const EdgeInsets.only(bottom: kMarginMedium),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(vo.key ?? ''),
-                Text(vo.value ?? '')
+                Expanded(child: Text(vo.key ?? '')),
+                const SizedBox(
+                  width: kMarginMedium2,
+                ),
+                Expanded(child: Text(vo.value ?? ''))
               ],
             ),
           );
@@ -421,6 +434,7 @@ class BannerSectionView extends StatelessWidget {
                           imageWidth: double.infinity,
                           imageUrl: images[realIndex],
                           boxFit: BoxFit.fitHeight,
+                          canView: true,
                         );
                       },
                       itemCount: images.length + ((video?.isNotEmpty ?? false) ? 1 : 0),
@@ -482,7 +496,7 @@ class CategoryAndReturnPointView extends StatelessWidget {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: kMarginMedium, horizontal: kMarginMedium),
+          padding: const EdgeInsets.symmetric(vertical: kMarginMedium, horizontal: kMarginMedium2),
           child: Row(
             children: [
               Expanded(
@@ -498,12 +512,12 @@ class CategoryAndReturnPointView extends StatelessWidget {
               ),
               const Icon(
                 Icons.star,
-                color: kPrimaryColor,
+                color: Colors.black,
                 size: 20,
               ),
               Text(
                 productVO?.rating.toString() ?? "0",
-                style: const TextStyle(fontSize: kTextRegular, fontWeight: FontWeight.bold, color: kPrimaryColor),
+                style: const TextStyle(fontSize: kTextSmall, fontWeight: FontWeight.bold, color: Colors.black),
               ),
               const SizedBox(
                 width: 20,
@@ -512,7 +526,7 @@ class CategoryAndReturnPointView extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: kMarginMedium, horizontal: kMarginMedium),
+          padding: const EdgeInsets.symmetric(vertical: kMarginMedium, horizontal: kMarginMedium2),
           child: Row(
             children: [
               Text(
@@ -524,7 +538,7 @@ class CategoryAndReturnPointView extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: kMarginMedium, horizontal: kMarginMedium),
+          padding: const EdgeInsets.symmetric(vertical: kMarginMedium, horizontal: kMarginMedium2),
           child: Row(
             children: [
               // const Text(
@@ -543,13 +557,15 @@ class CategoryAndReturnPointView extends StatelessWidget {
         ),
         Container(
           decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(kMarginMedium)),
-          margin: const EdgeInsets.symmetric(vertical: kMarginMedium, horizontal: kMarginMedium),
-          padding: const EdgeInsets.symmetric(vertical: kMarginMedium, horizontal: kMarginMedium),
+          margin: const EdgeInsets.symmetric(vertical: kMarginMedium, horizontal: kMarginMedium2),
+          padding: const EdgeInsets.symmetric(vertical: kMarginMedium2, horizontal: kMarginMedium3),
           child: Row(
             children: [
               const Text(
                 'Return Points',
-                style: TextStyle(fontSize: kTextRegular2x, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: kTextRegular,
+                ),
               ),
               const Spacer(),
               PromotionPointView(
@@ -614,7 +630,7 @@ void showBuyNowOrAddToCartBottomSheet(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Selector<ProductDetailsBottomSheetBloc, String>(
-                        selector: (context, bloc) =>bloc.selectedVariant?.images.isNotEmpty ?? true ? bloc.selectedVariant?.images.first.url ?? '' : errorImageUrl,
+                        selector: (context, bloc) => bloc.selectedVariant?.images.isNotEmpty ?? true ? bloc.selectedVariant?.images.first.url ?? '' : errorImageUrl,
                         builder: (context, productImage, child) => ClipRRect(
                           child: CachedNetworkImageView(
                             imageHeight: 100,
@@ -725,9 +741,9 @@ void showBuyNowOrAddToCartBottomSheet(
                   ),
 
                   ///color view
-                   Text(
-                     AppLocalizations.of(context)!.availableColor,
-                    style:const TextStyle(color: Colors.black, fontSize: kTextRegular2x),
+                  Text(
+                    AppLocalizations.of(context)!.availableColor,
+                    style: const TextStyle(color: Colors.black, fontSize: kTextRegular2x),
                   ),
 
                   ///spacer
@@ -825,9 +841,9 @@ void showBuyNowOrAddToCartBottomSheet(
                   ),
 
                   ///color view
-                   Text(
-                       AppLocalizations.of(context)!.availableSize,
-                    style:const TextStyle(color: Colors.black, fontSize: kTextRegular2x),
+                  Text(
+                    AppLocalizations.of(context)!.availableSize,
+                    style: const TextStyle(color: Colors.black, fontSize: kTextRegular2x),
                   ),
 
                   ///spacer

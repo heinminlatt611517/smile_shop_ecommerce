@@ -9,6 +9,7 @@ import 'package:smile_shop/pages/order_detail_page.dart';
 import 'package:smile_shop/pages/payment_method_page.dart';
 import 'package:smile_shop/pages/product_refund_page.dart';
 import 'package:smile_shop/utils/colors.dart';
+import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/utils/extensions.dart';
 
 import '../utils/images.dart';
@@ -25,8 +26,7 @@ class MyOrderPage extends StatefulWidget {
   State<MyOrderPage> createState() => _MyOrderPageState();
 }
 
-class _MyOrderPageState extends State<MyOrderPage>
-    with SingleTickerProviderStateMixin {
+class _MyOrderPageState extends State<MyOrderPage> with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -73,7 +73,10 @@ class _MyOrderPageState extends State<MyOrderPage>
                 ),
               ),
               const Spacer(),
-              Text(AppLocalizations.of(context)?.myOrders ?? ''),
+              Text(
+                AppLocalizations.of(context)?.myOrders ?? '',
+                style:const TextStyle(fontSize: kTextRegular3x, color: Colors.black, fontWeight: FontWeight.w500),
+              ),
               const Spacer(),
               const Text(''),
             ],
@@ -87,7 +90,6 @@ class _MyOrderPageState extends State<MyOrderPage>
                     dividerColor: Colors.transparent,
                     indicatorColor: kFillingFastColor,
                     isScrollable: true,
-
                     labelPadding: const EdgeInsets.all(13),
                     indicatorPadding: const EdgeInsets.only(bottom: 5),
                     tabAlignment: TabAlignment.center,
@@ -124,16 +126,13 @@ class _MyOrderPageState extends State<MyOrderPage>
                     ? const Center(
                         child: Text(''),
                       )
-                    : TabBarView(
-                        physics: const NeverScrollableScrollPhysics(),
-                        controller: _tabController,
-                        children: [
-                            _myOrderView(orders),
-                            _myOrderView(orders),
-                            _myOrderView(orders),
-                            _myOrderView(orders),
-                            _myOrderView(orders),
-                          ]),
+                    : TabBarView(physics: const NeverScrollableScrollPhysics(), controller: _tabController, children: [
+                        _myOrderView(orders),
+                        _myOrderView(orders),
+                        _myOrderView(orders),
+                        _myOrderView(orders),
+                        _myOrderView(orders),
+                      ]),
               ),
 
               ///loading view
@@ -164,14 +163,21 @@ class _MyOrderPageState extends State<MyOrderPage>
             itemBuilder: (context, index) {
               return GestureDetector(
                 onTap: () {
-                  if (orderList[index].paymentStatus != "not_pay") {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (_) => OrderDetailPage(
-                              orderStatus: orderList[index].paymentStatus ?? "",
-                              orderNumber: orderList[index].orderNo ?? '',
-                              deliveryHistory: orderList[index].deliveryHistory ?? [],
-                            )));
-                  }
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => OrderDetailPage(
+                            // orderStatus: orderList[index].paymentStatus ?? "",
+                            orderNumber: orderList[index].orderNo ?? '',
+                            // deliveryHistory: orderList[index].deliveryHistory ?? [],
+                          )));
+
+                  // if (orderList[index].paymentStatus != "not_pay") {
+                  //   Navigator.of(context).push(MaterialPageRoute(
+                  //       builder: (_) => OrderDetailPage(
+                  //             orderStatus: orderList[index].paymentStatus ?? "",
+                  //             orderNumber: orderList[index].orderNo ?? '',
+                  //             deliveryHistory: orderList[index].deliveryHistory ?? [],
+                  //           )));
+                  // }
                 },
                 child: MyOrderListItemView(
                   orderVO: orderList[index],

@@ -1,7 +1,10 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:hive_flutter/adapters.dart';
 import 'package:json_annotation/json_annotation.dart';
+
 import 'package:smile_shop/data/vos/refer_code_vo.dart';
 import 'package:smile_shop/persistence/hive_constants.dart';
+
 part 'user_vo.g.dart';
 
 @JsonSerializable()
@@ -195,4 +198,9 @@ class UserVO {
       _$UserVOFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserVOToJson(this);
+
+  @override
+  String toString() {
+    return 'UserVO(id: $id, name: $name, memberName: $memberName, paymentPassword: $paymentPassword, endUserIp: $endUserIp, levelId: $levelId, level: $level, phone: $phone, balance: $balance, payRecommenderId: $payRecommenderId, sourceRecommender: $sourceRecommender, recommender: $recommender, recommenderId: $recommenderId, rechargeAmount: $rechargeAmount, rechargeAmountUnder: $rechargeAmountUnder, withdrawAmount: $withdrawAmount, withdrawAmountUnder: $withdrawAmountUnder, teamPerformance: $teamPerformance, registrationTime: $registrationTime, activationTime: $activationTime, registrationSourceId: $registrationSourceId, registrationSource: $registrationSource, stateId: $stateId, state: $state, isLimit: $isLimit, profileName: $profileName, profile: $profile, inviteCode: $inviteCode, createdAt: $createdAt, updatedAt: $updatedAt, freeze: $freeze, userPhoto: $userPhoto, profileImage: $profileImage, referCodeVO: $referCodeVO, promotionPoints: $promotionPoints, showPopUp: $showPopUp)';
+  }
 }

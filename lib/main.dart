@@ -19,8 +19,11 @@ import 'package:smile_shop/data/vos/search_product_vo.dart';
 import 'package:smile_shop/data/vos/size_vo.dart';
 import 'package:smile_shop/data/vos/user_vo.dart';
 import 'package:smile_shop/data/vos/variant_vo.dart';
+import 'package:smile_shop/pages/blog_page.dart';
+import 'package:smile_shop/pages/notification_page.dart';
 import 'package:smile_shop/pages/splash_page.dart';
 import 'package:smile_shop/persistence/hive_constants.dart';
+import 'package:smile_shop/service/notification_service.dart';
 import 'package:smile_shop/utils/fonts.dart';
 import 'data/vos/login_data_vo.dart';
 import 'data/vos/sub_category_vo.dart';
@@ -38,9 +41,12 @@ Future<Locale> _getLocaleData() async {
   }
 }
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  NotificationService.instance.initialize();
   await Hive.initFlutter();
   await GetStorage.init();
   Locale locale = await _getLocaleData();
@@ -83,9 +89,9 @@ void main() async {
 }
 
 class SmileShopApp extends StatelessWidget {
-  final Locale language;
-
   const SmileShopApp({super.key, required this.language});
+
+  final Locale language;
 
   @override
   Widget build(BuildContext context) {
@@ -93,12 +99,16 @@ class SmileShopApp extends StatelessWidget {
       create: (BuildContext context) => AppLanguageBloc(language),
       child: Consumer<AppLanguageBloc>(
         builder: (context, bloc, child) => MaterialApp(
+          navigatorKey: navigatorKey,
+          routes: {
+            '/notification_detail' : (context) => const BlogPage()
+          },
           debugShowCheckedModeBanner: false,
           localizationsDelegates: const [
             AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate
           ],
           locale: bloc.appLocal,
           supportedLocales: const [
@@ -106,12 +116,7 @@ class SmileShopApp extends StatelessWidget {
             Locale('my', ''),
             Locale('zh', 'CN'),
           ],
-          theme: ThemeData(
-              colorScheme: ColorScheme.fromSeed(
-                  seedColor: Colors.deepPurple,
-                  primary: const Color.fromRGBO(255, 255, 255, 1.0)),
-              useMaterial3: true,
-              fontFamily: kInter),
+          theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple, primary: const Color.fromRGBO(255, 255, 255, 1.0)), useMaterial3: true, fontFamily: kInter),
           themeMode: ThemeMode.light,
           home: const SplashPage(),
         ),
@@ -119,4 +124,3 @@ class SmileShopApp extends StatelessWidget {
     );
   }
 }
-

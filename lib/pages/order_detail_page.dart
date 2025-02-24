@@ -10,14 +10,15 @@ import 'package:smile_shop/widgets/delivery_stepper_view.dart';
 import 'package:smile_shop/widgets/loading_view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
 class OrderDetailPage extends StatelessWidget {
-  const OrderDetailPage(
-      {super.key, required this.orderNumber, required this.orderStatus,required this.deliveryHistory});
+  const OrderDetailPage({
+    super.key,
+    required this.orderNumber,
+  });
 
-  final String orderStatus;
+  // final String orderStatus;
   final String orderNumber;
-  final List<DeliveryHistoryVO> deliveryHistory;
+  // final List<DeliveryHistoryVO> deliveryHistory;
 
   @override
   Widget build(BuildContext context) {
@@ -32,168 +33,185 @@ class OrderDetailPage extends StatelessWidget {
           title: Text(AppLocalizations.of(context)?.order ?? ''),
         ),
         body: Consumer<OrderDetailBloc>(
-          builder: (context, bloc, child) =>
-          bloc.isLoading == true
-              ? const LoadingView(
-              indicator: Indicator.ballBeat, indicatorColor: kPrimaryColor)
+          builder: (context, bloc, child) => bloc.isLoading == true
+              ? const LoadingView(indicator: Indicator.ballBeat, indicatorColor: kPrimaryColor)
               : Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-            child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                Visibility(
-                visible: orderStatus == "delivered",
-                  child:  Text(
-                    AppLocalizations.of(context)?.yourOrderIsCompleted ?? '',
-                    style: const TextStyle(fontSize: kTextRegular),
-                  ),
-                ),
-                Visibility(
-                  visible: orderStatus == "cancel",
-                  child:  Text(
-                   AppLocalizations.of(context)!.yourOrderIsCanceled,
-                    style:const TextStyle(fontSize: kTextRegular),
-                  ),
-                ),
-                Visibility(
-                  visible: orderStatus == "paid",
-                  child:  Text(
-                   AppLocalizations.of(context)?.yourOrderIsShipping ?? '',
-                    style: const TextStyle(fontSize: kTextRegular),
-                  ),
-                ),
-
-                const SizedBox(
-                  height: 30,
-                ),
-
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    children: [
-                      const Icon(
-                        Icons.car_rental_outlined,
-                        color: kFillingFastColor,
-                      ),
-                      const SizedBox(
-                        width: 24,
-                      ),
-                      Visibility(
-                        visible: orderStatus == "paid",
-                        child:  Text(
-                          AppLocalizations.of(context)?.yourOrderIsOnTheWay ?? '',
-                          style: const TextStyle(fontSize: kTextRegular),
-                        ),
-                      ),
-                      Visibility(
-                        visible: orderStatus == "cancel",
-                        child:  Text(
-                          AppLocalizations.of(context)!.yourOrderIsCanceled,
-                          style:const TextStyle(fontSize: kTextRegular),
-                        ),
-                      ),
-                      Visibility(
-                        visible: orderStatus == "delivered",
-                        child:  Text(
-                          AppLocalizations.of(context)!.yourOrderHasBeenDeliveredOn,
-                          style:const TextStyle(fontSize: kTextRegular),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-
-                 Padding(
-                  padding:const EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    children: [
-                      const Icon(
-                        Icons.location_pin,
-                        color: kFillingFastColor,
-                      ),
-                      const SizedBox(
-                        width: 24,
-                      ),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                          Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                          const Text(
-                          'Smile Shop',
-                          style: TextStyle(fontSize: kTextRegular),
-                        ),
-                        Padding(
-                          padding:const EdgeInsets.only(right: 20),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Visibility(
+                          visible: bloc.orderDetails?.getStatus() == "delivered",
                           child: Text(
-                          bloc.orderDetails?.addressVO?.phone ?? "",
-                          style:const TextStyle(fontSize: kTextRegular),
+                            AppLocalizations.of(context)?.yourOrderIsCompleted ?? '',
+                            style: const TextStyle(fontSize: kTextRegular),
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    bloc.orderDetails?.addressVO?.address ?? "",
-                    style:const TextStyle(fontSize: kTextRegular),
-                  ),
-                  ],
-                ))
-            ],
-          ),
-        ),
-        const SizedBox(
-          height: 30,
-        ),
-        MyOrderListItemView(
-          isRefundView: true,
-          orderVO: bloc.orderDetails,
-          onTapRefund: (orderNo) {
+                        Visibility(
+                          visible: bloc.orderDetails?.getStatus() == "cancel",
+                          child: Text(
+                            AppLocalizations.of(context)!.yourOrderIsCanceled,
+                            style: const TextStyle(fontSize: kTextRegular),
+                          ),
+                        ),
+                        Visibility(
+                          visible: bloc.orderDetails?.getStatus() == "paid",
+                          child: Text(
+                            AppLocalizations.of(context)?.yourOrderIsShipping ?? '',
+                            style: const TextStyle(fontSize: kTextRegular),
+                          ),
+                        ),
 
-          },
-          onTapReview: (orderNo) {},
-        ),
-        const SizedBox(
-          height: 20,
-        ),
+                        const SizedBox(
+                          height: 30,
+                        ),
 
-        ///stepper
-        Visibility(
-          visible: orderStatus == "ongoing" || orderStatus == "paid",
-          child: Text(
-            AppLocalizations.of(context)?.yourOrderTracking ?? '',
-            style: const TextStyle(fontSize: kTextRegular2x),
-          ),
-        ),
-        const SizedBox(
-          height: 14,
-        ),
-        Visibility(
-            visible: orderStatus == "ongoing" || orderStatus == "paid",
-            child: DeliveryStepperView(deliveryList: deliveryHistory,)),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.local_shipping,
+                                color: kFillingFastColor,
+                              ),
+                              const SizedBox(
+                                width: 24,
+                              ),
+                              Visibility(
+                                visible: bloc.orderDetails?.getStatus() == "paid",
+                                child: Text(
+                                  AppLocalizations.of(context)?.yourOrderIsOnTheWay ?? '',
+                                  style: const TextStyle(fontSize: kTextRegular),
+                                ),
+                              ),
+                              Visibility(
+                                visible: bloc.orderDetails?.getStatus() == "cancel",
+                                child: Text(
+                                  AppLocalizations.of(context)!.yourOrderIsCanceled,
+                                  style: const TextStyle(fontSize: kTextRegular),
+                                ),
+                              ),
+                              Visibility(
+                                visible: bloc.orderDetails?.getStatus() == "delivered",
+                                child: Text(
+                                  AppLocalizations.of(context)!.yourOrderHasBeenDeliveredOn,
+                                  style: const TextStyle(fontSize: kTextRegular),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
 
-        const SizedBox(
-          height: 50,
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.location_pin,
+                                color: kFillingFastColor,
+                              ),
+                              const SizedBox(
+                                width: 24,
+                              ),
+                              Expanded(
+                                  child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text(
+                                        'Smile Shop',
+                                        style: TextStyle(fontSize: kTextRegular),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(right: 20),
+                                        child: Text(
+                                          bloc.orderDetails?.addressVO?.phone ?? "",
+                                          style: const TextStyle(fontSize: kTextRegular),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  Text(
+                                    bloc.orderDetails?.addressVO?.address ?? "",
+                                    style: const TextStyle(fontSize: kTextRegular),
+                                  ),
+                                ],
+                              ))
+                            ],
+                          ),
+                        ),
+
+                        Visibility(
+                          visible: bloc.orderDetails?.paymentType?.toString() == "cod" || bloc.orderDetails?.paymentType?.toLowerCase() == "cash on delivery",
+                          child: const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.payments,
+                                  color: kFillingFastColor,
+                                ),
+                                SizedBox(
+                                  width: 24,
+                                ),
+                                Text(
+                                  "Cash On Delivery",
+                                  style: TextStyle(fontSize: kTextRegular),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        MyOrderListItemView(
+                          isRefundView: false,
+                          orderVO: bloc.orderDetails,
+                          hideButton: true,
+                          onTapRefund: (orderNo) {},
+                          onTapReview: (orderNo) {},
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+
+                        ///stepper
+                        Visibility(
+                          // visible: bloc.orderDetails?.getStatus() == "on_going" || bloc.orderDetails?.getStatus() == "paid",
+                          child: Text(
+                            AppLocalizations.of(context)?.yourOrderTracking ?? '',
+                            style: const TextStyle(fontSize: kTextRegular2x),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 14,
+                        ),
+                        Visibility(
+                            // visible: bloc.orderDetails?.getStatus() == "on_going" || bloc.orderDetails?.getStatus() == "paid",
+                            child: DeliveryStepperView(
+                          deliveryList: bloc.orderDetails?.deliveryHistory ?? [],
+                        )),
+
+                        const SizedBox(
+                          height: 50,
+                        ),
+                        //button
+                      ],
+                    ),
+                  ),
+                ),
         ),
-        //button
-        ],
       ),
-    ),)
-    ,
-    )
-    ,
-    )
-    ,
     );
   }
 }
-
-

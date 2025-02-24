@@ -10,12 +10,14 @@ BannerVO _$BannerVOFromJson(Map<String, dynamic> json) => BannerVO(
       id: (json['id'] as num?)?.toInt(),
       sort: (json['sort'] as num?)?.toInt(),
       status: (json['status'] as num?)?.toInt(),
-      image: json['image'] as String?,
+      sourceUrl: json['url'] as String?,
+      mediaType: json['media_type'] as String?,
     );
 
 Map<String, dynamic> _$BannerVOToJson(BannerVO instance) => <String, dynamic>{
       'id': instance.id,
       'sort': instance.sort,
       'status': instance.status,
-      'image': instance.image,
+      'url': instance.sourceUrl,
+      'media_type': instance.mediaType,
     };

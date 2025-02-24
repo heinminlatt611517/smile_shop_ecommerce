@@ -18,9 +18,9 @@
         </intent>
     </queries>
    <application
-        android:label="smile_shop"
+        android:label="Smile Shop"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
             android:exported="true"

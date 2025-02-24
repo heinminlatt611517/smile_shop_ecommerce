@@ -2045,8 +2045,9 @@ class _SmileShopApi implements SmileShopApi {
   Future<SuccessNetworkResponse> postRefund(
     String acceptLanguage,
     String token,
-    int orderNo,
-    int reasonId,
+    String orderNo,
+    String reasonId,
+    String userId,
     File image,
   ) async {
     final _extra = <String, dynamic>{};
@@ -2058,18 +2059,22 @@ class _SmileShopApi implements SmileShopApi {
     _headers.removeWhere((k, v) => v == null);
     final _data = FormData();
     _data.fields.add(MapEntry(
-      'orderNo',
-      orderNo.toString(),
+      'order_no',
+      orderNo,
     ));
     _data.fields.add(MapEntry(
-      'reasonId',
-      reasonId.toString(),
+      'reason_id',
+      reasonId,
+    ));
+    _data.fields.add(MapEntry(
+      'user_id',
+      userId,
     ));
     _data.files.add(MapEntry(
       'image',
       MultipartFile.fromFileSync(
         image.path,
-        filename: image.path.split(Platform.pathSeparator).last,
+        filename: 'image',
       ),
     ));
     final _options = _setStreamType<SuccessNetworkResponse>(Options(
@@ -2709,6 +2714,46 @@ class _SmileShopApi implements SmileShopApi {
     late FavouriteProductResponse _value;
     try {
       _value = FavouriteProductResponse.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<NotificationListResponse> getNotificationList(
+    String token,
+    String acceptLanguage,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{
+      r'Authorization': token,
+      r'Accept-Language': acceptLanguage,
+    };
+    _headers.removeWhere((k, v) => v == null);
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<NotificationListResponse>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/api/news',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late NotificationListResponse _value;
+    try {
+      _value = NotificationListResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;
