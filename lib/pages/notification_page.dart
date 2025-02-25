@@ -78,7 +78,7 @@ class NotificationCard extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: kMarginMedium2),
-                child: Text(noti.content ?? ''),
+                child: Text(noti.shortContent ?? ''),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: kMarginMedium),

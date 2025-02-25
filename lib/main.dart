@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -20,7 +21,6 @@ import 'package:smile_shop/data/vos/size_vo.dart';
 import 'package:smile_shop/data/vos/user_vo.dart';
 import 'package:smile_shop/data/vos/variant_vo.dart';
 import 'package:smile_shop/pages/blog_page.dart';
-import 'package:smile_shop/pages/notification_page.dart';
 import 'package:smile_shop/pages/splash_page.dart';
 import 'package:smile_shop/persistence/hive_constants.dart';
 import 'package:smile_shop/service/notification_service.dart';
@@ -41,11 +41,21 @@ Future<Locale> _getLocaleData() async {
   }
 }
 
+@pragma('vm:entry-point')
+Future<void> _backgrounHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  showNotification(message);
+  // Update SharedPreferences safely in the background
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.setBool('newNoti', true);
+}
+
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  FirebaseMessaging.onBackgroundMessage(_backgrounHandler);
   NotificationService.instance.initialize();
   await Hive.initFlutter();
   await GetStorage.init();
@@ -101,7 +111,7 @@ class SmileShopApp extends StatelessWidget {
         builder: (context, bloc, child) => MaterialApp(
           navigatorKey: navigatorKey,
           routes: {
-            '/notification_detail' : (context) => const BlogPage()
+            '/notification_detail': (context) => const BlogPage()
           },
           debugShowCheckedModeBanner: false,
           localizationsDelegates: const [

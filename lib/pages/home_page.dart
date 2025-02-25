@@ -34,7 +34,16 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => HomeBloc(context),
-      child: const Scaffold(backgroundColor: kBackgroundColor, body: HomeContentView()),
+      child: const Scaffold(
+          appBar: PreferredSize(
+            preferredSize: Size(double.infinity, 55),
+            child: SafeArea(child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: kMarginMedium2, vertical: kMarginSmall),
+              child: SearchView(),
+            )),
+          ),
+          backgroundColor: kBackgroundColor,
+          body: HomeContentView()),
     );
   }
 }
@@ -76,16 +85,16 @@ class _HomeContentViewState extends State<HomeContentView> {
         ///spacer
         const SliverToBoxAdapter(
             child: SizedBox(
-          height: kMarginXXLarge,
+          height: kMarginMedium2,
         )),
 
-        ///search view
-        const SliverToBoxAdapter(
-          child: Padding(
-            padding: EdgeInsets.all(kMarginLarge),
-            child: SearchView(),
-          ),
-        ),
+        // ///search view
+        // const SliverToBoxAdapter(
+        //   child: Padding(
+        //     padding: EdgeInsets.all(kMarginLarge),
+        //     child: SearchView(),
+        //   ),
+        // ),
 
         ///Banner view
         SliverToBoxAdapter(
