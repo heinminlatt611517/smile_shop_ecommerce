@@ -63,68 +63,56 @@ class _ProfilePageState extends State<ProfilePage> {
                 automaticallyImplyLeading: false,
                 title: Selector<ProfileBloc, UserVO?>(
                   selector: (context, bloc) => bloc.userProfile,
-                  builder: (_, user, child) => Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(30),
-                        child: CachedNetworkImage(
-                            height: 60,
-                            width: 60,
-                            fit: BoxFit.cover,
-                            imageUrl: user?.profileImage == ''
-                        ? errorImageUrl
-                            : user?.profileImage ?? errorImageUrl),),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            user?.name ?? '',
-                            style: const TextStyle(fontSize: kTextRegular2x),
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          GestureDetector(
-                            onTap: () async {
-                              final bool? isUpdated =
-                                  await Navigator.of(context).push(
-                                MaterialPageRoute(
-                                    builder: (builder) => EditProfilePage(
-                                          userVo: user,
-                                        )),
-                              );
-                              if (isUpdated == true) {
-                                context.read<ProfileBloc>().getProfile(context);
-                              }
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 5),
-                              decoration: BoxDecoration(
-                                  color: kMTicketColor.withOpacity(0.3),
-                                  borderRadius: BorderRadius.circular(5)),
-                              child:  Center(
-                                child: Text(
-                                  AppLocalizations.of(context)!.edit,
-                                  style:const TextStyle(fontSize: kTextSmall),
-                                ),
-                              ),
+                  builder: (_, user, child) => SizedBox(
+                    width: double.infinity,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(30),
+                          child: CachedNetworkImage(height: 60, width: 60, fit: BoxFit.cover, imageUrl: user?.profileImage == '' ? errorImageUrl : user?.profileImage ?? errorImageUrl),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          user?.name ?? '',
+                          style: const TextStyle(fontSize: kTextRegular2x),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          user?.phone ?? '',
+                          style: const TextStyle(fontSize: kTextRegular2x),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        GestureDetector(
+                          onTap: () async {
+                            final bool? isUpdated = await Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (builder) => EditProfilePage(
+                                        userVo: user,
+                                      )),
+                            );
+                            if (isUpdated == true) {
+                              context.read<ProfileBloc>().getProfile(context);
+                            }
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                            decoration: BoxDecoration(color: kMTicketColor.withOpacity(0.3), borderRadius: BorderRadius.circular(5)),
+                            child: Text(
+                              AppLocalizations.of(context)!.edit,
+                              style: const TextStyle(fontSize: kTextSmall),
                             ),
-                          )
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        user?.phone ?? '',
-                        style: const TextStyle(fontSize: kTextRegular2x),
-                      ),
-                    ],
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
                 shape: const RoundedRectangleBorder(
@@ -135,13 +123,18 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               body: Padding(
                 padding: const EdgeInsets.symmetric(
-                    horizontal: 16,),
+                  horizontal: 16,
+                ),
                 child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const SizedBox(height: kMarginMedium,),
-                       Text(AppLocalizations.of(context)!.myOrders,),
+                      const SizedBox(
+                        height: kMarginMedium,
+                      ),
+                      Text(
+                        AppLocalizations.of(context)!.myOrders,
+                      ),
                       const SizedBox(
                         height: 15,
                       ),
@@ -167,10 +160,10 @@ class _ProfilePageState extends State<ProfilePage> {
                         builder: (context, isNewNoti, child) => GridView.count(
                           crossAxisCount: 4,
                           mainAxisSpacing: 0,
-                        
+
                           /// Vertical spacing between items
                           crossAxisSpacing: 10,
-                        
+
                           /// Horizontal spacing between items
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
@@ -206,183 +199,149 @@ class _ProfilePageState extends State<ProfilePage> {
 
     items.add(InkWell(
       onTap: () {
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (_) => const MyOrderPage(tabIndex: 1)));
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => const MyOrderPage(tabIndex: 1)));
       },
-      child: _buildProfileItem(context,
-          title: AppLocalizations.of(context)!.toPay, assetImagePath: kToPayIcon),
+      child: _buildProfileItem(context, title: AppLocalizations.of(context)!.toPay, assetImagePath: kToPayIcon),
     ));
 
     items.add(InkWell(
       onTap: () {
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (_) => const MyOrderPage(tabIndex: 2)));
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => const MyOrderPage(tabIndex: 2)));
       },
-      child: _buildProfileItem(context,
-          title: AppLocalizations.of(context)!.toShip, assetImagePath: kToShipIcon),
+      child: _buildProfileItem(context, title: AppLocalizations.of(context)!.toShip, assetImagePath: kToShipIcon),
     ));
 
     items.add(InkWell(
       onTap: () {
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (_) => const MyOrderPage(tabIndex: 3)));
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => const MyOrderPage(tabIndex: 3)));
       },
-      child: _buildProfileItem(context,
-          title: AppLocalizations.of(context)!.toReceive, assetImagePath: kToReceiveIcon),
+      child: _buildProfileItem(context, title: AppLocalizations.of(context)!.toReceive, assetImagePath: kToReceiveIcon),
     ));
 
     items.add(InkWell(
       onTap: () {
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (_) => const MyOrderPage(tabIndex: 4)));
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => const MyOrderPage(tabIndex: 4)));
       },
-      child: _buildProfileItem(context,
-          title: AppLocalizations.of(context)!.toReview, assetImagePath: kToReviewIcon),
+      child: _buildProfileItem(context, title: AppLocalizations.of(context)!.toReview, assetImagePath: kToReviewIcon),
     ));
 
     return items;
   }
-
 
   ///build profile item
   _buildProfileItems(BuildContext context, bool isNewNoti) {
     List<Widget> items = [];
     items.add(InkWell(
       onTap: () {
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (_) => const RefundPage()));
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => const RefundPage()));
       },
-      child: _buildProfileItem(context,
-          title: AppLocalizations.of(context)!.refund, assetImagePath: kRefundIcon),
+      child: _buildProfileItem(context, title: AppLocalizations.of(context)!.refund, assetImagePath: kRefundIcon),
     ));
 
     items.add(InkWell(
       onTap: () {
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (_) => const SmilePointPage()));
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => const SmilePointPage()));
       },
-      child: _buildProfileItem(context,
-          title: AppLocalizations.of(context)!.smileWallet, assetImagePath: kSmileIcon),
+      child: _buildProfileItem(context, title: AppLocalizations.of(context)!.smileWallet, assetImagePath: kSmileIcon),
     ));
 
     items.add(InkWell(
       onTap: () {
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (_) => const PromotionPointPage()));
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => const PromotionPointPage()));
       },
-      child: _buildProfileItem(context,
-          title: AppLocalizations.of(context)!.promotionPoint, assetImagePath: kPointIcon),
-    ));
-
-      items.add(InkWell(
-        onTap: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (_) => const PackagePage()));
-        },
-        child: _buildProfileItem(context,
-            title: AppLocalizations.of(context)!.package, assetImagePath: kPackageIcon),
-      ));
-
-    items.add(InkWell(
-      onTap: () {
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (_) => const MyFavouritePage()));
-      },
-      child: _buildProfileItem(context,
-          title: AppLocalizations.of(context)!.myFavourite, assetImagePath: kFavouriteIcon),
+      child: _buildProfileItem(context, title: AppLocalizations.of(context)!.promotionPoint, assetImagePath: kPointIcon),
     ));
 
     items.add(InkWell(
       onTap: () {
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (_) => const LanguagePage()));
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => const PackagePage()));
       },
-      child: _buildProfileItem(context,
-          title: AppLocalizations.of(context)!.language, assetImagePath: kLanguageIcon),
+      child: _buildProfileItem(context, title: AppLocalizations.of(context)!.package, assetImagePath: kPackageIcon),
+    ));
+
+    items.add(InkWell(
+      onTap: () {
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => const MyFavouritePage()));
+      },
+      child: _buildProfileItem(context, title: AppLocalizations.of(context)!.myFavourite, assetImagePath: kFavouriteIcon),
+    ));
+
+    items.add(InkWell(
+      onTap: () {
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => const LanguagePage()));
+      },
+      child: _buildProfileItem(context, title: AppLocalizations.of(context)!.language, assetImagePath: kLanguageIcon),
     ));
 
     if (GetStorage().read(kBoxKeyLoginUserType) == kTypeEndUser) {
       items.add(InkWell(
         onTap: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (_) => const MyTeamPage()));
+          Navigator.of(context).push(MaterialPageRoute(builder: (_) => const MyTeamPage()));
         },
-        child: _buildProfileItem(context,
-            title:AppLocalizations.of(context)!.myTeam, assetImagePath: kMyTeamIcon),
+        child: _buildProfileItem(context, title: AppLocalizations.of(context)!.myTeam, assetImagePath: kMyTeamIcon),
       ));
     }
 
     items.add(InkWell(
       onTap: () {
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (_) => const MyAddressPage(needReturnValue: false,)));
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (_) => const MyAddressPage(
+                  needReturnValue: false,
+                )));
       },
-      child: _buildProfileItem(context,
-          title: AppLocalizations.of(context)!.address, assetImagePath: kAddressIcon),
+      child: _buildProfileItem(context, title: AppLocalizations.of(context)!.address, assetImagePath: kAddressIcon),
     ));
 
     items.add(InkWell(
       onTap: () {
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (_) => const NotificationPage()));
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => const NotificationPage()));
       },
-      child: _buildProfileItem(context,
-      showBadge: isNewNoti,
-          title: AppLocalizations.of(context)!.notification, assetImagePath: kNotiSvgIcon),
+      child: _buildProfileItem(context, showBadge: isNewNoti, title: AppLocalizations.of(context)!.notification, assetImagePath: kNotiSvgIcon),
     ));
 
     items.add(InkWell(
       onTap: () {
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (_) => const ReferralCodePage()));
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ReferralCodePage()));
       },
-      child: _buildProfileItem(context,
-          title: AppLocalizations.of(context)!.referralCode, assetImagePath: kReferralIcon),
+      child: _buildProfileItem(context, title: AppLocalizations.of(context)!.referralCode, assetImagePath: kReferralIcon),
     ));
 
-    items.add(_buildProfileItem(context,
-        title: AppLocalizations.of(context)!.aboutUs, assetImagePath: kAboutUsIcon));
+    items.add(_buildProfileItem(context, title: AppLocalizations.of(context)!.aboutUs, assetImagePath: kAboutUsIcon));
 
-    items.add(_buildProfileItem(context,
-        title: AppLocalizations.of(context)!.contactUs, assetImagePath: kContactUsIcon));
+    items.add(_buildProfileItem(context, title: AppLocalizations.of(context)!.contactUs, assetImagePath: kContactUsIcon));
 
     items.add(InkWell(
-      onTap: (){
-        showCommonDialog(context: context,dialogWidget: LogoutDialogView(onLogout: (){
-          _model.clearSaveLoginData();
-          Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(
-                  builder: (builder) => const LoginPage()),
-                  (Route<dynamic> route) => false);
-        }));
+      onTap: () {
+        showCommonDialog(
+            context: context,
+            dialogWidget: LogoutDialogView(onLogout: () {
+              _model.clearSaveLoginData();
+              Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (builder) => const LoginPage()), (Route<dynamic> route) => false);
+            }));
       },
-      child: _buildProfileItem(context,
-          title: AppLocalizations.of(context)!.logout, assetImagePath: kLogoutIcon),
+      child: _buildProfileItem(context, title: AppLocalizations.of(context)!.logout, assetImagePath: kLogoutIcon),
     ));
 
     items.add(Consumer<ProfileBloc>(
-      builder: (context,bloc,child)=>
-       InkWell(
-        onTap: (){
-          showCommonDialog(context: context,dialogWidget: DeleteAccountDialogView(onTapConfirm: (){
-            bloc.deleteAccount().then((response){
-              if(response.status == 200){
-                _model.clearSaveLoginData();
-                Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(
-                        builder: (builder) => const LoginPage()),
-                        (Route<dynamic> route) => false);
-              }
-            }).catchError((error) {
-                showCommonDialog(
-                  context: context,
-                  dialogWidget: ErrorDialogView(errorMessage: error),
-                );
-            });
-          }));
+      builder: (context, bloc, child) => InkWell(
+        onTap: () {
+          showCommonDialog(
+              context: context,
+              dialogWidget: DeleteAccountDialogView(onTapConfirm: () {
+                bloc.deleteAccount().then((response) {
+                  if (response.status == 200) {
+                    _model.clearSaveLoginData();
+                    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (builder) => const LoginPage()), (Route<dynamic> route) => false);
+                  }
+                }).catchError((error) {
+                  showCommonDialog(
+                    context: context,
+                    dialogWidget: ErrorDialogView(errorMessage: error),
+                  );
+                });
+              }));
         },
-        child: _buildProfileItem(context,
-            title: AppLocalizations.of(context)!.deleteAccount, assetImagePath: kDeleteIcon),
+        child: _buildProfileItem(context, title: AppLocalizations.of(context)!.deleteAccount, assetImagePath: kDeleteIcon),
       ),
     ));
 
@@ -390,8 +349,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 }
 
-Widget _buildProfileItem(BuildContext context,
-    {required String title, required String assetImagePath,  bool showBadge = false}) {
+Widget _buildProfileItem(BuildContext context, {required String title, required String assetImagePath, bool showBadge = false}) {
   double itemWidth = (MediaQuery.of(context).size.width - 30) / 4;
   return SizedBox(
     width: itemWidth,
@@ -400,9 +358,10 @@ Widget _buildProfileItem(BuildContext context,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Badge(
-          smallSize:showBadge ? 8 : 0,
+          smallSize: showBadge ? 8 : 0,
           largeSize: showBadge ? 8 : 0,
-          child: SvgImageView(imageName: assetImagePath,
+          child: SvgImageView(
+            imageName: assetImagePath,
             imageHeight: 20,
             imageWidth: 20,
           ),

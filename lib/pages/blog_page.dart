@@ -1,11 +1,13 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 import 'package:smile_shop/data/vos/notification_vo.dart';
 import 'package:smile_shop/utils/dimens.dart';
+import 'package:smile_shop/widgets/cached_network_image_view.dart';
 import 'package:smile_shop/widgets/custom_app_bar_view.dart';
 
 class BlogPage extends StatelessWidget {
@@ -32,7 +34,15 @@ class BlogPage extends StatelessWidget {
       backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: kMarginMedium2),
-        child: HtmlWidget(notificationVO?.content ?? (notiFromNotiTap?.content ?? '')),
+        child: Column(
+          children: [
+            CachedNetworkImage(imageUrl: notificationVO?.image ?? ''),
+            const SizedBox(
+              height: kMarginMedium,
+            ),
+            HtmlWidget(notificationVO?.content ?? (notiFromNotiTap?.content ?? '')),
+          ],
+        ),
       ),
     );
   }
