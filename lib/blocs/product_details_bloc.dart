@@ -58,7 +58,6 @@ class ProductDetailsBloc extends ChangeNotifier {
   Future<void> _loadLanguage() async {
     var prefs = await SharedPreferences.getInstance();
     String? languageCode = prefs.getString('language_code');
-    print("LANGUAGE CODE =====>$languageCode");
     if (languageCode == null) {
       currentLanguage = kAcceptLanguageEn;
     } else if (languageCode == "my" || languageCode == "my-MM") {

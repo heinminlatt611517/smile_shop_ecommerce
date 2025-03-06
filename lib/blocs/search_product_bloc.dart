@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
 import 'package:smile_shop/data/vos/search_product_vo.dart';
 import 'package:smile_shop/network/api_constants.dart';
@@ -35,6 +36,7 @@ class SearchProductBloc extends ChangeNotifier {
   int? maxRange;
   double? ratingValue;
   String? queryString;
+  var currentLanguage = kAcceptLanguageEn;
 
   SearchProductBloc() {
     ///first time get search product list from database
@@ -45,21 +47,37 @@ class SearchProductBloc extends ChangeNotifier {
     accessToken = _smileShopModel.getLoginResponseFromDatabase()?.accessToken ?? "";
     endUserId = _smileShopModel.getLoginResponseFromDatabase()?.data?.id.toString() ?? "0";
 
+    _loadLanguage();
+
     ///search product history list from database
     _searchProductListSubscription = _smileShopModel.getSearchProductFromDatabase().listen((searchResults) {
       searchProducts = searchResults;
       notifyListeners();
     });
 
-    queryStreamController.stream.debounceTime(const Duration(milliseconds: 500)).listen((query) {
+    queryStreamController.stream.debounceTime(const Duration(milliseconds: 800)).listen((query) {
       if (query.isNotEmpty) {
-        _makeSearchProductNetworkCall(query, authToken, kAcceptLanguageEn, endUserId);
+        _makeSearchProductNetworkCall(query, authToken, currentLanguage, endUserId);
       } else {
         isScreenLaunch = true;
         products = [];
         notifyListeners();
       }
     });
+  }
+  Future<void> _loadLanguage() async {
+    var prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('language_code');
+    if (languageCode == null) {
+      currentLanguage = kAcceptLanguageEn;
+    } else if (languageCode == "my" || languageCode == "my-MM") {
+      currentLanguage = kAcceptLanguageMM;
+    } else if (languageCode == "zh") {
+      currentLanguage = kAcceptLanguageCh;
+    } else {
+      currentLanguage = kAcceptLanguageEn;
+    }
+    _notifySafely();
   }
 
   void onChangedMinMaxRange(double minRangeValue, double maxRangeValue) {
@@ -93,7 +111,7 @@ class SearchProductBloc extends ChangeNotifier {
         ///check search product is already exist in database
         var searchProductVOByNameFromDatabase = _smileShopModel.getSearchProductByNameFromDatabase(query);
         if (searchProductVOByNameFromDatabase == null) {
-          var searchProductVO = SearchProductVO(name: query);
+          var searchProductVO = SearchProductVO(name: query, timeStamp: DateTime.now().toString());
           _smileShopModel.addSingleSearchProductToDatabase(searchProductVO);
         }
       }

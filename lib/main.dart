@@ -3,13 +3,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smile_shop/blocs/app_language_bloc.dart';
 import 'package:smile_shop/blocs/my_address_bloc.dart';
-import 'package:smile_shop/config/firebase_web_config.dart';
 import 'package:smile_shop/data/vos/brand_vo.dart';
 import 'package:smile_shop/data/vos/category_vo.dart';
 import 'package:smile_shop/data/vos/color_vo.dart';
@@ -56,20 +56,22 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await dotenv.load();
   if (kIsWeb) {
-    Configurations configurations = Configurations();
     await Firebase.initializeApp(
-        options: FirebaseOptions(
-      apiKey: configurations.apiKey,
-      appId: configurations.appId,
-      messagingSenderId: configurations.messagingSenderId,
-      projectId: configurations.projectId,
-      storageBucket: configurations.storageBucket
-    ));
+     options: FirebaseOptions(
+      apiKey: dotenv.env['FIREBASE_API_KEY']!,
+      authDomain: dotenv.env['FIREBASE_AUTH_DOMAIN']!,
+      projectId: dotenv.env['FIREBASE_PROJECT_ID']!,
+      storageBucket: dotenv.env['FIREBASE_STORAGE_BUCKET']!,
+      messagingSenderId: dotenv.env['FIREBASE_MESSAGING_SENDER_ID']!,
+      appId: dotenv.env['FIREBASE_APP_ID']!,
+    ),);
   } else {
-    await Firebase.initializeApp();
-    FirebaseMessaging.onBackgroundMessage(_backgrounHandler);
-    NotificationService.instance.initialize();
+  await Firebase.initializeApp();
+  FirebaseMessaging.onBackgroundMessage(_backgrounHandler);
+  NotificationService.instance.initialize();
   }
   await Hive.initFlutter();
   await GetStorage.init();

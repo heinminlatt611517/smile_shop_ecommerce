@@ -21,7 +21,10 @@ class SearchProductDao {
 
   ///get search products list
   List<SearchProductVO> getSearchProducts() {
-    return getSearchProductBox().values.toList();
+    return getSearchProductBox().values.toList()
+      ..sort(
+        (a, b) => (b.timeStamp ?? '').compareTo(a.timeStamp ?? ''),
+      );
   }
 
   ///delete search product
@@ -30,8 +33,8 @@ class SearchProductDao {
   }
 
   ///get search product by name
-  SearchProductVO? getSearchProductByName(String title)  {
-     return getSearchProductBox().get(title);
+  SearchProductVO? getSearchProductByName(String title) {
+    return getSearchProductBox().get(title);
   }
 
   ///clear search product

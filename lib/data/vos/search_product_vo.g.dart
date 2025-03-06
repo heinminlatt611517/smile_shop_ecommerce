@@ -18,15 +18,18 @@ class SearchProductVOAdapter extends TypeAdapter<SearchProductVO> {
     };
     return SearchProductVO(
       name: fields[0] as String?,
+      timeStamp: fields[1] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, SearchProductVO obj) {
     writer
-      ..writeByte(1)
+      ..writeByte(2)
       ..writeByte(0)
-      ..write(obj.name);
+      ..write(obj.name)
+      ..writeByte(1)
+      ..write(obj.timeStamp);
   }
 
   @override
