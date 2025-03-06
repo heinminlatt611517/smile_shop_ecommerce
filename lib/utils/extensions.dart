@@ -1,7 +1,7 @@
 import 'package:intl/intl.dart';
 
 extension StringExtension on String {
-  String get toCapitalized => length > 0 ?'${this[0].toUpperCase()}${substring(1).toLowerCase()}':'';
+  String get toCapitalized => length > 0 ? '${this[0].toUpperCase()}${substring(1).toLowerCase()}' : '';
   String get toTitleCase => replaceAll(RegExp(' +'), ' ').split(' ').map((str) => str.toCapitalized).join(' ');
 }
 
@@ -13,8 +13,14 @@ extension FormatTime on DateTime {
   }
 }
 
-extension SplitStringExtension on String {
+extension NumberFormatting on num {
+  String formatWithCommas() {
+    final formatter = NumberFormat("#,###");
+    return formatter.format(this);
+  }
+}
 
+extension SplitStringExtension on String {
   String getFirstPart() {
     List<String> words = split(' ');
     if (words.length > 1) {

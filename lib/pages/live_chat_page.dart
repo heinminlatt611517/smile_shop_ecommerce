@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:smile_shop/blocs/live_chat_bloc.dart';
 import 'package:smile_shop/data/vos/user_vo.dart';
@@ -9,6 +8,7 @@ import 'package:smile_shop/network/api_constants.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/extensions.dart';
 import 'package:smile_shop/utils/strings.dart';
+import 'package:smile_shop/widgets/require_log_in_view.dart';
 import 'package:voice_message_package/voice_message_package.dart';
 
 import '../data/dummy_data/dummy_data.dart';
@@ -16,14 +16,16 @@ import '../data/vos/message_vo.dart';
 import '../network/firebase_api.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
 class LiveChatPage extends StatelessWidget {
   const LiveChatPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => LiveChatBloc(GetStorage().read(kBoxKeyFirebaseUserId)),
+      create: (context) {
+        print("LIVE CHECK PROVIDER CALLED");
+        return LiveChatBloc();
+      },
       child: Consumer<LiveChatBloc>(
         builder: (context, bloc, child) => Scaffold(
           backgroundColor: kBackgroundColor,
@@ -33,81 +35,85 @@ class LiveChatPage extends StatelessWidget {
             title: Text(AppLocalizations.of(context)?.chat ?? ''),
             scrolledUnderElevation: 0,
           ),
-          body: Stack(
-            children: [
-              Column(
-                children: [
-                  Expanded(
-                    child: ListView.separated(
-                      reverse: true,
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      itemCount: bloc.chatVO?.messages?.length ?? 0,
-                      separatorBuilder: (context, index) => const SizedBox(
-                        height: 8,
-                      ),
-                      itemBuilder: (context, index) {
-                        int reversedIndex = (bloc.chatVO?.messages?.length ?? 0) - 1 - index;
-                        MessageVo message = bloc.chatVO!.messages?[reversedIndex] ?? MessageVo();
-                        return ChatBubble(
-                          messageVo: message,
-                        );
-                      },
-                    ),
-                  ),
-                  ChatInputField(
-                    onSend: () {
-                     // bloc.sendMsg();
-                    },
-                    imageFile: bloc.image,
-                    audioFile: bloc.audio,
-                    textController: bloc.msgController,
-                    onTapAddImage: () {
-                      bloc.pickImage();
-                    },
-                    onTapAddAudio: () {
-                      bloc.startRecordingAudio();
-                    },
-                  ),
-                ],
-              ),
-              if (bloc.isRecording)
-                Container(
-                  color: Colors.black.withOpacity(0.5),
-                  child: Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
+          body: bloc.loginDataVO == null
+              ? const Center(
+                  child: RequireLogInView(),
+                )
+              : Stack(
+                  children: [
+                    Column(
                       children: [
-                        const Icon(Icons.mic, color: Colors.white, size: 50),
-                        const Text(
-                          "Recording...",
-                          style: TextStyle(color: Colors.white),
+                        Expanded(
+                          child: ListView.separated(
+                            reverse: true,
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            itemCount: bloc.chatVO?.messages?.length ?? 0,
+                            separatorBuilder: (context, index) => const SizedBox(
+                              height: 8,
+                            ),
+                            itemBuilder: (context, index) {
+                              int reversedIndex = (bloc.chatVO?.messages?.length ?? 0) - 1 - index;
+                              MessageVo message = bloc.chatVO!.messages?[reversedIndex] ?? MessageVo();
+                              return ChatBubble(
+                                messageVo: message,
+                              );
+                            },
+                          ),
                         ),
-                        const SizedBox(height: 16),
-                        ElevatedButton(
-                            onPressed: () {
-                              //bloc.completeRecordingAudio();
-                            },
-                            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                            child: const Text(
-                              "Complete",
-                              style: TextStyle(color: Colors.white, fontSize: 16),
-                            )),
-                        const SizedBox(height: 16),
-                        ElevatedButton(
-                            onPressed: () {
-                              bloc.cancelRecordingAudio();
-                            },
-                            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                            child: const Text(
-                              "Cancel",
-                              style: TextStyle(color: Colors.white, fontSize: 16),
-                            ))
+                        ChatInputField(
+                          onSend: () {
+                            // bloc.sendMsg();
+                          },
+                          imageFile: bloc.image,
+                          audioFile: bloc.audio,
+                          textController: bloc.msgController,
+                          onTapAddImage: () {
+                            bloc.pickImage();
+                          },
+                          onTapAddAudio: () {
+                            bloc.startRecordingAudio();
+                          },
+                        ),
                       ],
                     ),
-                  ),
+                    if (bloc.isRecording)
+                      Container(
+                        color: Colors.black.withOpacity(0.5),
+                        child: Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(Icons.mic, color: Colors.white, size: 50),
+                              const Text(
+                                "Recording...",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              const SizedBox(height: 16),
+                              ElevatedButton(
+                                  onPressed: () {
+                                    //bloc.completeRecordingAudio();
+                                  },
+                                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                                  child: const Text(
+                                    "Complete",
+                                    style: TextStyle(color: Colors.white, fontSize: 16),
+                                  )),
+                              const SizedBox(height: 16),
+                              ElevatedButton(
+                                  onPressed: () {
+                                    bloc.cancelRecordingAudio();
+                                  },
+                                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                                  child: const Text(
+                                    "Cancel",
+                                    style: TextStyle(color: Colors.white, fontSize: 16),
+                                  ))
+                            ],
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
-            ],
-          ),
         ),
       ),
     );
@@ -172,9 +178,9 @@ class ChatBubble extends StatelessWidget {
                       circlesColor: Colors.white,
                       activeSliderColor: Colors.white,
                       innerPadding: 0,
-                      circlesTextStyle:const TextStyle(color: Colors.black),
-                      playIcon:const Icon(Icons.play_arrow, color: Color(0xffFF8800)),
-                      pauseIcon:const Icon(Icons.pause, color: Color(0xffFF8800)),
+                      circlesTextStyle: const TextStyle(color: Colors.black),
+                      playIcon: const Icon(Icons.play_arrow, color: Color(0xffFF8800)),
+                      pauseIcon: const Icon(Icons.pause, color: Color(0xffFF8800)),
                       playPauseButtonLoadingColor: Color(0xffFF8800),
                     ),
                   ],
@@ -194,13 +200,12 @@ class ChatBubble extends StatelessWidget {
           ),
           if (isSender) const SizedBox(width: 8),
           if (isSender)
-            Selector<LiveChatBloc,UserVO?>(
-              selector: (context,bloc)=>bloc.userVO,
-              builder: (context,userVO,child)=>
-                  CircleAvatar(
-                    radius: 16,
-                    backgroundImage: NetworkImage(userVO?.profileImage ?? errorImageUrl), // Dummy profile image
-                  ),
+            Selector<LiveChatBloc, UserVO?>(
+              selector: (context, bloc) => bloc.userVO,
+              builder: (context, userVO, child) => CircleAvatar(
+                radius: 16,
+                backgroundImage: NetworkImage(userVO?.profileImage ?? errorImageUrl), // Dummy profile image
+              ),
             ),
         ],
       );
@@ -280,10 +285,9 @@ class ChatBubble extends StatelessWidget {
         ),
         if (isSender) const SizedBox(width: 8),
         if (isSender)
-          Selector<LiveChatBloc,UserVO?>(
-            selector: (context,bloc)=>bloc.userVO,
-            builder: (context,userVO,child)=>
-              CircleAvatar(
+          Selector<LiveChatBloc, UserVO?>(
+            selector: (context, bloc) => bloc.userVO,
+            builder: (context, userVO, child) => CircleAvatar(
               radius: 16,
               backgroundImage: NetworkImage(userVO?.profileImage ?? errorImageUrl), // Dummy profile image
             ),
@@ -352,7 +356,7 @@ class ChatInputField extends StatelessWidget {
                 child: TextField(
                   controller: textController,
                   style: const TextStyle(fontSize: 12),
-                  decoration:  InputDecoration(
+                  decoration: InputDecoration(
                     hintText: AppLocalizations.of(context)?.sendAMessage ?? '',
                     border: InputBorder.none,
                     contentPadding: const EdgeInsets.only(bottom: 8),

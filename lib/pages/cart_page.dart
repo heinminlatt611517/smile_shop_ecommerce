@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smile_shop/blocs/cart_bloc.dart';
+import 'package:smile_shop/data/vos/login_data_vo.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
 import 'package:smile_shop/list_items/cart_list_item_view.dart';
 import 'package:smile_shop/pages/checkout_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:smile_shop/widgets/require_log_in_view.dart';
 
 
 import '../utils/images.dart';
@@ -30,68 +32,73 @@ class CartPage extends StatelessWidget {
             style:const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
         ),
-        body: Selector<CartBloc, List<ProductVO>>(
-          selector: (context, bloc) => bloc.productList,
-          builder: (context, products, Widget? child) => products.isEmpty
-              ? Center(
-                  child: Column(
-                    children: [
-                      const SizedBox(
-                        height: 100,
-                      ),
-                      Image.asset(
-                        kNoResultImage,
-                        fit: BoxFit.contain,
-                        height: kSplashAppLogoHeight,
-                        width: kSplashAppLogoWidth,
-                      ),
-                      Text(
-                        textAlign: TextAlign.center,
-                        AppLocalizations.of(context)?.thereWereNoResultTryToAddNewProduct ?? '',
-                        style: const TextStyle(fontSize: kTextSmall),
-                      ),
-                    ],
-                  ),
-                )
-              : Column(
-                children: [
-                  Visibility(
-                    visible: false,
-                    child: Container(
-                      color: kBackgroundColor,
-                      child: const Padding(
-                        padding: EdgeInsets.only(
-                            left: kMarginMedium,
-                            right: kMarginMedium,
-                            top: kMarginMedium),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('My Cart'),
-                            Text(
-                              'Manage',
-                              style: TextStyle(color: kPrimaryColor),
-                            )
-                          ],
+        body: Selector<CartBloc, LoginDataVO?>(
+          selector: (context, bloc) => bloc.loginDataVO,
+          builder: (context, logInData, child) => logInData == null ? const Center(
+            child: RequireLogInView(),
+          )  :  Selector<CartBloc, List<ProductVO>>(
+            selector: (context, bloc) => bloc.productList,
+            builder: (context, products, Widget? child) => products.isEmpty
+                ? Center(
+                    child: Column(
+                      children: [
+                        const SizedBox(
+                          height: 100,
+                        ),
+                        Image.asset(
+                          kNoResultImage,
+                          fit: BoxFit.contain,
+                          height: kSplashAppLogoHeight,
+                          width: kSplashAppLogoWidth,
+                        ),
+                        Text(
+                          textAlign: TextAlign.center,
+                          AppLocalizations.of(context)?.thereWereNoResultTryToAddNewProduct ?? '',
+                          style: const TextStyle(fontSize: kTextSmall),
+                        ),
+                      ],
+                    ),
+                  )
+                : Column(
+                  children: [
+                    Visibility(
+                      visible: false,
+                      child: Container(
+                        color: kBackgroundColor,
+                        child: const Padding(
+                          padding: EdgeInsets.only(
+                              left: kMarginMedium,
+                              right: kMarginMedium,
+                              top: kMarginMedium),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('My Cart'),
+                              Text(
+                                'Manage',
+                                style: TextStyle(color: kPrimaryColor),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    child: ListView.builder(
-                        padding: const EdgeInsets.symmetric(vertical: 20),
-                        itemCount: products.length,
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          return CartListItemView(
-                            productVO: products[index],
-                            isCheckout: false,
-                          );
-                        }),
-                  ),
-                ],
-              ),
+                    Expanded(
+                      child: ListView.builder(
+                          padding: const EdgeInsets.symmetric(vertical: 0),
+                          itemCount: products.length,
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            return CartListItemView(
+                              productVO: products[index],
+                              isCheckout: false,
+                            );
+                          }),
+                    ),
+                  ],
+                ),
+          ),
         ),
         bottomNavigationBar: Selector<CartBloc, List<ProductVO>>(
           selector: (context, bloc) => bloc.productList,
@@ -120,16 +127,16 @@ class CartPage extends StatelessWidget {
                               }),
                         ),
                       ),
-                      const SizedBox(
-                        width: 4,
-                      ),
-                      Text(AppLocalizations.of(context)?.selectAll ?? ''),
+                      // const SizedBox(
+                      //   width: 4,
+                      // ),
+                      // Text(AppLocalizations.of(context)?.selectAll ?? ''),
                     ],
                   ),
                   const SizedBox(width: 20,),
                   Row(
                     children: [
-                      Text(AppLocalizations.of(context)?.total ?? ''),
+                      Text("${AppLocalizations.of(context)?.total ?? ''}: "),
                       Selector<CartBloc, int?>(
                         selector: (context, bloc) => bloc.totalProductPrice,
                         builder: (context, totalPrice, child) => Text(

@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:smile_shop/data/vos/login_data_vo.dart';
 import 'package:smile_shop/data/vos/user_vo.dart';
 import 'package:smile_shop/network/api_constants.dart';
 import 'package:smile_shop/network/responses/success_network_response.dart';
@@ -18,11 +19,19 @@ class ProfileBloc extends ChangeNotifier {
   bool isDisposed = false;
   bool isNewNotiExist = false;
   var authToken = "";
+  //To check User is logged in user
+  LoginDataVO? loginDataVO;
 
   ProfileBloc(BuildContext context) {
+    getLogInUserData();
     authToken = _smileShopModel.getLoginResponseFromDatabase()?.accessToken ?? "";
+
     getProfile(context);
     listenNotification();
+  }
+  void getLogInUserData() async {
+    loginDataVO = _smileShopModel.getLoginResponseFromDatabase();
+    _notifySafely();
   }
 
   void listenNotification() async {
@@ -37,22 +46,24 @@ class ProfileBloc extends ChangeNotifier {
   }
 
   void getProfile(BuildContext context) {
-    _showLoading();
-    _smileShopModel
-        .userProfile(authToken, kAcceptLanguageEn)
-        .then((response) {
-          userProfile = response;
-          _notifySafely();
-        })
-        .whenComplete(() => _hideLoading())
-        .catchError((error) {
-          if (error.toString().toLowerCase() == 'unauthenticated') {
-            showCommonDialog(
-              context: context,
-              dialogWidget: SessionExpiredDialogView(),
-            );
-          }
-        });
+    if (loginDataVO != null) {
+      _showLoading();
+      _smileShopModel
+          .userProfile(authToken, kAcceptLanguageEn)
+          .then((response) {
+            userProfile = response;
+            _notifySafely();
+          })
+          .whenComplete(() => _hideLoading())
+          .catchError((error) {
+            if (error.toString().toLowerCase() == 'unauthenticated') {
+              showCommonDialog(
+                context: context,
+                dialogWidget: SessionExpiredDialogView(),
+              );
+            }
+          });
+    }
   }
 
   Future<SuccessNetworkResponse> deleteAccount() {

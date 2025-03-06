@@ -175,13 +175,13 @@ packages:
     source: hosted
     version: "2.0.3"
   chewie:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: chewie
-      sha256: "6386fcc7ad7a8f7b25709ce988cd089cdde894bf335c7a0024a1bfcf8788a452"
+      sha256: "645fbca3f22309381edb5af59a4c8aa544a3d3872d7b7b7c986c2b18b3bdd265"
       url: "https://pub.dev"
     source: hosted
-    version: "1.9.2"
+    version: "1.10.0"
   cli_util:
     dependency: transitive
     description:
@@ -826,6 +826,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.5.2"
+  image_network:
+    dependency: "direct main"
+    description:
+      name: image_network
+      sha256: "8d691f6a5b17bb7383a3da4ac340de0f3c39e949cf59a13eec84e932942babfe"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.6.0"
   image_picker:
     dependency: "direct main"
     description:
@@ -1234,6 +1242,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.0.2"
+  photo_view:
+    dependency: "direct main"
+    description:
+      name: photo_view
+      sha256: "1fc3d970a91295fbd1364296575f854c9863f225505c28c46e0a03e48960c75e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.15.0"
   pin_code_fields:
     dependency: "direct main"
     description:
@@ -1266,6 +1282,38 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.8"
+  pointer_interceptor:
+    dependency: transitive
+    description:
+      name: pointer_interceptor
+      sha256: "57210410680379aea8b1b7ed6ae0c3ad349bfd56fe845b8ea934a53344b9d523"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.10.1+2"
+  pointer_interceptor_ios:
+    dependency: transitive
+    description:
+      name: pointer_interceptor_ios
+      sha256: a6906772b3205b42c44614fcea28f818b1e5fdad73a4ca742a7bd49818d9c917
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.10.1"
+  pointer_interceptor_platform_interface:
+    dependency: transitive
+    description:
+      name: pointer_interceptor_platform_interface
+      sha256: "0597b0560e14354baeb23f8375cd612e8bd4841bf8306ecb71fcd0bb78552506"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.10.0+1"
+  pointer_interceptor_web:
+    dependency: transitive
+    description:
+      name: pointer_interceptor_web
+      sha256: "7a7087782110f8c1827170660b09f8aa893e0e9a61431dbbe2ac3fc482e8c044"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.10.2+1"
   pool:
     dependency: transitive
     description:
@@ -1943,6 +1991,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.17.0"
+  webviewimage:
+    dependency: transitive
+    description:
+      name: webviewimage
+      sha256: "7e120a76ed6ea1549168c8402f51bd55a64e274f1515b88884b831366e417148"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.6"
   win32:
     dependency: transitive
     description:

@@ -52,3 +52,4 @@ const Color kSearchContainerCenterColor = Color.fromRGBO(85, 85, 85, 0.40);
 const Color kSearchContainerEndColor = Color.fromRGBO(85, 85, 85, 0.40);
 const Color kLoginOrSignUpContainerBgColor = Color.fromRGBO(0, 255, 106, 0.10);
 const Color kSearchAppBarBackgroundColor = Color.fromRGBO(0, 0, 0, 0.50);
+const Color kLoginTextFieldFillColor = Color(0xfffdfdfd);

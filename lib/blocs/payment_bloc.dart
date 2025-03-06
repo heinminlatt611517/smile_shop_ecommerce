@@ -80,7 +80,7 @@ class PaymentBloc extends ChangeNotifier {
       if (selectedIndex == 0) {
         var checkWalletAmountRequest = CheckWalletAmountRequest(subTotal);
         var checkWalletPasswordRequest = CheckWalletPasswordRequest(
-            GetStorage().read(kBoxKeyWalletPassword));
+            GetStorage().read(kBoxKeyWalletPassword), CheckPasswordType.checkPassword);
 
         await _smileShopModel.checkWalletAmount(
             authToken, kAcceptLanguageEn, checkWalletAmountRequest);
@@ -214,7 +214,7 @@ class PaymentBloc extends ChangeNotifier {
         var checkWalletAmountRequest =
             CheckWalletAmountRequest(int.parse(subTotal));
         var checkWalletPasswordRequest = CheckWalletPasswordRequest(
-            GetStorage().read(kBoxKeyWalletPassword));
+            GetStorage().read(kBoxKeyWalletPassword), CheckPasswordType.checkPassword);
 
         await _smileShopModel.checkWalletAmount(
             authToken, kAcceptLanguageEn, checkWalletAmountRequest);

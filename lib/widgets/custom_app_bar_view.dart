@@ -31,7 +31,7 @@ class CustomAppBarView extends StatelessWidget implements PreferredSizeWidget {
             ),
           ),
           const Spacer(),
-          Text(title ?? ""),
+          Text(title ?? "" , style: const TextStyle(fontSize: kTextRegular2x, fontWeight: FontWeight.bold),),
           const Spacer(),
           const Text(''),
         ],

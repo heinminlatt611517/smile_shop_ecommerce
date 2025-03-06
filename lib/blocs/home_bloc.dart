@@ -12,7 +12,7 @@ import 'package:smile_shop/network/requests/pop_up_request.dart';
 import 'package:smile_shop/utils/images.dart';
 import 'package:smile_shop/widgets/session_expired_dialog_view.dart';
 import 'package:smile_shop/widgets/welcome_dialog_view.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../data/vos/user_vo.dart';
 import '../widgets/common_dialog.dart';
 
@@ -43,27 +43,31 @@ class HomeBloc extends ChangeNotifier {
     ///get data from database
     authToken = _smileShopModel.getLoginResponseFromDatabase()?.refreshToken ?? "";
     accessToken = _smileShopModel.getLoginResponseFromDatabase()?.accessToken ?? "";
-    endUserId = _smileShopModel.getLoginResponseFromDatabase()?.data?.id.toString() ?? "";
+    endUserId = _smileShopModel.getLoginResponseFromDatabase()?.data?.id.toString() ?? "0";
     init();
 
-    ///get user profile data
-    _smileShopModel.userProfile(accessToken, kAcceptLanguageEn).then((response) {
-      userProfile = response;
-      if (response.showPopUp == 0) {
-        getHomePopupData(response.id ?? 0, context);
-      }
-      _notifySafely();
-    }).catchError((error) {
-      if (error.toString().toLowerCase() == 'unauthenticated') {
-        showCommonDialog(
-          context: context,
-          dialogWidget: SessionExpiredDialogView(),
-        );
-      }
-    });
+    if (endUserId != "0") {
+      // already log in
+      // then check user access token key is expired
+      ///get user profile data
+      _smileShopModel.userProfile(accessToken, kAcceptLanguageEn).then((response) {
+        userProfile = response;
+        if (response.showPopUp == 0) {
+          getHomePopupData(response.id ?? 0, context);
+        }
+        _notifySafely();
+      }).catchError((error) {
+        if (error.toString().toLowerCase() == 'unauthenticated') {
+          showCommonDialog(
+            context: context,
+            dialogWidget: SessionExpiredDialogView(),
+          );
+        }
+      });
+    }
   }
-  void init() {
-    loadLanguage();
+  void init() async {
+    await loadLanguage();
     _loadData();
   }
 
@@ -85,7 +89,6 @@ class HomeBloc extends ChangeNotifier {
       currentFlagImage = kEnglishImg;
     }
     _notifySafely();
-    _loadData();
   }
 
   String getCurrentLanguageFormatted() {
@@ -178,6 +181,11 @@ class HomeBloc extends ChangeNotifier {
 
   void onTapFavourite(ProductVO? product, BuildContext context) {
     if (product == null) return;
+
+    if (endUserId.isEmpty || endUserId == "0") {
+      showSnackBar(context, AppLocalizations.of(context)!.need_login, Colors.deepOrange);
+      return;
+    }
     var favoriteProductRequest = FavouriteProductRequest(
       productId: product.id,
       status: product.isFavouriteProduct == true ? 'unfavourite' : 'favourite',

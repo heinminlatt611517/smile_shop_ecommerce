@@ -7,10 +7,10 @@
   "typeYourPassword" : "Type your password",
   "forgotPassword" : "Forgot password?",
   "login" : "Login",
-  "ifYouDontHaveAccount" : "If you don't have an account.",
+  "ifYouDontHaveAccount" : "If you don't have an account,",
   "signUp" : "Sign Up",
   "enterReferralCode" : "Enter referral code",
-  "ifYouAlreadyHaveAnAccount" : "If you already have an account.",
+  "ifYouAlreadyHaveAnAccount" : "If you already have an account,",
   "checkYourPhone" : "Check Your Phone",
   "weHaveHaveSendTheCodeToYourPhone" : "We've have the code to your phone",
   "codeExpireIn" : "Code expire in",
@@ -154,5 +154,9 @@
   "yourOrderHasBeenDeliveredOn" : "Your order has been delivered on.",
   "favourite" : "Favourite",
   "doYouWantToDeleteAccount" : "Do you want to delete your account? This action cannot be undone",
-  "notification" : "Notification"
+  "notification" : "Notification",
+  "need_login" :  "You need to log in to use this feature.",
+  "leftReferralCodeEmpty" : "If you don't have a referral code, leave it blank.",
+  "toViewMyTeamMembers" : "To view my team members",
+  "doubleTapToZoom" : "Double Tap to Zoom In/Out"
   }

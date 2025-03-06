@@ -155,5 +155,9 @@
   "yourOrderHasBeenDeliveredOn" : "您的订单已于以下日期送达。",
   "favourite" : "收藏",
   "doYouWantToDeleteAccount" : "您想删除您的帐户吗？此操作无法撤消。", 
-  "notification" : "通知"
+  "notification" : "通知",
+  "need_login" :  "您需要登录才能使用此功能。",
+  "leftReferralCodeEmpty" : "如果您没有推荐代码，请将其留空。",
+  "toViewMyTeamMembers" : "查看我的团队成员",
+  "doubleTapToZoom" : "双击放大/缩小"
 }

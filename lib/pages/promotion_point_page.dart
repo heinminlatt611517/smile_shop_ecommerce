@@ -6,11 +6,11 @@ import 'package:smile_shop/blocs/promotion_bloc.dart';
 import 'package:smile_shop/data/vos/promotion_vo.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
+import 'package:smile_shop/utils/extensions.dart';
 
 import '../utils/images.dart';
 import '../widgets/svg_image_view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 
 class PromotionPointPage extends StatelessWidget {
   const PromotionPointPage({super.key});
@@ -25,64 +25,81 @@ class PromotionPointPage extends StatelessWidget {
           centerTitle: true,
           backgroundColor: kSecondaryColor,
           automaticallyImplyLeading: false,
-          title:  Row(children: [InkWell(
-            onTap: (){
-              Navigator.pop(context);
-            },
-            child:const SvgImageView(
-              imageName: kBackSvgIcon,
-              imageHeight: 26,
-              imageWidth: 26,
-            ),
+          title: Row(
+            children: [
+              InkWell(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: const SvgImageView(
+                  imageName: kBackSvgIcon,
+                  imageHeight: 26,
+                  imageWidth: 26,
+                ),
+              ),
+              const Spacer(),
+              Text(AppLocalizations.of(context)?.promotionPoint ?? ''),
+              const Spacer(),
+              const Text(''),
+            ],
           ),
-            const Spacer(),
-            Text(AppLocalizations.of(context)?.promotionPoint ?? ''),
-            const Spacer(),
-            const Text(''),
-          ],),
         ),
         body: Column(
           children: [
             Container(
               width: double.infinity,
               color: kSecondaryColor,
-              child:  Column(
-                children: [
-                  const Text(
-                    'You have                 ',
-                    style:
-                        TextStyle(fontSize: kTextRegular, color: Colors.black),
-                  ),
-                  const SizedBox(
-                    height: 7,
-                  ),
-                  Consumer<PromotionBloc>(
-                    builder: (context,bloc,child)=>
-                     Text(bloc.promotionDataVO?.currentPoint.toString() ?? "0",
-                      style:const TextStyle(
-                          fontSize: 32,
-                          color: kBackgroundColor,
-                          fontWeight: FontWeight.bold),
+              child: Center(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    // const Text(
+                    //   'You have',
+                    //   style: TextStyle(fontSize: kTextRegular, color: Colors.black),
+                    // ),
+                    // const SizedBox(
+                    //   height: 5,
+                    // ),
+                    // Consumer<PromotionBloc>(
+                    //   builder: (context, bloc, child) => Text(
+                    //     bloc.promotionDataVO?.currentPoint?.formatWithCommas() ?? "0",
+                    //     style: const TextStyle(fontSize: 32, color: kBackgroundColor, fontWeight: FontWeight.bold),
+                    //   ),
+                    // ),
+                    Consumer<PromotionBloc>(
+                        builder: (context, bloc, child) => Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  "You Have",
+                                  style: TextStyle(fontSize: kTextRegular, color: Colors.black, fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  bloc.promotionDataVO?.currentPoint?.formatWithCommas() ?? "0",
+                                  style: const TextStyle(
+                                    fontSize: 32,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                )
+                              ],
+                            )),
+
+                    Text(
+                      AppLocalizations.of(context)?.promotionPoints ?? '',
+                      style: const TextStyle(fontSize: kTextSmall, color: Colors.black, fontWeight: FontWeight.w600),
                     ),
-                  ),
-                  Text(
-                    '        ${AppLocalizations.of(context)?.promotionPoint ?? ''}',
-                    style: const TextStyle(fontSize: kTextSmall, color: Colors.black),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                ],
+                    const SizedBox(
+                      height: 20,
+                    ),
+                  ],
+                ),
               ),
             ),
             Consumer<PromotionBloc>(
               builder: (context, bloc, child) => Expanded(
                   child: Container(
-                decoration: const BoxDecoration(
-                    color: kBackgroundColor,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(50),
-                        topRight: Radius.circular(50))),
+                decoration: const BoxDecoration(color: kBackgroundColor, borderRadius: BorderRadius.only(topLeft: Radius.circular(50), topRight: Radius.circular(50))),
                 width: double.infinity,
                 child: Column(
                   children: [
@@ -93,11 +110,11 @@ class PromotionPointPage extends StatelessWidget {
                         children: {
                           0: Container(
                             margin: const EdgeInsets.symmetric(vertical: 10),
-                            child:  Text(AppLocalizations.of(context)?.incomePoints ?? ''),
+                            child: Text(AppLocalizations.of(context)?.incomePoints ?? ''),
                           ),
                           1: Container(
                             margin: const EdgeInsets.symmetric(vertical: 10),
-                            child:  Text(AppLocalizations.of(context)?.outcomePoints ?? ''),
+                            child: Text(AppLocalizations.of(context)?.outcomePoints ?? ''),
                           ),
                         },
                         thumbColor: kSecondaryColor,
@@ -107,16 +124,11 @@ class PromotionPointPage extends StatelessWidget {
                         }),
                     Selector<PromotionBloc, List<PromotionVO>>(
                       selector: (context, bloc) => bloc.promotions,
-                      builder: (context, promotions, child) =>
-                          Selector<PromotionBloc, bool>(
+                      builder: (context, promotions, child) => Selector<PromotionBloc, bool>(
                         selector: (context, bloc) => bloc.isLoading,
                         builder: (context, isLoading, child) => Stack(
                           children: [
-                            bloc.selectedSegment == 0
-                                ? _buildIncomeAndOutcomePointListView(
-                                    promotions, AppLocalizations.of(context)?.incomePoints ?? '')
-                                : _buildIncomeAndOutcomePointListView(
-                                    promotions, AppLocalizations.of(context)?.outcomePoints ?? ''),
+                            bloc.selectedSegment == 0 ? _buildIncomeAndOutcomePointListView(promotions, AppLocalizations.of(context)?.incomePoints ?? '') : _buildIncomeAndOutcomePointListView(promotions, AppLocalizations.of(context)?.outcomePoints ?? ''),
                             // Loading view
                             if (isLoading)
                               const Padding(
@@ -141,8 +153,7 @@ class PromotionPointPage extends StatelessWidget {
   }
 }
 
-Widget _buildIncomeAndOutcomePointListView(
-    List<PromotionVO> promotionList, String pointLabel) {
+Widget _buildIncomeAndOutcomePointListView(List<PromotionVO> promotionList, String pointLabel) {
   return ListView.builder(
     shrinkWrap: true, // Ensures the list doesn't take up unnecessary space
     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -165,7 +176,7 @@ Widget _pointItemView(String pointLabel, PromotionVO promotionVO) {
       children: [
         Row(
           children: [
-            const Icon(Icons.currency_bitcoin),
+            const Icon(Icons.attach_money),
             const SizedBox(width: 30),
             Expanded(
               child: Column(
@@ -178,22 +189,20 @@ Widget _pointItemView(String pointLabel, PromotionVO promotionVO) {
                         style: const TextStyle(fontSize: kTextSmall),
                       ),
                       Text(
-                        pointLabel == 'Outcome Points'? '-${promotionVO.amount} Points' : '+${promotionVO.amount} Points',
-                        style: const TextStyle(
-                            fontSize: kTextRegular2x, color: kSecondaryColor),
+                        pointLabel == 'Outcome Points' ? '-${promotionVO.amount} Points' : '+${promotionVO.amount} Points',
+                        style: const TextStyle(fontSize: kTextRegular2x, color: kSecondaryColor),
                       ),
                     ],
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                       Text(
-                        pointLabel == 'Outcome Points'? 'Discharge' :'Recharge',
-                        style:const TextStyle(fontSize: kTextRegular2x),
+                      Text(
+                        pointLabel == 'Outcome Points' ? 'Discharge' : 'Recharge',
+                        style: const TextStyle(fontSize: kTextRegular2x),
                       ),
                       Text(
-                        DateFormat('MMM dd, yyyy/HH').format(
-                            DateTime.parse(DateTime.now().toString())),
+                        DateFormat('MMM dd, yyyy/HH').format(DateTime.parse(DateTime.now().toString())),
                         style: const TextStyle(fontSize: kTextSmall),
                       ),
                     ],

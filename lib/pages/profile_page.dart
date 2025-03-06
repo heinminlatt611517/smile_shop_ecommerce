@@ -4,6 +4,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:smile_shop/blocs/profile_bloc.dart';
+import 'package:smile_shop/data/vos/login_data_vo.dart';
 import 'package:smile_shop/data/vos/user_vo.dart';
 import 'package:smile_shop/network/api_constants.dart';
 import 'package:smile_shop/pages/edit_profile_page.dart';
@@ -26,6 +27,7 @@ import 'package:smile_shop/widgets/common_dialog.dart';
 import 'package:smile_shop/widgets/delete_account_dialog_view.dart';
 import 'package:smile_shop/widgets/error_dialog_view.dart';
 import 'package:smile_shop/widgets/logout_dialog_view.dart';
+import 'package:smile_shop/widgets/require_log_in_view.dart';
 import 'package:smile_shop/widgets/svg_image_view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -49,146 +51,156 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (BuildContext context) => ProfileBloc(context),
-      child: Selector<ProfileBloc, bool>(
-        selector: (context, bloc) => bloc.isLoading,
-        builder: (context, isLoading, child) => Stack(
-          children: [
-            ///body view
-            Scaffold(
-              backgroundColor: kBackgroundColor,
-              appBar: AppBar(
-                toolbarHeight: 185,
-                elevation: 0,
-                backgroundColor: kSecondaryColor,
-                automaticallyImplyLeading: false,
-                title: Selector<ProfileBloc, UserVO?>(
-                  selector: (context, bloc) => bloc.userProfile,
-                  builder: (_, user, child) => SizedBox(
-                    width: double.infinity,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(30),
-                          child: CachedNetworkImage(height: 60, width: 60, fit: BoxFit.cover, imageUrl: user?.profileImage == '' ? errorImageUrl : user?.profileImage ?? errorImageUrl),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          user?.name ?? '',
-                          style: const TextStyle(fontSize: kTextRegular2x),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          user?.phone ?? '',
-                          style: const TextStyle(fontSize: kTextRegular2x),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        GestureDetector(
-                          onTap: () async {
-                            final bool? isUpdated = await Navigator.of(context).push(
-                              MaterialPageRoute(
-                                  builder: (builder) => EditProfilePage(
-                                        userVo: user,
-                                      )),
-                            );
-                            if (isUpdated == true) {
-                              context.read<ProfileBloc>().getProfile(context);
-                            }
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-                            decoration: BoxDecoration(color: kMTicketColor.withOpacity(0.3), borderRadius: BorderRadius.circular(5)),
-                            child: Text(
-                              AppLocalizations.of(context)!.edit,
-                              style: const TextStyle(fontSize: kTextSmall),
+      child: Selector<ProfileBloc, LoginDataVO?>(
+        selector: (context, bloc) => bloc.loginDataVO,
+        builder: (context, logInData, child) => logInData == null
+            ? Container(
+              color: kBackgroundColor,
+              child: const Center(
+                  child: RequireLogInView(),
+                ),
+            )
+            : Selector<ProfileBloc, bool>(
+                selector: (context, bloc) => bloc.isLoading,
+                builder: (context, isLoading, child) => Stack(
+                  children: [
+                    ///body view
+                    Scaffold(
+                      backgroundColor: kBackgroundColor,
+                      appBar: AppBar(
+                        toolbarHeight: 185,
+                        elevation: 0,
+                        backgroundColor: kSecondaryColor,
+                        automaticallyImplyLeading: false,
+                        title: Selector<ProfileBloc, UserVO?>(
+                          selector: (context, bloc) => bloc.userProfile,
+                          builder: (_, user, child) => SizedBox(
+                            width: double.infinity,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(30),
+                                  child: CachedNetworkImage(height: 60, width: 60, fit: BoxFit.cover, imageUrl: user?.profileImage == '' ? errorImageUrl : user?.profileImage ?? errorImageUrl),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  user?.name ?? '',
+                                  style: const TextStyle(fontSize: kTextRegular2x),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  user?.phone ?? '',
+                                  style: const TextStyle(fontSize: kTextRegular2x),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                GestureDetector(
+                                  onTap: () async {
+                                    final bool? isUpdated = await Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                          builder: (builder) => EditProfilePage(
+                                                userVo: user,
+                                              )),
+                                    );
+                                    if (isUpdated == true) {
+                                      context.read<ProfileBloc>().getProfile(context);
+                                    }
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                                    decoration: BoxDecoration(color: kMTicketColor.withOpacity(0.3), borderRadius: BorderRadius.circular(5)),
+                                    child: Text(
+                                      AppLocalizations.of(context)!.edit,
+                                      style: const TextStyle(fontSize: kTextSmall),
+                                    ),
+                                  ),
+                                )
+                              ],
                             ),
                           ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.vertical(
-                    bottom: Radius.circular(50),
-                  ),
-                ),
-              ),
-              body: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                ),
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(
-                        height: kMarginMedium,
-                      ),
-                      Text(
-                        AppLocalizations.of(context)!.myOrders,
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-
-                      ///my order items
-                      Center(
-                        child: Container(
-                          color: Colors.grey.withOpacity(0.1),
-                          child: GridView.count(
-                            crossAxisCount: 4,
-                            mainAxisSpacing: 0,
-                            crossAxisSpacing: 10,
-                            shrinkWrap: true,
-                            padding: EdgeInsets.zero,
-                            physics: const NeverScrollableScrollPhysics(),
-                            children: _buildMyOrderItems(context),
+                        ),
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(
+                            bottom: Radius.circular(50),
                           ),
                         ),
                       ),
-
-                      Selector<ProfileBloc, bool>(
-                        selector: (context, bloc) => bloc.isNewNotiExist,
-                        builder: (context, isNewNoti, child) => GridView.count(
-                          crossAxisCount: 4,
-                          mainAxisSpacing: 0,
-
-                          /// Vertical spacing between items
-                          crossAxisSpacing: 10,
-
-                          /// Horizontal spacing between items
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          children: _buildProfileItems(context, isNewNoti),
+                      body: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
                         ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ),
+                        child: SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(
+                                height: kMarginMedium,
+                              ),
+                              Text(
+                                AppLocalizations.of(context)!.myOrders,
+                              ),
+                              const SizedBox(
+                                height: 15,
+                              ),
 
-            ///loading view
-            if (isLoading)
-              Container(
-                color: Colors.black12,
-                child: const Center(
-                  child: LoadingView(
-                    indicatorColor: kPrimaryColor,
-                    indicator: Indicator.ballSpinFadeLoader,
-                  ),
+                              ///my order items
+                              Center(
+                                child: Container(
+                                  color: Colors.grey.withOpacity(0.1),
+                                  child: GridView.count(
+                                    crossAxisCount: 4,
+                                    mainAxisSpacing: 0,
+                                    crossAxisSpacing: 10,
+                                    shrinkWrap: true,
+                                    padding: EdgeInsets.zero,
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    children: _buildMyOrderItems(context),
+                                  ),
+                                ),
+                              ),
+
+                              Selector<ProfileBloc, bool>(
+                                selector: (context, bloc) => bloc.isNewNotiExist,
+                                builder: (context, isNewNoti, child) => GridView.count(
+                                  crossAxisCount: 4,
+                                  mainAxisSpacing: 0,
+
+                                  /// Vertical spacing between items
+                                  crossAxisSpacing: 10,
+
+                                  /// Horizontal spacing between items
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  children: _buildProfileItems(context, isNewNoti),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    ///loading view
+                    if (isLoading)
+                      Container(
+                        color: Colors.black12,
+                        child: const Center(
+                          child: LoadingView(
+                            indicatorColor: kPrimaryColor,
+                            indicator: Indicator.ballSpinFadeLoader,
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
               ),
-          ],
-        ),
       ),
     );
   }

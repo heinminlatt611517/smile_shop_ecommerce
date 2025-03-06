@@ -1,5 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image_network/image_network.dart';
+import 'package:photo_view/photo_view.dart';
 
 import '../network/api_constants.dart';
 
@@ -14,21 +17,25 @@ class CachedNetworkImageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: canView? () {
-        showDialog(
-          context: context,
-          builder: (context) => ExpandImageView(url: imageUrl),
-        );
-      } : null,
-      child: CachedNetworkImage(
-          width: imageWidth,
-          height: imageHeight,
-          fit: boxFit ?? BoxFit.cover,
-          imageUrl: imageUrl,
-          errorWidget: (context, url, error) => Image.network(
-                errorImageUrl,
-                fit: BoxFit.cover,
-              )),
+      onTap: canView
+          ? () {
+              showDialog(
+                context: context,
+                builder: (context) => ExpandImageView(url: imageUrl),
+              );
+            }
+          : null,
+      child: (kIsWeb)
+          ? ImageNetwork(image: imageUrl, height: imageHeight, width: imageWidth)
+          : CachedNetworkImage(
+              width: imageWidth,
+              height: imageHeight,
+              fit: boxFit ?? BoxFit.cover,
+              imageUrl: imageUrl,
+              errorWidget: (context, url, error) => Image.network(
+                    errorImageUrl,
+                    fit: BoxFit.cover,
+                  )),
     );
   }
 }
@@ -51,6 +58,10 @@ class ExpandImageView extends StatelessWidget {
               height: double.infinity,
               fit: BoxFit.fitWidth,
               imageUrl: url,
+              imageBuilder: (context, imageProvider) => PhotoView(
+                imageProvider: imageProvider,
+                minScale: PhotoViewComputedScale.contained,
+              ),
               errorWidget: (context, url, error) => Image.network(
                 errorImageUrl,
                 fit: BoxFit.cover,

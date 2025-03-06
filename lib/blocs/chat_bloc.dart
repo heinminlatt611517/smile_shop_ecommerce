@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:record/record.dart';
+import 'package:smile_shop/data/vos/login_data_vo.dart';
 
 import '../data/model/smile_shop_model.dart';
 import '../data/model/smile_shop_model_impl.dart';
@@ -27,9 +28,19 @@ class ChatBloc extends ChangeNotifier {
   bool isRecording = false;
   final record = AudioRecorder();
 
+  //To check User is logged in user
+  LoginDataVO? loginDataVO;
+
   ChatBloc() {
+    getLogInUserData();
     userVO = _smileShopModel.getUserDataFromDatabase();
     listenTickets();
+  }
+
+  void getLogInUserData() async {
+    loginDataVO = _smileShopModel.getLoginResponseFromDatabase();
+    print("log in data vo ======================> $loginDataVO");
+    safeNotifyListeners();
   }
 
   void sendMsg() async {
