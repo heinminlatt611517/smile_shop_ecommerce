@@ -1,4 +1,4 @@
-const kLoadingLabel = "smile shop";
+const kLoadingLabel = "Smile Shop";
 const kHomeLabel = "Home";
 const kCartLabel = "Cart";
 const kLiveChatLabel = "Live Chat";

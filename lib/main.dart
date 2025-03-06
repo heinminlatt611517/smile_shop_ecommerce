@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -8,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smile_shop/blocs/app_language_bloc.dart';
 import 'package:smile_shop/blocs/my_address_bloc.dart';
+import 'package:smile_shop/config/firebase_web_config.dart';
 import 'package:smile_shop/data/vos/brand_vo.dart';
 import 'package:smile_shop/data/vos/category_vo.dart';
 import 'package:smile_shop/data/vos/color_vo.dart';
@@ -54,9 +56,21 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  FirebaseMessaging.onBackgroundMessage(_backgrounHandler);
-  NotificationService.instance.initialize();
+  if (kIsWeb) {
+    Configurations configurations = Configurations();
+    await Firebase.initializeApp(
+        options: FirebaseOptions(
+      apiKey: configurations.apiKey,
+      appId: configurations.appId,
+      messagingSenderId: configurations.messagingSenderId,
+      projectId: configurations.projectId,
+      storageBucket: configurations.storageBucket
+    ));
+  } else {
+    await Firebase.initializeApp();
+    FirebaseMessaging.onBackgroundMessage(_backgrounHandler);
+    NotificationService.instance.initialize();
+  }
   await Hive.initFlutter();
   await GetStorage.init();
   Locale locale = await _getLocaleData();
@@ -126,7 +140,7 @@ class SmileShopApp extends StatelessWidget {
             Locale('my', ''),
             Locale('zh', 'CN'),
           ],
-          theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple, primary: const Color.fromRGBO(255, 255, 255, 1.0)), useMaterial3: true, fontFamily: kInter),
+          theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple, primary: const Color.fromRGBO(255, 255, 255, 1.0)), fontFamily: kInter),
           themeMode: ThemeMode.light,
           home: const SplashPage(),
         ),

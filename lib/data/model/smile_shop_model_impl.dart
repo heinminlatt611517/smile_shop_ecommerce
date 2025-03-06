@@ -86,6 +86,7 @@ class SmileShopModelImpl extends SmileShopModel {
 
   @override
   Future<LoginResponse> login(LoginRequest loginRequest) {
+    clearSearchProduct();
     return mDataAgent.login(loginRequest).then((response) async {
       debugPrint("UserDataVO>>>>${response.data?.data?.id}");
 
@@ -280,6 +281,8 @@ class SmileShopModelImpl extends SmileShopModel {
 
   @override
   void clearSaveLoginData() {
+    GetStorage().remove(kBoxKeyLoginUserType);
+    clearSearchProduct();
     _loginDataDao.clearLoginData();
   }
 

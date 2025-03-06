@@ -19,15 +19,14 @@ class SmileWalletBloc extends ChangeNotifier {
   WalletVO? walletVO;
   List<WalletTransactionVO> walletTransactions = [];
   var accessToken = "";
-  bool isShowSetPasswordText = true;
+  bool isShowSetPasswordText = false;
   int? selectedSegment = 0;
   dynamic walletTransitionRequest;
 
   final SmileShopModel _smileShopModel = SmileShopModelImpl();
 
   SmileWalletBloc() {
-    accessToken =
-        _smileShopModel.getLoginResponseFromDatabase()?.accessToken ?? "";
+    accessToken = _smileShopModel.getLoginResponseFromDatabase()?.accessToken ?? "";
     walletTransitionRequest = WalletTransitionRequest(1, kLogTypeIncome);
 
     ///get wallet data
@@ -43,27 +42,22 @@ class SmileWalletBloc extends ChangeNotifier {
     getWalletTransaction(walletTransitionRequest);
   }
 
-  void checkWalletPassword(){
-    var checkWalletPasswordRequest = CheckWalletPasswordRequest(
-        GetStorage().read(kBoxKeyWalletPassword));
-    _smileShopModel.checkWalletPassword(
-        accessToken, kAcceptLanguageEn, checkWalletPasswordRequest).then((response){
-          if(response.status == 200){
-            isShowSetPasswordText = false;
-          }
-          else {
-           isShowSetPasswordText = true;
-          }
-          _notifySafely();
+  void checkWalletPassword() {
+    var checkWalletPasswordRequest = CheckWalletPasswordRequest(GetStorage().read(kBoxKeyWalletPassword), CheckPasswordType.setPasswordCheck);
+    print("CALL WALLET PASSWORD ==================?");
+    _smileShopModel.checkWalletPassword(accessToken, kAcceptLanguageEn, checkWalletPasswordRequest).then((response) {
+      if (response.status == 200) {
+        isShowSetPasswordText = false;
+      } else {
+        isShowSetPasswordText = true;
+      }
+      _notifySafely();
     });
   }
 
   void getWalletTransaction(WalletTransitionRequest walletTransactionRequest) {
     _showLoading();
-    _smileShopModel
-        .getWalletTransactions(
-            accessToken, kAcceptLanguageEn, walletTransactionRequest)
-        .then((response) {
+    _smileShopModel.getWalletTransactions(accessToken, kAcceptLanguageEn, walletTransactionRequest).then((response) {
       walletTransactions = response;
       _notifySafely();
     }).whenComplete(() => _hideLoading());

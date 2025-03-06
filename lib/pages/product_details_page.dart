@@ -11,7 +11,9 @@ import 'package:smile_shop/pages/cart_page.dart';
 import 'package:smile_shop/pages/chat_screen.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/widgets/common_button_view.dart';
+import 'package:smile_shop/widgets/image_list_dialog_view.dart';
 import 'package:smile_shop/widgets/promotion_point_view.dart';
+import 'package:smile_shop/widgets/require_log_in_view.dart';
 import 'package:smile_shop/widgets/vertical_icon_with_label_view.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
@@ -55,6 +57,13 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> with SingleTick
           body: Selector<ProductDetailsBloc, ProductVO?>(
               selector: (context, bloc) => bloc.productVO,
               builder: (context, product, child) {
+                if (product == null) {
+                  return const Center(
+                    child: CircularProgressIndicator(
+                      color: kPrimaryColor,
+                    ),
+                  );
+                }
                 return Stack(
                   children: [
                     Stack(
@@ -160,118 +169,126 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> with SingleTick
                     ),
                     Align(
                       alignment: Alignment.bottomCenter,
-                      child: Container(
-                        color: Colors.white,
-                        height: 80,
-                        width: double.infinity,
-                        padding: const EdgeInsets.symmetric(horizontal: kMarginSmall),
-                        child: Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Flexible(
-                                flex: 1,
-                                child: VerticalIconWithLabelView(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => const ChatScreen()),
-                                    );
-                                  },
-                                  icon: Icons.chat,
-                                  label: AppLocalizations.of(context)!.liveChat,
-                                ),
-                              ),
-                              VerticalIconWithLabelView(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => const CartPage()),
-                                  );
-                                },
-                                icon: Icons.shopping_cart_outlined,
-                                label: AppLocalizations.of(context)!.cart,
-                              ),
-                              VerticalIconWithLabelView(
-                                onTap: () {
-                                  var bloc = Provider.of<ProductDetailsBloc>(context, listen: false);
-                                  bloc.onTapFavourite(product, context);
-                                },
-                                iconColor: product?.isFavouriteProduct == true ? kPrimaryColor : null,
-                                icon: product?.isFavouriteProduct == true ? Icons.favorite_outlined : Icons.favorite_outline,
-                                label: AppLocalizations.of(context)!.favourite,
-                              ),
-
-                              ///add to cart and buy now
-                              Flexible(
-                                flex: 2,
-                                child: Selector<ProductDetailsBloc, ProductVO?>(
-                                  selector: (context, bloc) => bloc.productVO,
-                                  builder: (context, product, child) => Row(
+                      child: Selector<ProductDetailsBloc, String>(
+                        selector: (context, bloc) => bloc.endUserId,
+                        builder: (context, userId, child) => userId == "0"
+                            ? const RequireLogInView()
+                            : Container(
+                                color: Colors.white,
+                                height: 80,
+                                width: double.infinity,
+                                padding: const EdgeInsets.symmetric(horizontal: kMarginSmall),
+                                child: Center(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
-                                      ///add to cart
-                                      Expanded(
-                                        child: Consumer<ProductDetailsBloc>(
-                                          builder: (context, bloc, child) => InkWell(
-                                            onTap: () {
-                                              showBuyNowOrAddToCartBottomSheet(context, product?.variantVO?.isNotEmpty ?? true ? product?.variantVO : [], product?.name ?? "", product, bloc, true);
-                                            },
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                  borderRadius: const BorderRadius.only(topLeft: Radius.circular(6), bottomLeft: Radius.circular(6)),
-                                                  color: kPrimaryColor,
-                                                  gradient: LinearGradient(begin: Alignment.centerLeft, end: Alignment.centerRight, colors: [
-                                                    kSecondaryColor,
-                                                    kPrimaryColor.withOpacity(0.7),
-                                                  ])),
-                                              child: Padding(
-                                                padding: const EdgeInsets.all(8.0),
-                                                child: Text(
-                                                  maxLines: 1,
-                                                  softWrap: true,
-                                                  overflow: TextOverflow.ellipsis,
-                                                  textAlign: TextAlign.center,
-                                                  AppLocalizations.of(context)!.addToCart,
-                                                  style: const TextStyle(color: kBackgroundColor, fontWeight: FontWeight.w600, fontSize: 12),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
+                                      Flexible(
+                                        flex: 1,
+                                        child: VerticalIconWithLabelView(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(builder: (context) => const ChatScreen()),
+                                            );
+                                          },
+                                          icon: Icons.chat,
+                                          label: AppLocalizations.of(context)!.liveChat,
                                         ),
                                       ),
+                                      VerticalIconWithLabelView(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(builder: (context) => const CartPage()),
+                                          );
+                                        },
+                                        icon: Icons.shopping_cart_outlined,
+                                        label: AppLocalizations.of(context)!.cart,
+                                      ),
+                                      VerticalIconWithLabelView(
+                                        onTap: () {
+                                          var bloc = Provider.of<ProductDetailsBloc>(context, listen: false);
+                                          bloc.onTapFavourite(product, context);
+                                        },
+                                        iconColor: product?.isFavouriteProduct == true ? kPrimaryColor : null,
+                                        icon: product?.isFavouriteProduct == true ? Icons.favorite_outlined : Icons.favorite_outline,
+                                        label: AppLocalizations.of(context)!.favourite,
+                                      ),
 
-                                      ///buy now
-                                      Expanded(
-                                        child: Consumer<ProductDetailsBloc>(
-                                          builder: (context, bloc, chid) => InkWell(
-                                            onTap: () {
-                                              showBuyNowOrAddToCartBottomSheet(
-                                                context,
-                                                product?.variantVO?.isNotEmpty ?? true ? product?.variantVO : [],
-                                                product?.name ?? "",
-                                                product,
-                                                bloc,
-                                                false,
-                                              );
-                                            },
-                                            child: Container(
-                                              decoration: const BoxDecoration(
-                                                borderRadius: BorderRadius.only(topRight: Radius.circular(6), bottomRight: Radius.circular(6)),
-                                                color: kPrimaryColor,
-                                              ),
-                                              child: Padding(
-                                                padding: const EdgeInsets.all(8.0),
-                                                child: Text(
-                                                  maxLines: 1,
-                                                  softWrap: true,
-                                                  overflow: TextOverflow.ellipsis,
-                                                  textAlign: TextAlign.center,
-                                                  AppLocalizations.of(context)!.buyNow,
-                                                  style: const TextStyle(color: kBackgroundColor, fontWeight: FontWeight.w600, fontSize: 12),
+                                      ///add to cart and buy now
+                                      Flexible(
+                                        flex: 2,
+                                        child: Selector<ProductDetailsBloc, ProductVO?>(
+                                          selector: (context, bloc) => bloc.productVO,
+                                          builder: (context, product, child) => Row(
+                                            children: [
+                                              ///add to cart
+                                              Expanded(
+                                                child: Consumer<ProductDetailsBloc>(
+                                                  builder: (context, bloc, child) => InkWell(
+                                                    onTap: () {
+                                                      showBuyNowOrAddToCartBottomSheet(context, product?.variantVO?.isNotEmpty ?? true ? product?.variantVO : [], product?.name ?? "", product, bloc, true);
+                                                    },
+                                                    child: Container(
+                                                      decoration: BoxDecoration(
+                                                          borderRadius: const BorderRadius.only(topLeft: Radius.circular(6), bottomLeft: Radius.circular(6)),
+                                                          color: kPrimaryColor,
+                                                          gradient: LinearGradient(begin: Alignment.centerLeft, end: Alignment.centerRight, colors: [
+                                                            kSecondaryColor,
+                                                            kPrimaryColor.withOpacity(0.7),
+                                                          ])),
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.all(8.0),
+                                                        child: Text(
+                                                          maxLines: 1,
+                                                          softWrap: true,
+                                                          overflow: TextOverflow.ellipsis,
+                                                          textAlign: TextAlign.center,
+                                                          AppLocalizations.of(context)!.addToCart,
+                                                          style: const TextStyle(color: kBackgroundColor, fontWeight: FontWeight.w600, fontSize: 12),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
                                                 ),
                                               ),
-                                            ),
+
+                                              ///buy now
+                                              Expanded(
+                                                child: Consumer<ProductDetailsBloc>(
+                                                  builder: (context, bloc, chid) => InkWell(
+                                                    onTap: () {
+                                                      showBuyNowOrAddToCartBottomSheet(
+                                                        context,
+                                                        product?.variantVO?.isNotEmpty ?? true ? product?.variantVO : [],
+                                                        product?.name ?? "",
+                                                        product,
+                                                        bloc,
+                                                        false,
+                                                      );
+                                                    },
+                                                    child: Container(
+                                                      decoration: const BoxDecoration(
+                                                        borderRadius: BorderRadius.only(topRight: Radius.circular(6), bottomRight: Radius.circular(6)),
+                                                        color: kPrimaryColor,
+                                                      ),
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.all(8.0),
+                                                        child: Text(
+                                                          maxLines: 1,
+                                                          softWrap: true,
+                                                          overflow: TextOverflow.ellipsis,
+                                                          textAlign: TextAlign.center,
+                                                          AppLocalizations.of(context)!.buyNow,
+                                                          style: const TextStyle(color: kBackgroundColor, fontWeight: FontWeight.w600, fontSize: 12),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ),
@@ -279,9 +296,6 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> with SingleTick
                                   ),
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
                       ),
                     ),
                   ],
@@ -339,11 +353,21 @@ class ProductDetailsView extends StatelessWidget {
               left: kMarginMedium,
               right: kMarginMedium,
             ),
-            child: CachedNetworkImageView(
-              imageHeight: 340,
-              imageWidth: double.infinity,
-              imageUrl: images[index],
-              canView: true,
+            child: InkWell(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return ImageListDialogView(imageList: images, index: index);
+                  },
+                );
+              },
+              child: CachedNetworkImageView(
+                imageHeight: 340,
+                imageWidth: double.infinity,
+                imageUrl: images[index],
+                canView: false,
+              ),
             ),
           );
         },
@@ -418,23 +442,32 @@ class BannerSectionView extends StatelessWidget {
                       controller: _bannerPageController,
                       itemBuilder: (context, index) {
                         int realIndex = index - ((video?.isNotEmpty ?? false) ? 1 : 0);
-                        if (realIndex == -1) {
-                          // VIDEO EXISTS
-
-                          return playerController != null
-                              ? VideoPlayer(
-                                  playerController!,
-                                )
-                              : const Center(
-                                  child: Text("Video Can Not Be Played"),
-                                );
-                        }
-                        return CachedNetworkImageView(
-                          imageHeight: 120,
-                          imageWidth: double.infinity,
-                          imageUrl: images[realIndex],
-                          boxFit: BoxFit.fitHeight,
-                          canView: true,
+                        return InkWell(
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => ImageListDialogView(
+                                imageList: images,
+                                index: realIndex,
+                                video:video,
+                              ),
+                            );
+                          },
+                          child: (realIndex == -1)
+                              ? playerController != null
+                                  ? VideoPlayer(
+                                      playerController!,
+                                    )
+                                  : const Center(
+                                      child: Text("Video Can Not Be Played"),
+                                    )
+                              : CachedNetworkImageView(
+                                  imageHeight: 120,
+                                  imageWidth: double.infinity,
+                                  imageUrl: images[realIndex],
+                                  boxFit: BoxFit.fitHeight,
+                                  canView: false,
+                                ),
                         );
                       },
                       itemCount: images.length + ((video?.isNotEmpty ?? false) ? 1 : 0),
@@ -508,7 +541,7 @@ class CategoryAndReturnPointView extends StatelessWidget {
                 ),
               ),
               const SizedBox(
-                width: 100,
+                width: kMarginMedium2,
               ),
               const Icon(
                 Icons.star,

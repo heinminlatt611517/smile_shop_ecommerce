@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smile_shop/utils/colors.dart';
 
 import '../utils/dimens.dart';
 
@@ -21,12 +22,12 @@ class InputViewLockIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       child: Container(
-        color: Colors.white,
+        color: kLoginTextFieldFillColor,
         height: 55,
         child: Row(
           children: [
             Container(
-              color: Colors.white,
+              color: kLoginTextFieldFillColor,
               margin: const EdgeInsets.only(left: kMarginMedium2),
               child: Row(
                 children: [
@@ -70,14 +71,14 @@ class InputViewLockIcon extends StatelessWidget {
                             ),
                           ),
                     filled: true,
-                    fillColor: Colors.white,
+                    fillColor: kLoginTextFieldFillColor,
                     border: InputBorder.none,
                     contentPadding: isMailIcon == true
                         ? const EdgeInsets.only(left: kMarginMedium2)
                         : const EdgeInsets.only(
                             top: kMargin10, left: kMarginMedium2),
                     hintText: hintLabel,
-                    hintStyle: const TextStyle(color: Colors.grey)),
+                    hintStyle: const TextStyle(color: Colors.grey,letterSpacing: 0)),
                 onChanged: (v) {
                   onChangeValue(v);
                 },

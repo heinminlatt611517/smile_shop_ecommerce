@@ -24,11 +24,11 @@ class _SplashPageState extends State<SplashPage> {
   void initState() {
     super.initState();
     Future.delayed(const Duration(seconds: 4), () {
-      if (_model.getLoginResponseFromDatabase() != null) {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const MainPage()));
-      } else {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const LoginPage()));
-      }
+      // if (_model.getLoginResponseFromDatabase() != null) {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const MainPage()));
+      // } else {
+      //   Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const LoginPage()));
+      // }
     });
   }
 
@@ -55,16 +55,6 @@ class _SplashPageState extends State<SplashPage> {
             const Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                SizedBox(
-                  height: 20.0,
-                  width: 20.0,
-                  child: CircularProgressIndicator(
-                    color: kPrimaryColor,
-                  ),
-                ),
-                SizedBox(
-                  width: kMarginMedium,
-                ),
                 Text(
                   kLoadingLabel,
                   style: TextStyle(color: kLoadingLabelColor, fontSize: kTextRegular3x),

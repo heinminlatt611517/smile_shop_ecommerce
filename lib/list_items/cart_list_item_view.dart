@@ -25,13 +25,17 @@ class CartListItemView extends StatelessWidget {
         children: [
           isCheckout == true
               ? const SizedBox.shrink()
-              : Checkbox(
-              checkColor: kPrimaryColor,
-              value: productVO?.isChecked ?? false, onChanged: (value){
-            var bloc = Provider.of<CartBloc>(context,
-                listen: false);
-            bloc.onTapChecked(productVO!);
-          }),
+              : SizedBox(
+                width: 24,
+                height: 24,
+                child: Checkbox(
+                checkColor: kPrimaryColor,
+                value: productVO?.isChecked ?? false, onChanged: (value){
+                            var bloc = Provider.of<CartBloc>(context,
+                  listen: false);
+                            bloc.onTapChecked(productVO!);
+                          }),
+              ),
            Visibility(
              visible: isCheckout == false,
              child:const SizedBox(

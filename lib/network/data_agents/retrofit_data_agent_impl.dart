@@ -269,7 +269,18 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
 
   @override
   Future<List<ProductVO>> searchProductsBySubCategoryId(String token, String acceptLanguage, String endUserId, int pageNo, int subCategoryId) {
-    return mApi.searchProductsBySubCategoryId('Bearer $token', acceptLanguage, int.parse(endUserId), pageNo, subCategoryId).asStream().map((response) => response.data?.products ?? []).first.catchError((error) {
+    return mApi
+        .searchProductsBySubCategoryId(
+          'Bearer $token',
+          acceptLanguage,
+          int.parse(endUserId),
+          pageNo,
+          subCategoryId,
+        )
+        .asStream()
+        .map((response) => response.data?.products ?? [])
+        .first
+        .catchError((error) {
       throw _createException(error);
     });
   }

@@ -9,6 +9,7 @@ import 'package:smile_shop/pages/wallet_password_page.dart';
 import 'package:smile_shop/pages/wallet_payment_method_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
+import 'package:smile_shop/utils/extensions.dart';
 
 import '../utils/images.dart';
 import '../widgets/svg_image_view.dart';
@@ -104,40 +105,53 @@ class SmilePointPage extends StatelessWidget {
                 color: kSecondaryColor,
                 child: Column(
                   children: [
-                    const Text(
-                      'You                  ',
-                      style: TextStyle(fontSize: kTextRegular, color: Colors.white, fontWeight: FontWeight.w500),
-                    ),
-                    const SizedBox(
-                      height: 7,
-                    ),
-                    Text(
-                      walletData?.amount.toString() ?? "",
-                      style: const TextStyle(fontSize: 32, color: Colors.black, fontWeight: FontWeight.bold),
-                    ),
-                    const Text(
-                      '                smile points',
-                      style: TextStyle(fontSize: kTextRegular, color: Colors.white, fontWeight: FontWeight.w500),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(builder: (builder) => const WalletPaymentMethodPage()));
-                      },
-                      child: IntrinsicWidth(
-                        child: Container(
-                          // height: 28,
-                          decoration: BoxDecoration(color: kFillingFastColor, borderRadius: BorderRadius.circular(4)),
-                          padding: const EdgeInsets.symmetric(horizontal: kMarginMedium2, vertical: kMarginMedium),
-                          child: Center(
-                            child: Text(
-                              AppLocalizations.of(context)?.recharge ?? '',
-                              style: const TextStyle(color: kBackgroundColor, fontSize: kTextRegular),
+                    Center(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "You Have",
+                                style: TextStyle(fontSize: kTextRegular, color: Colors.black, fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                walletData?.amount?.formatWithCommas() ?? "0",
+                                style: const TextStyle(
+                                  fontSize: 32,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              )
+                            ],
+                          ),
+                          const Text(
+                            'Smile Points',
+                            style: TextStyle(fontSize: kTextRegular, color: Colors.black, fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(builder: (builder) => const WalletPaymentMethodPage()));
+                            },
+                            child: IntrinsicWidth(
+                              child: Container(
+                                // height: 28,
+                                decoration: BoxDecoration(color: kFillingFastColor, borderRadius: BorderRadius.circular(4)),
+                                padding: const EdgeInsets.symmetric(horizontal: kMarginMedium2, vertical: kMarginMedium),
+                                child: Center(
+                                  child: Text(
+                                    AppLocalizations.of(context)?.recharge ?? '',
+                                    style: const TextStyle(color: kBackgroundColor, fontSize: kTextRegular),
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
-                        ),
+                        ],
                       ),
                     ),
                     const SizedBox(
@@ -254,7 +268,7 @@ Widget _pointItemView(String pointLabel, WalletTransactionVO walletTransactionVO
       children: [
         Row(
           children: [
-            const Icon(Icons.currency_bitcoin),
+            const Icon(Icons.attach_money),
             const SizedBox(width: 30),
             Expanded(
               child: Column(

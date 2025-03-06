@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 
 import '../data/dummy_data/country_code.dart';
@@ -6,7 +7,7 @@ import '../data/dummy_data/country_code.dart';
 Widget normalPhoneTextField({required TextEditingController controller, required String hint, required String phoneCode, required BuildContext context, void Function(String)? onChangeTextField, required void Function(CountryCode?)? onChanged}) {
   return StatefulBuilder(
     builder: (_, setstate) => Container(
-      color: Colors.white,
+      color: kLoginTextFieldFillColor,
       height: 55,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -21,7 +22,7 @@ Widget normalPhoneTextField({required TextEditingController controller, required
               height: 56,
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: kLoginTextFieldFillColor,
                 border: Border.all(color: Colors.white),
               ),
               child: DropdownButton(
@@ -29,7 +30,9 @@ Widget normalPhoneTextField({required TextEditingController controller, required
                   underline: const SizedBox.shrink(),
                   hint: Text(
                     phoneCode,
-                    style: Theme.of(context).textTheme.titleSmall!.copyWith(color: Colors.black),
+                    style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                          color: Colors.black,
+                        ),
                   ),
                   items: countries
                       .map((e) => DropdownMenuItem(
@@ -43,7 +46,7 @@ Widget normalPhoneTextField({required TextEditingController controller, required
             ),
           ),
           Container(
-            color: Colors.white,
+            color: kLoginTextFieldFillColor,
             margin: const EdgeInsets.only(left: kMarginMedium2),
             child: Row(
               children: [
@@ -70,9 +73,9 @@ Widget normalPhoneTextField({required TextEditingController controller, required
               decoration: InputDecoration(
                 alignLabelWithHint: true,
                 hintText: hint,
-                fillColor: Colors.white,
+                fillColor:kLoginTextFieldFillColor,
                 filled: true,
-                hintStyle: const TextStyle(color: Colors.grey),
+                hintStyle: const TextStyle(color: Colors.grey, letterSpacing: 0),
                 focusedBorder: OutlineInputBorder(borderSide: const BorderSide(color: Colors.white), borderRadius: BorderRadius.circular(0)),
                 errorBorder: OutlineInputBorder(borderSide: const BorderSide(color: Colors.white), borderRadius: BorderRadius.circular(0)),
                 focusedErrorBorder: OutlineInputBorder(borderSide: const BorderSide(color: Colors.white), borderRadius: BorderRadius.circular(0)),

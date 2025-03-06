@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:smile_shop/data/model/smile_shop_model.dart';
 import 'package:smile_shop/data/model/smile_shop_model_impl.dart';
+import 'package:smile_shop/data/vos/login_data_vo.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
 
 class CartBloc extends ChangeNotifier {
@@ -17,24 +18,34 @@ class CartBloc extends ChangeNotifier {
   bool isDisposed = false;
   bool isAllSelectedProduct = false;
 
-  CartBloc(){
+  //To check User is logged in user
+  LoginDataVO? loginDataVO;
+
+  CartBloc() {
+    getLogInUserData();
+
     ///first time get products from database
     firstTimeGetProductsFromDatabase();
 
     ///get product from database
-    _productListSubscription =
-        _smileShopModel.getProductFromDatabase().listen((products) {
-          debugPrint("ProductLength:::${products.length}");
-          productList = products;
-          notifyListeners();
-        });
+    _productListSubscription = _smileShopModel.getProductFromDatabase().listen((products) {
+      debugPrint("ProductLength:::${products.length}");
+      productList = products;
+      notifyListeners();
+    });
 
-    if(productList.isNotEmpty){
+    if (productList.isNotEmpty) {
       calculateTotalProductPrice();
+      checkAllProductSelect();
     }
   }
 
-  void onTapSelectAll(){
+  void getLogInUserData() async {
+    loginDataVO = _smileShopModel.getLoginResponseFromDatabase();
+    _notifySafely();
+  }
+
+  void onTapSelectAll() {
     isAllSelectedProduct = !isAllSelectedProduct;
     onTapSelectAllProduct();
     firstTimeGetProductsFromDatabase();
@@ -47,54 +58,58 @@ class CartBloc extends ChangeNotifier {
     notifyListeners();
   }
 
-  void onTapChecked(ProductVO productVO){
-    if(productVO.isChecked == true){
+  void onTapChecked(ProductVO productVO) {
+    if (productVO.isChecked == true) {
       var newProductVO = productVO.copyWith(isChecked: false);
       _smileShopModel.saveProductToHive(newProductVO);
-    }
-    else {
+    } else {
       var newProductVO = productVO.copyWith(isChecked: true);
       _smileShopModel.saveProductToHive(newProductVO);
     }
     firstTimeGetProductsFromDatabase();
     calculateTotalProductPrice();
+    checkAllProductSelect();
   }
 
-  void onTapIncreaseQty(ProductVO productVO){
+  void checkAllProductSelect() {
+    int checkedCount = productList.where((product) => product.isChecked == true).length;
+    isAllSelectedProduct = checkedCount == productList.length;
+    _notifySafely();
+  }
+
+  void onTapIncreaseQty(ProductVO productVO) {
     int initialPrice = productVO.variantVO?.first.price ?? 0;
-    var newProductVO = productVO.copyWith(qtyCount: productVO.qtyCount!+1);
+    var newProductVO = productVO.copyWith(qtyCount: productVO.qtyCount! + 1);
     var updatedTotalPrice = newProductVO.qtyCount! * (initialPrice);
     _smileShopModel.saveProductToHive(newProductVO.copyWith(totalPrice: updatedTotalPrice));
     firstTimeGetProductsFromDatabase();
     calculateTotalProductPrice();
   }
 
-  void onTapDecreaseQty(ProductVO productVO){
-    if (productVO.qtyCount! >= 0){
+  void onTapDecreaseQty(ProductVO productVO) {
+    if (productVO.qtyCount! >= 0) {
       int initialQtyPrice = productVO.variantVO?.first.price ?? 0;
       var newProductVO = productVO.copyWith(qtyCount: productVO.qtyCount! - 1);
       var updatedTotalPrice = newProductVO.qtyCount! * (initialQtyPrice);
       _smileShopModel.saveProductToHive(newProductVO.copyWith(totalPrice: updatedTotalPrice));
     }
-    if(productVO.qtyCount == 1){
-    _smileShopModel.deleteProductById(productVO.id!);
+    if (productVO.qtyCount == 1) {
+      _smileShopModel.deleteProductById(productVO.id!);
     }
     firstTimeGetProductsFromDatabase();
     calculateTotalProductPrice();
   }
 
-  void calculateTotalProductPrice(){
-        filterProductByIsChecked =
-            productList.where((product) => product.isChecked == true).toList();
-        if(filterProductByIsChecked.isNotEmpty){
-          subTotalPrice = filterProductByIsChecked.map((e) => e.totalPrice!).toList();
-          totalProductPrice = subTotalPrice.reduce((first,second) => first+second);
-          _notifySafely();
-        }
-        else {
-          totalProductPrice = 0;
-          _notifySafely();
-        }
+  void calculateTotalProductPrice() {
+    filterProductByIsChecked = productList.where((product) => product.isChecked == true).toList();
+    if (filterProductByIsChecked.isNotEmpty) {
+      subTotalPrice = filterProductByIsChecked.map((e) => e.totalPrice!).toList();
+      totalProductPrice = subTotalPrice.reduce((first, second) => first + second);
+      _notifySafely();
+    } else {
+      totalProductPrice = 0;
+      _notifySafely();
+    }
   }
 
   void _notifySafely() {
@@ -103,19 +118,17 @@ class CartBloc extends ChangeNotifier {
     }
   }
 
-  void onTapSelectAllProduct(){
-    if(isAllSelectedProduct == true){
-      for(var product in productList){
+  void onTapSelectAllProduct() {
+    if (isAllSelectedProduct == true) {
+      for (var product in productList) {
         _smileShopModel.saveProductToHive(product.copyWith(isChecked: true));
       }
-    }
-    else {
-      for(var product in productList){
+    } else {
+      for (var product in productList) {
         _smileShopModel.saveProductToHive(product.copyWith(isChecked: false));
       }
     }
   }
-
 
   @override
   void dispose() {
@@ -123,5 +136,4 @@ class CartBloc extends ChangeNotifier {
     _productListSubscription?.cancel();
     isDisposed = true;
   }
-
 }

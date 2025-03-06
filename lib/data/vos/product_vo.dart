@@ -4,6 +4,7 @@ import 'package:smile_shop/data/vos/brand_vo.dart';
 import 'package:smile_shop/data/vos/specification_vo.dart';
 import 'package:smile_shop/data/vos/sub_category_vo.dart';
 import 'package:smile_shop/data/vos/variant_vo.dart';
+import 'package:smile_shop/network/api_constants.dart';
 
 import '../../persistence/hive_constants.dart';
 
@@ -138,6 +139,8 @@ class ProductVO {
     this.specificationList,
     this.isFavouriteProduct
   });
+
+ 
 
   factory ProductVO.fromJson(Map<String, dynamic> json) => _$ProductVOFromJson(json);
 

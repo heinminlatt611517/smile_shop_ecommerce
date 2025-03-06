@@ -10,6 +10,7 @@ import 'package:smile_shop/network/api_constants.dart';
 import '../data/model/smile_shop_model.dart';
 import '../data/model/smile_shop_model_impl.dart';
 import '../network/requests/favourite_product_request.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SearchProductBloc extends ChangeNotifier {
   ///model
@@ -40,27 +41,19 @@ class SearchProductBloc extends ChangeNotifier {
     getFirstTimeSearchProductsFromDatabase();
 
     ///get data from database
-    authToken =
-        _smileShopModel.getLoginResponseFromDatabase()?.refreshToken ?? "";
-    accessToken =
-        _smileShopModel.getLoginResponseFromDatabase()?.accessToken ?? "";
-    endUserId =
-        _smileShopModel.getLoginResponseFromDatabase()?.data?.id.toString() ??
-            "";
+    authToken = _smileShopModel.getLoginResponseFromDatabase()?.refreshToken ?? "";
+    accessToken = _smileShopModel.getLoginResponseFromDatabase()?.accessToken ?? "";
+    endUserId = _smileShopModel.getLoginResponseFromDatabase()?.data?.id.toString() ?? "0";
 
     ///search product history list from database
-    _searchProductListSubscription =
-        _smileShopModel.getSearchProductFromDatabase().listen((searchResults) {
+    _searchProductListSubscription = _smileShopModel.getSearchProductFromDatabase().listen((searchResults) {
       searchProducts = searchResults;
       notifyListeners();
     });
 
-    queryStreamController.stream
-        .debounceTime(const Duration(milliseconds: 500))
-        .listen((query) {
+    queryStreamController.stream.debounceTime(const Duration(milliseconds: 500)).listen((query) {
       if (query.isNotEmpty) {
-        _makeSearchProductNetworkCall(
-            query, authToken, kAcceptLanguageEn, endUserId);
+        _makeSearchProductNetworkCall(query, authToken, kAcceptLanguageEn, endUserId);
       } else {
         isScreenLaunch = true;
         products = [];
@@ -77,13 +70,11 @@ class SearchProductBloc extends ChangeNotifier {
       maxRange = maxRangeValue.toInt();
     }
     _notifySafely();
-    searchProductByDynamicParam();
   }
 
-  void onChangedRating(double rating) {
+  void onChangedRating(double? rating) {
     ratingValue = rating;
     _notifySafely();
-    searchProductByDynamicParam();
   }
 
   void getFirstTimeSearchProductsFromDatabase() {
@@ -91,20 +82,16 @@ class SearchProductBloc extends ChangeNotifier {
     notifyListeners();
   }
 
-  void _makeSearchProductNetworkCall(
-      String query, String authToken, String acceptLanguage, String endUserId) {
+  void _makeSearchProductNetworkCall(String query, String authToken, String acceptLanguage, String endUserId) {
     _showLoading();
-    _smileShopModel
-        .searchProductsByName(accessToken, acceptLanguage, endUserId, 1, query)
-        .whenComplete(() => _hideLoading())
-        .then((searchResults) {
+    _smileShopModel.searchProductsByName(accessToken, acceptLanguage, endUserId, 1, query).whenComplete(() => _hideLoading()).then((searchResults) {
       query = query;
+      queryString = query;
       products = searchResults;
 
       if (searchResults.isNotEmpty) {
         ///check search product is already exist in database
-        var searchProductVOByNameFromDatabase =
-            _smileShopModel.getSearchProductByNameFromDatabase(query);
+        var searchProductVOByNameFromDatabase = _smileShopModel.getSearchProductByNameFromDatabase(query);
         if (searchProductVOByNameFromDatabase == null) {
           var searchProductVO = SearchProductVO(name: query);
           _smileShopModel.addSingleSearchProductToDatabase(searchProductVO);
@@ -119,8 +106,16 @@ class SearchProductBloc extends ChangeNotifier {
   searchProductByDynamicParam() {
     _showLoading();
     _smileShopModel
-        .searchProductsWithDynamicParam(accessToken, kAcceptLanguageEn, endUserId,
-            1, queryString, ratingValue, minRange, maxRange)
+        .searchProductsWithDynamicParam(
+          accessToken,
+          kAcceptLanguageEn,
+          endUserId,
+          1,
+          queryString,
+          ratingValue,
+          minRange,
+          maxRange,
+        )
         .whenComplete(() => _hideLoading())
         .then((searchResults) {
       products.clear();
@@ -158,6 +153,10 @@ class SearchProductBloc extends ChangeNotifier {
     // showSnackBar(context, '${product?.name} added to favourite successfully!',
     //     Colors.green);
     if (product == null) return;
+    if (endUserId.isEmpty || endUserId == "0") {
+      showSnackBar(context, AppLocalizations.of(context)!.need_login, Colors.deepOrange);
+      return;
+    }
     var favoriteProductRequest = FavouriteProductRequest(
       productId: product.id,
       status: product.isFavouriteProduct == true ? 'unfavourite' : 'favourite',
@@ -193,8 +192,7 @@ class SearchProductBloc extends ChangeNotifier {
     });
   }
 
-  void showSnackBar(
-      BuildContext context, String description, Color snackBarColor) {
+  void showSnackBar(BuildContext context, String description, Color snackBarColor) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(description),

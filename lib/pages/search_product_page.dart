@@ -10,6 +10,7 @@ import 'package:smile_shop/data/vos/search_product_vo.dart';
 import 'package:smile_shop/list_items/search_product_history_list_item_view.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
+import 'package:smile_shop/widgets/common_button_view.dart';
 import 'package:smile_shop/widgets/svg_image_view.dart';
 import '../list_items/trending_product_list_item_view.dart';
 import '../utils/images.dart';
@@ -27,26 +28,24 @@ class SearchProductPage extends StatelessWidget {
       child: Consumer<SearchProductBloc>(
         builder: (context, bloc, child) => Scaffold(
             backgroundColor: kBackgroundColor,
+            appBar: PreferredSize(
+              preferredSize: Size.fromHeight(55 + MediaQuery.of(context).padding.top),
+              child: Padding(
+                padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+                child: const SearchBarWithBackArrowView(),
+              ),
+            ),
             body: Selector<SearchProductBloc, bool>(
               selector: (context, bloc) => bloc.isLoading,
               builder: (context, isLoading, child) => Stack(
                 children: [
                   CustomScrollView(
                     slivers: [
-                      ///spacer
-                      const SliverToBoxAdapter(
-                          child: SizedBox(
-                        height: kMarginXXLarge,
-                      )),
-
                       SliverToBoxAdapter(
                         child: Container(
                           decoration: const BoxDecoration(borderRadius: BorderRadius.only(bottomRight: Radius.circular(kMarginMedium2), bottomLeft: Radius.circular(kMarginMedium2))),
                           child: Column(
                             children: [
-                              ///search bar with back arrow view
-                              const SearchBarWithBackArrowView(),
-
                               ///spacer
                               const SizedBox(
                                 height: kMarginMedium2,
@@ -133,55 +132,6 @@ class SearchProductPage extends StatelessWidget {
                               ///search result
                               return Column(
                                 children: [
-                                  ///rating and price view
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: kMarginMedium2),
-                                    child: Row(
-                                      children: [
-                                        ///rating
-                                        InkWell(
-                                          onTap: () {
-                                            showRatingAndPriceGeneralDialog(context, bloc);
-                                          },
-                                          child: Container(
-                                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(kMarginSmall), color: Colors.black.withOpacity(0.1)),
-                                            child: const Row(
-                                              children: [
-                                                SizedBox(
-                                                  width: 10,
-                                                ),
-                                                Text('Rating'),
-                                                Icon(Icons.keyboard_arrow_down)
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          width: kMarginMedium2,
-                                        ),
-
-                                        ///Price
-                                        InkWell(
-                                          onTap: () {
-                                            showRatingAndPriceGeneralDialog(context, bloc);
-                                          },
-                                          child: Container(
-                                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(kMarginSmall), color: Colors.black.withOpacity(0.1)),
-                                            child: const Row(
-                                              children: [
-                                                SizedBox(
-                                                  width: 10,
-                                                ),
-                                                Text('Price'),
-                                                Icon(Icons.keyboard_arrow_down)
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-
                                   const SizedBox(
                                     height: kMarginMedium,
                                   ),
@@ -238,6 +188,17 @@ class SearchProductPage extends StatelessWidget {
                     ],
                   ),
 
+                  Selector<SearchProductBloc, List<ProductVO>>(
+                    selector: (context, bloc) => bloc.products,
+                    builder: (context, products, child) => Visibility(
+                      visible: products.isNotEmpty,
+                      child: const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: kMargin10),
+                        child: RatingAndPriceSectionView(),
+                      ),
+                    ),
+                  ),
+
                   ///loading view
                   if (isLoading)
                     Container(
@@ -252,6 +213,67 @@ class SearchProductPage extends StatelessWidget {
                 ],
               ),
             )),
+      ),
+    );
+  }
+}
+
+class RatingAndPriceSectionView extends StatelessWidget {
+  const RatingAndPriceSectionView({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    var bloc = context.read<SearchProductBloc>();
+    return Container(
+      color: kBackgroundColor,
+      padding: const EdgeInsets.only(top: kMargin12),
+      child: Row(
+        children: [
+          ///rating
+          InkWell(
+            onTap: () {
+              bloc.onChangedRating(null);
+              showRatingAndPriceGeneralDialog(context, bloc);
+            },
+            child: Container(
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(kMarginSmall), color: Colors.black.withOpacity(0.1)),
+              child: const Row(
+                children: [
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text('Rating'),
+                  Icon(Icons.keyboard_arrow_down)
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(
+            width: kMarginMedium2,
+          ),
+
+          ///Price
+          InkWell(
+            onTap: () {
+              bloc.onChangedRating(null);
+              showRatingAndPriceGeneralDialog(context, bloc);
+            },
+            child: Container(
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(kMarginSmall), color: Colors.black.withOpacity(0.1)),
+              child: const Row(
+                children: [
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text('Price'),
+                  Icon(Icons.keyboard_arrow_down)
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -324,10 +346,16 @@ class SearchBarWithBackArrowView extends StatelessWidget {
 }
 
 ///rating and price view
-class RatingAndPriceView extends StatelessWidget {
+class RatingAndPriceDialogView extends StatefulWidget {
   final SearchProductBloc bloc;
-  const RatingAndPriceView({super.key, required this.bloc});
+  const RatingAndPriceDialogView({super.key, required this.bloc});
 
+  @override
+  State<RatingAndPriceDialogView> createState() => _RatingAndPriceDialogViewState();
+}
+
+class _RatingAndPriceDialogViewState extends State<RatingAndPriceDialogView> {
+  double? selectedRating;
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -356,13 +384,19 @@ class RatingAndPriceView extends StatelessWidget {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
+                bool isSelected = selectedRating == double.parse(ratingDummyData[index]);
                 return InkWell(
                   onTap: () {
-                    bloc.onChangedRating(double.parse(ratingDummyData[index]));
-                    Navigator.pop(context);
+                    setState(() {
+                      selectedRating = double.parse(ratingDummyData[index]);
+                    });
+                    widget.bloc.onChangedRating(double.parse(ratingDummyData[index]));
                   },
                   child: Container(
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(kMarginMedium), color: Colors.black.withOpacity(0.1)),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(kMarginMedium),
+                      color: isSelected ? kPrimaryColor : Colors.black.withOpacity(0.1),
+                    ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -394,9 +428,20 @@ class RatingAndPriceView extends StatelessWidget {
               'Price Range',
             ),
             _PriceRangeSlider(onPriceRangeChanged: (minRange, maxRange) {
-              Navigator.pop(context);
-              bloc.onChangedMinMaxRange(minRange, maxRange);
-            })
+              widget.bloc.onChangedMinMaxRange(minRange, maxRange);
+            }),
+            const SizedBox(
+              height: kMargin10,
+            ),
+            CommonButtonView(
+              label: AppLocalizations.of(context)!.confirm,
+              labelColor: Colors.white,
+              bgColor: kPrimaryColor,
+              onTapButton: () {
+                Navigator.pop(context);
+                widget.bloc.searchProductByDynamicParam();
+              },
+            )
           ],
         ),
       ),
@@ -421,7 +466,7 @@ void showRatingAndPriceGeneralDialog(BuildContext context, SearchProductBloc blo
               color: Colors.white,
               borderRadius: BorderRadius.circular(12),
             ),
-            child: RatingAndPriceView(
+            child: RatingAndPriceDialogView(
               bloc: bloc,
             ),
           ),

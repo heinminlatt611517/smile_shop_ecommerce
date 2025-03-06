@@ -8,6 +8,7 @@ class CommonButtonView extends StatelessWidget {
   final Color bgColor;
   final bool isShowBorder;
   final Function() onTapButton;
+  final double? height;
 
   const CommonButtonView({
     super.key,
@@ -16,6 +17,7 @@ class CommonButtonView extends StatelessWidget {
     required this.bgColor,
     required this.onTapButton,
     this.isShowBorder = false,
+    this.height
   });
 
   @override
@@ -24,6 +26,7 @@ class CommonButtonView extends StatelessWidget {
       onTap: onTapButton,
       child: Container(
         width: double.infinity,
+        height: height,
         decoration: BoxDecoration(
             border: (isShowBorder)
                 ? Border.all(

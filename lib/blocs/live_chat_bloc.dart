@@ -1,11 +1,14 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:record/record.dart';
+import 'package:smile_shop/data/vos/login_data_vo.dart';
 import 'package:smile_shop/data/vos/user_vo.dart';
+import 'package:smile_shop/utils/strings.dart';
 
 import '../data/model/smile_shop_model.dart';
 import '../data/model/smile_shop_model_impl.dart';
@@ -17,7 +20,7 @@ class LiveChatBloc extends ChangeNotifier {
 
   ///states
   bool isDisposed = false;
-  final String chatId;
+  String? chatId;
   ChatVo? chatVO;
   UserVO? userVO;
   final FirebaseApi _api = FirebaseApi();
@@ -27,10 +30,24 @@ class LiveChatBloc extends ChangeNotifier {
   bool isRecording = false;
   final record = AudioRecorder();
 
-  LiveChatBloc(this.chatId) {
+  //To check User is logged in user
+  LoginDataVO? loginDataVO;
+
+  LiveChatBloc() {
+    print("CALL BLOC =================");
+    getLogInUserData();
+
+    chatId = GetStorage().read(kBoxKeyFirebaseUserId);
+
     //listenChat();
     userVO = _smileShopModel.getUserDataFromDatabase();
     debugPrint("UsreImage>>>>>${userVO?.profileImage}");
+    safeNotifyListeners();
+  }
+
+  void getLogInUserData() async {
+    loginDataVO = _smileShopModel.getLoginResponseFromDatabase();
+    print("log in data vo ======================> $loginDataVO");
     safeNotifyListeners();
   }
 
@@ -66,8 +83,7 @@ class LiveChatBloc extends ChangeNotifier {
 
   void pickImage() async {
     ImagePicker picker = ImagePicker();
-    final XFile? imageFile =
-        await picker.pickImage(source: ImageSource.gallery);
+    final XFile? imageFile = await picker.pickImage(source: ImageSource.gallery);
     if (imageFile != null) {
       image = File(imageFile.path);
       safeNotifyListeners();
@@ -83,9 +99,7 @@ class LiveChatBloc extends ChangeNotifier {
           isRecording = true;
           var path = await getApplicationDocumentsDirectory();
           print("PATH: ${path.path}");
-          await record.start(const RecordConfig(encoder: AudioEncoder.wav),
-              path:
-                  '${path.path}/${DateTime.now().millisecondsSinceEpoch}.wav');
+          await record.start(const RecordConfig(encoder: AudioEncoder.wav), path: '${path.path}/${DateTime.now().millisecondsSinceEpoch}.wav');
 
           safeNotifyListeners();
         } catch (e) {

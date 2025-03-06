@@ -7,6 +7,7 @@ import 'package:smile_shop/network/api_constants.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import 'package:video_player/video_player.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../network/requests/favourite_product_request.dart';
 
@@ -27,7 +28,7 @@ class ProductDetailsBloc extends ChangeNotifier {
 
     ///get data from database
     accessToken = _smileShopModel.getLoginResponseFromDatabase()?.accessToken ?? "";
-    endUserId = _smileShopModel.getLoginResponseFromDatabase()?.data?.id.toString() ?? "";
+    endUserId = _smileShopModel.getLoginResponseFromDatabase()?.data?.id.toString() ?? "0";
   }
 
   void onTapAddToCart(BuildContext context, String selectedColorName, String selectedSize, int qtyCount, int totalPrice) {
@@ -50,16 +51,17 @@ class ProductDetailsBloc extends ChangeNotifier {
   }
 
   Future<void> loadData() async {
-    _loadLanguage();
+    await _loadLanguage();
     _getItemDetail();
   }
 
   Future<void> _loadLanguage() async {
     var prefs = await SharedPreferences.getInstance();
     String? languageCode = prefs.getString('language_code');
+    print("LANGUAGE CODE =====>$languageCode");
     if (languageCode == null) {
       currentLanguage = kAcceptLanguageEn;
-    } else if (languageCode == "my") {
+    } else if (languageCode == "my" || languageCode == "my-MM") {
       currentLanguage = kAcceptLanguageMM;
     } else if (languageCode == "zh") {
       currentLanguage = kAcceptLanguageCh;
@@ -70,6 +72,8 @@ class ProductDetailsBloc extends ChangeNotifier {
   }
 
   Future<void> _getItemDetail() async {
+    print("CURRENT LANGUAGE ===============> $currentLanguage");
+
     ///get product details
     _smileShopModel.getProductDetails(endUserId, productId, currentLanguage, accessToken).then((productDetailsResponse) {
       productVO = productDetailsResponse;
@@ -106,6 +110,10 @@ class ProductDetailsBloc extends ChangeNotifier {
 
   void onTapFavourite(ProductVO? product, BuildContext context) {
     if (product == null) return;
+    if (endUserId.isEmpty || endUserId == "0") {
+      showSnackBar(context, AppLocalizations.of(context)!.need_login, Colors.deepOrange);
+      return;
+    }
     var favoriteProductRequest = FavouriteProductRequest(
       productId: product.id,
       status: product.isFavouriteProduct == true ? 'unfavourite' : 'favourite',
