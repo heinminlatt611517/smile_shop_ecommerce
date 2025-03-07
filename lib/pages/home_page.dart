@@ -16,6 +16,7 @@ import 'package:smile_shop/pages/search_product_page.dart';
 import 'package:smile_shop/pages/sub_category_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/images.dart';
+import 'package:smile_shop/utils/responsive.dart';
 import 'package:smile_shop/utils/strings.dart';
 import 'package:smile_shop/widgets/cached_network_image_view.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -460,7 +461,12 @@ class CategoriesView extends StatelessWidget {
             );
           },
           itemCount: categories.length,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, mainAxisSpacing: 14.0, crossAxisSpacing: 1.0, childAspectRatio: 2 / 1.5),
+          gridDelegate:  SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3,
+            mainAxisSpacing: 14.0,
+            crossAxisSpacing: 1.0,
+            childAspectRatio: Responsive(context).isTablet ? 2 :  2 / 1.5,
+          ),
         ),
       ),
     );
@@ -598,11 +604,11 @@ class TrendingProductsView extends StatelessWidget {
                                     );
                                   },
                                   itemCount: products.length,
-                                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                     crossAxisCount: 2,
                                     mainAxisSpacing: 14.0,
                                     crossAxisSpacing: 10.0,
-                                    childAspectRatio: 2 / 2.7,
+                                    childAspectRatio: Responsive(context).isTablet ? 1 : 2 / 2.7,
                                   ),
                                 ),
                                 const SizedBox(

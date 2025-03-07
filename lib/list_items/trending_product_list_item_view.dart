@@ -98,6 +98,7 @@ import 'package:smile_shop/network/api_constants.dart';
 import 'package:smile_shop/pages/product_details_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
+import 'package:smile_shop/utils/responsive.dart';
 import 'package:smile_shop/widgets/cached_network_image_view.dart';
 
 class TrendingProductListItemView extends StatelessWidget {
@@ -123,8 +124,8 @@ class TrendingProductListItemView extends StatelessWidget {
       },
       child: Container(
         padding: EdgeInsets.symmetric(
-          vertical: kMarginMedium2,
-          horizontal: screenWidth * 0.04,
+          vertical: Responsive(context).isTablet ? kMarginMedium2 : kMarginMedium,
+          horizontal: Responsive(context).isTablet ? kMarginMedium2 : kMarginMedium,
         ),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -140,7 +141,7 @@ class TrendingProductListItemView extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                   child: CachedNetworkImageView(
                     // Responsive image size
-                    imageHeight: screenHeight * 0.15,
+                    imageHeight: screenHeight * (Responsive(context).isTablet ? 0.18 : 0.15),
                     imageWidth: screenWidth, // Full width of the screen
                     imageUrl: productVO?.image ?? errorImageUrl,
                   ),
@@ -153,40 +154,35 @@ class TrendingProductListItemView extends StatelessWidget {
                       onTapFavourite(productVO);
                     },
                     child: Icon(
-                      productVO?.isFavouriteProduct == true
-                          ? Icons.favorite_outlined
-                          : Icons.favorite_outline,
+                      productVO?.isFavouriteProduct == true ? Icons.favorite_outlined : Icons.favorite_outline,
                       color: kSecondaryColor,
                     ),
                   ),
                 ),
               ],
             ),
-            SizedBox(height: screenHeight * 0.01), // Spacing between elements
-            Flexible(
-              child: Text(
-                productVO?.name ?? "",
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: screenWidth * 0.04,
-                  height: 1.5,
-                ),
+            const SizedBox(height: kMargin6),
+            Text(
+              productVO?.name ?? "",
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: Responsive(context).isTablet ? kTextRegular18 : kTextRegular,
+                height: 1.5,
               ),
             ),
-            Flexible(
-              child: Text(
-                productVO?.subcategory?.name ?? "",
-                style: TextStyle(
-                  fontWeight: FontWeight.normal,
-                  fontSize: screenWidth * 0.035,
-                  color: Colors.grey,
-                  height: 1.2,
-                ),
+            const SizedBox(height: kMargin6),
+            Text(
+              productVO?.subcategory?.name ?? "",
+              style: TextStyle(
+                fontWeight: FontWeight.normal,
+                fontSize: Responsive(context).isTablet ? kTextRegular2x : kTextSmall,
+                color: Colors.grey,
+                height: 1.2,
               ),
             ),
-            SizedBox(height: screenHeight * 0.01), // Spacing between elements
+            const SizedBox(height: kMargin6),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -196,7 +192,7 @@ class TrendingProductListItemView extends StatelessWidget {
                     style: TextStyle(
                       height: 1.5,
                       fontWeight: FontWeight.bold,
-                      fontSize: screenWidth * 0.04,
+                      fontSize: Responsive(context).isTablet ? kTextRegular18 : kTextRegular,
                       color: kPrimaryColor,
                     ),
                   ),
@@ -207,7 +203,7 @@ class TrendingProductListItemView extends StatelessWidget {
                     style: TextStyle(
                       height: 1.5,
                       fontWeight: FontWeight.normal,
-                      fontSize: screenWidth * 0.04,
+                      fontSize: Responsive(context).isTablet ? kTextRegular18 : kTextRegular,
                       color: kSecondaryColor,
                     ),
                     textAlign: TextAlign.right,

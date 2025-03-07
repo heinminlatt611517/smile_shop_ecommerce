@@ -22,6 +22,7 @@ import 'package:smile_shop/pages/smile_point_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/utils/images.dart';
+import 'package:smile_shop/utils/responsive.dart';
 import 'package:smile_shop/utils/strings.dart';
 import 'package:smile_shop/widgets/common_dialog.dart';
 import 'package:smile_shop/widgets/delete_account_dialog_view.dart';
@@ -55,11 +56,11 @@ class _ProfilePageState extends State<ProfilePage> {
         selector: (context, bloc) => bloc.loginDataVO,
         builder: (context, logInData, child) => logInData == null
             ? Container(
-              color: kBackgroundColor,
-              child: const Center(
+                color: kBackgroundColor,
+                child: const Center(
                   child: RequireLogInView(),
                 ),
-            )
+              )
             : Selector<ProfileBloc, bool>(
                 selector: (context, bloc) => bloc.isLoading,
                 builder: (context, isLoading, child) => Stack(
@@ -374,8 +375,8 @@ Widget _buildProfileItem(BuildContext context, {required String title, required 
           largeSize: showBadge ? 8 : 0,
           child: SvgImageView(
             imageName: assetImagePath,
-            imageHeight: 20,
-            imageWidth: 20,
+            imageHeight: Responsive(context).isTablet ? 30 : 20,
+            imageWidth: Responsive(context).isTablet ? 30 : 20,
           ),
         ),
         const SizedBox(
@@ -384,7 +385,7 @@ Widget _buildProfileItem(BuildContext context, {required String title, required 
         Text(
           title,
           textAlign: TextAlign.center,
-          style: const TextStyle(fontSize: kTextSmall),
+          style:  TextStyle(fontSize:Responsive(context).isTablet ? kTextRegular : kTextSmall),
         )
       ],
     ),

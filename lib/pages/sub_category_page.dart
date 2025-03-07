@@ -8,6 +8,7 @@ import 'package:smile_shop/data/vos/sub_category_vo.dart';
 import 'package:smile_shop/pages/product_category_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
+import 'package:smile_shop/utils/responsive.dart';
 import 'package:smile_shop/widgets/custom_app_bar_view.dart';
 import 'package:smile_shop/widgets/loading_view.dart';
 import 'package:smile_shop/widgets/subcategory_vertical_icon_with_label_view.dart';
@@ -147,11 +148,11 @@ class ProductsView extends StatelessWidget {
                   );
                 },
                 itemCount: products.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   mainAxisSpacing: 14.0,
                   crossAxisSpacing: 10.0,
-                  childAspectRatio: 2 / 2.7,
+                  childAspectRatio: Responsive(context).isTablet ? 1 : 2 / 2.7,
                 ),
               )
             : const SizedBox.shrink();

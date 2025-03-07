@@ -5,6 +5,7 @@ import 'package:smile_shop/blocs/product_category_bloc.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
+import 'package:smile_shop/utils/responsive.dart';
 import 'package:smile_shop/widgets/custom_app_bar_view.dart';
 import '../list_items/trending_product_list_item_view.dart';
 import '../utils/strings.dart';
@@ -14,8 +15,7 @@ class ProductCategoryPage extends StatelessWidget {
   final String? categoryName;
   final int? subCategoryId;
 
-  const ProductCategoryPage(
-      {super.key, required this.categoryName, required this.subCategoryId});
+  const ProductCategoryPage({super.key, required this.categoryName, required this.subCategoryId});
 
   @override
   Widget build(BuildContext context) {
@@ -24,12 +24,11 @@ class ProductCategoryPage extends StatelessWidget {
       child: Scaffold(
           backgroundColor: kBackgroundColor,
           appBar: CustomAppBarView(title: categoryName),
-          body: Selector<ProductCategoryBloc,bool>(
-              selector: (context, bloc) => bloc.isLoading,
-              builder: (BuildContext context, isLoading, Widget? child) =>
-             Stack(
-               children: [
-                 Padding(
+          body: Selector<ProductCategoryBloc, bool>(
+            selector: (context, bloc) => bloc.isLoading,
+            builder: (BuildContext context, isLoading, Widget? child) => Stack(
+              children: [
+                Padding(
                   padding: const EdgeInsets.all(kMarginMedium2),
                   child: Consumer<ProductCategoryBloc>(
                     builder: (context, bloc, child) => CustomScrollView(
@@ -48,21 +47,21 @@ class ProductCategoryPage extends StatelessWidget {
                       ],
                     ),
                   ),
-                             ),
+                ),
 
-                 ///loading view
-                 if (isLoading)
-                   Container(
-                     color: Colors.black12,
-                     child: const Center(
-                       child: LoadingView(
-                         indicatorColor: kPrimaryColor,
-                         indicator: Indicator.ballSpinFadeLoader,
-                       ),
-                     ),
-                   ),
-               ],
-             ),
+                ///loading view
+                if (isLoading)
+                  Container(
+                    color: Colors.black12,
+                    child: const Center(
+                      child: LoadingView(
+                        indicatorColor: kPrimaryColor,
+                        indicator: Indicator.ballSpinFadeLoader,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           )),
     );
   }
@@ -107,12 +106,7 @@ class SearchBarWithBackArrowView extends StatelessWidget {
                 Expanded(
                   child: TextField(
                     enabled: false,
-                    decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: kSearchHereHintLabel,
-                        hintStyle: TextStyle(
-                            fontSize: kTextRegular,
-                            fontWeight: FontWeight.bold)),
+                    decoration: InputDecoration(border: InputBorder.none, hintText: kSearchHereHintLabel, hintStyle: TextStyle(fontSize: kTextRegular, fontWeight: FontWeight.bold)),
                   ),
                 ),
               ],
@@ -149,19 +143,18 @@ class ProductsView extends StatelessWidget {
                       return TrendingProductListItemView(
                         productVO: products[index],
                         onTapFavourite: (product) {
-                          var bloc = Provider.of<ProductCategoryBloc>(context,
-                              listen: false);
+                          var bloc = Provider.of<ProductCategoryBloc>(context, listen: false);
                           bloc.onTapFavourite(product, context);
                         },
                       );
                     },
                     itemCount: products.length,
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            mainAxisSpacing: 14.0,
-                            crossAxisSpacing: 10.0,
-                            childAspectRatio: 2 / 2.7),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 14.0,
+                      crossAxisSpacing: 10.0,
+                      childAspectRatio: Responsive(context).isTablet ? 1 : 2 / 2.7,
+                    ),
                   );
       },
     );
