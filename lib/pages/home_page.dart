@@ -9,6 +9,7 @@ import 'package:smile_shop/data/vos/product_vo.dart';
 import 'package:smile_shop/list_items/trending_product_list_item_view.dart';
 import 'package:smile_shop/network/api_constants.dart';
 import 'package:smile_shop/pages/campaign_page.dart';
+import 'package:smile_shop/pages/category_page.dart';
 import 'package:smile_shop/pages/daily_checkin_page.dart';
 import 'package:smile_shop/pages/language_page.dart';
 import 'package:smile_shop/pages/my_team_page.dart';
@@ -38,7 +39,8 @@ class HomePage extends StatelessWidget {
             preferredSize: Size(double.infinity, 55),
             child: SafeArea(
                 child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: kMarginMedium2, vertical: kMarginSmall),
+              padding: EdgeInsets.symmetric(
+                  horizontal: kMarginMedium2, vertical: kMarginSmall),
               child: SearchView(),
             )),
           ),
@@ -63,7 +65,8 @@ class _HomeContentViewState extends State<HomeContentView> {
   void initState() {
     super.initState();
     scrollController.addListener(() {
-      if (scrollController.position.pixels == scrollController.position.maxScrollExtent) {
+      if (scrollController.position.pixels ==
+          scrollController.position.maxScrollExtent) {
         var bloc = Provider.of<HomeBloc>(context, listen: false);
         bloc.getProducts();
         debugPrint("OnListEndReach");
@@ -134,13 +137,17 @@ class SearchView extends StatelessWidget {
         Expanded(
           child: InkWell(
             onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: (builder) => const SearchProductPage()));
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (builder) => const SearchProductPage()));
             },
             child: Container(
               height: 40,
               width: double.infinity, // Adjust the width as needed
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              decoration: BoxDecoration(color: kSearchBackgroundColor, borderRadius: BorderRadius.circular(8.0), border: Border.all(width: 1, color: Colors.grey.shade300)
+              decoration: BoxDecoration(
+                  color: kSearchBackgroundColor,
+                  borderRadius: BorderRadius.circular(8.0),
+                  border: Border.all(width: 1, color: Colors.grey.shade300)
                   // boxShadow: [
                   //   BoxShadow(
                   //     color: Colors.grey.withOpacity(0.2),
@@ -154,11 +161,13 @@ class SearchView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const Icon(Icons.search),
-                  const SizedBox(width: 8.0), // Space between the icon and text field
+                  const SizedBox(
+                      width: 8.0), // Space between the icon and text field
                   Expanded(
                     child: Text(
                       AppLocalizations.of(context)!.searchHere,
-                      style: const TextStyle(fontSize: kTextRegular, color: Colors.grey),
+                      style: const TextStyle(
+                          fontSize: kTextRegular, color: Colors.grey),
                     ),
                     // child: TextField(
                     //   enabled: false,
@@ -181,7 +190,10 @@ class SearchView extends StatelessWidget {
         Consumer<HomeBloc>(
           builder: (context, bloc, child) => InkWell(
             onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => const LanguagePage())).then(
+              Navigator.of(context)
+                  .push(MaterialPageRoute(
+                      builder: (context) => const LanguagePage()))
+                  .then(
                 (value) {
                   bloc.init();
                 },
@@ -223,7 +235,8 @@ class CampaignDailyCheckInUserLevelView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: kMarginMedium2, left: kMarginMedium2, right: kMarginMedium2),
+      padding: const EdgeInsets.only(
+          top: kMarginMedium2, left: kMarginMedium2, right: kMarginMedium2),
       child: SizedBox(
         height: 160,
         child: Row(
@@ -235,10 +248,12 @@ class CampaignDailyCheckInUserLevelView extends StatelessWidget {
                   ///Daily check in view
                   Expanded(
                     child: InkWell(
-                      onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const DailyCheckInPage())),
+                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => const DailyCheckInPage())),
                       child: Container(
                         // padding: const EdgeInsets.all(kMarginMedium2),
-                        padding: const EdgeInsets.symmetric(horizontal: kMarginMedium),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: kMarginMedium),
                         decoration: BoxDecoration(
                           color: const Color(0xFFFFF9C4),
                           borderRadius: BorderRadius.circular(kMarginMedium),
@@ -267,14 +282,21 @@ class CampaignDailyCheckInUserLevelView extends StatelessWidget {
                                 children: [
                                   Text(
                                     AppLocalizations.of(context)!.dailyCheckIn,
-                                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: kTextRegular, color: Colors.black),
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: kTextRegular,
+                                        color: Colors.black),
                                   ),
                                   const SizedBox(
                                     height: kMarginSmall,
                                   ),
                                   Text(
-                                    AppLocalizations.of(context)!.toClaimPointDaily,
-                                    style: const TextStyle(fontWeight: FontWeight.normal, fontSize: kTextXSmall, color: Colors.grey),
+                                    AppLocalizations.of(context)!
+                                        .toClaimPointDaily,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: kTextXSmall,
+                                        color: Colors.grey),
                                   ),
                                 ],
                               ),
@@ -301,11 +323,13 @@ class CampaignDailyCheckInUserLevelView extends StatelessWidget {
                   Expanded(
                     child: InkWell(
                       onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(builder: (_) => const MyTeamPage()));
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (_) => const MyTeamPage()));
                       },
                       child: Container(
                         // padding: const EdgeInsets.all(kMarginMedium2),
-                        padding: const EdgeInsets.symmetric(horizontal: kMarginMedium),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: kMarginMedium),
                         decoration: BoxDecoration(
                           color: const Color(0xFFFFD180),
                           borderRadius: BorderRadius.circular(kMarginMedium),
@@ -334,14 +358,21 @@ class CampaignDailyCheckInUserLevelView extends StatelessWidget {
                                 children: [
                                   Text(
                                     AppLocalizations.of(context)!.userLevel,
-                                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: kTextRegular, color: Colors.black),
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: kTextRegular,
+                                        color: Colors.black),
                                   ),
                                   const SizedBox(
                                     height: kMarginSmall,
                                   ),
                                   Text(
-                                    AppLocalizations.of(context)!.toViewMyTeamMembers,
-                                    style: const TextStyle(fontWeight: FontWeight.normal, fontSize: kTextXSmall, color: Colors.grey),
+                                    AppLocalizations.of(context)!
+                                        .toViewMyTeamMembers,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: kTextXSmall,
+                                        color: Colors.grey),
                                   ),
                                 ],
                               ),
@@ -380,7 +411,10 @@ class CampaignDailyCheckInUserLevelView extends StatelessWidget {
                   );
                 },
                 child: Container(
-                  decoration: BoxDecoration(color: const Color(0xFFFFF9C4), borderRadius: BorderRadius.circular(kMarginMedium), border: Border.all(color: const Color(0xFFFDCC03))
+                  decoration: BoxDecoration(
+                      color: const Color(0xFFFFF9C4),
+                      borderRadius: BorderRadius.circular(kMarginMedium),
+                      border: Border.all(color: const Color(0xFFFDCC03))
                       // boxShadow: [
                       //   BoxShadow(
                       //     color: Colors.grey.withOpacity(0.3),
@@ -409,7 +443,10 @@ class CampaignDailyCheckInUserLevelView extends StatelessWidget {
                       ),
                       Text(
                         AppLocalizations.of(context)!.campaign.toUpperCase(),
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: kTextRegular2x, color: Colors.black),
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: kTextRegular2x,
+                            color: Colors.black),
                       ),
                       // Text(
                       //   AppLocalizations.of(context)!.letPracticeAndEnjoyIt,
@@ -437,36 +474,73 @@ class CategoriesView extends StatelessWidget {
       padding: const EdgeInsets.only(top: kMarginXLarge),
       child: Selector<HomeBloc, List<CategoryVO>>(
         selector: (context, bloc) => bloc.categories,
-        builder: (context, categories, child) => GridView.builder(
-          shrinkWrap: true,
-          padding: EdgeInsets.zero,
-          physics: const NeverScrollableScrollPhysics(),
-          itemBuilder: (context, index) {
-            return InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SubCategoryPage(
-                      categoryVO: categories[index],
+        builder: (context, categories, child) => Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: kMarginMedium2),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    AppLocalizations.of(context)?.category ?? '',
+                    style: const TextStyle(
+                      fontSize: kTextRegular18,
+                      fontWeight: FontWeight.w600,
                     ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) =>
+                              CategoryPage(categoryList: categories)));
+                    },
+                    child: const Text(
+                      "See more",
+                      style: TextStyle(
+                          color: kPrimaryColor,
+                          fontSize: kTextSmall,
+                          decoration: TextDecoration.underline,
+                          decorationColor: kPrimaryColor),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: kMarginMedium,
+            ),
+            GridView.builder(
+              shrinkWrap: true,
+              padding: EdgeInsets.zero,
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (context, index) {
+                return InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SubCategoryPage(
+                          categoryVO: categories[index],
+                        ),
+                      ),
+                    );
+                  },
+                  child: CategoryVerticalIconWithLabelView(
+                    isIconWithBg: true,
+                    bgColor: kSecondaryColor,
+                    categoryVO: categories[index],
                   ),
                 );
               },
-              child: CategoryVerticalIconWithLabelView(
-                isIconWithBg: true,
-                bgColor: kSecondaryColor,
-                categoryVO: categories[index],
+              itemCount: 6,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                mainAxisSpacing: 14.0,
+                crossAxisSpacing: 1.0,
+                childAspectRatio: Responsive(context).isTablet ? 2 : 2 / 1.5,
               ),
-            );
-          },
-          itemCount: categories.length,
-          gridDelegate:  SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            mainAxisSpacing: 14.0,
-            crossAxisSpacing: 1.0,
-            childAspectRatio: Responsive(context).isTablet ? 2 :  2 / 1.5,
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -477,7 +551,8 @@ class CategoriesView extends StatelessWidget {
 class BannerSectionView extends StatelessWidget {
   BannerSectionView({super.key});
 
-  final PageController _bannerPageController = PageController(viewportFraction: 0.9);
+  final PageController _bannerPageController =
+      PageController(viewportFraction: 0.9);
 
   @override
   Widget build(BuildContext context) {
@@ -495,7 +570,8 @@ class BannerSectionView extends StatelessWidget {
                     BannerVO bannerVO = banners[index];
                     if (bannerVO.isImage()) {
                       return Container(
-                        margin: const EdgeInsets.symmetric(horizontal: kMarginMedium),
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: kMarginMedium),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(kMarginMedium),
                           child: CachedNetworkImageView(
@@ -507,7 +583,8 @@ class BannerSectionView extends StatelessWidget {
                       );
                     } else {
                       return Container(
-                        margin: const EdgeInsets.symmetric(horizontal: kMarginMedium),
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: kMarginMedium),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(kMarginMedium),
                           child: VideoPlayer(
@@ -571,7 +648,8 @@ class TrendingProductsView extends StatelessWidget {
           children: [
             Text(
               AppLocalizations.of(context)!.trendingProducts,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: kTextRegular18),
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold, fontSize: kTextRegular18),
             ),
             const SizedBox(
               height: 10,
@@ -598,17 +676,23 @@ class TrendingProductsView extends StatelessWidget {
                                     return TrendingProductListItemView(
                                       productVO: products[index],
                                       onTapFavourite: (product) {
-                                        var bloc = Provider.of<HomeBloc>(context, listen: false);
+                                        var bloc = Provider.of<HomeBloc>(
+                                            context,
+                                            listen: false);
                                         bloc.onTapFavourite(product, context);
                                       },
                                     );
                                   },
                                   itemCount: products.length,
-                                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
                                     crossAxisCount: 2,
                                     mainAxisSpacing: 14.0,
                                     crossAxisSpacing: 10.0,
-                                    childAspectRatio: Responsive(context).isTablet ? 1 : 2 / 2.7,
+                                    childAspectRatio:
+                                        Responsive(context).isTablet
+                                            ? 1
+                                            : 2 / 2.7,
                                   ),
                                 ),
                                 const SizedBox(

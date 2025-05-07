@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:smile_shop/data/model/smile_shop_model.dart';
 import 'package:smile_shop/data/model/smile_shop_model_impl.dart';
+import 'package:smile_shop/data/vos/campaign_vo.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
+import 'package:smile_shop/data/vos/user_vo.dart';
 
 import '../data/vos/address_vo.dart';
 import '../network/api_constants.dart';
@@ -12,6 +14,7 @@ import '../widgets/session_expired_dialog_view.dart';
 
 class CheckOutBloc extends ChangeNotifier {
   final SmileShopModel _smileShopModel = SmileShopModelImpl();
+  UserVO? userVo;
 
   ///states
   StreamSubscription? _productListSubscription;
@@ -29,7 +32,7 @@ class CheckOutBloc extends ChangeNotifier {
   var addressForShow = "";
   bool isSelectedUsePromotion = true;
   bool isSelectedNoPromotion = false;
-
+  final SmileShopModel _model = SmileShopModelImpl();
   CheckOutBloc(List<ProductVO> productList, this.context) {
     if (productList.isNotEmpty) {
       calculateTotalProductPrice(productList);
@@ -37,17 +40,28 @@ class CheckOutBloc extends ChangeNotifier {
 
     ///load address
     _loadAddress();
+    getUser();
+  }
+
+  void getUser() async {
+    String? token = _smileShopModel.getLoginResponseFromDatabase()?.accessToken;
+    userVo = await _model.userProfile(token ?? '', kAcceptLanguageEn);
+    _notifySafely();
   }
 
   /// Call the API to load the address
   void _loadAddress() {
     _showLoading();
-    var accessToken = _smileShopModel.getLoginResponseFromDatabase()?.accessToken ?? "";
+    var accessToken =
+        _smileShopModel.getLoginResponseFromDatabase()?.accessToken ?? "";
 
-    _smileShopModel.address(accessToken, kAcceptLanguageEn).then((addressResponse) {
+    _smileShopModel
+        .address(accessToken, kAcceptLanguageEn)
+        .then((addressResponse) {
       addressList = addressResponse.data?.addressVO ?? [];
       if (addressList.isNotEmpty) {
-        defaultAddressVO = addressList.firstWhere((e) => e.isDefault == 1, orElse: () => addressList.first);
+        defaultAddressVO = addressList.firstWhere((e) => e.isDefault == 1,
+            orElse: () => addressList.first);
       } else {
         defaultAddressVO = null;
       }
@@ -73,8 +87,9 @@ class CheckOutBloc extends ChangeNotifier {
 
   void calculateTotalProductPrice(List<ProductVO> productList) {
     if (productList.isNotEmpty) {
-      subTotalPrice = productList.map((e) => e.totalPrice!).toList();
-      totalProductPrice = subTotalPrice.reduce((first, second) => first + second);
+      subTotalPrice = productList.map((e) => e.totalPrice ?? 0).toList();
+      totalProductPrice =
+          subTotalPrice.reduce((first, second) => first + second);
       totalSummaryProductPrice = (totalProductPrice! + deliveryFeePrice);
       _notifySafely();
     } else {

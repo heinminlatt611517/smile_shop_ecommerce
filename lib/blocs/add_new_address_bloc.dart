@@ -25,7 +25,7 @@ class AddNewAddressBloc extends ChangeNotifier {
   int? addressCategoryId = 1;
   TextEditingController mapAddressNameController = TextEditingController();
   String googleMapName = "";
-
+  TextEditingController noteController = TextEditingController();
   final SmileShopModel _smileShopModel = SmileShopModelImpl();
 
   AddNewAddressBloc() {
@@ -77,6 +77,7 @@ class AddNewAddressBloc extends ChangeNotifier {
           townshipId: townshipId,
           isDefault: isChecked == true ? 1 : 0,
           categoryId: addressCategoryId,
+          note: noteController.text,
         );
         if (name == "") {
           throw ('Please enter your name');
@@ -88,27 +89,30 @@ class AddNewAddressBloc extends ChangeNotifier {
           throw ('Please select township');
         }
       } else {
-        addressRequest = AddressRequest(
-          phone: phone,
-          address: name,
-          name: name,
-          stateId: stateId,
-          regionId: stateId,
-          townshipId: townshipId,
-          isDefault: isChecked == true ? 1 : 0,
-          categoryId: addressCategoryId,
-        );
+        throw ('Please select your address from map');
+        // addressRequest = AddressRequest(
+        //   phone: phone,
+        //   address: name,
+        //   name: name,
+        //   stateId: stateId,
+        //   regionId: stateId,
+        //   townshipId: townshipId,
+        //   isDefault: isChecked == true ? 1 : 0,
+        //   categoryId: addressCategoryId,
+        // );
 
-        if (name == "") {
-          throw ('Please enter your name');
-        } else if (phone == "") {
-          throw ('Please enter your phone number');
-        } else if (stateId == null) {
-          throw ('Please select state');
-        } else if (townshipId == null) {
-          throw ('Please select township');
-        }
+        // if (name == "") {
+        //   throw ('Please enter your name');
+        // } else if (phone == "") {
+        //   throw ('Please enter your phone number');
+        // } else if (stateId == null) {
+        //   throw ('Please select state');
+        // } else if (townshipId == null) {
+        //   throw ('Please select township');
+        // }
       }
+
+      print("AddressRequest::::${addressRequest.toString()}");
       _showLoading();
       await _smileShopModel.addNewAddress(accessToken, kAcceptLanguageEn, addressRequest);
     } finally {

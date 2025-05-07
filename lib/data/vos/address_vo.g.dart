@@ -28,6 +28,7 @@ AddressVO _$AddressVOFromJson(Map<String, dynamic> json) => AddressVO(
       townshipVO: json['township'] == null
           ? null
           : TownshipVO.fromJson(json['township'] as Map<String, dynamic>),
+      note: json['note'] as String?,
     );
 
 Map<String, dynamic> _$AddressVOToJson(AddressVO instance) => <String, dynamic>{
@@ -46,4 +47,5 @@ Map<String, dynamic> _$AddressVOToJson(AddressVO instance) => <String, dynamic>{
       'category': instance.categoryVO,
       'state': instance.stateVO,
       'township': instance.townshipVO,
+      'note': instance.note,
     };

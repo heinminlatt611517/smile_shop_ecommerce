@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:smile_shop/blocs/checkout_bloc.dart';
 import 'package:smile_shop/data/vos/address_vo.dart';
 import 'package:smile_shop/list_items/cart_list_item_view.dart';
+import 'package:smile_shop/list_items/checkout_item.dart';
 import 'package:smile_shop/network/api_constants.dart';
 import 'package:smile_shop/pages/my_address_page.dart';
 import 'package:smile_shop/utils/colors.dart';
@@ -25,7 +26,8 @@ class CheckoutPage extends StatelessWidget {
   final List<ProductVO>? productList;
   final bool? isFromCartPage;
 
-  const CheckoutPage({super.key, this.productList, required this.isFromCartPage});
+  const CheckoutPage(
+      {super.key, this.productList, required this.isFromCartPage});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +35,8 @@ class CheckoutPage extends StatelessWidget {
       create: (context) => CheckOutBloc(productList ?? [], context),
       child: Scaffold(
         backgroundColor: kBackgroundColor,
-        appBar: CustomAppBarView(title: AppLocalizations.of(context)?.checkOut ?? ''),
+        appBar: CustomAppBarView(
+            title: AppLocalizations.of(context)?.checkOut ?? ''),
         body: Selector<CheckOutBloc, bool>(
           selector: (context, bloc) => bloc.isLoading,
           builder: (context, isLoading, child) => Stack(
@@ -49,15 +52,17 @@ class CheckoutPage extends StatelessWidget {
                       ),
 
                       ///product
-                      ListView.builder(
-                          itemCount: productList?.length,
+                      ListView.separated(
+                          padding: const EdgeInsets.only(
+                              left: kMarginMedium2, right: kMarginMedium2, bottom: kMarginMedium2),
+                          itemCount: productList?.length ?? 0,
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
+                          separatorBuilder: (context, index) => const SizedBox(
+                                height: kMarginMedium,
+                              ),
                           itemBuilder: (context, index) {
-                            return CartListItemView(
-                              isCheckout: true,
-                              productVO: productList?[index],
-                            );
+                            return CheckOutItem(productVO: productList![index]);
                           }),
 
                       ///address view
@@ -76,7 +81,8 @@ class CheckoutPage extends StatelessWidget {
 
                       ///promotion point view
                       Consumer<CheckOutBloc>(
-                        builder: (context, bloc, child) => _BuildPromotionPointView(
+                        builder: (context, bloc, child) =>
+                            _BuildPromotionPointView(
                           productVO: productList?.first,
                           bloc: bloc,
                         ),
@@ -128,7 +134,9 @@ class CheckoutPage extends StatelessWidget {
                           productSubTotalPrice: bloc.totalSummaryProductPrice,
                           isFromCartPage: isFromCartPage,
                           productList: productList,
-                          promotionPoint: bloc.isSelectedUsePromotion == true ? GetStorage().read(kBoxKeyPromotionPoint) : 0,
+                          promotionPoint: bloc.isSelectedUsePromotion == true
+                              ? GetStorage().read(kBoxKeyPromotionPoint)
+                              : 0,
                           isFromMyOrderPage: false,
                         )));
               }
@@ -137,7 +145,8 @@ class CheckoutPage extends StatelessWidget {
               margin: const EdgeInsets.only(bottom: 30, left: 16, right: 16),
               height: 40,
               width: double.infinity,
-              decoration: BoxDecoration(color: kPrimaryColor, borderRadius: BorderRadius.circular(4)),
+              decoration: BoxDecoration(
+                  color: kPrimaryColor, borderRadius: BorderRadius.circular(4)),
               child: Center(
                 child: Text(
                   AppLocalizations.of(context)?.payNow ?? '',
@@ -179,7 +188,11 @@ class _BuildAddressView extends StatelessWidget {
           //   context.read<CheckOutBloc>().refreshAddress();
           // }
 
-          await Navigator.of(context).push(MaterialPageRoute(builder: (context) => const MyAddressPage(needReturnValue: true))).then(
+          await Navigator.of(context)
+              .push(MaterialPageRoute(
+                  builder: (context) =>
+                      const MyAddressPage(needReturnValue: true)))
+              .then(
             (value) {
               if (value is AddressVO) {
                 context.read<CheckOutBloc>().changeAddress(value);
@@ -192,7 +205,9 @@ class _BuildAddressView extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 30),
           height: 50,
           width: double.infinity,
-          decoration: BoxDecoration(color: kFillingFastColor.withOpacity(0.1), borderRadius: BorderRadius.circular(10)),
+          decoration: BoxDecoration(
+              color: kFillingFastColor.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(10)),
           child: Row(
             children: [
               Text(AppLocalizations.of(context)?.address ?? ''),
@@ -205,7 +220,9 @@ class _BuildAddressView extends StatelessWidget {
                   children: [
                     Flexible(
                         child: Text(
-                      bloc.defaultAddressVO != null ? '${bloc.defaultAddressVO?.townshipVO?.name},${bloc.defaultAddressVO?.stateVO?.name}' : '',
+                      bloc.defaultAddressVO != null
+                          ? '${bloc.defaultAddressVO?.townshipVO?.name},${bloc.defaultAddressVO?.stateVO?.name}'
+                          : '',
                       overflow: TextOverflow.ellipsis,
                     )),
                     const SizedBox(
@@ -232,14 +249,18 @@ class _BuildDeliveryOptionView extends StatelessWidget {
     return Consumer<CheckOutBloc>(
       builder: (context, bloc, child) => GestureDetector(
         onTap: () {
-          showModalBottomSheet(context: context, builder: (builder) => deliveryOptionModalSheet(context, bloc));
+          showModalBottomSheet(
+              context: context,
+              builder: (builder) => deliveryOptionModalSheet(context, bloc));
         },
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 16),
           padding: const EdgeInsets.symmetric(horizontal: 30),
           height: 50,
           width: double.infinity,
-          decoration: BoxDecoration(color: kFillingFastColor.withOpacity(0.1), borderRadius: BorderRadius.circular(10)),
+          decoration: BoxDecoration(
+              color: kFillingFastColor.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(10)),
           child: Row(
             children: [
               Text(AppLocalizations.of(context)?.deliveryOptions ?? ''),
@@ -252,7 +273,9 @@ class _BuildDeliveryOptionView extends StatelessWidget {
                   children: [
                     Flexible(
                         child: Text(
-                      bloc.isSelectedStandardDelivery ? AppLocalizations.of(context)?.standardDelivery ?? '' : AppLocalizations.of(context)?.specialDelivery ?? '',
+                      bloc.isSelectedStandardDelivery
+                          ? AppLocalizations.of(context)?.standardDelivery ?? ''
+                          : AppLocalizations.of(context)?.specialDelivery ?? '',
                       overflow: TextOverflow.ellipsis,
                     )),
                     const SizedBox(
@@ -280,7 +303,9 @@ class _BuildOrderSummaryView extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16),
       padding: const EdgeInsets.all(20),
       width: double.infinity,
-      decoration: BoxDecoration(color: kFillingFastColor.withOpacity(0.1), borderRadius: BorderRadius.circular(20)),
+      decoration: BoxDecoration(
+          color: kFillingFastColor.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(20)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -357,7 +382,9 @@ class _BuildPromotionPointView extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 30),
         height: 50,
         width: double.infinity,
-        decoration: BoxDecoration(border: Border.all(color: kFillingFastColor), borderRadius: BorderRadius.circular(10)),
+        decoration: BoxDecoration(
+            border: Border.all(color: kFillingFastColor),
+            borderRadius: BorderRadius.circular(10)),
         child: Row(
           children: [
             Text(AppLocalizations.of(context)?.promotionPoint ?? ''),
@@ -432,14 +459,21 @@ Widget deliveryOptionModalSheet(BuildContext context, CheckOutBloc bloc) {
             height: 40,
             width: double.infinity,
             margin: const EdgeInsets.symmetric(horizontal: 20),
-            decoration: BoxDecoration(border: Border.all(color: bloc.isSelectedStandardDelivery ? kPrimaryColor : Colors.transparent, width: 1), color: kFillingFastColor.withOpacity(0.1), borderRadius: BorderRadius.circular(10)),
+            decoration: BoxDecoration(
+                border: Border.all(
+                    color: bloc.isSelectedStandardDelivery
+                        ? kPrimaryColor
+                        : Colors.transparent,
+                    width: 1),
+                color: kFillingFastColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(10)),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: kMarginMedium),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(AppLocalizations.of(context)?.standardDelivery ?? ''),
-                  Text('Free')
+                  const Text('Free')
                 ],
               ),
             ),
@@ -457,14 +491,21 @@ Widget deliveryOptionModalSheet(BuildContext context, CheckOutBloc bloc) {
             height: 40,
             margin: const EdgeInsets.symmetric(horizontal: 20),
             width: double.infinity,
-            decoration: BoxDecoration(border: Border.all(color: bloc.isSelectedSpecialDelivery ? kPrimaryColor : Colors.transparent, width: 1), color: kFillingFastColor.withOpacity(0.1), borderRadius: BorderRadius.circular(10)),
+            decoration: BoxDecoration(
+                border: Border.all(
+                    color: bloc.isSelectedSpecialDelivery
+                        ? kPrimaryColor
+                        : Colors.transparent,
+                    width: 1),
+                color: kFillingFastColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(10)),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: kMarginMedium),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(AppLocalizations.of(context)?.specialDelivery ?? ''),
-                  Text('Ks 3500')
+                  const Text('Ks 3500')
                 ],
               ),
             ),

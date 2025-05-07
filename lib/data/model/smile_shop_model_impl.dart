@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smile_shop/data/model/smile_shop_model.dart';
 import 'package:smile_shop/data/vos/banner_vo.dart';
 import 'package:smile_shop/data/vos/brand_and_category_vo.dart';
+import 'package:smile_shop/data/vos/cart_item_vo.dart';
 import 'package:smile_shop/data/vos/notification_vo.dart';
 import 'package:smile_shop/data/vos/popup_data_vo.dart';
 import 'package:smile_shop/data/vos/refund_reason_vo.dart';
@@ -53,6 +54,7 @@ import 'package:smile_shop/network/responses/profile_response.dart';
 import 'package:smile_shop/network/responses/set_password_response.dart';
 import 'package:smile_shop/network/responses/success_network_response.dart';
 import 'package:smile_shop/network/responses/success_payment_response.dart';
+import 'package:smile_shop/persistence/cart_dao.dart';
 import 'package:smile_shop/persistence/favourite_product_dao.dart';
 import 'package:smile_shop/persistence/product_dao.dart';
 import 'package:smile_shop/persistence/search_product_dao.dart';
@@ -83,6 +85,7 @@ class SmileShopModelImpl extends SmileShopModel {
   final SearchProductDao _searchProductDao = SearchProductDao();
   final ProductDao _productDao = ProductDao();
   final FavouriteProductDao _favouriteProductDao = FavouriteProductDao();
+  final CartItemDao _cartItemDao = CartItemDao();
 
   @override
   Future<LoginResponse> login(LoginRequest loginRequest) {
@@ -101,7 +104,8 @@ class SmileShopModelImpl extends SmileShopModel {
       );
 
       ///save login data to hive
-      await GetStorage().write(kBoxKeyReferralCode, loginResponse.data?.referCodeVO?.code);
+      await GetStorage()
+          .write(kBoxKeyReferralCode, loginResponse.data?.referCodeVO?.code);
       await _loginDataDao.saveLoginData(loginResponse);
       await _userDataDao.saveUserData(loginResponse.data);
       return response;
@@ -123,7 +127,8 @@ class SmileShopModelImpl extends SmileShopModel {
       );
 
       ///save login data to hive
-      await GetStorage().write(kBoxKeyReferralCode, loginResponse.data?.referCodeVO?.code);
+      await GetStorage()
+          .write(kBoxKeyReferralCode, loginResponse.data?.referCodeVO?.code);
       await _loginDataDao.saveLoginData(loginResponse);
       await _userDataDao.saveUserData(loginResponse.data);
       return response;
@@ -146,34 +151,45 @@ class SmileShopModelImpl extends SmileShopModel {
   }
 
   @override
-  Future register(String invitationCode, String name, String phone, String loginPassword, String paymentPassword) {
-    return mDataAgent.register(invitationCode, name, phone, loginPassword, paymentPassword);
+  Future register(String invitationCode, String name, String phone,
+      String loginPassword, String paymentPassword) {
+    return mDataAgent.register(
+        invitationCode, name, phone, loginPassword, paymentPassword);
   }
 
   @override
-  Future<ProductVO> getProductDetails(String endUserId, String productId, String acceptLanguage, String token) {
-    return mDataAgent.getProductDetails(endUserId, productId, acceptLanguage, token);
+  Future<ProductVO> getProductDetails(
+      String endUserId, String productId, String acceptLanguage, String token) {
+    return mDataAgent.getProductDetails(
+        endUserId, productId, acceptLanguage, token);
   }
 
   @override
-  Future<BrandAndCategoryVO> getBrandsAndCategories(String token, String acceptLanguage, String endUserId) {
+  Future<BrandAndCategoryVO> getBrandsAndCategories(
+      String token, String acceptLanguage, String endUserId) {
     return mDataAgent.getBrandsAndCategories(token, acceptLanguage, endUserId);
   }
 
   @override
-  Future<List<ProductVO>> searchProductsByName(String token, String acceptLanguage, String endUserId, int pageNo, String name) {
-    return mDataAgent.searchProductsByName(token, acceptLanguage, endUserId, pageNo, name);
+  Future<List<ProductVO>> searchProductsByName(String token,
+      String acceptLanguage, String endUserId, int pageNo, String name) {
+    return mDataAgent.searchProductsByName(
+        token, acceptLanguage, endUserId, pageNo, name);
   }
 
   @override
-  Future<List<ProductVO>> searchProductsByRating(String token, String acceptLanguage, String endUserId, int pageNo, double rating) {
-    return mDataAgent.searchProductsByRating(token, acceptLanguage, endUserId, pageNo, rating);
+  Future<List<ProductVO>> searchProductsByRating(String token,
+      String acceptLanguage, String endUserId, int pageNo, double rating) {
+    return mDataAgent.searchProductsByRating(
+        token, acceptLanguage, endUserId, pageNo, rating);
   }
 
   @override
-  Future<SetPasswordResponse> setPassword(SetPasswordRequest setPasswordRequest) {
+  Future<SetPasswordResponse> setPassword(
+      SetPasswordRequest setPasswordRequest) {
     return mDataAgent.setPassword(setPasswordRequest).then((response) async {
-      await GetStorage().write(kBoxKeyReferralCode, response.data?.referCodeVO?.code);
+      await GetStorage()
+          .write(kBoxKeyReferralCode, response.data?.referCodeVO?.code);
       await _userDataDao.saveUserData(response.data);
       return response;
     });
@@ -188,8 +204,10 @@ class SmileShopModelImpl extends SmileShopModel {
   }
 
   @override
-  Future addNewAddress(String accessToken, String acceptLanguage, AddressRequest addressRequest) {
-    return mDataAgent.addNewAddress(accessToken, acceptLanguage, addressRequest);
+  Future addNewAddress(String accessToken, String acceptLanguage,
+      AddressRequest addressRequest) {
+    return mDataAgent.addNewAddress(
+        accessToken, acceptLanguage, addressRequest);
   }
 
   @override
@@ -208,7 +226,8 @@ class SmileShopModelImpl extends SmileShopModel {
   }
 
   @override
-  Future<ProductResponseDataVO> products(String token, String acceptLanguage, int endUserId, int page) {
+  Future<ProductResponseDataVO> products(
+      String token, String acceptLanguage, int endUserId, int page) {
     debugPrint("Token:::$token");
     return mDataAgent.products(token, acceptLanguage, endUserId, page);
   }
@@ -219,7 +238,8 @@ class SmileShopModelImpl extends SmileShopModel {
   }
 
   @override
-  Future editAddress(String accessToken, int addressId, AddressRequest addressRequest) {
+  Future editAddress(
+      String accessToken, int addressId, AddressRequest addressRequest) {
     return mDataAgent.editAddress(accessToken, addressId, addressRequest);
   }
 
@@ -229,17 +249,29 @@ class SmileShopModelImpl extends SmileShopModel {
   }
 
   @override
-  Future<List<SubcategoryVO>> subCategoryByCategory(String token, String acceptLanguage, SubCategoryRequest subCategoryRequest) {
-    return mDataAgent.subCategoryByCategory(token, acceptLanguage, subCategoryRequest);
+  Future<List<SubcategoryVO>> subCategoryByCategory(String token,
+      String acceptLanguage, SubCategoryRequest subCategoryRequest) {
+    return mDataAgent.subCategoryByCategory(
+        token, acceptLanguage, subCategoryRequest);
   }
 
   @override
-  Future<SuccessPaymentResponse> postOrder(String token, String acceptLanguage, int subTotal, String paymentType, String itemList, String appType, String paymentData, int usedPoint) {
-    return mDataAgent.postOrder(token, acceptLanguage, subTotal, paymentType, itemList, appType, paymentData, usedPoint);
+  Future<SuccessPaymentResponse> postOrder(
+      String token,
+      String acceptLanguage,
+      int subTotal,
+      String paymentType,
+      String itemList,
+      String appType,
+      String paymentData,
+      int usedPoint) {
+    return mDataAgent.postOrder(token, acceptLanguage, subTotal, paymentType,
+        itemList, appType, paymentData, usedPoint);
   }
 
   @override
-  Future<List<PaymentVO>> payments(String token, String acceptLanguage, String action) {
+  Future<List<PaymentVO>> payments(
+      String token, String acceptLanguage, String action) {
     return mDataAgent.payments(token, acceptLanguage, action);
   }
 
@@ -261,7 +293,9 @@ class SmileShopModelImpl extends SmileShopModel {
 
   @override
   Stream<List<SearchProductVO>> getSearchProductFromDatabase() {
-    return _searchProductDao.watchSearchProductBox().map((_) => _searchProductDao.getSearchProducts());
+    return _searchProductDao
+        .watchSearchProductBox()
+        .map((_) => _searchProductDao.getSearchProducts());
   }
 
   @override
@@ -287,7 +321,8 @@ class SmileShopModelImpl extends SmileShopModel {
   }
 
   @override
-  Future<OrderVO> orderDetails(String token, String acceptLanguage, String orderId) {
+  Future<OrderVO> orderDetails(
+      String token, String acceptLanguage, String orderId) {
     return mDataAgent.orderDetails(token, acceptLanguage, orderId);
   }
 
@@ -297,7 +332,8 @@ class SmileShopModelImpl extends SmileShopModel {
   }
 
   @override
-  Future<List<OrderVO>> getOrderListByOrderType(String token, String acceptLanguage, String orderType) {
+  Future<List<OrderVO>> getOrderListByOrderType(
+      String token, String acceptLanguage, String orderType) {
     return mDataAgent.getOrderListByOrderType(token, acceptLanguage, orderType);
   }
 
@@ -307,19 +343,31 @@ class SmileShopModelImpl extends SmileShopModel {
   }
 
   @override
-  Future checkWalletAmount(String token, String acceptLanguage, CheckWalletAmountRequest checkWalletAmountRequest) {
-    return mDataAgent.checkWalletAmount(token, acceptLanguage, checkWalletAmountRequest);
+  Future checkWalletAmount(String token, String acceptLanguage,
+      CheckWalletAmountRequest checkWalletAmountRequest) {
+    return mDataAgent.checkWalletAmount(
+        token, acceptLanguage, checkWalletAmountRequest);
   }
 
   @override
-  Future<SuccessNetworkResponse> checkWalletPassword(String token, String acceptLanguage, CheckWalletPasswordRequest checkWalletPasswordRequest) {
-    return mDataAgent.checkWalletPassword(token, acceptLanguage, checkWalletPasswordRequest);
+  Future<SuccessNetworkResponse> checkWalletPassword(
+      String token,
+      String acceptLanguage,
+      CheckWalletPasswordRequest checkWalletPasswordRequest) {
+    return mDataAgent.checkWalletPassword(
+        token, acceptLanguage, checkWalletPasswordRequest);
   }
 
   @override
-  Future<SuccessNetworkResponse> setWalletPassword(String token, String acceptLanguage, SetWalletPasswordRequest setWalletPasswordRequest) {
-    return mDataAgent.setWalletPassword(token, acceptLanguage, setWalletPasswordRequest).then((response) async {
-      await GetStorage().write(kBoxKeyWalletPassword, setWalletPasswordRequest.passwordConfirmation);
+  Future<SuccessNetworkResponse> setWalletPassword(
+      String token,
+      String acceptLanguage,
+      SetWalletPasswordRequest setWalletPasswordRequest) {
+    return mDataAgent
+        .setWalletPassword(token, acceptLanguage, setWalletPasswordRequest)
+        .then((response) async {
+      await GetStorage().write(
+          kBoxKeyWalletPassword, setWalletPasswordRequest.passwordConfirmation);
       return response;
     });
   }
@@ -361,18 +409,29 @@ class SmileShopModelImpl extends SmileShopModel {
   }
 
   @override
-  Future<List<ProductVO>> searchProductsByPrice(String token, String acceptLanguage, String endUserId, int pageNo, int price, String operator) {
-    return mDataAgent.searchProductsByPrice(token, acceptLanguage, endUserId, pageNo, price, operator);
+  Future<List<ProductVO>> searchProductsByPrice(
+      String token,
+      String acceptLanguage,
+      String endUserId,
+      int pageNo,
+      int price,
+      String operator) {
+    return mDataAgent.searchProductsByPrice(
+        token, acceptLanguage, endUserId, pageNo, price, operator);
   }
 
   @override
-  Future<List<ProductVO>> searchProductsBySubCategoryId(String token, String acceptLanguage, String endUserId, int pageNo, int subCategoryId) {
-    return mDataAgent.searchProductsBySubCategoryId(token, acceptLanguage, endUserId, pageNo, subCategoryId);
+  Future<List<ProductVO>> searchProductsBySubCategoryId(String token,
+      String acceptLanguage, String endUserId, int pageNo, int subCategoryId) {
+    return mDataAgent.searchProductsBySubCategoryId(
+        token, acceptLanguage, endUserId, pageNo, subCategoryId);
   }
 
   @override
-  Future<List<ProductVO>> searchProductsCategoryId(String token, String acceptLanguage, String endUserId, int pageNo, int categoryId) {
-    return mDataAgent.searchProductsCategoryId(token, acceptLanguage, endUserId, pageNo, categoryId);
+  Future<List<ProductVO>> searchProductsCategoryId(String token,
+      String acceptLanguage, String endUserId, int pageNo, int categoryId) {
+    return mDataAgent.searchProductsCategoryId(
+        token, acceptLanguage, endUserId, pageNo, categoryId);
   }
 
   @override
@@ -384,12 +443,14 @@ class SmileShopModelImpl extends SmileShopModel {
   }
 
   @override
-  Future<ProfileResponse> updateProfile(String token, String acceptLanguage, String name, File? image) {
+  Future<ProfileResponse> updateProfile(
+      String token, String acceptLanguage, String name, File? image) {
     return mDataAgent.updateProfile(token, acceptLanguage, name, image);
   }
 
   @override
-  Future<ProfileResponse> updateProfileName(String token, String acceptLanguage, String name) {
+  Future<ProfileResponse> updateProfileName(
+      String token, String acceptLanguage, String name) {
     return mDataAgent.updateProfileName(token, acceptLanguage, name);
   }
 
@@ -405,7 +466,9 @@ class SmileShopModelImpl extends SmileShopModel {
 
   @override
   Stream<List<ProductVO>> getFavouriteProductFromDatabase() {
-    return _favouriteProductDao.watchFavouriteProductBox().map((_) => _favouriteProductDao.getFavouriteProducts());
+    return _favouriteProductDao
+        .watchFavouriteProductBox()
+        .map((_) => _favouriteProductDao.getFavouriteProducts());
   }
 
   @override
@@ -414,13 +477,22 @@ class SmileShopModelImpl extends SmileShopModel {
   }
 
   @override
-  Future<SuccessPaymentResponse> rechargeWallet(String token, String acceptLanguage, int total, String paymentType, String appType, String paymentData) {
-    return mDataAgent.rechargeWallet(token, acceptLanguage, total, paymentType, appType, paymentData);
+  Future<SuccessPaymentResponse> rechargeWallet(
+      String token,
+      String acceptLanguage,
+      int total,
+      String paymentType,
+      String appType,
+      String paymentData) {
+    return mDataAgent.rechargeWallet(
+        token, acceptLanguage, total, paymentType, appType, paymentData);
   }
 
   @override
-  Future<List<WalletTransactionVO>> getWalletTransactions(String token, String acceptLanguage, WalletTransitionRequest walletTransactionRequest) {
-    return mDataAgent.getWalletTransactions(token, acceptLanguage, walletTransactionRequest);
+  Future<List<WalletTransactionVO>> getWalletTransactions(String token,
+      String acceptLanguage, WalletTransitionRequest walletTransactionRequest) {
+    return mDataAgent.getWalletTransactions(
+        token, acceptLanguage, walletTransactionRequest);
   }
 
   @override
@@ -429,7 +501,8 @@ class SmileShopModelImpl extends SmileShopModel {
   }
 
   @override
-  Future<SuccessNetworkResponse> postUserCheckIn(String token, String acceptLanguage, CheckInRequest checkInRequest) {
+  Future<SuccessNetworkResponse> postUserCheckIn(
+      String token, String acceptLanguage, CheckInRequest checkInRequest) {
     return mDataAgent.postUserCheckIn(token, acceptLanguage, checkInRequest);
   }
 
@@ -444,38 +517,60 @@ class SmileShopModelImpl extends SmileShopModel {
   }
 
   @override
-  Future<CampaignVo> getCampaignDetail(String token, String acceptLanguage, CampaignDetailRequest request) {
+  Future<CampaignVo> getCampaignDetail(
+      String token, String acceptLanguage, CampaignDetailRequest request) {
     return mDataAgent.getCampaignDetail(token, acceptLanguage, request);
   }
 
   @override
-  Future<void> joinCampaign(String token, String acceptLanguage, CampaignJoinRequest request) {
+  Future<void> joinCampaign(
+      String token, String acceptLanguage, CampaignJoinRequest request) {
     return mDataAgent.joinCampaign(token, acceptLanguage, request);
   }
 
   @override
-  Future<List<CampaignParticipantVo>> getCampaignParticipants(String token, String acceptLanguage, CampaignDetailRequest request) {
+  Future<List<CampaignParticipantVo>> getCampaignParticipants(
+      String token, String acceptLanguage, CampaignDetailRequest request) {
     return mDataAgent.getCampaignParticipants(token, acceptLanguage, request);
   }
 
   @override
-  Future<SuccessNetworkResponse> cancelOrder(String token, String acceptLanguage, OrderCancelRequest request) {
+  Future<SuccessNetworkResponse> cancelOrder(
+      String token, String acceptLanguage, OrderCancelRequest request) {
     return mDataAgent.cancelOrder(token, acceptLanguage, request);
   }
 
   @override
-  Future<List<ProductVO>> searchProductsWithDynamicParam(String token, String acceptLanguage, String endUserId, int pageNo, String? name, double? rating, int? minRange, int? maxRange) {
-    return mDataAgent.searchProductsWithDynamicParam(token, acceptLanguage, endUserId, pageNo, name, rating, minRange, maxRange);
+  Future<List<ProductVO>> searchProductsWithDynamicParam(
+      String token,
+      String acceptLanguage,
+      String endUserId,
+      int pageNo,
+      String? name,
+      double? rating,
+      int? minRange,
+      int? maxRange) {
+    return mDataAgent.searchProductsWithDynamicParam(token, acceptLanguage,
+        endUserId, pageNo, name, rating, minRange, maxRange);
   }
 
   @override
-  Future<SuccessPaymentResponse> makePayment(String token, String acceptLanguage, String paymentType, String paymentData, String orderNo, String appType) {
-    return mDataAgent.makePayment(token, acceptLanguage, paymentType, paymentData, orderNo, appType);
+  Future<SuccessPaymentResponse> makePayment(
+      String token,
+      String acceptLanguage,
+      String paymentType,
+      String paymentData,
+      String orderNo,
+      String appType) {
+    return mDataAgent.makePayment(
+        token, acceptLanguage, paymentType, paymentData, orderNo, appType);
   }
 
   @override
-  Future<SuccessNetworkResponse> postRefund(String token, String acceptLanguage, String orderNo, int reasonId, int userId, File? image) {
-    return mDataAgent.postRefund(token, acceptLanguage, orderNo, reasonId, userId, image);
+  Future<SuccessNetworkResponse> postRefund(String token, String acceptLanguage,
+      String orderNo, int reasonId, int userId, File? image) {
+    return mDataAgent.postRefund(
+        token, acceptLanguage, orderNo, reasonId, userId, image);
   }
 
   @override
@@ -484,12 +579,14 @@ class SmileShopModelImpl extends SmileShopModel {
   }
 
   @override
-  Future<List<RefundVO>> getRefundsByStatus(String token, String acceptLanguage, int status) {
+  Future<List<RefundVO>> getRefundsByStatus(
+      String token, String acceptLanguage, int status) {
     return mDataAgent.getRefundsByStatus(token, acceptLanguage, status);
   }
 
   @override
-  Future<PromotionDataVO> getPromotionLogsByStatus(String token, String acceptLanguage, String status) {
+  Future<PromotionDataVO> getPromotionLogsByStatus(
+      String token, String acceptLanguage, String status) {
     return mDataAgent.getPromotionLogsByStatus(token, acceptLanguage, status);
   }
 
@@ -499,7 +596,8 @@ class SmileShopModelImpl extends SmileShopModel {
   }
 
   @override
-  Future<PackageVO> getPackageDetails(String token, String acceptLanguage, int id) {
+  Future<PackageVO> getPackageDetails(
+      String token, String acceptLanguage, int id) {
     return mDataAgent.getPackageDetails(token, acceptLanguage, id);
   }
 
@@ -509,22 +607,26 @@ class SmileShopModelImpl extends SmileShopModel {
   }
 
   @override
-  Future<SuccessNetworkResponse> checkOrderStatus(String acceptLanguage, String token, OrderStatusRequest request) {
+  Future<SuccessNetworkResponse> checkOrderStatus(
+      String acceptLanguage, String token, OrderStatusRequest request) {
     return mDataAgent.checkOrderStatus(acceptLanguage, token, request);
   }
 
   @override
-  Future<CampaignHistoryResponse> getCampaignHistory(String acceptLanguage, String token) {
+  Future<CampaignHistoryResponse> getCampaignHistory(
+      String acceptLanguage, String token) {
     return mDataAgent.getCampaignHistory(acceptLanguage, token);
   }
 
   @override
-  Future<PopupDataVO> getHomePopUpData(String acceptLanguage, String token, PopupRequest request) {
+  Future<PopupDataVO> getHomePopUpData(
+      String acceptLanguage, String token, PopupRequest request) {
     return mDataAgent.getHomePopUpData(acceptLanguage, token, request);
   }
 
   @override
-  Future<SuccessNetworkResponse> updateHomePopUp(String acceptLanguage, String token, PopupRequest request) {
+  Future<SuccessNetworkResponse> updateHomePopUp(
+      String acceptLanguage, String token, PopupRequest request) {
     return mDataAgent.updateHomePopUp(acceptLanguage, token, request);
   }
 
@@ -534,7 +636,8 @@ class SmileShopModelImpl extends SmileShopModel {
   }
 
   @override
-  Future<SetPasswordResponse> forgotPasswordSetPassword(SetPasswordRequest setPasswordRequest) {
+  Future<SetPasswordResponse> forgotPasswordSetPassword(
+      SetPasswordRequest setPasswordRequest) {
     return mDataAgent.forgotPasswordSetPassword(setPasswordRequest);
   }
 
@@ -544,8 +647,16 @@ class SmileShopModelImpl extends SmileShopModel {
   }
 
   @override
-  Future<SuccessNetworkResponse> changePassword(String token, String acceptLanguage, int endUserId, String oldPassword, String newPassword, String confirmPassword, String passwordType) {
-    return mDataAgent.changePassword(token, acceptLanguage, endUserId, oldPassword, newPassword, confirmPassword, passwordType);
+  Future<SuccessNetworkResponse> changePassword(
+      String token,
+      String acceptLanguage,
+      int endUserId,
+      String oldPassword,
+      String newPassword,
+      String confirmPassword,
+      String passwordType) {
+    return mDataAgent.changePassword(token, acceptLanguage, endUserId,
+        oldPassword, newPassword, confirmPassword, passwordType);
   }
 
   @override
@@ -554,22 +665,71 @@ class SmileShopModelImpl extends SmileShopModel {
   }
 
   @override
-  Future<List<RefundReasonVO>> getRefundReasons(String acceptLanguage, String token) {
+  Future<List<RefundReasonVO>> getRefundReasons(
+      String acceptLanguage, String token) {
     return mDataAgent.getRefundReasons(acceptLanguage, token);
   }
 
   @override
-  Future<SuccessNetworkResponse> addFavouriteProduct(String token, String acceptLanguage, FavouriteProductRequest request) {
+  Future<SuccessNetworkResponse> addFavouriteProduct(
+      String token, String acceptLanguage, FavouriteProductRequest request) {
     return mDataAgent.addFavouriteProduct(token, acceptLanguage, request);
   }
 
   @override
-  Future<List<ProductVO>> getFavouriteProducts(String token, String acceptLanguage) {
+  Future<List<ProductVO>> getFavouriteProducts(
+      String token, String acceptLanguage) {
     return mDataAgent.getFavouriteProducts(token, acceptLanguage);
   }
 
   @override
-  Future<List<NotificationVO>> getNotificationList(String token, String acceptLanguage) {
+  Future<List<NotificationVO>> getNotificationList(
+      String token, String acceptLanguage) {
     return mDataAgent.getNotificationList(token, acceptLanguage);
+  }
+
+  @override
+  void clearCartFromDatabase() async {
+    return _cartItemDao.clearCart();
+  }
+
+  @override
+  List<CartItemVo> getAllCartItemsFromDatabase() {
+    return _cartItemDao.getAllCartItems();
+  }
+
+  @override
+  Stream<List<CartItemVo>> getCartItemsStreamFromDatabase() {
+    return _cartItemDao.watchCartItems();
+  }
+
+  @override
+  void removeCartItemById(String variantId) async {
+    return _cartItemDao.removeCartItem(variantId);
+  }
+
+  @override
+  void saveCartItemToHive(CartItemVo cartItemVo) async {
+    return _cartItemDao.saveCartItem(cartItemVo);
+  }
+
+  @override
+  void updateCartItemQuantity(String variantId, int newQuantity) async {
+    return _cartItemDao.updateCartItemQuantity(variantId, newQuantity);
+  }
+
+  @override
+  int getTotalPriceOfSelectedItems() {
+    return _cartItemDao.getTotalPrice();
+  }
+
+  @override
+  void toggelCartItemSelected(String variantId) async{
+    return _cartItemDao.toggleCartItemSelection(variantId);
+  }
+  
+  @override
+  void setAllCartItemSelected(bool isSelected) async{
+    return _cartItemDao.setAllCartItemsSelection(isSelected);
   }
 }

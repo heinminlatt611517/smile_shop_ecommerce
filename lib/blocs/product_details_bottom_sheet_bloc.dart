@@ -5,7 +5,7 @@ import 'package:smile_shop/data/vos/variant_vo.dart';
 class ProductDetailsBottomSheetBloc extends ChangeNotifier {
   int? selectedIndex;
   int? selectedSizeIndex;
-  int? quantityCount = 1;
+  int quantityCount = 1;
   var selectedColor = "";
   var selectedSize = "";
   int? updateTotalPrice;
@@ -20,7 +20,9 @@ class ProductDetailsBottomSheetBloc extends ChangeNotifier {
     this.productVO,
   ) {
     allVariantListGroupByColor = productVO?.getColorMapList() ?? {};
-    selectedColor = allVariantListGroupByColor.values.isNotEmpty ? allVariantListGroupByColor.values.first.first.colorName ?? '' : '';
+    selectedColor = allVariantListGroupByColor.values.isNotEmpty
+        ? allVariantListGroupByColor.values.first.first.colorVO?.value ?? ''
+        : '';
     selectedVariantListByColor = allVariantListGroupByColor[selectedColor];
     selectedVariant = selectedVariantListByColor?.first;
     selectedSize = selectedVariant?.sizeVO?.value ?? '';
@@ -88,12 +90,13 @@ class ProductDetailsBottomSheetBloc extends ChangeNotifier {
   // }
 
   void onTapAdd() {
-    quantityCount = (quantityCount! + 1);
+    quantityCount = (quantityCount + 1);
     calculateTotalPrice();
     notifyListeners();
   }
 
-  void showTopSnackBar(BuildContext context, String message, Color snackBarColor) {
+  void showTopSnackBar(
+      BuildContext context, String message, Color snackBarColor) {
     final scaffold = ScaffoldMessenger.of(context);
 
     final snackBar = SnackBar(
@@ -110,11 +113,10 @@ class ProductDetailsBottomSheetBloc extends ChangeNotifier {
   }
 
   void onTapMinus() {
-    if (quantityCount! > 1) {
-      quantityCount = (quantityCount! - 1);
+    if (quantityCount > 1) {
+      quantityCount = (quantityCount - 1);
       calculateTotalPrice();
       notifyListeners();
     }
   }
-  
 }

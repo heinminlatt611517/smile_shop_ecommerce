@@ -158,5 +158,6 @@
   "need_login" :  "You need to log in to use this feature.",
   "leftReferralCodeEmpty" : "If you don't have a referral code, leave it blank.",
   "toViewMyTeamMembers" : "To view my team members",
-  "doubleTapToZoom" : "Double Tap to Zoom In/Out"
+  "doubleTapToZoom" : "Double Tap to Zoom In/Out",
+  "category": "Category"
   }

@@ -8,7 +8,8 @@ class AddressListItemView extends StatelessWidget {
   final Function() onTapEdit;
   final AddressVO? addressVO;
 
-  const AddressListItemView({super.key, required this.onTapEdit,required this.addressVO});
+  const AddressListItemView(
+      {super.key, required this.onTapEdit, required this.addressVO});
 
   @override
   Widget build(BuildContext context) {
@@ -22,37 +23,49 @@ class AddressListItemView extends StatelessWidget {
             color: kPrimaryColor,
           ),
 
-          const SizedBox(width: kMarginMedium2,),
+          const SizedBox(
+            width: kMarginMedium2,
+          ),
 
           ///Address info view
           Expanded(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ///name and phone number
-               Row(
+              Row(
                 children: [
-                   Text(
+                  Text(
                     addressVO?.name ?? "",
-                    style:const TextStyle(fontSize: kTextRegular),
+                    style: const TextStyle(fontSize: kTextRegular),
                   ),
-                  const SizedBox(width: kMarginMedium2,),
+                  const SizedBox(
+                    width: kMarginMedium2,
+                  ),
                   Text(
                     addressVO?.phone ?? "",
-                    style:const TextStyle(fontSize: kTextRegular, color: Colors.grey),
+                    style: const TextStyle(
+                        fontSize: kTextRegular, color: Colors.grey),
                   )
                 ],
               ),
 
-              const SizedBox(height: kMarginMedium,),
-
-              ///address
-               Text(
-                '${addressVO?.townshipVO?.name ?? ""},${addressVO?.stateVO?.name ?? ""}',
-                style:const TextStyle(fontSize: kTextRegular),
+              const SizedBox(
+                height: kMarginMedium,
               ),
 
-              const SizedBox(height: kMarginMedium,),
+              ///address
+              Text(
+                '${addressVO?.townshipVO?.name ?? ""},${addressVO?.stateVO?.name ?? ""}',
+                style: const TextStyle(fontSize: kTextRegular),
+              ),
+              Text(
+                addressVO?.address ?? "",
+                style: const TextStyle(fontSize: kTextRegular),
+              ),
+              const SizedBox(
+                height: kMarginMedium,
+              ),
 
               ///home or office button
               Visibility(
@@ -62,9 +75,10 @@ class AddressListItemView extends StatelessWidget {
                     decoration: BoxDecoration(
                         color: Colors.grey.withOpacity(0.5),
                         borderRadius: BorderRadius.circular(kMarginMedium)),
-                    child:  Center(
+                    child: Center(
                       child: Padding(
-                        padding:const EdgeInsets.symmetric(horizontal: 4,vertical: 2),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 4, vertical: 2),
                         child: Text(addressVO?.categoryVO?.name ?? ""),
                       ),
                     ),
@@ -77,11 +91,12 @@ class AddressListItemView extends StatelessWidget {
           ///edit
           InkWell(
               onTap: onTapEdit,
-              child:  Text(
+              child: Text(
                 AppLocalizations.of(context)?.edit ?? '',
-                style:const TextStyle(
+                style: const TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: kTextRegular, color: kPrimaryColor),
+                    fontSize: kTextRegular,
+                    color: kPrimaryColor),
               )),
         ],
       ),

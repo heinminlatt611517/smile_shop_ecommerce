@@ -158,5 +158,6 @@
   "need_login" :  "ဤလုပ်ဆောင်ချက်ကို အသုံးပြုရန် အကောင့်ဝင်ရန်လိုအပ်ပါသည်။",
   "leftReferralCodeEmpty" : "မျှဝေကုဒ်မရှိပါက ဘာမှမထည့်ပဲထားပါ။",
   "toViewMyTeamMembers" : "အဖွဲ့ဝင်များကိုကြည့်ရန်",
-  "doubleTapToZoom" : "Zoomဆွဲရန် နှစ်ချက်နှိပ်ပါ"
+  "doubleTapToZoom" : "Zoomဆွဲရန် နှစ်ချက်နှိပ်ပါ",
+  "category": "အမျိုးအစားများ"
 }

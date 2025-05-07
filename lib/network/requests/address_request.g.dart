@@ -16,6 +16,7 @@ AddressRequest _$AddressRequestFromJson(Map<String, dynamic> json) =>
       categoryId: (json['category_id'] as num?)?.toInt(),
       townshipId: (json['township_id'] as num?)?.toInt(),
       name: json['name'] as String?,
+      note: json['note'] as String?,
     );
 
 Map<String, dynamic> _$AddressRequestToJson(AddressRequest instance) =>
@@ -28,4 +29,5 @@ Map<String, dynamic> _$AddressRequestToJson(AddressRequest instance) =>
       'category_id': instance.categoryId,
       'township_id': instance.townshipId,
       'name': instance.name,
+      'note': instance.note,
     };

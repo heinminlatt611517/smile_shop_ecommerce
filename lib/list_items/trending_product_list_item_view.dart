@@ -106,7 +106,8 @@ class TrendingProductListItemView extends StatelessWidget {
   final String? imageUrl;
   final Function(ProductVO? productVO) onTapFavourite;
 
-  const TrendingProductListItemView({super.key, this.productVO, this.imageUrl, required this.onTapFavourite});
+  const TrendingProductListItemView(
+      {super.key, this.productVO, this.imageUrl, required this.onTapFavourite});
 
   @override
   Widget build(BuildContext context) {
@@ -118,14 +119,17 @@ class TrendingProductListItemView extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ProductDetailsPage(productId: productVO?.id.toString() ?? ""),
+            builder: (context) =>
+                ProductDetailsPage(productId: productVO?.id.toString() ?? ""),
           ),
         );
       },
       child: Container(
         padding: EdgeInsets.symmetric(
-          vertical: Responsive(context).isTablet ? kMarginMedium2 : kMarginMedium,
-          horizontal: Responsive(context).isTablet ? kMarginMedium2 : kMarginMedium,
+          vertical:
+              Responsive(context).isTablet ? kMarginMedium2 : kMarginMedium,
+          horizontal:
+              Responsive(context).isTablet ? kMarginMedium2 : kMarginMedium,
         ),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -133,7 +137,8 @@ class TrendingProductListItemView extends StatelessWidget {
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min, // Makes the column take only as much space as needed
+          mainAxisSize: MainAxisSize
+              .min, // Makes the column take only as much space as needed
           children: [
             Stack(
               children: [
@@ -141,7 +146,8 @@ class TrendingProductListItemView extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                   child: CachedNetworkImageView(
                     // Responsive image size
-                    imageHeight: screenHeight * (Responsive(context).isTablet ? 0.18 : 0.15),
+                    imageHeight: screenHeight *
+                        (Responsive(context).isTablet ? 0.18 : 0.15),
                     imageWidth: screenWidth, // Full width of the screen
                     imageUrl: productVO?.image ?? errorImageUrl,
                   ),
@@ -154,7 +160,9 @@ class TrendingProductListItemView extends StatelessWidget {
                       onTapFavourite(productVO);
                     },
                     child: Icon(
-                      productVO?.isFavouriteProduct == true ? Icons.favorite_outlined : Icons.favorite_outline,
+                      productVO?.isFavouriteProduct == true
+                          ? Icons.favorite_outlined
+                          : Icons.favorite_outline,
                       color: kSecondaryColor,
                     ),
                   ),
@@ -168,7 +176,9 @@ class TrendingProductListItemView extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: Responsive(context).isTablet ? kTextRegular18 : kTextRegular,
+                fontSize: Responsive(context).isTablet
+                    ? kTextRegular18
+                    : kTextRegular,
                 height: 1.5,
               ),
             ),
@@ -177,7 +187,8 @@ class TrendingProductListItemView extends StatelessWidget {
               productVO?.subcategory?.name ?? "",
               style: TextStyle(
                 fontWeight: FontWeight.normal,
-                fontSize: Responsive(context).isTablet ? kTextRegular2x : kTextSmall,
+                fontSize:
+                    Responsive(context).isTablet ? kTextRegular2x : kTextSmall,
                 color: Colors.grey,
                 height: 1.2,
               ),
@@ -192,18 +203,24 @@ class TrendingProductListItemView extends StatelessWidget {
                     style: TextStyle(
                       height: 1.5,
                       fontWeight: FontWeight.bold,
-                      fontSize: Responsive(context).isTablet ? kTextRegular18 : kTextRegular,
+                      fontSize: Responsive(context).isTablet
+                          ? kTextRegular18
+                          : kTextRegular,
                       color: kPrimaryColor,
                     ),
                   ),
                 ),
                 Flexible(
                   child: Text(
-                    '${productVO?.variantVO?.first.redeemPoint ?? 0} pt',
+                    (productVO?.variantVO?.isNotEmpty ?? false)
+                        ? '${productVO?.variantVO?.first.redeemPoint ?? 0} pt'
+                        : '0 pt',
                     style: TextStyle(
                       height: 1.5,
                       fontWeight: FontWeight.normal,
-                      fontSize: Responsive(context).isTablet ? kTextRegular18 : kTextRegular,
+                      fontSize: Responsive(context).isTablet
+                          ? kTextRegular18
+                          : kTextRegular,
                       color: kSecondaryColor,
                     ),
                     textAlign: TextAlign.right,

@@ -159,5 +159,6 @@
   "need_login" :  "您需要登录才能使用此功能。",
   "leftReferralCodeEmpty" : "如果您没有推荐代码，请将其留空。",
   "toViewMyTeamMembers" : "查看我的团队成员",
-  "doubleTapToZoom" : "双击放大/缩小"
+  "doubleTapToZoom" : "双击放大/缩小",
+  "category": "类别"
 }

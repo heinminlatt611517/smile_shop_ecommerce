@@ -35,13 +35,14 @@ class VariantVOAdapter extends TypeAdapter<VariantVO> {
       redeemPoint: fields[15] as int?,
       colorName: fields[16] as String?,
       image: fields[17] as String?,
+      qtyCount: fields[18] as int?,
     );
   }
 
   @override
   void write(BinaryWriter writer, VariantVO obj) {
     writer
-      ..writeByte(18)
+      ..writeByte(19)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -77,7 +78,9 @@ class VariantVOAdapter extends TypeAdapter<VariantVO> {
       ..writeByte(16)
       ..write(obj.colorName)
       ..writeByte(17)
-      ..write(obj.image);
+      ..write(obj.image)
+      ..writeByte(18)
+      ..write(obj.qtyCount);
   }
 
   @override

@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:smile_shop/data/model/smile_shop_model.dart';
 import 'package:smile_shop/data/model/smile_shop_model_impl.dart';
 import 'package:smile_shop/data/vos/address_vo.dart';
@@ -21,14 +22,15 @@ class EditAddressBloc extends ChangeNotifier {
   List<StateVO> states = [];
   List<TownshipVO> townships = [];
   int? addressCategoryId;
+  TextEditingController mapAddressNameController = TextEditingController();
+  String googleMapName = "";
+  TextEditingController noteController = TextEditingController();
 
   final SmileShopModel _smileShopModel = SmileShopModelImpl();
 
   EditAddressBloc(AddressVO? addressVO) {
     ///init address data
     initAddressData(addressVO);
-
-    debugPrint("StateId>>>>>>>>>${addressVO?.stateId}");
 
     accessToken =
         _smileShopModel.getLoginResponseFromDatabase()?.accessToken ?? "";
@@ -41,15 +43,18 @@ class EditAddressBloc extends ChangeNotifier {
     });
   }
 
-  void initAddressData(AddressVO? addressVO){
-     phone = addressVO?.phone ?? "";
-     name = addressVO?.address ?? "";
-     stateId = addressVO?.stateId;
-     isDefault = addressVO?.isDefault;
-     townshipId = addressVO?.townshipId;
-     addressCategoryId = addressVO?.categoryId;
-     isChecked = addressVO?.isDefault == 1 ? true : false;
-     notifyListeners();
+  void initAddressData(AddressVO? addressVO) {
+    phone = addressVO?.phone ?? "";
+    name = addressVO?.name ?? "";
+    googleMapName = addressVO?.address ?? "";
+    stateId = addressVO?.stateId;
+    isDefault = addressVO?.isDefault;
+    townshipId = addressVO?.townshipId;
+    addressCategoryId = addressVO?.categoryId;
+    isChecked = addressVO?.isDefault == 1 ? true : false;
+    mapAddressNameController.text = googleMapName;
+    noteController.text = addressVO?.note ?? "";
+    notifyListeners();
   }
 
   ///fetch townships by state id
@@ -66,26 +71,29 @@ class EditAddressBloc extends ChangeNotifier {
 
   ///save
   Future onTapSave(int addressId) {
-      var addressRequest = AddressRequest(
-          phone: phone,
-          address: name,
-          name: name,
-          stateId: stateId,
-          regionId: stateId,
-          townshipId: townshipId,
-          isDefault: isChecked == true ? 1 : 0,
-          categoryId: addressCategoryId);
+    if (!_validateAddressFields()) {
+      return Future.error("Please fill all fields");
+    }
+    var addressRequest = AddressRequest(
+        phone: phone,
+        address: googleMapName,
+        name: name,
+        stateId: stateId,
+        regionId: stateId,
+        townshipId: townshipId,
+        isDefault: isChecked == true ? 1 : 0,
+        categoryId: addressCategoryId,note: noteController.text);
 
-      _showLoading();
-      return _smileShopModel
-          .editAddress(accessToken, addressId, addressRequest)
-          .whenComplete(() => _hideLoading());
-  }
-
-  Future onTapDeleteAddress(int addressId){
     _showLoading();
     return _smileShopModel
-        .deleteAddress(accessToken,addressId)
+        .editAddress(accessToken, addressId, addressRequest)
+        .whenComplete(() => _hideLoading());
+  }
+
+  Future onTapDeleteAddress(int addressId) {
+    _showLoading();
+    return _smileShopModel
+        .deleteAddress(accessToken, addressId)
         .whenComplete(() => _hideLoading());
   }
 
@@ -103,7 +111,16 @@ class EditAddressBloc extends ChangeNotifier {
       return false;
     }
 
+    if (googleMapName == "" || googleMapName.isEmpty) {
+      return false;
+    }
+
     return true;
+  }
+
+  void onChangedGoogleMapNamed(String name) {
+    googleMapName = name;
+    _notifySafely();
   }
 
   void onPhoneNumberChanged(String phone) {

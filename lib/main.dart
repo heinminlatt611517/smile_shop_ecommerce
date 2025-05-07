@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smile_shop/blocs/app_language_bloc.dart';
 import 'package:smile_shop/blocs/my_address_bloc.dart';
 import 'package:smile_shop/data/vos/brand_vo.dart';
+import 'package:smile_shop/data/vos/cart_item_vo.dart';
 import 'package:smile_shop/data/vos/category_vo.dart';
 import 'package:smile_shop/data/vos/color_vo.dart';
 import 'package:smile_shop/data/vos/extended_price_vo.dart';
@@ -60,18 +61,19 @@ void main() async {
   await dotenv.load();
   if (kIsWeb) {
     await Firebase.initializeApp(
-     options: FirebaseOptions(
-      apiKey: dotenv.env['FIREBASE_API_KEY']!,
-      authDomain: dotenv.env['FIREBASE_AUTH_DOMAIN']!,
-      projectId: dotenv.env['FIREBASE_PROJECT_ID']!,
-      storageBucket: dotenv.env['FIREBASE_STORAGE_BUCKET']!,
-      messagingSenderId: dotenv.env['FIREBASE_MESSAGING_SENDER_ID']!,
-      appId: dotenv.env['FIREBASE_APP_ID']!,
-    ),);
+      options: FirebaseOptions(
+        apiKey: dotenv.env['FIREBASE_API_KEY']!,
+        authDomain: dotenv.env['FIREBASE_AUTH_DOMAIN']!,
+        projectId: dotenv.env['FIREBASE_PROJECT_ID']!,
+        storageBucket: dotenv.env['FIREBASE_STORAGE_BUCKET']!,
+        messagingSenderId: dotenv.env['FIREBASE_MESSAGING_SENDER_ID']!,
+        appId: dotenv.env['FIREBASE_APP_ID']!,
+      ),
+    );
   } else {
-  await Firebase.initializeApp();
-  FirebaseMessaging.onBackgroundMessage(_backgrounHandler);
-  NotificationService.instance.initialize();
+    await Firebase.initializeApp();
+    FirebaseMessaging.onBackgroundMessage(_backgrounHandler);
+    NotificationService.instance.initialize();
   }
   await Hive.initFlutter();
   await GetStorage.init();
@@ -92,6 +94,7 @@ void main() async {
   Hive.registerAdapter(CategoryVOAdapter());
   Hive.registerAdapter(VariantVOAdapter());
   Hive.registerAdapter(ReferVOAdapter());
+  Hive.registerAdapter(CartVOAdapter());
 
   ///open hive
   await Hive.openBox<LoginDataVO>(kBoxLoginResponse);
@@ -99,6 +102,7 @@ void main() async {
   await Hive.openBox<ProductVO>(kBoxProduct);
   await Hive.openBox<ProductVO>(kBoxFavouriteProduct);
   await Hive.openBox<UserVO>(kBoxUser);
+  await Hive.openBox<CartItemVo>(kBoxCart);
 
   runApp(MultiProvider(
       providers: [
@@ -126,9 +130,7 @@ class SmileShopApp extends StatelessWidget {
       child: Consumer<AppLanguageBloc>(
         builder: (context, bloc, child) => MaterialApp(
           navigatorKey: navigatorKey,
-          routes: {
-            '/notification_detail': (context) => const BlogPage()
-          },
+          routes: {'/notification_detail': (context) => const BlogPage()},
           debugShowCheckedModeBanner: false,
           localizationsDelegates: const [
             AppLocalizations.delegate,
@@ -142,7 +144,11 @@ class SmileShopApp extends StatelessWidget {
             Locale('my', ''),
             Locale('zh', 'CN'),
           ],
-          theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple, primary: const Color.fromRGBO(255, 255, 255, 1.0)), fontFamily: kInter),
+          theme: ThemeData(
+              colorScheme: ColorScheme.fromSeed(
+                  seedColor: Colors.deepPurple,
+                  primary: const Color.fromRGBO(255, 255, 255, 1.0)),
+              fontFamily: kInter),
           themeMode: ThemeMode.light,
           home: const SplashPage(),
         ),

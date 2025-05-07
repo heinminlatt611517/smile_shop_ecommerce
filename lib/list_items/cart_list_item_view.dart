@@ -1,223 +1,240 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smile_shop/blocs/cart_bloc.dart';
-import 'package:smile_shop/data/vos/product_vo.dart';
+import 'package:smile_shop/data/vos/cart_item_vo.dart';
 import 'package:smile_shop/network/api_constants.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/widgets/cached_network_image_view.dart';
+import 'package:smile_shop/widgets/custom_checkbox.dart';
 import 'package:smile_shop/widgets/promotion_point_view.dart';
 
 class CartListItemView extends StatelessWidget {
-  final bool isCheckout;
-  final ProductVO? productVO;
-  const CartListItemView({super.key, required this.isCheckout,this.productVO});
+  final CartItemVo? productVO;
+  final Function onTapCheck;
+  final Function onTapIncreaseQty;
+  final Function onTapDecreaseQty;
+  const CartListItemView(
+      {super.key,
+      this.productVO,
+      required this.onTapCheck,
+      required this.onTapIncreaseQty,
+      required this.onTapDecreaseQty});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-      height: 164,
+    return SizedBox(
       width: double.infinity,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          isCheckout == true
-              ? const SizedBox.shrink()
-              : SizedBox(
-                width: 24,
-                height: 24,
-                child: Checkbox(
-                checkColor: kPrimaryColor,
-                value: productVO?.isChecked ?? false, onChanged: (value){
-                            var bloc = Provider.of<CartBloc>(context,
-                  listen: false);
-                            bloc.onTapChecked(productVO!);
-                          }),
+          SizedBox(
+              width: 18,
+              height: 18,
+              child: CustomCheckbox(
+                  value: productVO?.isSelected ?? false,
+                  onChanged: (value) {
+                    onTapCheck();
+                  })
+              // Checkbox(
+              //     checkColor: kPrimaryColor,
+              //     fillColor: WidgetStateProperty.all(Colors.transparent),
+              //     value: productVO?.isSelected ?? false,
+              //     onChanged: (value) {
+              //       onTapCheck();
+              //     }),
               ),
-           Visibility(
-             visible: isCheckout == false,
-             child:const SizedBox(
-              width: 10,
-             ),
-           ),
+          const SizedBox(
+            width: 10,
+          ),
           Expanded(
             child: Container(
-              padding:const EdgeInsets.symmetric(horizontal: kMarginMedium),
-              decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(kMarginMedium)),
+              padding: const EdgeInsets.symmetric(
+                  horizontal: kMarginMedium, vertical: kMarginMedium),
+              decoration: BoxDecoration(
+                  color: kCartItemContainerColor,
+                  borderRadius: BorderRadius.circular(kMarginMedium)),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const SizedBox(
-                    height: kMarginMedium,
+                  const Row(
+                    children: [
+                      ///minus button
+                    ],
                   ),
                   Row(
                     children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child:  CachedNetworkImageView(
-                          imageHeight: 80,
-                          imageWidth: 80,
-                          imageUrl:productVO?.images?.isNotEmpty ?? true ? productVO?.images?.first ?? errorImageUrl : errorImageUrl),
-                    ),
-                    const SizedBox(
-                      width: kMarginMedium3,
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                           Text(
-                            productVO?.name ?? "",
-                            overflow: TextOverflow.ellipsis,
-                            softWrap: true,
-                            style:const TextStyle(
-                                fontSize: kTextRegular2x, fontWeight: FontWeight.w600),
-                          ),
-                          const SizedBox(
-                            height: kMargin10,
-                          ),
-                          ///color
-                          Row(
-                            children: [
-                               Expanded(
-                                 child: Text(
-                                   maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  productVO?.subcategory?.name ?? "",
-                                  style:const TextStyle(
-                                      color: kTpinTextColor, fontSize: kTextSmall),
-                                                               ),
-                               ),
-                              const SizedBox(
-                                width: kMargin6 + 1,
-                              ),
-                              Expanded(
-                                child: Container(
-                                  color: kCartColor.withOpacity(0.4),
-                                  height: 22,
-                                  padding: const EdgeInsets.symmetric(horizontal: 5),
-                                  child:  Center(
-                                    child: Text(
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      'Color Family: ${productVO?.colorName}',
-                                      style:const TextStyle(fontSize: kTextSmall),
-                                    ),
+                      ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: CachedNetworkImageView(
+                              imageHeight: 80,
+                              imageWidth: 80,
+                              imageUrl: productVO?.image ?? '')),
+                      const SizedBox(
+                        width: kMarginMedium3,
+                      ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    productVO?.productName ?? "",
+                                    overflow: TextOverflow.ellipsis,
+                                    softWrap: true,
+                                    maxLines: 1,
+                                    style: const TextStyle(
+                                        fontSize: kTextRegular2x,
+                                        fontWeight: FontWeight.w600),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
+                                const SizedBox(
+                                  width: kMarginSmall,
+                                ),
+                                PromotionPointView(
+                                  point: productVO?.promotionPoint,
+                                )
+                              ],
+                            ),
+                            const SizedBox(
+                              height: kMarginSmall,
+                            ),
 
-                          const SizedBox(
-                            height: 2,
-                          ),
-
-                          ///size
-                          Row(
-                            children: [
-                              const Expanded(
-                                child: Text(
+                            ///color
+                            Row(
+                              children: [
+                                Text(
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                   "",
-                                  style:TextStyle(
-                                      color: kTpinTextColor, fontSize: kTextSmall),
+                                  productVO?.subCategory ?? "",
+                                  style: const TextStyle(
+                                      color: kTpinTextColor,
+                                      fontSize: kTextSmall),
                                 ),
-                              ),
-                              const SizedBox(
-                                width: kMargin6 + 1,
-                              ),
-                              Container(
-                                color: kCartColor.withOpacity(0.4),
-                                height: 22,
-                                padding: const EdgeInsets.symmetric(horizontal: 5),
-                                child:  Center(
+                              ],
+                            ),
+
+                            const SizedBox(
+                              height: 2,
+                            ),
+
+                            // /Color and size
+                            Row(
+                              children: [
+                                Expanded(
                                   child: Text(
-                                    'Size: ${productVO?.size}',
-                                    style:const TextStyle(fontSize: kTextSmall),
+                                    "Color: ${productVO?.color}, Size: ${productVO?.size}",
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                    style:
+                                        const TextStyle(fontSize: kTextSmall),
                                   ),
+                                )
+                                // Expanded(
+                                //   child: Container(
+                                //     decoration: BoxDecoration(
+                                //         color: kCartColor.withOpacity(0.4),
+                                //         borderRadius: BorderRadius.circular(4)),
+                                //     height: 22,
+                                //     padding: const EdgeInsets.symmetric(
+                                //       horizontal: 8,
+                                //     ),
+                                //     child: Center(
+                                //       child: Text(
+                                //         maxLines: 1,
+                                //         overflow: TextOverflow.ellipsis,
+                                //         'Color: ${productVO?.color}',
+                                //         style:
+                                //             const TextStyle(fontSize: kTextSmall),
+                                //       ),
+                                //     ),
+                                //   ),
+                                // ),
+                                // const SizedBox(
+                                //   width: kMargin6 + 1,
+                                // ),
+                                // Expanded(
+                                //   child: Container(
+                                //     decoration: BoxDecoration(
+                                //         color: kCartColor.withOpacity(0.4),
+                                //         borderRadius: BorderRadius.circular(4)),
+                                //     height: 22,
+                                //     padding:
+                                //         const EdgeInsets.symmetric(horizontal: 8),
+                                //     child: Center(
+                                //       child: Text(
+                                //         'Size: ${productVO?.size}',
+                                //         style:
+                                //             const TextStyle(fontSize: kTextSmall),
+                                //       ),
+                                //     ),
+                                //   ),
+                                // ),
+                              ],
+                            ),
+
+                            const SizedBox(
+                              height: kMarginSmall,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Ks ${productVO?.variantPrice?.toString()}",
+                                  overflow: TextOverflow.ellipsis,
+                                  style:
+                                      const TextStyle(fontSize: kTextRegular2x),
                                 ),
-                              ),
-                            ],
-                          ),
+                               const Spacer(),
+                               // Add And Remove Button
+                                TextButton(
+                                    style: TextButton.styleFrom(
+                                      minimumSize: Size.zero,
+                                      padding: EdgeInsets.zero,
+                                      tapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
+                                    ),
+                                    onPressed: () {
+                                      onTapDecreaseQty();
+                                    },
+                                    child: const Icon(
+                                      Icons.remove_circle,
+                                      color: kCartColor,
+                                      size: 26,
+                                    )),
+                                const SizedBox(
+                                  width: kMarginMedium,
+                                ),
+                                Text(productVO?.quantity.toString() ?? ""),
+                                const SizedBox(
+                                  width: kMarginMedium,
+                                ),
 
-                          const SizedBox(
-                            height: kMargin10,
-                          ),
-                           Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                overflow: TextOverflow.ellipsis,
-                                productVO?.totalPrice.toString() == "0" ? 'Ks ${productVO?.variantVO?.first.price.toString()}' : 'Ks ${productVO?.totalPrice.toString()}',
-                                style:const TextStyle(fontSize: kTextRegular2x),
-                              ),
-                              const SizedBox(
-                                width: kMargin30,
-                              ),
-                              PromotionPointView(point: productVO?.variantVO?.first.promotionPoint ?? 0,)
-                            ],
-                          ),
-                          isCheckout == true
-                              ?  Text(
-                              'Qty: ${productVO?.qtyCount.toString()}')
-                              : const SizedBox.shrink(),
-
-                        ],
-                      ),
-                    )
-                  ],),
-                  isCheckout == true
-                      ? const SizedBox.shrink()
-                      : Row(
-                    children: [
-                      const Spacer(),
-                      ///minus button
-                      TextButton(
-                          style: TextButton.styleFrom(
-                            minimumSize: Size.zero,
-                            padding: EdgeInsets.zero,
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          ),
-                          onPressed: () {
-                            var bloc = Provider.of<CartBloc>(context,
-                                listen: false);
-                            bloc.onTapDecreaseQty(productVO!);
-                          },
-                          child: const Icon(
-                            Icons.remove_circle,
-                            color: kCartColor,
-                            size: 26,
-                          )),
-                      const SizedBox(
-                        width: kMarginMedium,
-                      ),
-                       Text(productVO?.qtyCount.toString() ?? ""),
-                      const SizedBox(
-                        width: kMarginMedium,
-                      ),
-
-                      ///increase button
-                      TextButton(
-                          style: TextButton.styleFrom(
-                            minimumSize: Size.zero,
-                            padding: EdgeInsets.zero,
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          ),
-                          onPressed: () {
-                            var bloc = Provider.of<CartBloc>(context,
-                                listen: false);
-                            bloc.onTapIncreaseQty(productVO!);
-                          },
-                          child: const Icon(
-                            Icons.add_circle,
-                            color: kCartColor,
-                            size: 26,
-                          )),
+                                ///increase button
+                                TextButton(
+                                    style: TextButton.styleFrom(
+                                      minimumSize: Size.zero,
+                                      padding: EdgeInsets.zero,
+                                      tapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
+                                    ),
+                                    onPressed: () {
+                                      onTapIncreaseQty();
+                                    },
+                                    child: const Icon(
+                                      Icons.add_circle,
+                                      color: kCartColor,
+                                      size: 26,
+                                    )),
+                              ],
+                            ),
+                          ],
+                        ),
+                      )
                     ],
                   )
                 ],

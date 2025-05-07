@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:json_annotation/json_annotation.dart';
 
 part 'address_request.g.dart';
@@ -28,19 +29,27 @@ class AddressRequest {
   @JsonKey(name: "name")
   final String? name;
 
-  AddressRequest({
-    this.phone,
-    this.address,
-    this.stateId,
-    this.regionId,
-    this.isDefault,
-    this.categoryId,
-    this.townshipId,
-    this.name
-  });
+  @JsonKey(name: "note")
+  final String? note;
+
+  AddressRequest(
+      {this.phone,
+      this.address,
+      this.stateId,
+      this.regionId,
+      this.isDefault,
+      this.categoryId,
+      this.townshipId,
+      this.name,
+      this.note});
 
   factory AddressRequest.fromJson(Map<String, dynamic> json) =>
       _$AddressRequestFromJson(json);
 
   Map<String, dynamic> toJson() => _$AddressRequestToJson(this);
+
+  @override
+  String toString() {
+    return 'AddressRequest(phone: $phone, address: $address, stateId: $stateId, regionId: $regionId, isDefault: $isDefault, categoryId: $categoryId, townshipId: $townshipId, name: $name)';
+  }
 }

@@ -13,7 +13,7 @@ const kHiveTypeImageVO = 10;
 const kHiveTypeExtendedPriceVO = 11;
 const kHiveInventoryVO = 12;
 const kHiveReferVO = 13;
-
+const kHiveTypeCartVo = 14;
 
 /// Adapters
 const kAdapterNameLoginResponse = "LoginResponseAdapter";
@@ -30,7 +30,7 @@ const kAdapterImageVO = "ImageVOAdapter";
 const kAdapterExtendedVO = "ExtendedPriceVOAdapter";
 const kAdapterInventoryVO = "InventoryVOAdapter";
 const kAdapterReferVO = "ReferVOAdapter";
-
+const kAdapterCartVO = "CartVOAdapter";
 
 ///Box Name
 const kBoxLoginResponse = "kBoxLoginResponse";
@@ -38,3 +38,4 @@ const kBoxSearchProduct = "kBoxSearchProduct";
 const kBoxProduct = "kBoxProduct";
 const kBoxFavouriteProduct = "kBoxFavouriteProduct";
 const kBoxUser = "kBoxUser";
+const kBoxCart = "kBoxCart";

@@ -3,6 +3,7 @@ import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:smile_shop/blocs/product_details_bloc.dart';
 import 'package:smile_shop/blocs/product_details_bottom_sheet_bloc.dart';
+import 'package:smile_shop/data/vos/cart_item_vo.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
 import 'package:smile_shop/data/vos/specification_vo.dart';
 import 'package:smile_shop/data/vos/variant_vo.dart';
@@ -37,7 +38,8 @@ class ProductDetailsPage extends StatefulWidget {
   State<ProductDetailsPage> createState() => _ProductDetailsPageState();
 }
 
-class _ProductDetailsPageState extends State<ProductDetailsPage> with SingleTickerProviderStateMixin {
+class _ProductDetailsPageState extends State<ProductDetailsPage>
+    with SingleTickerProviderStateMixin {
   TabController? tabController;
 
   @override
@@ -69,15 +71,19 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> with SingleTick
                     Stack(
                       children: [
                         NestedScrollView(
-                          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+                          headerSliverBuilder:
+                              (BuildContext context, bool innerBoxIsScrolled) {
                             return <Widget>[
                               /// Banner Section View
-                              Selector<ProductDetailsBloc, VideoPlayerController?>(
-                                selector: (context, bloc) => bloc.videoPlayerController,
-                                builder: (context, controller, child) => SliverToBoxAdapter(
+                              Selector<ProductDetailsBloc,
+                                  VideoPlayerController?>(
+                                selector: (context, bloc) =>
+                                    bloc.videoPlayerController,
+                                builder: (context, controller, child) =>
+                                    SliverToBoxAdapter(
                                   child: BannerSectionView(
-                                    images: product?.images ?? [],
-                                    video: product?.video,
+                                    images: product.images ?? [],
+                                    video: product.video,
                                     playerController: controller,
                                   ),
                                 ),
@@ -124,10 +130,17 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> with SingleTick
                                     labelStyle: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                     ),
-                                    labelPadding: const EdgeInsets.only(bottom: 8),
+                                    labelPadding:
+                                        const EdgeInsets.only(bottom: 8),
                                     tabs: [
-                                      Text(AppLocalizations.of(context)!.productDetails, textAlign: TextAlign.center),
-                                      Text(AppLocalizations.of(context)!.productSpecifications, textAlign: TextAlign.center),
+                                      Text(
+                                          AppLocalizations.of(context)!
+                                              .productDetails,
+                                          textAlign: TextAlign.center),
+                                      Text(
+                                          AppLocalizations.of(context)!
+                                              .productSpecifications,
+                                          textAlign: TextAlign.center),
                                       // Text('After Sale',
                                       //     textAlign: TextAlign.center),
                                     ],
@@ -143,9 +156,11 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> with SingleTick
                             physics: const NeverScrollableScrollPhysics(),
                             children: [
                               ProductDetailsView(
-                                images: product?.detailImages ?? [],
+                                images: product.detailImages ?? [],
                               ),
-                              ProductSpecificationView(specificationList: product?.specificationList ?? []),
+                              ProductSpecificationView(
+                                  specificationList:
+                                      product.specificationList ?? []),
 
                               // ProductDetailsView(
                               //   images: product?.images ?? [],
@@ -177,11 +192,14 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> with SingleTick
                                 color: Colors.white,
                                 height: 80,
                                 width: double.infinity,
-                                padding: const EdgeInsets.symmetric(horizontal: kMarginSmall),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: kMarginSmall),
                                 child: Center(
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
                                       Flexible(
                                         flex: 1,
@@ -189,64 +207,123 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> with SingleTick
                                           onTap: () {
                                             Navigator.push(
                                               context,
-                                              MaterialPageRoute(builder: (context) => const ChatScreen()),
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const ChatScreen()),
                                             );
                                           },
                                           icon: Icons.chat,
-                                          label: AppLocalizations.of(context)!.liveChat,
+                                          label: AppLocalizations.of(context)!
+                                              .liveChat,
                                         ),
                                       ),
                                       VerticalIconWithLabelView(
                                         onTap: () {
                                           Navigator.push(
                                             context,
-                                            MaterialPageRoute(builder: (context) => const CartPage()),
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const CartPage()),
                                           );
                                         },
                                         icon: Icons.shopping_cart_outlined,
-                                        label: AppLocalizations.of(context)!.cart,
+                                        label:
+                                            AppLocalizations.of(context)!.cart,
                                       ),
                                       VerticalIconWithLabelView(
                                         onTap: () {
-                                          var bloc = Provider.of<ProductDetailsBloc>(context, listen: false);
+                                          var bloc =
+                                              Provider.of<ProductDetailsBloc>(
+                                                  context,
+                                                  listen: false);
                                           bloc.onTapFavourite(product, context);
                                         },
-                                        iconColor: product?.isFavouriteProduct == true ? kPrimaryColor : null,
-                                        icon: product?.isFavouriteProduct == true ? Icons.favorite_outlined : Icons.favorite_outline,
-                                        label: AppLocalizations.of(context)!.favourite,
+                                        iconColor:
+                                            product.isFavouriteProduct == true
+                                                ? kPrimaryColor
+                                                : null,
+                                        icon: product.isFavouriteProduct == true
+                                            ? Icons.favorite_outlined
+                                            : Icons.favorite_outline,
+                                        label: AppLocalizations.of(context)!
+                                            .favourite,
                                       ),
 
                                       ///add to cart and buy now
                                       Flexible(
                                         flex: 2,
-                                        child: Selector<ProductDetailsBloc, ProductVO?>(
-                                          selector: (context, bloc) => bloc.productVO,
-                                          builder: (context, product, child) => Row(
+                                        child: Selector<ProductDetailsBloc,
+                                            ProductVO?>(
+                                          selector: (context, bloc) =>
+                                              bloc.productVO,
+                                          builder: (context, product, child) =>
+                                              Row(
                                             children: [
                                               ///add to cart
                                               Expanded(
-                                                child: Consumer<ProductDetailsBloc>(
-                                                  builder: (context, bloc, child) => InkWell(
+                                                child: Consumer<
+                                                    ProductDetailsBloc>(
+                                                  builder:
+                                                      (context, bloc, child) =>
+                                                          InkWell(
                                                     onTap: () {
-                                                      showBuyNowOrAddToCartBottomSheet(context, product?.variantVO?.isNotEmpty ?? true ? product?.variantVO : [], product?.name ?? "", product, bloc, true);
+                                                      showBuyNowOrAddToCartBottomSheet(
+                                                          context,
+                                                          product?.variantVO
+                                                                      ?.isNotEmpty ??
+                                                                  true
+                                                              ? product
+                                                                  ?.variantVO
+                                                              : [],
+                                                          product?.name ?? "",
+                                                          product,
+                                                          bloc,
+                                                          true);
                                                     },
                                                     child: Container(
                                                       decoration: BoxDecoration(
-                                                          borderRadius: const BorderRadius.only(topLeft: Radius.circular(6), bottomLeft: Radius.circular(6)),
+                                                          borderRadius:
+                                                              const BorderRadius
+                                                                  .only(
+                                                                  topLeft: Radius
+                                                                      .circular(
+                                                                          6),
+                                                                  bottomLeft: Radius
+                                                                      .circular(
+                                                                          6)),
                                                           color: kPrimaryColor,
-                                                          gradient: LinearGradient(begin: Alignment.centerLeft, end: Alignment.centerRight, colors: [
-                                                            kSecondaryColor,
-                                                            kPrimaryColor.withOpacity(0.7),
-                                                          ])),
+                                                          gradient: LinearGradient(
+                                                              begin: Alignment
+                                                                  .centerLeft,
+                                                              end: Alignment
+                                                                  .centerRight,
+                                                              colors: [
+                                                                kSecondaryColor,
+                                                                kPrimaryColor
+                                                                    .withOpacity(
+                                                                        0.7),
+                                                              ])),
                                                       child: Padding(
-                                                        padding: const EdgeInsets.all(8.0),
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(8.0),
                                                         child: Text(
                                                           maxLines: 1,
                                                           softWrap: true,
-                                                          overflow: TextOverflow.ellipsis,
-                                                          textAlign: TextAlign.center,
-                                                          AppLocalizations.of(context)!.addToCart,
-                                                          style: const TextStyle(color: kBackgroundColor, fontWeight: FontWeight.w600, fontSize: 12),
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .addToCart,
+                                                          style: const TextStyle(
+                                                              color:
+                                                                  kBackgroundColor,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                              fontSize: 12),
                                                         ),
                                                       ),
                                                     ),
@@ -256,12 +333,19 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> with SingleTick
 
                                               ///buy now
                                               Expanded(
-                                                child: Consumer<ProductDetailsBloc>(
-                                                  builder: (context, bloc, chid) => InkWell(
+                                                child: Consumer<
+                                                    ProductDetailsBloc>(
+                                                  builder:
+                                                      (context, bloc, chid) =>
+                                                          InkWell(
                                                     onTap: () {
                                                       showBuyNowOrAddToCartBottomSheet(
                                                         context,
-                                                        product?.variantVO?.isNotEmpty ?? true ? product?.variantVO : [],
+                                                        product?.variantVO
+                                                                    ?.isNotEmpty ??
+                                                                true
+                                                            ? product?.variantVO
+                                                            : [],
                                                         product?.name ?? "",
                                                         product,
                                                         bloc,
@@ -269,19 +353,40 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> with SingleTick
                                                       );
                                                     },
                                                     child: Container(
-                                                      decoration: const BoxDecoration(
-                                                        borderRadius: BorderRadius.only(topRight: Radius.circular(6), bottomRight: Radius.circular(6)),
+                                                      decoration:
+                                                          const BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius.only(
+                                                                topRight: Radius
+                                                                    .circular(
+                                                                        6),
+                                                                bottomRight:
+                                                                    Radius
+                                                                        .circular(
+                                                                            6)),
                                                         color: kPrimaryColor,
                                                       ),
                                                       child: Padding(
-                                                        padding: const EdgeInsets.all(8.0),
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(8.0),
                                                         child: Text(
                                                           maxLines: 1,
                                                           softWrap: true,
-                                                          overflow: TextOverflow.ellipsis,
-                                                          textAlign: TextAlign.center,
-                                                          AppLocalizations.of(context)!.buyNow,
-                                                          style: const TextStyle(color: kBackgroundColor, fontWeight: FontWeight.w600, fontSize: 12),
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .buyNow,
+                                                          style: const TextStyle(
+                                                              color:
+                                                                  kBackgroundColor,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                              fontSize: 12),
                                                         ),
                                                       ),
                                                     ),
@@ -320,7 +425,8 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   double get maxExtent => tabBar.preferredSize.height;
 
   @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
       color: kBackgroundColor,
       child: tabBar,
@@ -416,9 +522,11 @@ class BannerSectionView extends StatelessWidget {
   final List<String> images;
   final VideoPlayerController? playerController;
 
-  BannerSectionView({super.key, required this.images, this.video, this.playerController});
+  BannerSectionView(
+      {super.key, required this.images, this.video, this.playerController});
 
-  final PageController _bannerPageController = PageController(viewportFraction: 1);
+  final PageController _bannerPageController =
+      PageController(viewportFraction: 1);
 
   @override
   Widget build(BuildContext context) {
@@ -431,7 +539,8 @@ class BannerSectionView extends StatelessWidget {
             SizedBox(
               height: 380,
               width: double.infinity,
-              child: images.isEmpty && (video == null || (video?.isEmpty ?? false))
+              child: images.isEmpty &&
+                      (video == null || (video?.isEmpty ?? false))
                   ? const CachedNetworkImageView(
                       imageHeight: 120,
                       imageWidth: double.infinity,
@@ -441,7 +550,8 @@ class BannerSectionView extends StatelessWidget {
                   : PageView.builder(
                       controller: _bannerPageController,
                       itemBuilder: (context, index) {
-                        int realIndex = index - ((video?.isNotEmpty ?? false) ? 1 : 0);
+                        int realIndex =
+                            index - ((video?.isNotEmpty ?? false) ? 1 : 0);
                         return InkWell(
                           onTap: () {
                             showDialog(
@@ -449,7 +559,7 @@ class BannerSectionView extends StatelessWidget {
                               builder: (context) => ImageListDialogView(
                                 imageList: images,
                                 index: realIndex,
-                                video:video,
+                                video: video,
                               ),
                             );
                           },
@@ -470,7 +580,8 @@ class BannerSectionView extends StatelessWidget {
                                 ),
                         );
                       },
-                      itemCount: images.length + ((video?.isNotEmpty ?? false) ? 1 : 0),
+                      itemCount: images.length +
+                          ((video?.isNotEmpty ?? false) ? 1 : 0),
                     ),
             ),
             Padding(
@@ -481,7 +592,8 @@ class BannerSectionView extends StatelessWidget {
                 },
                 child: Container(
                   padding: const EdgeInsets.all(kMarginMedium),
-                  decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                  decoration: const BoxDecoration(
+                      color: Colors.white, shape: BoxShape.circle),
                   child: const SvgImageView(
                     imageName: kBackSvgIcon,
                     imageHeight: 20,
@@ -510,7 +622,9 @@ class BannerSectionView extends StatelessWidget {
             activeDotColor: kPrimaryColor,
           ),
           onDotClicked: (index) {
-            _bannerPageController.animateToPage(index, curve: Curves.easeOut, duration: const Duration(milliseconds: 500));
+            _bannerPageController.animateToPage(index,
+                curve: Curves.easeOut,
+                duration: const Duration(milliseconds: 500));
           },
         ),
       ],
@@ -529,7 +643,8 @@ class CategoryAndReturnPointView extends StatelessWidget {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: kMarginMedium, horizontal: kMarginMedium2),
+          padding: const EdgeInsets.symmetric(
+              vertical: kMarginMedium, horizontal: kMarginMedium2),
           child: Row(
             children: [
               Expanded(
@@ -537,7 +652,8 @@ class CategoryAndReturnPointView extends StatelessWidget {
                   maxLines: 3,
                   productVO?.name ?? "",
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: kTextRegular2x, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      fontSize: kTextRegular2x, fontWeight: FontWeight.bold),
                 ),
               ),
               const SizedBox(
@@ -550,7 +666,10 @@ class CategoryAndReturnPointView extends StatelessWidget {
               ),
               Text(
                 productVO?.rating.toString() ?? "0",
-                style: const TextStyle(fontSize: kTextSmall, fontWeight: FontWeight.bold, color: Colors.black),
+                style: const TextStyle(
+                    fontSize: kTextSmall,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black),
               ),
               const SizedBox(
                 width: 20,
@@ -559,19 +678,22 @@ class CategoryAndReturnPointView extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: kMarginMedium, horizontal: kMarginMedium2),
+          padding: const EdgeInsets.symmetric(
+              vertical: kMarginMedium, horizontal: kMarginMedium2),
           child: Row(
             children: [
               Text(
                 productVO?.subcategory?.name ?? "",
-                style: const TextStyle(fontSize: kTextRegular, fontWeight: FontWeight.normal),
+                style: const TextStyle(
+                    fontSize: kTextRegular, fontWeight: FontWeight.normal),
               ),
               const Spacer(),
             ],
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: kMarginMedium, horizontal: kMarginMedium2),
+          padding: const EdgeInsets.symmetric(
+              vertical: kMarginMedium, horizontal: kMarginMedium2),
           child: Row(
             children: [
               // const Text(
@@ -583,15 +705,22 @@ class CategoryAndReturnPointView extends StatelessWidget {
               // ),
               Text(
                 'Ks ${productVO?.price}',
-                style: const TextStyle(fontSize: kTextRegular, fontWeight: FontWeight.bold, color: kPrimaryColor),
+                style: const TextStyle(
+                    fontSize: kTextRegular,
+                    fontWeight: FontWeight.bold,
+                    color: kPrimaryColor),
               )
             ],
           ),
         ),
         Container(
-          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(kMarginMedium)),
-          margin: const EdgeInsets.symmetric(vertical: kMarginMedium, horizontal: kMarginMedium2),
-          padding: const EdgeInsets.symmetric(vertical: kMarginMedium2, horizontal: kMarginMedium3),
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(kMarginMedium)),
+          margin: const EdgeInsets.symmetric(
+              vertical: kMarginMedium, horizontal: kMarginMedium2),
+          padding: const EdgeInsets.symmetric(
+              vertical: kMarginMedium2, horizontal: kMarginMedium3),
           child: Row(
             children: [
               const Text(
@@ -602,7 +731,9 @@ class CategoryAndReturnPointView extends StatelessWidget {
               ),
               const Spacer(),
               PromotionPointView(
-                point: productVO?.variantVO?.isNotEmpty ?? true ? productVO?.variantVO?.first.redeemPoint ?? 0 : 0,
+                point: productVO?.variantVO?.isNotEmpty ?? true
+                    ? productVO?.variantVO?.first.redeemPoint ?? 0
+                    : 0,
               ),
             ],
           ),
@@ -663,7 +794,10 @@ void showBuyNowOrAddToCartBottomSheet(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Selector<ProductDetailsBottomSheetBloc, String>(
-                        selector: (context, bloc) => bloc.selectedVariant?.images.isNotEmpty ?? true ? bloc.selectedVariant?.images.first.url ?? '' : errorImageUrl,
+                        selector: (context, bloc) =>
+                            bloc.selectedVariant?.images.isNotEmpty ?? true
+                                ? bloc.selectedVariant?.images.first.url ?? ''
+                                : errorImageUrl,
                         builder: (context, productImage, child) => ClipRRect(
                           child: CachedNetworkImageView(
                             imageHeight: 100,
@@ -698,14 +832,17 @@ void showBuyNowOrAddToCartBottomSheet(
                                 Consumer<ProductDetailsBottomSheetBloc>(
                                   builder: (context, bloc, child) => Text(
                                     "Ks ${bloc.updateTotalPrice}",
-                                    style: const TextStyle(fontSize: kTextRegular2x),
+                                    style: const TextStyle(
+                                        fontSize: kTextRegular2x),
                                   ),
                                 ),
                                 const SizedBox(
                                   width: kMargin30,
                                 ),
                                 PromotionPointView(
-                                  point: variantVO?.isNotEmpty ?? true ? variantVO?.first.promotionPoint ?? 0 : 0,
+                                  point: variantVO?.isNotEmpty ?? true
+                                      ? variantVO?.first.promotionPoint ?? 0
+                                      : 0,
                                 )
                               ],
                             ),
@@ -723,7 +860,8 @@ void showBuyNowOrAddToCartBottomSheet(
                                     style: TextButton.styleFrom(
                                       minimumSize: Size.zero,
                                       padding: EdgeInsets.zero,
-                                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                      tapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
                                     ),
                                     onPressed: () {
                                       bloc.onTapMinus();
@@ -738,7 +876,8 @@ void showBuyNowOrAddToCartBottomSheet(
                                     width: kMarginMedium,
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: kMarginMedium),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: kMarginMedium),
                                     child: Text(bloc.quantityCount.toString()),
                                   ),
                                   const SizedBox(
@@ -748,7 +887,8 @@ void showBuyNowOrAddToCartBottomSheet(
                                     style: TextButton.styleFrom(
                                       minimumSize: Size.zero,
                                       padding: EdgeInsets.zero,
-                                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                      tapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
                                     ),
                                     onPressed: () {
                                       bloc.onTapAdd();
@@ -776,7 +916,8 @@ void showBuyNowOrAddToCartBottomSheet(
                   ///color view
                   Text(
                     AppLocalizations.of(context)!.availableColor,
-                    style: const TextStyle(color: Colors.black, fontSize: kTextRegular2x),
+                    style: const TextStyle(
+                        color: Colors.black, fontSize: kTextRegular2x),
                   ),
 
                   ///spacer
@@ -792,13 +933,19 @@ void showBuyNowOrAddToCartBottomSheet(
                         child: ListView.builder(
                           shrinkWrap: true,
                           scrollDirection: Axis.horizontal,
-                          itemCount: bloc.allVariantListGroupByColor.keys.length,
+                          itemCount:
+                              bloc.allVariantListGroupByColor.keys.length,
                           itemBuilder: (context, index) {
                             // bool isSelected = bloc.isSelected(index);
-                            String color = bloc.allVariantListGroupByColor.keys.toList()[index];
+                            String color = bloc.allVariantListGroupByColor.keys
+                                .toList()[index];
                             bool isSelected = bloc.isSelectedColor(color);
-                            String colorName = bloc.allVariantListGroupByColor[color]?.first.colorName ?? '';
-
+                            String colorName = bloc
+                                    .allVariantListGroupByColor[color]
+                                    ?.first
+                                    .colorVO
+                                    ?.value ??
+                                '';
                             return InkWell(
                               onTap: () {
                                 bloc.selectColor(color);
@@ -807,22 +954,39 @@ void showBuyNowOrAddToCartBottomSheet(
                                 //     variantVO?[index].colorName ?? "");
                               },
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: kMarginMedium),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: kMarginMedium),
                                 child: Row(
                                   children: [
                                     ClipRRect(
-                                      borderRadius: const BorderRadius.only(topLeft: Radius.circular(6), bottomLeft: Radius.circular(6)),
-                                      child: CachedNetworkImageView(imageHeight: 24, imageWidth: 24, imageUrl: variantVO?[index].image ?? errorImageUrl),
+                                      borderRadius: const BorderRadius.only(
+                                          topLeft: Radius.circular(6),
+                                          bottomLeft: Radius.circular(6)),
+                                      child: CachedNetworkImageView(
+                                          imageHeight: 24,
+                                          imageWidth: 24,
+                                          imageUrl: variantVO?[index].image ??
+                                              errorImageUrl),
                                     ),
                                     Container(
-                                      decoration: BoxDecoration(borderRadius: const BorderRadius.only(topRight: Radius.circular(6), bottomRight: Radius.circular(6)), color: isSelected ? kPrimaryColor : Colors.white),
+                                      decoration: BoxDecoration(
+                                          borderRadius: const BorderRadius.only(
+                                              topRight: Radius.circular(6),
+                                              bottomRight: Radius.circular(6)),
+                                          color: isSelected
+                                              ? kPrimaryColor
+                                              : Colors.white),
                                       child: Center(
                                         child: Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: kMarginMedium),
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: kMarginMedium),
                                           child: Text(
                                             // variantVO?[index].colorName ?? "",
                                             colorName,
-                                            style: TextStyle(color: isSelected ? Colors.white : kPrimaryColor),
+                                            style: TextStyle(
+                                                color: isSelected
+                                                    ? Colors.white
+                                                    : kPrimaryColor),
                                           ),
                                         ),
                                       ),
@@ -876,7 +1040,8 @@ void showBuyNowOrAddToCartBottomSheet(
                   ///color view
                   Text(
                     AppLocalizations.of(context)!.availableSize,
-                    style: const TextStyle(color: Colors.black, fontSize: kTextRegular2x),
+                    style: const TextStyle(
+                        color: Colors.black, fontSize: kTextRegular2x),
                   ),
 
                   ///spacer
@@ -895,8 +1060,11 @@ void showBuyNowOrAddToCartBottomSheet(
                           itemCount: bloc.selectedVariantListByColor?.length,
                           itemBuilder: (context, index) {
                             // bool isSelected = bloc.isSelectedSize(index);
-                            List<VariantVO> variantList = bloc.selectedVariantListByColor ?? [];
-                            VariantVO vo = variantList.isNotEmpty ? variantList[index] : VariantVO();
+                            List<VariantVO> variantList =
+                                bloc.selectedVariantListByColor ?? [];
+                            VariantVO vo = variantList.isNotEmpty
+                                ? variantList[index]
+                                : VariantVO();
 
                             bool isSelected = vo.id == bloc.selectedVariant?.id;
 
@@ -908,16 +1076,25 @@ void showBuyNowOrAddToCartBottomSheet(
                                 //     variantVO?[index].sizeVO?.value ?? "");
                               },
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: kMarginMedium),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: kMarginMedium),
                                 child: Container(
-                                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(6), color: isSelected ? kPrimaryColor : Colors.white),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(6),
+                                      color: isSelected
+                                          ? kPrimaryColor
+                                          : Colors.white),
                                   child: Center(
                                     child: Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: kMarginMedium),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: kMarginMedium),
                                       child: Text(
                                         // variantVO?[index].sizeVO?.value ?? "",
                                         vo.sizeVO?.value ?? '',
-                                        style: TextStyle(color: isSelected ? Colors.white : kPrimaryColor),
+                                        style: TextStyle(
+                                            color: isSelected
+                                                ? Colors.white
+                                                : kPrimaryColor),
                                       ),
                                     ),
                                   ),
@@ -937,7 +1114,7 @@ void showBuyNowOrAddToCartBottomSheet(
 
                   ///buy now button
                   Visibility(
-                    visible: isAddToCart == true ? false : true,
+                    visible: !isAddToCart,
                     child: Consumer<ProductDetailsBottomSheetBloc>(
                       builder: (context, bloc, child) => CommonButtonView(
                         label: AppLocalizations.of(context)!.buyNow,
@@ -945,18 +1122,32 @@ void showBuyNowOrAddToCartBottomSheet(
                         bgColor: kPrimaryColor,
                         onTapButton: () {
                           if (bloc.selectedVariant != null) {
+                            print("QTY Count ======== > ${bloc.quantityCount}");
                             Navigator.pop(context);
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (builder) => CheckoutPage(
                                       isFromCartPage: false,
                                       productList: [
-                                        productVO?.copyWith(colorName: bloc.selectedVariant?.colorName, size: bloc.selectedVariant?.sizeVO?.value, totalPrice: bloc.updateTotalPrice, qtyCount: bloc.quantityCount) ?? ProductVO()
+                                        productVO?.copyWith(
+                                                colorName: bloc.selectedVariant
+                                                    ?.colorVO?.value,
+                                                size: bloc.selectedVariant
+                                                    ?.sizeVO?.value,
+                                                variantVO: [
+                                                  bloc.selectedVariant?.copyWith(qtyCount: bloc.quantityCount, ) ??
+                                                      VariantVO()
+                                                ],
+                                                totalPrice:
+                                                    bloc.updateTotalPrice,
+                                                qtyCount: bloc.quantityCount) ??
+                                            ProductVO()
                                         // productVO?.copyWith(colorName: bloc.selectedColor, size: bloc.selectedSize, totalPrice: bloc.updateTotalPrice, qtyCount: bloc.quantityCount) ?? ProductVO()
                                       ],
                                     )));
                           } else {
                             showTopSnackBar(
-                              displayDuration: const Duration(milliseconds: 300),
+                              displayDuration:
+                                  const Duration(milliseconds: 300),
                               Overlay.of(context),
                               const CustomSnackBar.error(
                                 message: "Please select both color and size.",
@@ -989,19 +1180,43 @@ void showBuyNowOrAddToCartBottomSheet(
 
                   ///add to cart button
                   Visibility(
-                    visible: isAddToCart == true ? true : false,
+                    visible: isAddToCart,
                     child: Consumer<ProductDetailsBottomSheetBloc>(
                       builder: (context, bloc, child) => CommonButtonView(
                         label: AppLocalizations.of(context)!.addToCart,
                         labelColor: Colors.white,
                         bgColor: kPrimaryColor,
                         onTapButton: () {
-                          if (bloc.selectedColor != "" && bloc.selectedSize != "") {
-                            productDetailBloc.onTapAddToCart(context, bloc.selectedVariant?.colorName ?? "", bloc.selectedVariant?.sizeVO?.value ?? "", bloc.quantityCount ?? 0, bloc.updateTotalPrice ?? 0);
-                            // productDetailBloc.onTapAddToCart(context, bloc.selectedColor, bloc.selectedSize, bloc.quantityCount ?? 0, bloc.updateTotalPrice ?? 0);
+                          if (bloc.selectedColor != "" &&
+                              bloc.selectedSize != "") {
+                            CartItemVo cartItem = CartItemVo(
+                              productId: productVO?.id,
+                              productName: productName,
+                              image: bloc.selectedVariant?.images.first.url,
+                              price: productVO?.price,
+                              color: bloc.selectedVariant?.colorVO?.value,
+                              size: bloc.selectedVariant?.sizeVO?.value,
+                              variantId: bloc.selectedVariant?.id.toString(),
+                              quantity: bloc.quantityCount,
+                              subCategory: productVO?.subcategory?.name,
+                              isSelected: true,
+                              variantPrice: bloc.selectedVariant?.price,
+                              promotionPoint:
+                                  bloc.selectedVariant?.promotionPoint,
+                            );
+                            productDetailBloc.onTapAddToCart(context, cartItem);
+                            showTopSnackBar(
+                              displayDuration:
+                                  const Duration(milliseconds: 300),
+                              Overlay.of(context),
+                              const CustomSnackBar.success(
+                                message: "Added to Cart Successfully",
+                              ),
+                            );
                           } else {
                             showTopSnackBar(
-                              displayDuration: const Duration(milliseconds: 300),
+                              displayDuration:
+                                  const Duration(milliseconds: 300),
                               Overlay.of(context),
                               const CustomSnackBar.error(
                                 message: "Please select both color and size.",

@@ -13,36 +13,42 @@ class SearchProductHistoryListItemView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: kMarginMedium2),
-          child: Row(
-            children: [
-              InkWell(
-                onTap: (){
-                  bloc.queryStreamController.sink.add(searchProductVO?.name ?? "");
-                },
-                  child: Text(searchProductVO?.name ?? "",style:const TextStyle(fontSize: kTextRegular),)),
-              const Spacer(),
-              InkWell(
-                  onTap: () {
-                    bloc.onTapClearSingleSearchProduct(
-                        searchProductVO?.name ?? "");
-                  },
-                  child: const Icon(
-                    Icons.clear,
-                    size: 14,
-                    color: Colors.grey,
-                  ))
-            ],
+    return InkWell(
+      onTap: () {
+        bloc.queryStreamController.sink.add(searchProductVO?.name ?? "");
+      },
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: kMarginMedium2),
+            child: Row(
+              children: [
+                Text(
+                  searchProductVO?.name ?? "",
+                  style: const TextStyle(fontSize: kTextRegular),
+                ),
+                const Spacer(),
+                InkWell(
+                    onTap: () {
+                      bloc.onTapClearSingleSearchProduct(
+                          searchProductVO?.name ?? "");
+                    },
+                    child: const Icon(
+                      Icons.clear,
+                      size: 14,
+                      color: Colors.grey,
+                    ))
+              ],
+            ),
           ),
-        ),
-        Container(
-          margin:const EdgeInsets.symmetric(vertical: kMarginMedium2),
-          width: double.infinity,
-         height: 1,color: Colors.grey,)
-      ],
+          Container(
+            margin: const EdgeInsets.symmetric(vertical: kMarginMedium2),
+            width: double.infinity,
+            height: 1,
+            color: Colors.grey,
+          )
+        ],
+      ),
     );
   }
 }

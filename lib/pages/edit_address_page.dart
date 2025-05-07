@@ -6,8 +6,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:smile_shop/data/vos/address_vo.dart';
 import 'package:smile_shop/data/vos/state_vo.dart';
 import 'package:smile_shop/data/vos/township_vo.dart';
+import 'package:smile_shop/pages/map_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
+import 'package:smile_shop/utils/images.dart';
 import 'package:smile_shop/widgets/common_button_view.dart';
 import 'package:smile_shop/widgets/custom_app_bar_view.dart';
 import 'package:smile_shop/widgets/dynamic_drop_down_widget.dart';
@@ -30,7 +32,8 @@ class EditAddressPage extends StatelessWidget {
       create: (context) => EditAddressBloc(addressVO),
       child: Scaffold(
         backgroundColor: kBackgroundColor,
-        appBar: CustomAppBarView(title: AppLocalizations.of(context)!.editMyAddress),
+        appBar: CustomAppBarView(
+            title: AppLocalizations.of(context)!.editMyAddress),
         body: Selector<EditAddressBloc, bool>(
           selector: (context, bloc) => bloc.isLoading,
           builder: (context, isLoading, child) => Stack(
@@ -81,19 +84,23 @@ class EditAddressPage extends StatelessWidget {
                           children: [
                             Consumer<EditAddressBloc>(
                               builder: (context, bloc, child) => Checkbox(
-                                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                materialTapTargetSize:
+                                    MaterialTapTargetSize.shrinkWrap,
                                 value: bloc.isChecked,
                                 checkColor: Colors.white,
                                 activeColor: kPrimaryColor,
                                 onChanged: (v) {
-                                  var bloc = Provider.of<EditAddressBloc>(context, listen: false);
+                                  var bloc = Provider.of<EditAddressBloc>(
+                                      context,
+                                      listen: false);
                                   bloc.onCheckChange();
                                 },
                               ),
                             ),
                             Text(
                               AppLocalizations.of(context)!.setAsDefaultAddress,
-                              style: const TextStyle(fontSize: kTextRegular, color: Colors.black),
+                              style: const TextStyle(
+                                  fontSize: kTextRegular, color: Colors.black),
                             )
                           ],
                         ),
@@ -111,10 +118,15 @@ class EditAddressPage extends StatelessWidget {
                             labelColor: Colors.black,
                             bgColor: Colors.transparent,
                             onTapButton: () {
-                              bloc.onTapDeleteAddress(addressVO?.id ?? 0).then((value) {
+                              bloc
+                                  .onTapDeleteAddress(addressVO?.id ?? 0)
+                                  .then((value) {
                                 Navigator.pop(context, true);
                               }).catchError((error) {
-                                showCommonDialog(context: context, dialogWidget: ErrorDialogView(errorMessage: error.toString()));
+                                showCommonDialog(
+                                    context: context,
+                                    dialogWidget: ErrorDialogView(
+                                        errorMessage: error.toString()));
                               });
                             }),
                       ),
@@ -134,7 +146,10 @@ class EditAddressPage extends StatelessWidget {
                               bloc.onTapSave(addressVO?.id ?? 0).then((value) {
                                 Navigator.pop(context, true);
                               }).catchError((error) {
-                                showCommonDialog(context: context, dialogWidget: ErrorDialogView(errorMessage: error.toString()));
+                                showCommonDialog(
+                                    context: context,
+                                    dialogWidget: ErrorDialogView(
+                                        errorMessage: error.toString()));
                               });
                             }),
                       )
@@ -162,6 +177,78 @@ class EditAddressPage extends StatelessWidget {
   }
 }
 
+class MapView extends StatelessWidget {
+  const MapView({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      ///map view
+      children: [
+        Consumer<EditAddressBloc>(
+          builder: (context, bloc, child) => InkWell(
+            onTap: () async {
+              final String? addressName = await Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (builder) => const MapPage(),
+                ),
+              );
+              if (addressName != null) {
+                bloc.mapAddressNameController.text = addressName;
+                bloc.onChangedGoogleMapNamed(addressName);
+              }
+            },
+            child: Container(
+              height: 75,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                  color: Colors.blueAccent,
+                  borderRadius: BorderRadius.circular(kMarginMedium)),
+              child: Image.asset(
+                kMapImg,
+                fit: BoxFit.contain,
+                height: 50,
+                width: double.infinity,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        Consumer<EditAddressBloc>(
+          builder: (context, bloc, child) => TextField(
+            maxLines: null,
+            onChanged: (value) {
+              if (value == "") {
+                bloc.mapAddressNameController.clear();
+                bloc.onChangedGoogleMapNamed("");
+              }
+            },
+            controller: bloc.mapAddressNameController,
+            cursorColor: kPrimaryColor,
+            decoration: InputDecoration(
+              hintText: AppLocalizations.of(context)!.addAddress,
+              hintStyle: const TextStyle(fontSize: kTextRegular),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10.0),
+                borderSide: const BorderSide(
+                  width: 0,
+                  style: BorderStyle.none,
+                ),
+              ),
+              fillColor: kBackgroundColor.withOpacity(0.5),
+              filled: true,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 ///address category view
 class AddressCategoryView extends StatelessWidget {
   final AddressVO? addressVO;
@@ -185,7 +272,8 @@ class AddressCategoryView extends StatelessWidget {
             height: 30,
             child: Selector<AddressCategoryBloc, List<CategoryVO>>(
               selector: (context, bloc) => bloc.addressCategories,
-              builder: (context, addressCategories, child) => Consumer<AddressCategoryBloc>(
+              builder: (context, addressCategories, child) =>
+                  Consumer<AddressCategoryBloc>(
                 builder: (context, bloc, child) => ListView.builder(
                   shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
@@ -198,26 +286,36 @@ class AddressCategoryView extends StatelessWidget {
                       child: InkWell(
                         onTap: () {
                           bloc.toggleSelectionAddressCategory(index);
-                          var addNewAddressBloc = Provider.of<EditAddressBloc>(context, listen: false);
-                          addNewAddressBloc.onTapAddressCategory(addressCategories[index].id ?? 0);
+                          var addNewAddressBloc = Provider.of<EditAddressBloc>(
+                              context,
+                              listen: false);
+                          addNewAddressBloc.onTapAddressCategory(
+                              addressCategories[index].id ?? 0);
                         },
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(4),
-                            color: isSelected ? kPrimaryColor : Colors.transparent,
+                            color:
+                                isSelected ? kPrimaryColor : Colors.transparent,
                             border: Border.all(
-                              color: isSelected ? Colors.transparent : kPrimaryColor,
+                              color: isSelected
+                                  ? Colors.transparent
+                                  : kPrimaryColor,
                               width: 1,
                             ),
                           ),
                           child: Center(
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: kMarginMedium),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: kMarginMedium),
                               child: Text(
                                 addressCategories[index].name ?? "",
                                 style: TextStyle(
-                                  color: isSelected ? Colors.white : kPrimaryColor,
-                                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                                  color:
+                                      isSelected ? Colors.white : kPrimaryColor,
+                                  fontWeight: isSelected
+                                      ? FontWeight.bold
+                                      : FontWeight.normal,
                                 ),
                               ),
                             ),
@@ -241,13 +339,16 @@ class NameAndPhoneInputView extends StatelessWidget {
   final String name;
   final String phone;
 
-  const NameAndPhoneInputView({super.key, required this.phone, required this.name});
+  const NameAndPhoneInputView(
+      {super.key, required this.phone, required this.name});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(kMarginLarge),
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(kMarginMedium), color: kAddressContainerColor),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(kMarginMedium),
+          color: kAddressContainerColor),
       child: Column(
         children: [
           Consumer<EditAddressBloc>(
@@ -280,14 +381,17 @@ class StateTownshipAndMapDropdownView extends StatelessWidget {
   final StateVO? stateVO;
   final TownshipVO? townshipVO;
 
-  const StateTownshipAndMapDropdownView({super.key, required this.stateVO, required this.townshipVO});
+  const StateTownshipAndMapDropdownView(
+      {super.key, required this.stateVO, required this.townshipVO});
 
   @override
   Widget build(BuildContext context) {
     debugPrint("TownshipID>>>>>>>>${townshipVO?.id}");
     return Container(
       padding: const EdgeInsets.all(kMarginLarge),
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(kMarginMedium), color: kAddressContainerColor),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(kMarginMedium),
+          color: kAddressContainerColor),
       child: Column(
         children: [
           ///state dropdown
@@ -324,7 +428,11 @@ class StateTownshipAndMapDropdownView extends StatelessWidget {
               selector: (context, bloc) => bloc.isTownshipLoading,
               builder: (context, isLoading, child) {
                 if (isLoading) {
-                  return DynamicDropDownWidget(hintText: 'Select township', label: AppLocalizations.of(context)?.township ?? '', items: [], onSelect: (value) {});
+                  return DynamicDropDownWidget(
+                      hintText: 'Select township',
+                      label: AppLocalizations.of(context)?.township ?? '',
+                      items: const [],
+                      onSelect: (value) {});
                 } else {
                   return Selector<EditAddressBloc, List<TownshipVO>>(
                       selector: (context, bloc) => bloc.townships,
@@ -336,8 +444,10 @@ class StateTownshipAndMapDropdownView extends StatelessWidget {
                             orElse: () => townships.first,
                           );
                         }
-                        foundTownship ??= townships.isNotEmpty ? townshipVO : null;
-                        var bloc = Provider.of<EditAddressBloc>(context, listen: false);
+                        foundTownship ??=
+                            townships.isNotEmpty ? townshipVO : null;
+                        var bloc = Provider.of<EditAddressBloc>(context,
+                            listen: false);
                         return DynamicDropDownWidget(
                             initValue: townships.isEmpty ? null : foundTownship,
                             hintText: 'Select township',
@@ -352,6 +462,31 @@ class StateTownshipAndMapDropdownView extends StatelessWidget {
 
           const SizedBox(
             height: kMarginMedium,
+          ),
+          const MapView(),
+          const SizedBox(
+            height: kMarginMedium2,
+          ),
+          Consumer<EditAddressBloc>(
+            builder: (context, bloc, child) => TextField(
+              maxLines: null,
+              minLines: 3,
+              controller: bloc.noteController,
+              cursorColor: kPrimaryColor,
+              decoration: InputDecoration(
+                hintText: "Note",
+                hintStyle: const TextStyle(fontSize: kTextRegular),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                  borderSide: const BorderSide(
+                    width: 0,
+                    style: BorderStyle.none,
+                  ),
+                ),
+                fillColor: kBackgroundColor.withOpacity(0.5),
+                filled: true,
+              ),
+            ),
           ),
         ],
       ),

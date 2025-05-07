@@ -113,36 +113,34 @@ class ProductVO {
   @HiveField(24)
   bool? isFavouriteProduct;
 
-  ProductVO({
-    this.id,
-    this.name,
-    this.sku,
-    this.price,
-    this.brandId,
-    this.subcategoryId,
-    this.image,
-    this.subcategory,
-    this.brand,
-    this.variantVO,
-    this.images,
-    this.rating,
-    this.description,
-    this.highlight,
-    this.qtyCount,
-    this.isChecked = false,
-    this.totalPrice,
-    this.colorName,
-    this.isFavourite = false,
-    this.size,
-    this.detailImages,
-    this.video,
-    this.specificationList,
-    this.isFavouriteProduct
-  });
+  ProductVO(
+      {this.id,
+      this.name,
+      this.sku,
+      this.price,
+      this.brandId,
+      this.subcategoryId,
+      this.image,
+      this.subcategory,
+      this.brand,
+      this.variantVO,
+      this.images,
+      this.rating,
+      this.description,
+      this.highlight,
+      this.qtyCount,
+      this.isChecked = false,
+      this.totalPrice,
+      this.colorName,
+      this.isFavourite = false,
+      this.size,
+      this.detailImages,
+      this.video,
+      this.specificationList,
+      this.isFavouriteProduct});
 
- 
-
-  factory ProductVO.fromJson(Map<String, dynamic> json) => _$ProductVOFromJson(json);
+  factory ProductVO.fromJson(Map<String, dynamic> json) =>
+      _$ProductVOFromJson(json);
 
   Map<String, dynamic> toJson() => _$ProductVOToJson(this);
 
@@ -199,12 +197,10 @@ class ProductVO {
     Map<String, List<VariantVO>> colorMap = {};
 
     for (VariantVO variant in variantVO ?? []) {
-      if (colorMap.containsKey(variant.colorName)) {
-        colorMap[variant.colorName]!.add(variant);
+      if (colorMap.containsKey(variant.colorVO?.value)) {
+        colorMap[variant.colorVO?.value]!.add(variant);
       } else {
-        colorMap[variant.colorName ?? ''] = [
-          variant
-        ];
+        colorMap[variant.colorVO?.value ?? ''] = [variant];
       }
     }
     return colorMap;

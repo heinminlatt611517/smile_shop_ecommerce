@@ -52,23 +52,26 @@ class AddressVO {
   @JsonKey(name: "township")
   final TownshipVO? townshipVO;
 
-  AddressVO({
-    this.id,
-    this.enduserId,
-    this.phone,
-    this.name,
-    this.address,
-    this.isDefault,
-    this.categoryId,
-    this.stateId,
-    this.type,
-    this.createdAt,
-    this.updatedAt,
-    this.townshipId,
-    this.categoryVO,
-    this.stateVO,
-    this.townshipVO
-  });
+  @JsonKey(name: "note")
+  final String? note;
+
+  AddressVO(
+      {this.id,
+      this.enduserId,
+      this.phone,
+      this.name,
+      this.address,
+      this.isDefault,
+      this.categoryId,
+      this.stateId,
+      this.type,
+      this.createdAt,
+      this.updatedAt,
+      this.townshipId,
+      this.categoryVO,
+      this.stateVO,
+      this.townshipVO,
+      this.note});
 
   factory AddressVO.fromJson(Map<String, dynamic> json) =>
       _$AddressVOFromJson(json);
