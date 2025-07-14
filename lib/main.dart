@@ -31,7 +31,7 @@ import 'package:smile_shop/utils/fonts.dart';
 import 'data/vos/login_data_vo.dart';
 import 'data/vos/sub_category_vo.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:smile_shop/localization/app_localizations.dart';
 import 'dart:async';
 
 Future<Locale> _getLocaleData() async {
@@ -47,7 +47,7 @@ Future<Locale> _getLocaleData() async {
 @pragma('vm:entry-point')
 Future<void> _backgrounHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
-  showNotification(message);
+  await showNotification(message);
   // Update SharedPreferences safely in the background
   final prefs = await SharedPreferences.getInstance();
   await prefs.setBool('newNoti', true);
@@ -63,6 +63,7 @@ void main() async {
     await Firebase.initializeApp(
       options: FirebaseOptions(
         apiKey: dotenv.env['FIREBASE_API_KEY']!,
+        
         authDomain: dotenv.env['FIREBASE_AUTH_DOMAIN']!,
         projectId: dotenv.env['FIREBASE_PROJECT_ID']!,
         storageBucket: dotenv.env['FIREBASE_STORAGE_BUCKET']!,
@@ -125,6 +126,7 @@ class SmileShopApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     return ChangeNotifierProvider<AppLanguageBloc>(
       create: (BuildContext context) => AppLanguageBloc(language),
       child: Consumer<AppLanguageBloc>(

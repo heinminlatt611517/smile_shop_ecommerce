@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smile_shop/data/vos/order_product_vo.dart';
 import 'package:smile_shop/data/vos/order_vo.dart';
 import 'package:smile_shop/network/api_constants.dart';
 
@@ -16,6 +17,7 @@ class MyOrderListItemView extends StatelessWidget {
     this.onTapCancel,
     this.onTapPayment,
     this.hideButton = false,
+    this.orderProductVO,
   });
 
   final bool isRefundView;
@@ -24,14 +26,18 @@ class MyOrderListItemView extends StatelessWidget {
   final Function(int orderId, int subTotal)? onTapPayment;
   final Function(String orderId)? onTapCancel;
   final OrderVO? orderVO;
+  final OrderProductVO? orderProductVO;
   final bool hideButton;
 
   @override
   Widget build(BuildContext context) {
+    OrderProductVO orderProduct =
+        orderProductVO ?? (orderVO?.orderProducts?.first ?? OrderProductVO());
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: isRefundView ? 0 : 16, vertical: 13),
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20)),
+      padding:
+          const EdgeInsets.symmetric(horizontal: kMarginMedium2, vertical: kMarginMedium),
+      decoration: BoxDecoration(
+          color: Colors.white, borderRadius: BorderRadius.circular(10)),
       width: double.infinity,
       child: Column(
         children: [
@@ -39,14 +45,16 @@ class MyOrderListItemView extends StatelessWidget {
             children: [
               Text(
                 "Order ID - ${orderVO?.orderNo ?? ''}",
-                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                style:
+                    const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
               ),
               const Spacer(),
               Visibility(
                 visible: orderVO?.isCOD() ?? false,
                 child: const Text(
                   "Cash on Delivery",
-                  style: TextStyle(fontSize: kTextRegular, color: kFillingFastColor),
+                  style: TextStyle(
+                      fontSize: kTextRegular, color: kFillingFastColor),
                 ),
               ),
               Visibility(
@@ -69,7 +77,7 @@ class MyOrderListItemView extends StatelessWidget {
                 child: CachedNetworkImageView(
                   imageHeight: 80,
                   imageWidth: 80,
-                  imageUrl: orderVO?.orderProducts?.first.product?.image ?? errorImageUrl,
+                  imageUrl: orderProduct.product?.image ?? errorImageUrl,
                 ),
               ),
               const SizedBox(
@@ -80,10 +88,12 @@ class MyOrderListItemView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      orderVO?.orderProducts?.first.product?.name ?? '',
+                      orderProduct.product?.name ?? '',
                       overflow: TextOverflow.ellipsis,
                       softWrap: true,
-                      style: const TextStyle(fontSize: kTextRegular2x, fontWeight: FontWeight.w600),
+                      style: const TextStyle(
+                          fontSize: kTextRegular2x,
+                          fontWeight: FontWeight.w600),
                     ),
                     const SizedBox(
                       height: kMargin10,
@@ -93,14 +103,14 @@ class MyOrderListItemView extends StatelessWidget {
                       children: [
                         Text(
                           overflow: TextOverflow.ellipsis,
-                          'Ks ${orderVO?.orderProducts?.first.price ?? ''}',
+                          'Ks ${orderProduct.price ?? ''}',
                           style: const TextStyle(fontSize: kTextRegular2x),
                         ),
                         const SizedBox(
                           width: kMargin30,
                         ),
                         Text(
-                          'Qty: ${orderVO?.orderProducts?.first.qty ?? ''}',
+                          'Qty: ${orderProduct.qty ?? ''}',
                           style: const TextStyle(fontSize: kTextSmall),
                         )
                       ],
@@ -112,17 +122,14 @@ class MyOrderListItemView extends StatelessWidget {
                       children: [
                         const Spacer(),
                         Text(
-                          'Total(${orderVO?.orderProducts?.first.qty ?? ''} item): Ks ${orderVO?.orderProducts?.first.subtotal ?? ''}',
+                          'Total(${orderProduct.qty ?? ''} item): Ks ${orderProductVO != null ? orderProduct.getTotalPrice() : orderVO?.getTotalFees() ?? ''}',
                           style: const TextStyle(fontSize: kTextSmall),
                         ),
                       ],
                     ),
-                    const SizedBox(
-                      height: 15,
-                    ),
                     Visibility(
                       // visible: orderVO?.deliveryStatus == "ongoing",
-                      visible:  false,
+                      visible: false,
                       child: Row(
                         children: [
                           const Spacer(),
@@ -133,7 +140,9 @@ class MyOrderListItemView extends StatelessWidget {
                             child: Container(
                               height: 26,
                               width: 57,
-                              decoration: BoxDecoration(border: Border.all(color: kFillingFastColor), borderRadius: BorderRadius.circular(5)),
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: kFillingFastColor),
+                                  borderRadius: BorderRadius.circular(5)),
                               child: const Center(
                                 child: Text(
                                   'Refund',
@@ -142,19 +151,20 @@ class MyOrderListItemView extends StatelessWidget {
                               ),
                             ),
                           ),
-                          const SizedBox(
-                            width: 15,
-                          ),
                           Visibility(
                             visible: false,
                             child: Container(
                               height: 26,
                               width: 68,
-                              decoration: BoxDecoration(color: kFillingFastColor, borderRadius: BorderRadius.circular(5)),
+                              decoration: BoxDecoration(
+                                  color: kFillingFastColor,
+                                  borderRadius: BorderRadius.circular(5)),
                               child: const Center(
                                 child: Text(
                                   'Review',
-                                  style: TextStyle(color: Colors.white, fontSize: kTextSmall),
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: kTextSmall),
                                 ),
                               ),
                             ),
@@ -166,7 +176,8 @@ class MyOrderListItemView extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Visibility(
-                          visible: (!hideButton) && (orderVO?.deliveryStatus == "delivered"),
+                          visible: (!hideButton) &&
+                              (orderVO?.deliveryStatus == "delivered"),
                           child: InkWell(
                             onTap: () {
                               onTapRefund!(orderVO);
@@ -174,7 +185,9 @@ class MyOrderListItemView extends StatelessWidget {
                             child: Container(
                               height: 36,
                               width: 68,
-                              decoration: BoxDecoration(border: Border.all(color: kFillingFastColor), borderRadius: BorderRadius.circular(5)),
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: kFillingFastColor),
+                                  borderRadius: BorderRadius.circular(5)),
                               child: const Center(
                                 child: Text(
                                   'Refund',
@@ -188,7 +201,9 @@ class MyOrderListItemView extends StatelessWidget {
                           width: 15,
                         ),
                         Visibility(
-                          visible: orderVO?.paymentStatus != "paid" && orderVO?.paymentStatus != 'cancel' &&  !(orderVO?.isCOD() ?? false),
+                          visible: orderVO?.paymentStatus != "paid" &&
+                              orderVO?.paymentStatus != 'cancel' &&
+                              !(orderVO?.isCOD() ?? false),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
@@ -214,16 +229,24 @@ class MyOrderListItemView extends StatelessWidget {
                               // ),
                               InkWell(
                                 onTap: () {
-                                  onTapPayment!(int.parse(orderVO?.orderNo.toString() ?? ""), int.parse(orderVO?.subtotal.toString() ?? ""));
+                                  onTapPayment!(
+                                      int.parse(
+                                          orderVO?.orderNo.toString() ?? ""),
+                                      int.parse(
+                                          orderVO?.subtotal.toString() ?? ""));
                                 },
                                 child: Container(
                                   height: 36,
                                   width: 68,
-                                  decoration: BoxDecoration(color: kFillingFastColor, borderRadius: BorderRadius.circular(5)),
+                                  decoration: BoxDecoration(
+                                      color: kFillingFastColor,
+                                      borderRadius: BorderRadius.circular(5)),
                                   child: const Center(
                                     child: Text(
                                       'Payment',
-                                      style: TextStyle(color: Colors.white, fontSize: kTextSmall),
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: kTextSmall),
                                     ),
                                   ),
                                 ),

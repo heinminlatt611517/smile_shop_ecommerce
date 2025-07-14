@@ -23,17 +23,16 @@ class CampaignVo {
   final List<UserVo>? joinedUsers;
 
   @JsonKey(name: "product")
-  final ProductVo? product;
+  final CampaignProductVo? product;
 
-  CampaignVo({
-    this.id,
-    this.productId,
-    this.price,
-    this.userJoined,
-    this.joinedUsers,
-    this.product,
-    this.description
-  });
+  CampaignVo(
+      {this.id,
+      this.productId,
+      this.price,
+      this.userJoined,
+      this.joinedUsers,
+      this.product,
+      this.description});
 
   factory CampaignVo.fromJson(Map<String, dynamic> json) =>
       _$CampaignVoFromJson(json);
@@ -66,14 +65,13 @@ class UserVo {
     this.profileImage,
   });
 
-  factory UserVo.fromJson(Map<String, dynamic> json) =>
-      _$UserVoFromJson(json);
+  factory UserVo.fromJson(Map<String, dynamic> json) => _$UserVoFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserVoToJson(this);
 }
 
 @JsonSerializable()
-class ProductVo {
+class CampaignProductVo {
   @JsonKey(name: "id")
   final int? id;
 
@@ -86,15 +84,15 @@ class ProductVo {
   @JsonKey(name: "campaign_id")
   final int? campaignId;
 
-  ProductVo({
+  CampaignProductVo({
     this.id,
     this.name,
     this.image,
     this.campaignId,
   });
 
-  factory ProductVo.fromJson(Map<String, dynamic> json) =>
-      _$ProductVoFromJson(json);
+  factory CampaignProductVo.fromJson(Map<String, dynamic> json) =>
+      _$CampaignProductVoFromJson(json);
 
-  Map<String, dynamic> toJson() => _$ProductVoToJson(this);
+  Map<String, dynamic> toJson() => _$CampaignProductVoToJson(this);
 }

@@ -16,7 +16,7 @@ CampaignVo _$CampaignVoFromJson(Map<String, dynamic> json) => CampaignVo(
           .toList(),
       product: json['product'] == null
           ? null
-          : ProductVo.fromJson(json['product'] as Map<String, dynamic>),
+          : CampaignProductVo.fromJson(json['product'] as Map<String, dynamic>),
       description: json['description'] as String?,
     );
 
@@ -47,14 +47,16 @@ Map<String, dynamic> _$UserVoToJson(UserVo instance) => <String, dynamic>{
       'profile_image': instance.profileImage,
     };
 
-ProductVo _$ProductVoFromJson(Map<String, dynamic> json) => ProductVo(
+CampaignProductVo _$CampaignProductVoFromJson(Map<String, dynamic> json) =>
+    CampaignProductVo(
       id: (json['id'] as num?)?.toInt(),
       name: json['name'] as String?,
       image: json['image'] as String?,
       campaignId: (json['campaign_id'] as num?)?.toInt(),
     );
 
-Map<String, dynamic> _$ProductVoToJson(ProductVo instance) => <String, dynamic>{
+Map<String, dynamic> _$CampaignProductVoToJson(CampaignProductVo instance) =>
+    <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
       'image': instance.image,

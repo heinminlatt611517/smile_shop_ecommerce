@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:provider/provider.dart';
@@ -11,9 +10,11 @@ import 'package:smile_shop/network/api_constants.dart';
 import 'package:smile_shop/pages/campaign_page.dart';
 import 'package:smile_shop/pages/category_page.dart';
 import 'package:smile_shop/pages/daily_checkin_page.dart';
+import 'package:smile_shop/pages/below_3000_items_page.dart';
 import 'package:smile_shop/pages/language_page.dart';
-import 'package:smile_shop/pages/my_team_page.dart';
+import 'package:smile_shop/pages/promotion_point_product_page.dart';
 import 'package:smile_shop/pages/search_product_page.dart';
+import 'package:smile_shop/pages/smile_point_page.dart';
 import 'package:smile_shop/pages/sub_category_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/images.dart';
@@ -21,7 +22,7 @@ import 'package:smile_shop/utils/responsive.dart';
 import 'package:smile_shop/utils/strings.dart';
 import 'package:smile_shop/widgets/cached_network_image_view.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:smile_shop/localization/app_localizations.dart';
 import 'package:video_player/video_player.dart';
 
 import '../utils/dimens.dart';
@@ -34,94 +35,75 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => HomeBloc(context),
-      child: const Scaffold(
-          appBar: PreferredSize(
-            preferredSize: Size(double.infinity, 55),
-            child: SafeArea(
-                child: Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: kMarginMedium2, vertical: kMarginSmall),
-              child: SearchView(),
-            )),
-          ),
-          backgroundColor: kBackgroundColor,
-          body: HomeContentView()),
+      child: Consumer<HomeBloc>(
+        builder: (context, bloc, child) => WillPopScope(
+          onWillPop: () => bloc.onWillPop(),
+          child: const Scaffold(
+              appBar: PreferredSize(
+                preferredSize: Size(double.infinity, 55),
+                child: SafeArea(
+                    child: Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: kMarginMedium2, vertical: kMarginSmall),
+                  child: SearchView(),
+                )),
+              ),
+              backgroundColor: kBackgroundColor,
+              body: HomeContentView()),
+        ),
+      ),
     );
   }
 }
 
 ///home content view
-class HomeContentView extends StatefulWidget {
+class HomeContentView extends StatelessWidget {
   const HomeContentView({super.key});
 
   @override
-  State<HomeContentView> createState() => _HomeContentViewState();
-}
-
-class _HomeContentViewState extends State<HomeContentView> {
-  var scrollController = ScrollController();
-
-  @override
-  void initState() {
-    super.initState();
-    scrollController.addListener(() {
-      if (scrollController.position.pixels ==
-          scrollController.position.maxScrollExtent) {
-        var bloc = Provider.of<HomeBloc>(context, listen: false);
-        bloc.getProducts();
-        debugPrint("OnListEndReach");
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    scrollController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      controller: scrollController,
-      slivers: [
-        ///spacer
-        const SliverToBoxAdapter(
-            child: SizedBox(
-          height: kMarginMedium2,
-        )),
+    return Consumer<HomeBloc>(
+      builder: (context, bloc, child) => CustomScrollView(
+        controller: bloc.scrollController,
+        slivers: [
+          ///spacer
+          const SliverToBoxAdapter(
+              child: SizedBox(
+            height: kMarginMedium2,
+          )),
 
-        // ///search view
-        // const SliverToBoxAdapter(
-        //   child: Padding(
-        //     padding: EdgeInsets.all(kMarginLarge),
-        //     child: SearchView(),
-        //   ),
-        // ),
+          // ///search view
+          // const SliverToBoxAdapter(
+          //   child: Padding(
+          //     padding: EdgeInsets.all(kMarginLarge),
+          //     child: SearchView(),
+          //   ),
+          // ),
 
-        ///Banner view
-        SliverToBoxAdapter(
-          child: BannerSectionView(),
-        ),
-
-        ///Campaign ,Daily check in and User Level view
-        SliverToBoxAdapter(
-          child: Visibility(
-            visible: GetStorage().read(kBoxKeyLoginUserType) == kTypeEndUser,
-            child: const CampaignDailyCheckInUserLevelView(),
+          ///Banner view
+          SliverToBoxAdapter(
+            child: BannerSectionView(),
           ),
-        ),
 
-        ///Categories View
-        const SliverToBoxAdapter(
-          child: CategoriesView(),
-        ),
+          ///Campaign ,Daily check in and User Level view
+          SliverToBoxAdapter(
+            child: Visibility(
+              visible: GetStorage().read(kBoxKeyLoginUserType) == kTypeEndUser,
+              child: const CampaignDailyCheckInUserWalletView(),
+            ),
+          ),
 
-        ///trending products view
-        const SliverToBoxAdapter(
-          child: TrendingProductsView(),
-        )
-      ],
+          ///Categories View
+          const SliverToBoxAdapter(
+            child: CategoriesView(),
+          ),
+
+          ///trending products view
+          const SliverToBoxAdapter(
+            child: TrendingProductsView(),
+          )
+        ],
+      ),
     );
   }
 }
@@ -161,6 +143,7 @@ class SearchView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const Icon(Icons.search),
+                  const SizedBox(),
                   const SizedBox(
                       width: 8.0), // Space between the icon and text field
                   Expanded(
@@ -229,8 +212,8 @@ class SearchView extends StatelessWidget {
 }
 
 ///Campaign ,Daily check in and User Level view
-class CampaignDailyCheckInUserLevelView extends StatelessWidget {
-  const CampaignDailyCheckInUserLevelView({super.key});
+class CampaignDailyCheckInUserWalletView extends StatelessWidget {
+  const CampaignDailyCheckInUserWalletView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -324,7 +307,7 @@ class CampaignDailyCheckInUserLevelView extends StatelessWidget {
                     child: InkWell(
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (_) => const MyTeamPage()));
+                            builder: (_) => const SmilePointPage()));
                       },
                       child: Container(
                         // padding: const EdgeInsets.all(kMarginMedium2),
@@ -357,7 +340,7 @@ class CampaignDailyCheckInUserLevelView extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    AppLocalizations.of(context)!.userLevel,
+                                    AppLocalizations.of(context)!.smileWallet,
                                     style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: kTextRegular,
@@ -368,7 +351,7 @@ class CampaignDailyCheckInUserLevelView extends StatelessWidget {
                                   ),
                                   Text(
                                     AppLocalizations.of(context)!
-                                        .toViewMyTeamMembers,
+                                        .toViewMyWallet,
                                     style: const TextStyle(
                                         fontWeight: FontWeight.normal,
                                         fontSize: kTextXSmall,
@@ -381,7 +364,7 @@ class CampaignDailyCheckInUserLevelView extends StatelessWidget {
                               width: kMarginMedium,
                             ),
                             Image.asset(
-                              kUserLevelIcon,
+                              kWallet,
                               height: 30,
                               width: 30,
                               fit: BoxFit.cover,
@@ -472,76 +455,102 @@ class CategoriesView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: kMarginXLarge),
-      child: Selector<HomeBloc, List<CategoryVO>>(
-        selector: (context, bloc) => bloc.categories,
-        builder: (context, categories, child) => Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: kMarginMedium2),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Consumer<HomeBloc>(
+        builder: (context, bloc, child) => bloc
+                .getCategoryListForHomePage()
+                .isEmpty
+            ? const SizedBox.shrink()
+            : Column(
                 children: [
-                  Text(
-                    AppLocalizations.of(context)?.category ?? '',
-                    style: const TextStyle(
-                      fontSize: kTextRegular18,
-                      fontWeight: FontWeight.w600,
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: kMarginMedium2),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          AppLocalizations.of(context)?.category ?? '',
+                          style: const TextStyle(
+                            fontSize: kTextRegular18,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => const CategoryPage()));
+                          },
+                          child: const Text(
+                            "See more",
+                            style: TextStyle(
+                                color: kPrimaryColor,
+                                fontSize: kTextSmall,
+                                decoration: TextDecoration.underline,
+                                decorationColor: kPrimaryColor),
+                          ),
+                        )
+                      ],
                     ),
                   ),
-                  InkWell(
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) =>
-                              CategoryPage(categoryList: categories)));
+                  const SizedBox(
+                    height: kMarginMedium,
+                  ),
+                  GridView.builder(
+                    shrinkWrap: true,
+                    padding: EdgeInsets.zero,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      return InkWell(
+                        onTap: () {
+                          if (bloc.getCategoryListForHomePage()[index].type ==
+                              CategoryType.below3000) {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => Below3000ItemsPage(
+                                      title: bloc
+                                              .getCategoryListForHomePage()[
+                                                  index]
+                                              .name ??
+                                          "",
+                                    )));
+                          } else if (bloc
+                                  .getCategoryListForHomePage()[index]
+                                  .type ==
+                              CategoryType.promotionPoint) {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) =>
+                                    const PromotionPointProductPage()));
+                          } else {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SubCategoryPage(
+                                  categoryVO:
+                                      bloc.getCategoryListForHomePage()[index],
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                        child: CategoryVerticalIconWithLabelView(
+                          isIconWithBg: true,
+                          bgColor: kSecondaryColor,
+                          categoryVO: bloc.getCategoryListForHomePage()[index],
+                        ),
+                      );
                     },
-                    child: const Text(
-                      "See more",
-                      style: TextStyle(
-                          color: kPrimaryColor,
-                          fontSize: kTextSmall,
-                          decoration: TextDecoration.underline,
-                          decorationColor: kPrimaryColor),
+                    itemCount: bloc.getCategoryListForHomePage().length > 6
+                        ? 6
+                        : bloc.getCategoryListForHomePage().length,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      mainAxisSpacing: 14.0,
+                      crossAxisSpacing: 1.0,
+                      childAspectRatio:
+                          Responsive(context).isTablet ? 2 : 2 / 1.5,
                     ),
-                  )
+                  ),
                 ],
               ),
-            ),
-            const SizedBox(
-              height: kMarginMedium,
-            ),
-            GridView.builder(
-              shrinkWrap: true,
-              padding: EdgeInsets.zero,
-              physics: const NeverScrollableScrollPhysics(),
-              itemBuilder: (context, index) {
-                return InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SubCategoryPage(
-                          categoryVO: categories[index],
-                        ),
-                      ),
-                    );
-                  },
-                  child: CategoryVerticalIconWithLabelView(
-                    isIconWithBg: true,
-                    bgColor: kSecondaryColor,
-                    categoryVO: categories[index],
-                  ),
-                );
-              },
-              itemCount: 6,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                mainAxisSpacing: 14.0,
-                crossAxisSpacing: 1.0,
-                childAspectRatio: Responsive(context).isTablet ? 2 : 2 / 1.5,
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -582,22 +591,7 @@ class BannerSectionView extends StatelessWidget {
                         ),
                       );
                     } else {
-                      return Container(
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: kMarginMedium),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(kMarginMedium),
-                          child: VideoPlayer(
-                            VideoPlayerController.networkUrl(
-                              Uri.parse(bannerVO.sourceUrl ?? ''),
-                            )
-                              ..initialize()
-                              ..setLooping(true)
-                              ..setVolume(0)
-                              ..play(),
-                          ),
-                        ),
-                      );
+                      return BannerVideoView(bannerVO: bannerVO);
                     }
                   },
                   itemCount: banners.length,
@@ -630,6 +624,88 @@ class BannerSectionView extends StatelessWidget {
             )
         ],
       ),
+    );
+  }
+}
+
+class BannerVideoView extends StatefulWidget {
+  const BannerVideoView({
+    super.key,
+    required this.bannerVO,
+  });
+
+  final BannerVO bannerVO;
+
+  @override
+  State<BannerVideoView> createState() => _BannerVideoViewState();
+}
+
+class _BannerVideoViewState extends State<BannerVideoView> {
+  VideoPlayerController? controller;
+  bool isMute = true;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = VideoPlayerController.networkUrl(
+      Uri.parse(widget.bannerVO.sourceUrl ?? ''),
+    )
+      ..initialize()
+      ..setLooping(true)
+      ..setVolume(0)
+      ..play();
+    setState(() {});
+  }
+
+  void changeVolume() {
+    if (isMute) {
+      controller?.setVolume(50);
+    } else {
+      controller?.setVolume(0);
+    }
+
+    isMute = !isMute;
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: kMarginMedium),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(kMarginMedium),
+            child: controller == null
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : VideoPlayer(controller!),
+          ),
+        ),
+        Align(
+          alignment: Alignment.topRight,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+                horizontal: kMarginMedium2, vertical: kMargin10),
+            child: InkWell(
+              onTap: () {
+                changeVolume();
+              },
+              child: Container(
+                padding: const EdgeInsets.all(kMarginSmall),
+                decoration: const BoxDecoration(
+                    shape: BoxShape.circle, color: Colors.grey),
+                child: Icon(
+                  isMute ? Icons.volume_off : Icons.volume_up,
+                  color: Colors.white,
+                  size: 25,
+                ),
+              ),
+            ),
+          ),
+        )
+      ],
     );
   }
 }

@@ -1,5 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:smile_shop/data/vos/address_data_vo.dart';
 
 part 'success_network_response.g.dart';
 

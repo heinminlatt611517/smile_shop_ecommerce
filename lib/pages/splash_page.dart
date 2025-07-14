@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:smile_shop/data/model/smile_shop_model.dart';
-import 'package:smile_shop/data/model/smile_shop_model_impl.dart';
-import 'package:smile_shop/pages/login_page.dart';
 import 'package:smile_shop/pages/main_page.dart';
 
 import '../utils/colors.dart';
@@ -17,15 +14,16 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
-  ///Model
-  final SmileShopModel _model = SmileShopModelImpl();
+  // ///Model
+  // final SmileShopModel _model = SmileShopModelImpl();
 
   @override
   void initState() {
     super.initState();
     Future.delayed(const Duration(seconds: 4), () {
       // if (_model.getLoginResponseFromDatabase() != null) {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const MainPage()));
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const MainPage()));
       // } else {
       //   Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const LoginPage()));
       // }
@@ -57,7 +55,8 @@ class _SplashPageState extends State<SplashPage> {
               children: [
                 Text(
                   kLoadingLabel,
-                  style: TextStyle(color: kLoadingLabelColor, fontSize: kTextRegular3x),
+                  style: TextStyle(
+                      color: kLoadingLabelColor, fontSize: kTextRegular3x),
                 )
               ],
             )

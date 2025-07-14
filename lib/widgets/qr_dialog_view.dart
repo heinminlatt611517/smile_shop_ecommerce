@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
-import '../utils/colors.dart';
 import '../utils/dimens.dart';
 
 class QrDialogView extends StatelessWidget {

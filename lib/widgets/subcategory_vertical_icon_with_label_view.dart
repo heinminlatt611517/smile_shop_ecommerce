@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:smile_shop/data/vos/sub_category_vo.dart';
-import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 
 import '../network/api_constants.dart';
@@ -19,10 +18,10 @@ class SubCategoryVerticalIconWithLabelView extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            decoration: BoxDecoration(
-              color: kSecondaryColor,
-              borderRadius: BorderRadius.circular(kMarginMedium),
-            ),
+            // decoration: BoxDecoration(
+            //   color: kSecondaryColor,
+            //   borderRadius: BorderRadius.circular(kMarginMedium),
+            // ),
             padding: const EdgeInsets.all(10),
             child: CachedNetworkImageView(imageHeight: 45, imageWidth: 45, imageUrl: subcategoryVO?.image ?? errorImageUrl),
           ),

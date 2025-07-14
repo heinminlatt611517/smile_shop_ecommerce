@@ -9,10 +9,9 @@ import 'package:smile_shop/widgets/input_view_lock_icon.dart';
 import '../widgets/common_dialog.dart';
 import '../widgets/error_dialog_view.dart';
 import '../widgets/loading_view.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:smile_shop/localization/app_localizations.dart';
 
 import 'main_page.dart';
-
 
 class ChangePasswordPage extends StatelessWidget {
   const ChangePasswordPage({super.key});
@@ -55,7 +54,8 @@ class ChangePasswordPage extends StatelessWidget {
                               bloc.onTapShowOldPassword();
                             },
                             isSecure: bloc.isShowOldPassword,
-                            hintLabel: AppLocalizations.of(context)!.typeYourOldPassword,
+                            hintLabel: AppLocalizations.of(context)!
+                                .typeYourOldPassword,
                             onChangeValue: (value) {
                               bloc.onChangedOldPassword(value);
                             }),
@@ -72,7 +72,8 @@ class ChangePasswordPage extends StatelessWidget {
                               bloc.onTapShowNewPassword();
                             },
                             isSecure: bloc.isShowNewPassword,
-                            hintLabel: AppLocalizations.of(context)!.typeYourNewPassword,
+                            hintLabel: AppLocalizations.of(context)!
+                                .typeYourNewPassword,
                             onChangeValue: (value) {
                               bloc.onChangedNewPassword(value);
                             }),
@@ -89,7 +90,8 @@ class ChangePasswordPage extends StatelessWidget {
                               bloc.onTapShowRetypePassword();
                             },
                             isSecure: bloc.isShowRetypePassword,
-                            hintLabel: AppLocalizations.of(context)!.reTypeYourNewPassword,
+                            hintLabel: AppLocalizations.of(context)!
+                                .reTypeYourNewPassword,
                             onChangeValue: (value) {
                               bloc.onChangedConfirmPassword(value);
                             }),
@@ -100,13 +102,14 @@ class ChangePasswordPage extends StatelessWidget {
                       ),
 
                       Consumer<ChangePasswordBloc>(
-                        builder: (context,bloc,child)=>
-                         GestureDetector(
+                        builder: (context, bloc, child) => GestureDetector(
                           onTap: () {
-                            bloc.onTapConfirm().then((response){
-                              if(response.status == 200){
+                            bloc.onTapConfirm().then((response) {
+                              if (response.status == 200) {
                                 Navigator.of(context).pushAndRemoveUntil(
-                                    MaterialPageRoute(builder: (builder) => const MainPage()),(Route<dynamic> route) => false);
+                                    MaterialPageRoute(
+                                        builder: (builder) => const MainPage()),
+                                    (Route<dynamic> route) => false);
                               }
                             }).catchError((error) {
                               showCommonDialog(
@@ -121,10 +124,10 @@ class ChangePasswordPage extends StatelessWidget {
                             decoration: BoxDecoration(
                                 color: kPrimaryColor,
                                 borderRadius: BorderRadius.circular(4)),
-                            child:  Center(
+                            child: Center(
                               child: Text(
                                 AppLocalizations.of(context)!.confirm,
-                                style:const TextStyle(color: kBackgroundColor),
+                                style: const TextStyle(color: kBackgroundColor),
                               ),
                             ),
                           ),
@@ -133,7 +136,6 @@ class ChangePasswordPage extends StatelessWidget {
                       const SizedBox(
                         height: kMargin30,
                       ),
-
                     ],
                   ),
                 ),

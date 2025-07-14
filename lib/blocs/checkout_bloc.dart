@@ -3,9 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:smile_shop/data/model/smile_shop_model.dart';
 import 'package:smile_shop/data/model/smile_shop_model_impl.dart';
-import 'package:smile_shop/data/vos/campaign_vo.dart';
+import 'package:smile_shop/data/vos/coupon_vo.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
 import 'package:smile_shop/data/vos/user_vo.dart';
+import 'package:smile_shop/localization/app_localizations.dart';
 
 import '../data/vos/address_vo.dart';
 import '../network/api_constants.dart';
@@ -26,26 +27,109 @@ class CheckOutBloc extends ChangeNotifier {
   AddressVO? defaultAddressVO;
   bool isDisposed = false;
   bool isLoading = false;
-  bool isSelectedStandardDelivery = true;
-  bool isSelectedSpecialDelivery = false;
+  DeliveryOptions? selectedDeliveryOption = DeliveryOptions.standard;
   BuildContext? context;
-  var addressForShow = "";
-  bool isSelectedUsePromotion = true;
-  bool isSelectedNoPromotion = false;
+  CouponVO? selectedCoupon;
   final SmileShopModel _model = SmileShopModelImpl();
-  CheckOutBloc(List<ProductVO> productList, this.context) {
-    if (productList.isNotEmpty) {
-      calculateTotalProductPrice(productList);
-    }
+  List<ProductVO> productList;
 
+  int availalePromotionPoints = 0;
+  int usedPromotionPoints = 0;
+  int userCurrentPromotionPoints = 0;
+
+  List<CouponVO> couponList = [];
+  CheckOutBloc(this.productList, this.context) {
     ///load address
     _loadAddress();
     getUser();
+    if (productList.isNotEmpty) {
+      calculateTotalProductPrice(productList);
+      calculateLargestPromotionPoints();
+      getCouponList();
+    }
+  }
+
+  void getCouponList() {
+    String? token = _smileShopModel.getLoginResponseFromDatabase()?.accessToken;
+    _smileShopModel.getCouponList(token ?? '').then((coupons) {
+      couponList = coupons
+          .where(
+            (element) => element.isValid(totalProductPrice ?? 0),
+          )
+          .toList();
+      _notifySafely();
+    }).catchError((error) {
+      if (error.toString().toLowerCase() == 'unauthenticated') {
+        showCommonDialog(
+          context: context!,
+          dialogWidget: SessionExpiredDialogView(),
+        );
+      }
+    });
+  }
+
+  void calculateLargestPromotionPoints() {
+    if (productList.isNotEmpty) {
+      int largestPromotionPoints = 0;
+      for (var product in productList) {
+        if (product.variantVO?.firstOrNull?.redeemPoint != null &&
+            (product.variantVO?.firstOrNull?.redeemPoint ?? 0) >
+                largestPromotionPoints) {
+          largestPromotionPoints =
+              product.variantVO?.firstOrNull?.redeemPoint ?? 0;
+
+        }
+      }
+      availalePromotionPoints = largestPromotionPoints;
+      usedPromotionPoints = 0; // Reset used points
+      _notifySafely();
+    }
+  }
+
+  void changePromotionPointStatus(bool isUsed) {
+    if (isUsed) {
+      if (availalePromotionPoints > userCurrentPromotionPoints) {
+        showSnackBar(
+          context!,
+          "Not Enough Promotion Points",
+          Colors.red,
+        );
+        return;
+      }
+      usedPromotionPoints = availalePromotionPoints;
+      totalSummaryProductPrice = (totalProductPrice ?? 0) +
+          deliveryFeePrice -
+          usedPromotionPoints -
+          (selectedCoupon?.getDiscountValue().floor() ?? 0);
+    } else {
+      usedPromotionPoints = 0;
+      totalSummaryProductPrice = (totalProductPrice ?? 0) +
+          deliveryFeePrice -
+          (selectedCoupon?.getDiscountValue().floor() ?? 0);
+    }
+    _notifySafely();
+  }
+
+  void selectCoupon(CouponVO? coupon) {
+    if (coupon != null) {
+      selectedCoupon = coupon;
+      totalSummaryProductPrice = (totalProductPrice ?? 0) +
+          deliveryFeePrice -
+          (coupon.getDiscountValue().floor()) -
+          usedPromotionPoints;
+      _notifySafely();
+    } else {
+      selectedCoupon = null;
+      totalSummaryProductPrice =
+          (totalProductPrice ?? 0) + deliveryFeePrice - usedPromotionPoints;
+      _notifySafely();
+    }
   }
 
   void getUser() async {
     String? token = _smileShopModel.getLoginResponseFromDatabase()?.accessToken;
     userVo = await _model.userProfile(token ?? '', kAcceptLanguageEn);
+    userCurrentPromotionPoints = userVo?.promotionPoints ?? 0;
     _notifySafely();
   }
 
@@ -65,6 +149,8 @@ class CheckOutBloc extends ChangeNotifier {
       } else {
         defaultAddressVO = null;
       }
+      deliveryFeePrice = defaultAddressVO?.townshipVO?.deliveryFees ?? 0;
+      calculateTotalProductPrice(productList);
       _notifySafely();
     }).catchError((error) {
       if (error.toString().toLowerCase() == 'unauthenticated') {
@@ -74,11 +160,6 @@ class CheckOutBloc extends ChangeNotifier {
         );
       }
     }).whenComplete(() => _hideLoading());
-  }
-
-  void onChangedAddressForShow(String newAddress) {
-    addressForShow = newAddress;
-    _notifySafely();
   }
 
   void refreshAddress() {
@@ -116,19 +197,41 @@ class CheckOutBloc extends ChangeNotifier {
 
   void changeAddress(AddressVO addressVo) {
     defaultAddressVO = addressVo;
+    deliveryFeePrice = defaultAddressVO?.townshipVO?.deliveryFees ?? 0;
+    totalSummaryProductPrice = (totalProductPrice ?? 0) + deliveryFeePrice;
     _notifySafely();
   }
 
-  void onTapAddStandardDelivery() {
-    isSelectedStandardDelivery = !isSelectedStandardDelivery;
-    isSelectedSpecialDelivery = !isSelectedSpecialDelivery;
-    notifyListeners();
+  void changeSelectedDeliveryOption(DeliveryOptions option) {
+    selectedDeliveryOption = option;
+    if (selectedDeliveryOption == DeliveryOptions.special ||
+        selectedDeliveryOption == DeliveryOptions.pickup) {
+      deliveryFeePrice = 0;
+      totalSummaryProductPrice = totalProductPrice;
+    } else {
+      deliveryFeePrice = defaultAddressVO?.townshipVO?.deliveryFees ?? 0;
+      totalSummaryProductPrice = (totalProductPrice ?? 0) + deliveryFeePrice;
+    }
+    _notifySafely();
   }
 
-  void onTapUsePromotion() {
-    isSelectedNoPromotion = !isSelectedNoPromotion;
-    isSelectedUsePromotion = !isSelectedUsePromotion;
-    notifyListeners();
+  // void onTapUsePromotion() {
+  //   isSelectedNoPromotion = !isSelectedNoPromotion;
+  //   isSelectedUsePromotion = !isSelectedUsePromotion;
+  //   notifyListeners();
+  // }
+
+  String getTextAccordingToDeliveryOption(BuildContext context) {
+    switch (selectedDeliveryOption) {
+      case DeliveryOptions.standard:
+        return AppLocalizations.of(context)!.standardDelivery;
+      case DeliveryOptions.special:
+        return AppLocalizations.of(context)!.specialDelivery;
+      case DeliveryOptions.pickup:
+        return AppLocalizations.of(context)!.pickUp;
+      default:
+        return '';
+    }
   }
 
   void _notifySafely() {
@@ -154,3 +257,5 @@ class CheckOutBloc extends ChangeNotifier {
     isDisposed = true;
   }
 }
+
+enum DeliveryOptions { standard, special, pickup }

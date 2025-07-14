@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:smile_shop/blocs/retund_bloc.dart';
@@ -11,7 +10,7 @@ import 'package:smile_shop/utils/dimens.dart';
 import '../utils/images.dart';
 import '../widgets/loading_view.dart';
 import '../widgets/svg_image_view.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:smile_shop/localization/app_localizations.dart';
 
 class RefundPage extends StatefulWidget {
   const RefundPage({super.key});
@@ -20,7 +19,8 @@ class RefundPage extends StatefulWidget {
   State<RefundPage> createState() => _RefundPageState();
 }
 
-class _RefundPageState extends State<RefundPage> with SingleTickerProviderStateMixin {
+class _RefundPageState extends State<RefundPage>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -114,7 +114,8 @@ class _RefundPageState extends State<RefundPage> with SingleTickerProviderStateM
               ///body view
               Selector<RefundBloc, List<RefundVO>>(
                 selector: (context, bloc) => bloc.refundList,
-                builder: (context, refunds, child) => TabBarView(controller: _tabController, children: [
+                builder: (context, refunds, child) =>
+                    TabBarView(controller: _tabController, children: [
                   _refundView(refundList: refunds),
                   _refundView(refundList: refunds),
                   _refundView(refundList: refunds),

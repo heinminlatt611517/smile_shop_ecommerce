@@ -1,7 +1,5 @@
 import 'dart:async';
-import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
@@ -11,7 +9,7 @@ import 'package:smile_shop/network/api_constants.dart';
 import '../data/model/smile_shop_model.dart';
 import '../data/model/smile_shop_model_impl.dart';
 import '../network/requests/favourite_product_request.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:smile_shop/localization/app_localizations.dart';
 
 class SearchProductBloc extends ChangeNotifier {
   ///model
@@ -37,32 +35,61 @@ class SearchProductBloc extends ChangeNotifier {
   double? ratingValue;
   String? queryString;
   var currentLanguage = kAcceptLanguageEn;
+  int page = 1;
+
+  bool isReachEnd = false;
+  ScrollController scrollController = ScrollController();
 
   SearchProductBloc() {
+    scrollController.addListener(() {
+      if (scrollController.position.pixels ==
+          scrollController.position.maxScrollExtent) {
+        ///load more product
+        if (queryString != null && queryString!.isNotEmpty) {
+          _makeSearchProductNetworkCall(
+              queryString!, authToken, currentLanguage, endUserId);
+        }
+      }
+    });
+
     ///first time get search product list from database
     getFirstTimeSearchProductsFromDatabase();
 
     ///get data from database
-    authToken = _smileShopModel.getLoginResponseFromDatabase()?.refreshToken ?? "";
-    accessToken = _smileShopModel.getLoginResponseFromDatabase()?.accessToken ?? "";
-    endUserId = _smileShopModel.getLoginResponseFromDatabase()?.data?.id.toString() ?? "0";
+    authToken =
+        _smileShopModel.getLoginResponseFromDatabase()?.refreshToken ?? "";
+    accessToken =
+        _smileShopModel.getLoginResponseFromDatabase()?.accessToken ?? "";
+    endUserId =
+        _smileShopModel.getLoginResponseFromDatabase()?.data?.id.toString() ??
+            "0";
 
     _loadLanguage();
 
     ///search product history list from database
-    _searchProductListSubscription = _smileShopModel.getSearchProductFromDatabase().listen((searchResults) {
+    _searchProductListSubscription =
+        _smileShopModel.getSearchProductFromDatabase().listen((searchResults) {
       searchProducts = searchResults;
       notifyListeners();
     });
 
-    queryStreamController.stream.debounceTime(const Duration(milliseconds: 800)).listen((query) {
+    queryStreamController.stream
+        .debounceTime(const Duration(milliseconds: 800))
+        .listen((query) {
+      page = 1;
+      if (query != queryString) {
+        products = [];
+        isReachEnd = false;
+      }
       if (query.isNotEmpty) {
-        _makeSearchProductNetworkCall(query, authToken, currentLanguage, endUserId);
+        _makeSearchProductNetworkCall(
+            query, authToken, currentLanguage, endUserId);
       } else {
         isScreenLaunch = true;
         products = [];
         notifyListeners();
       }
+      notifyListeners();
     });
   }
   Future<void> _loadLanguage() async {
@@ -100,20 +127,38 @@ class SearchProductBloc extends ChangeNotifier {
     notifyListeners();
   }
 
-  void _makeSearchProductNetworkCall(String query, String authToken, String acceptLanguage, String endUserId) {
+  void _makeSearchProductNetworkCall(
+      String query, String authToken, String acceptLanguage, String endUserId) {
+    if (isReachEnd) {
+      return;
+    }
     _showLoading();
-    _smileShopModel.searchProductsByName(accessToken, acceptLanguage, endUserId, 1, query).whenComplete(() => _hideLoading()).then((searchResults) {
+    _smileShopModel
+        .searchProductsByName(
+            accessToken, acceptLanguage, endUserId, page, query)
+        .whenComplete(() => _hideLoading())
+        .then((searchResults) {
       query = query;
       queryString = query;
-      products = searchResults;
+      if (products.isNotEmpty) {
+        products.addAll(searchResults);
+      } else {
+        products = searchResults;
+      }
 
       if (searchResults.isNotEmpty) {
+        page++;
+
         ///check search product is already exist in database
-        var searchProductVOByNameFromDatabase = _smileShopModel.getSearchProductByNameFromDatabase(query);
+        var searchProductVOByNameFromDatabase =
+            _smileShopModel.getSearchProductByNameFromDatabase(query);
         if (searchProductVOByNameFromDatabase == null) {
-          var searchProductVO = SearchProductVO(name: query, timeStamp: DateTime.now().toString());
+          var searchProductVO = SearchProductVO(
+              name: query, timeStamp: DateTime.now().toString());
           _smileShopModel.addSingleSearchProductToDatabase(searchProductVO);
         }
+      } else {
+        isReachEnd = true;
       }
       isScreenLaunch = false;
 
@@ -172,7 +217,8 @@ class SearchProductBloc extends ChangeNotifier {
     //     Colors.green);
     if (product == null) return;
     if (endUserId.isEmpty || endUserId == "0") {
-      showSnackBar(context, AppLocalizations.of(context)!.need_login, Colors.deepOrange);
+      showSnackBar(
+          context, AppLocalizations.of(context)!.need_login, Colors.deepOrange);
       return;
     }
     var favoriteProductRequest = FavouriteProductRequest(
@@ -210,7 +256,8 @@ class SearchProductBloc extends ChangeNotifier {
     });
   }
 
-  void showSnackBar(BuildContext context, String description, Color snackBarColor) {
+  void showSnackBar(
+      BuildContext context, String description, Color snackBarColor) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(description),

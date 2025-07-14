@@ -2,12 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smile_shop/data/model/smile_shop_model.dart';
 import 'package:smile_shop/data/vos/banner_vo.dart';
 import 'package:smile_shop/data/vos/brand_and_category_vo.dart';
 import 'package:smile_shop/data/vos/cart_item_vo.dart';
+import 'package:smile_shop/data/vos/coupon_vo.dart';
 import 'package:smile_shop/data/vos/notification_vo.dart';
+import 'package:smile_shop/data/vos/payment_status_vo.dart';
 import 'package:smile_shop/data/vos/popup_data_vo.dart';
 import 'package:smile_shop/data/vos/refund_reason_vo.dart';
 import 'package:smile_shop/network/requests/favourite_product_request.dart';
@@ -264,9 +265,22 @@ class SmileShopModelImpl extends SmileShopModel {
       String itemList,
       String appType,
       String paymentData,
-      int usedPoint) {
-    return mDataAgent.postOrder(token, acceptLanguage, subTotal, paymentType,
-        itemList, appType, paymentData, usedPoint);
+      int usedPoint,
+      String deliveryType,
+      int? couponId,
+      int addressId) {
+    return mDataAgent.postOrder(
+        token,
+        acceptLanguage,
+        subTotal,
+        paymentType,
+        itemList,
+        appType,
+        paymentData,
+        usedPoint,
+        deliveryType,
+        couponId,
+        addressId);
   }
 
   @override
@@ -318,6 +332,7 @@ class SmileShopModelImpl extends SmileShopModel {
     GetStorage().remove(kBoxKeyLoginUserType);
     clearSearchProduct();
     _loginDataDao.clearLoginData();
+    _cartItemDao.clearCart();
   }
 
   @override
@@ -421,17 +436,29 @@ class SmileShopModelImpl extends SmileShopModel {
   }
 
   @override
-  Future<List<ProductVO>> searchProductsBySubCategoryId(String token,
-      String acceptLanguage, String endUserId, int pageNo, int subCategoryId) {
-    return mDataAgent.searchProductsBySubCategoryId(
-        token, acceptLanguage, endUserId, pageNo, subCategoryId);
+  Future<List<ProductVO>> searchProductsBySubCategoryId(
+      String token,
+      String acceptLanguage,
+      String endUserId,
+      int pageNo,
+      int subCategoryId,
+      int? minPrice,
+      int? maxPrice) {
+    return mDataAgent.searchProductsBySubCategoryId(token, acceptLanguage,
+        endUserId, pageNo, subCategoryId, minPrice, maxPrice);
   }
 
   @override
-  Future<List<ProductVO>> searchProductsCategoryId(String token,
-      String acceptLanguage, String endUserId, int pageNo, int categoryId) {
-    return mDataAgent.searchProductsCategoryId(
-        token, acceptLanguage, endUserId, pageNo, categoryId);
+  Future<List<ProductVO>> searchProductsCategoryId(
+      String token,
+      String acceptLanguage,
+      String endUserId,
+      int pageNo,
+      int categoryId,
+      int? minPrice,
+      int? maxPrice) {
+    return mDataAgent.searchProductsCategoryId(token, acceptLanguage, endUserId,
+        pageNo, categoryId, minPrice, maxPrice);
   }
 
   @override
@@ -607,7 +634,7 @@ class SmileShopModelImpl extends SmileShopModel {
   }
 
   @override
-  Future<SuccessNetworkResponse> checkOrderStatus(
+  Future<PaymentStatusVO?> checkOrderStatus(
       String acceptLanguage, String token, OrderStatusRequest request) {
     return mDataAgent.checkOrderStatus(acceptLanguage, token, request);
   }
@@ -724,12 +751,30 @@ class SmileShopModelImpl extends SmileShopModel {
   }
 
   @override
-  void toggelCartItemSelected(String variantId) async{
+  void toggelCartItemSelected(String variantId) async {
     return _cartItemDao.toggleCartItemSelection(variantId);
   }
-  
+
   @override
-  void setAllCartItemSelected(bool isSelected) async{
+  void setAllCartItemSelected(bool isSelected) async {
     return _cartItemDao.setAllCartItemsSelection(isSelected);
+  }
+
+  @override
+  Future<List<ProductVO>> getCustomCategoryProducts(
+      String token, String acceptLanguage, int pageNo, String category) {
+    return mDataAgent.getCustomCategoryProducts(
+        token, acceptLanguage, pageNo, 20, category);
+  }
+
+  @override
+  Future<List<CouponVO>> getCouponList(String token) {
+    return mDataAgent.getCouponList(token);
+  }
+
+  @override
+  Future<PaymentStatusVO?> getWalletRechargeStatus(
+      String token, String transactionId) {
+    return mDataAgent.getWalletRechargeStatus(token, transactionId);
   }
 }

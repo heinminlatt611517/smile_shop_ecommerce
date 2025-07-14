@@ -161,4 +161,9 @@ class VariantVO {
       qtyCount: qtyCount ?? this.qtyCount,
     );
   }
+
+  @override
+  String toString() {
+    return 'VariantVO(id: $id, productId: $productId, sku: $sku, price: $price, dealerLevel1Price: $dealerLevel1Price, dealerLevel2Price: $dealerLevel2Price, dealerLevel3Price: $dealerLevel3Price, status: $status, updatedAt: $updatedAt, colorVO: $colorVO, sizeVO: $sizeVO, images: $images, extendedPriceVO: $extendedPriceVO, inventoryVO: $inventoryVO, promotionPoint: $promotionPoint, redeemPoint: $redeemPoint, colorName: $colorName, image: $image, qtyCount: $qtyCount)';
+  }
 }

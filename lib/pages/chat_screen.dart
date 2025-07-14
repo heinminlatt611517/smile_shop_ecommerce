@@ -13,7 +13,7 @@ import '../data/vos/message_vo.dart';
 import '../data/vos/user_vo.dart';
 import '../network/api_constants.dart';
 import '../network/firebase_api.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:smile_shop/localization/app_localizations.dart';
 
 class ChatScreen extends StatelessWidget {
   const ChatScreen({super.key});
@@ -48,12 +48,18 @@ class ChatScreen extends StatelessWidget {
                             reverse: true,
                             padding: const EdgeInsets.symmetric(horizontal: 16),
                             itemCount: bloc.ticket?.messages?.length ?? 0,
-                            separatorBuilder: (context, index) => const SizedBox(
+                            separatorBuilder: (context, index) =>
+                                const SizedBox(
                               height: 8,
                             ),
                             itemBuilder: (context, index) {
-                              int reversedIndex = (bloc.ticket?.messages?.length ?? 0) - 1 - index;
-                              MessageVo message = bloc.ticket!.messages?[reversedIndex] ?? MessageVo();
+                              int reversedIndex =
+                                  (bloc.ticket?.messages?.length ?? 0) -
+                                      1 -
+                                      index;
+                              MessageVo message =
+                                  bloc.ticket!.messages?[reversedIndex] ??
+                                      MessageVo();
                               return ChatBubble(
                                 messageVo: message,
                               );
@@ -83,7 +89,8 @@ class ChatScreen extends StatelessWidget {
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Icon(Icons.mic, color: Colors.white, size: 50),
+                              const Icon(Icons.mic,
+                                  color: Colors.white, size: 50),
                               const Text(
                                 "Recording...",
                                 style: TextStyle(color: Colors.white),
@@ -93,20 +100,24 @@ class ChatScreen extends StatelessWidget {
                                   onPressed: () {
                                     bloc.completeRecordingAudio();
                                   },
-                                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.red),
                                   child: const Text(
                                     "Complete",
-                                    style: TextStyle(color: Colors.white, fontSize: 16),
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 16),
                                   )),
                               const SizedBox(height: 16),
                               ElevatedButton(
                                   onPressed: () {
                                     bloc.cancelRecordingAudio();
                                   },
-                                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.red),
                                   child: const Text(
                                     "Cancel",
-                                    style: TextStyle(color: Colors.white, fontSize: 16),
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 16),
                                   ))
                             ],
                           ),
@@ -130,38 +141,52 @@ class ChatBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isSender = messageVo.senderId == FIREBASE_USER.id?.toString(); // Replace with actual senderId
+    bool isSender = messageVo.senderId ==
+        FIREBASE_USER.id?.toString(); // Replace with actual senderId
 
     if (messageVo.messageType == MessageType.voice.name) {
       return Row(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: isSender ? MainAxisAlignment.end : MainAxisAlignment.start,
+        mainAxisAlignment:
+            isSender ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: [
           if (!isSender)
             const CircleAvatar(
               radius: 16,
-              backgroundImage: NetworkImage("https://via.placeholder.com/150"), // Dummy profile image
+              backgroundImage: NetworkImage(
+                  "https://via.placeholder.com/150"), // Dummy profile image
             ),
           if (!isSender) const SizedBox(width: 8),
           Column(
-            crossAxisAlignment: isSender ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+            crossAxisAlignment:
+                isSender ? CrossAxisAlignment.end : CrossAxisAlignment.start,
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.width * 0.7, // 70% of screen
+                  maxWidth:
+                      MediaQuery.of(context).size.width * 0.7, // 70% of screen
                 ),
                 decoration: BoxDecoration(
-                  color: isSender ? const Color(0xffFF8800) : const Color(0xffFF8800).withOpacity(0.3),
+                  color: isSender
+                      ? const Color(0xffFF8800)
+                      : const Color(0xffFF8800).withOpacity(0.3),
                   borderRadius: BorderRadius.only(
                     bottomLeft: const Radius.circular(12),
                     bottomRight: const Radius.circular(12),
-                    topLeft: isSender ? const Radius.circular(12) : const Radius.circular(0),
-                    topRight: isSender ? const Radius.circular(0) : const Radius.circular(12),
+                    topLeft: isSender
+                        ? const Radius.circular(12)
+                        : const Radius.circular(0),
+                    topRight: isSender
+                        ? const Radius.circular(0)
+                        : const Radius.circular(12),
                   ),
                 ),
                 child: Column(
-                  crossAxisAlignment: isSender ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                  crossAxisAlignment: isSender
+                      ? CrossAxisAlignment.end
+                      : CrossAxisAlignment.start,
                   children: [
                     // Audio player
                     VoiceMessageView(
@@ -178,10 +203,12 @@ class ChatBubble extends StatelessWidget {
                       circlesColor: Colors.white,
                       activeSliderColor: Colors.white,
                       innerPadding: 0,
-                      circlesTextStyle: TextStyle(color: Colors.black),
-                      playIcon: Icon(Icons.play_arrow, color: Color(0xffFF8800)),
-                      pauseIcon: Icon(Icons.pause, color: Color(0xffFF8800)),
-                      playPauseButtonLoadingColor: Color(0xffFF8800),
+                      circlesTextStyle: const TextStyle(color: Colors.black),
+                      playIcon: const Icon(Icons.play_arrow,
+                          color: Color(0xffFF8800)),
+                      pauseIcon:
+                          const Icon(Icons.pause, color: Color(0xffFF8800)),
+                      playPauseButtonLoadingColor: const Color(0xffFF8800),
                     ),
                   ],
                 ),
@@ -204,7 +231,8 @@ class ChatBubble extends StatelessWidget {
               selector: (context, bloc) => bloc.userVO,
               builder: (context, userVO, child) => CircleAvatar(
                 radius: 16,
-                backgroundImage: NetworkImage(userVO?.profileImage ?? errorImageUrl), // Dummy profile image
+                backgroundImage: NetworkImage(userVO?.profileImage ??
+                    errorImageUrl), // Dummy profile image
               ),
             ),
         ],
@@ -212,33 +240,45 @@ class ChatBubble extends StatelessWidget {
     }
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: isSender ? MainAxisAlignment.end : MainAxisAlignment.start,
+      mainAxisAlignment:
+          isSender ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: [
         if (!isSender)
           const CircleAvatar(
             radius: 16,
-            backgroundImage: NetworkImage("https://via.placeholder.com/150"), // Dummy profile image
+            backgroundImage: NetworkImage(
+                "https://via.placeholder.com/150"), // Dummy profile image
           ),
         if (!isSender) const SizedBox(width: 8),
         Column(
-          crossAxisAlignment: isSender ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+          crossAxisAlignment:
+              isSender ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           children: [
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               constraints: BoxConstraints(
-                maxWidth: MediaQuery.of(context).size.width * 0.7, // 70% of screen
+                maxWidth:
+                    MediaQuery.of(context).size.width * 0.7, // 70% of screen
               ),
               decoration: BoxDecoration(
-                color: isSender ? const Color(0xffFF8800) : const Color(0xffFF8800).withOpacity(0.3),
+                color: isSender
+                    ? const Color(0xffFF8800)
+                    : const Color(0xffFF8800).withOpacity(0.3),
                 borderRadius: BorderRadius.only(
                   bottomLeft: const Radius.circular(12),
                   bottomRight: const Radius.circular(12),
-                  topLeft: isSender ? const Radius.circular(12) : const Radius.circular(0),
-                  topRight: isSender ? const Radius.circular(0) : const Radius.circular(12),
+                  topLeft: isSender
+                      ? const Radius.circular(12)
+                      : const Radius.circular(0),
+                  topRight: isSender
+                      ? const Radius.circular(0)
+                      : const Radius.circular(12),
                 ),
               ),
               child: Column(
-                crossAxisAlignment: isSender ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                crossAxisAlignment: isSender
+                    ? CrossAxisAlignment.end
+                    : CrossAxisAlignment.start,
                 children: [
                   // Message text
                   if (messageVo.message != null)
@@ -250,7 +290,8 @@ class ChatBubble extends StatelessWidget {
                     ),
 
                   // Image (if available)
-                  if (messageVo.attachmentUrl != null && messageVo.messageType == MessageType.image.name)
+                  if (messageVo.attachmentUrl != null &&
+                      messageVo.messageType == MessageType.image.name)
                     Padding(
                       padding: const EdgeInsets.only(top: 8),
                       child: ClipRRect(
@@ -258,7 +299,8 @@ class ChatBubble extends StatelessWidget {
                         child: Image.network(
                           messageVo.attachmentUrl!,
                           fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) => const Icon(
+                          errorBuilder: (context, error, stackTrace) =>
+                              const Icon(
                             Icons.broken_image,
                             size: 50,
                             color: Colors.grey,
@@ -287,7 +329,10 @@ class ChatBubble extends StatelessWidget {
             selector: (context, bloc) => bloc.userVO,
             builder: (context, userVO, child) => CircleAvatar(
               radius: 16,
-              backgroundImage: NetworkImage(userVO?.profileImage == '' ? errorImageUrl : userVO?.profileImage ?? errorImageUrl), // Dummy profile image
+              backgroundImage: NetworkImage(userVO?.profileImage == ''
+                  ? errorImageUrl
+                  : userVO?.profileImage ??
+                      errorImageUrl), // Dummy profile image
             ),
           ),
       ],
@@ -332,9 +377,12 @@ class ChatInputField extends StatelessWidget {
                 fit: BoxFit.contain,
               )),
         Container(
-          decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(20)),
+          decoration: BoxDecoration(
+              color: Colors.grey.shade300,
+              borderRadius: BorderRadius.circular(20)),
           height: 40,
-          margin: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 20),
+          margin:
+              const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 20),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -368,7 +416,8 @@ class ChatInputField extends StatelessWidget {
                 child: Container(
                   height: 40,
                   width: 40,
-                  decoration: const BoxDecoration(color: Color(0xffFF8800), shape: BoxShape.circle),
+                  decoration: const BoxDecoration(
+                      color: Color(0xffFF8800), shape: BoxShape.circle),
                   child: const Icon(Icons.send_outlined, color: Colors.white),
                 ),
               ),

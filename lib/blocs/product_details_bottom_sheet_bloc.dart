@@ -90,9 +90,11 @@ class ProductDetailsBottomSheetBloc extends ChangeNotifier {
   // }
 
   void onTapAdd() {
-    quantityCount = (quantityCount + 1);
-    calculateTotalPrice();
-    notifyListeners();
+    if (quantityCount < (selectedVariant?.inventoryVO?.quantity ?? 0)) {
+      quantityCount = (quantityCount + 1);
+      calculateTotalPrice();
+      notifyListeners();
+    }
   }
 
   void showTopSnackBar(

@@ -8,7 +8,7 @@ import 'package:smile_shop/network/api_constants.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import 'package:video_player/video_player.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:smile_shop/localization/app_localizations.dart';
 
 import '../network/requests/favourite_product_request.dart';
 
@@ -23,6 +23,7 @@ class ProductDetailsBloc extends ChangeNotifier {
   var endUserId = "";
   var accessToken = "";
   var productId = "";
+  bool isVideoMute = false;
 
   ProductDetailsBloc(this.productId) {
     loadData();
@@ -81,6 +82,12 @@ class ProductDetailsBloc extends ChangeNotifier {
       //selectedColorName = productVO?.variantVO?.first.colorName ?? "";
       _notifySafely();
     });
+  }
+
+  void onTapMute() {
+    videoPlayerController?.setVolume(isVideoMute ? 50 : 0);
+    isVideoMute = !isVideoMute;
+    _notifySafely();
   }
 
   // void onTapColor(String colorName) {
@@ -186,6 +193,7 @@ class ProductDetailsBloc extends ChangeNotifier {
   @override
   void dispose() {
     videoPlayerController?.dispose();
+    _notifySafely();
     super.dispose();
   }
 }

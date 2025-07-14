@@ -3,13 +3,12 @@ import 'package:provider/provider.dart';
 import 'package:smile_shop/blocs/cart_bloc.dart';
 import 'package:smile_shop/data/vos/cart_item_vo.dart';
 import 'package:smile_shop/data/vos/login_data_vo.dart';
-import 'package:smile_shop/data/vos/product_vo.dart';
 import 'package:smile_shop/list_items/cart_list_item_view.dart';
 import 'package:smile_shop/pages/checkout_page.dart';
 import 'package:smile_shop/persistence/cart_dao.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:smile_shop/localization/app_localizations.dart';
 import 'package:smile_shop/widgets/custom_checkbox.dart';
 import 'package:smile_shop/widgets/require_log_in_view.dart';
 

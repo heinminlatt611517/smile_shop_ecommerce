@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smile_shop/pages/cart_page.dart';
 import 'package:smile_shop/pages/chat_screen.dart';
 import 'package:smile_shop/pages/profile_page.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:smile_shop/localization/app_localizations.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/images.dart';
 import '../widgets/svg_image_view.dart';
@@ -53,12 +53,15 @@ class _MainPageState extends State<MainPage> {
           color: Colors.white,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            mainAxisSize: MainAxisSize.min, // Ensures row only takes up required space
+            mainAxisSize:
+                MainAxisSize.min, // Ensures row only takes up required space
             children: [
               _buildNavItem(kHomeIcon, AppLocalizations.of(context)!.home, 0),
               _buildNavItem(kCartIcon, AppLocalizations.of(context)!.cart, 1),
-              _buildNavItem(kLiveChatIcon, AppLocalizations.of(context)!.liveChat, 2),
-              _buildNavItem(kProfileIcon, AppLocalizations.of(context)!.profile, 3),
+              _buildNavItem(
+                  kLiveChatIcon, AppLocalizations.of(context)!.liveChat, 2),
+              _buildNavItem(
+                  kProfileIcon, AppLocalizations.of(context)!.profile, 3),
             ],
           ),
         ),
@@ -78,7 +81,9 @@ class _MainPageState extends State<MainPage> {
         MainAxisAlignment alignment = MainAxisAlignment.center;
         if (snapshot.data != null) {
           var prefs = snapshot.data;
-          alignment = prefs?.getString('language_code') == "my" ? MainAxisAlignment.start : MainAxisAlignment.center;
+          alignment = prefs?.getString('language_code') == "my"
+              ? MainAxisAlignment.start
+              : MainAxisAlignment.center;
         }
 
         return Expanded(
@@ -111,7 +116,9 @@ class _MainPageState extends State<MainPage> {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 12,
-                        fontWeight: currentIndex == index ? FontWeight.bold : FontWeight.normal,
+                        fontWeight: currentIndex == index
+                            ? FontWeight.bold
+                            : FontWeight.normal,
                         color: labelColor,
                       ),
                     ),

@@ -160,5 +160,16 @@
   "leftReferralCodeEmpty" : "如果您没有推荐代码，请将其留空。",
   "toViewMyTeamMembers" : "查看我的团队成员",
   "doubleTapToZoom" : "双击放大/缩小",
-  "category": "类别"
+  "category": "类别",
+  "inWareHouse" : "仓库内",
+  "onGoing" : "开始交付",
+  "delivered" : "发表",
+  "toViewMyWallet" : "查看我的钱包",
+  "pickUp" : "自取",
+  "findMyPickUp" : "查找我的接送",
+  "coupon": "优惠券",
+  "deliveryFee" : "运费",
+  "subTotal" : "小计",
+  "failed" : "失败的",
+  "detailAddress" : "详细地址"
 }

@@ -14,9 +14,8 @@ import 'package:smile_shop/widgets/common_button_view.dart';
 import 'package:smile_shop/widgets/svg_image_view.dart';
 import '../list_items/trending_product_list_item_view.dart';
 import '../utils/images.dart';
-import '../utils/strings.dart';
 import '../widgets/loading_view.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:smile_shop/localization/app_localizations.dart';
 
 class SearchProductPage extends StatelessWidget {
   const SearchProductPage({super.key});
@@ -29,9 +28,11 @@ class SearchProductPage extends StatelessWidget {
         builder: (context, bloc, child) => Scaffold(
             backgroundColor: kBackgroundColor,
             appBar: PreferredSize(
-              preferredSize: Size.fromHeight(55 + MediaQuery.of(context).padding.top),
+              preferredSize:
+                  Size.fromHeight(55 + MediaQuery.of(context).padding.top),
               child: Padding(
-                padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+                padding:
+                    EdgeInsets.only(top: MediaQuery.of(context).padding.top),
                 child: const SearchBarWithBackArrowView(),
               ),
             ),
@@ -40,10 +41,14 @@ class SearchProductPage extends StatelessWidget {
               builder: (context, isLoading, child) => Stack(
                 children: [
                   CustomScrollView(
+                    controller: bloc.scrollController,
                     slivers: [
                       SliverToBoxAdapter(
                         child: Container(
-                          decoration: const BoxDecoration(borderRadius: BorderRadius.only(bottomRight: Radius.circular(kMarginMedium2), bottomLeft: Radius.circular(kMarginMedium2))),
+                          decoration: const BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                  bottomRight: Radius.circular(kMarginMedium2),
+                                  bottomLeft: Radius.circular(kMarginMedium2))),
                           child: Column(
                             children: [
                               ///spacer
@@ -54,39 +59,57 @@ class SearchProductPage extends StatelessWidget {
                               ///search history view
                               Selector<SearchProductBloc, List<ProductVO>>(
                                 selector: (context, bloc) => bloc.products,
-                                builder: (context, products, child) => Selector<SearchProductBloc, List<SearchProductVO>>(
-                                  selector: (context, bloc) => bloc.searchProducts,
+                                builder: (context, products, child) => Selector<
+                                    SearchProductBloc, List<SearchProductVO>>(
+                                  selector: (context, bloc) =>
+                                      bloc.searchProducts,
                                   builder: (context, snapshot, child) {
                                     if (snapshot.isNotEmpty) {
                                       return products.isEmpty
                                           ? Column(
                                               children: [
                                                 Padding(
-                                                  padding: const EdgeInsets.symmetric(horizontal: kMarginMedium2),
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal:
+                                                          kMarginMedium2),
                                                   child: Row(
                                                     children: [
                                                       Text(
-                                                        AppLocalizations.of(context)!.searchHistory,
-                                                        style: const TextStyle(fontSize: kTextRegular),
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .searchHistory,
+                                                        style: const TextStyle(
+                                                            fontSize:
+                                                                kTextRegular),
                                                       ),
                                                       const Spacer(),
                                                       InkWell(
                                                         onTap: () {
-                                                          var bloc = context.read<SearchProductBloc>();
+                                                          var bloc = context.read<
+                                                              SearchProductBloc>();
                                                           bloc.onTapClearAll();
                                                         },
                                                         child: Row(
                                                           children: [
                                                             Text(
-                                                              AppLocalizations.of(context)!.clearAll,
-                                                              style: const TextStyle(fontSize: kTextRegular, color: Colors.grey),
+                                                              AppLocalizations.of(
+                                                                      context)!
+                                                                  .clearAll,
+                                                              style: const TextStyle(
+                                                                  fontSize:
+                                                                      kTextRegular,
+                                                                  color: Colors
+                                                                      .grey),
                                                             ),
                                                             const SizedBox(
-                                                              width: kMarginSmall,
+                                                              width:
+                                                                  kMarginSmall,
                                                             ),
                                                             const Icon(
                                                               Icons.delete,
-                                                              color: Colors.grey,
+                                                              color:
+                                                                  Colors.grey,
                                                               size: 18,
                                                             )
                                                           ],
@@ -97,11 +120,19 @@ class SearchProductPage extends StatelessWidget {
                                                 ),
                                                 ListView.builder(
                                                   shrinkWrap: true,
-                                                  padding: const EdgeInsets.symmetric(vertical: kMarginMedium2, horizontal: kMarginLarge),
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      vertical: kMarginMedium2,
+                                                      horizontal: kMarginLarge),
                                                   itemCount: snapshot.length,
-                                                  itemBuilder: (context, index) {
-                                                    var bloc = context.read<SearchProductBloc>();
-                                                    return SearchProductHistoryListItemView(searchProductVO: snapshot[index], bloc: bloc);
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    var bloc = context.read<
+                                                        SearchProductBloc>();
+                                                    return SearchProductHistoryListItemView(
+                                                        searchProductVO:
+                                                            snapshot[index],
+                                                        bloc: bloc);
                                                   },
                                                 ),
 
@@ -136,51 +167,67 @@ class SearchProductPage extends StatelessWidget {
                                     height: kMarginMedium,
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.all(kMarginMedium2),
+                                    padding:
+                                        const EdgeInsets.all(kMarginMedium2),
                                     child: GridView.builder(
                                       shrinkWrap: true,
                                       padding: EdgeInsets.zero,
-                                      physics: const NeverScrollableScrollPhysics(),
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
                                       itemBuilder: (context, index) {
                                         return TrendingProductListItemView(
                                           productVO: products[index],
                                           onTapFavourite: (product) {
-                                            var bloc = Provider.of<SearchProductBloc>(context, listen: false);
-                                            bloc.onTapFavourite(product, context);
+                                            var bloc =
+                                                Provider.of<SearchProductBloc>(
+                                                    context,
+                                                    listen: false);
+                                            bloc.onTapFavourite(
+                                                product, context);
                                           },
                                         );
                                       },
                                       itemCount: products.length,
-                                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, mainAxisSpacing: 14.0, crossAxisSpacing: 10.0, childAspectRatio: 2 / 2.7),
+                                      gridDelegate:
+                                          const SliverGridDelegateWithFixedCrossAxisCount(
+                                              crossAxisCount: 2,
+                                              mainAxisSpacing: 14.0,
+                                              crossAxisSpacing: 10.0,
+                                              childAspectRatio: 2 / 2.7),
                                     ),
                                   ),
                                 ],
                               );
                             } else {
                               return Selector<SearchProductBloc, bool>(
-                                  selector: (context, bloc) => bloc.isScreenLaunch,
-                                  builder: (context, isFirstTimeScreenLaunch, child) => isFirstTimeScreenLaunch == true
-                                      ? const SizedBox.shrink()
-                                      : Center(
-                                          child: Column(
-                                            children: [
-                                              const SizedBox(
-                                                height: 100,
+                                  selector: (context, bloc) =>
+                                      bloc.isScreenLaunch,
+                                  builder: (context, isFirstTimeScreenLaunch,
+                                          child) =>
+                                      isFirstTimeScreenLaunch == true
+                                          ? const SizedBox.shrink()
+                                          : Center(
+                                              child: Column(
+                                                children: [
+                                                  const SizedBox(
+                                                    height: 100,
+                                                  ),
+                                                  Image.asset(
+                                                    kNoResultImage,
+                                                    fit: BoxFit.contain,
+                                                    height:
+                                                        kSplashAppLogoHeight,
+                                                    width: kSplashAppLogoWidth,
+                                                  ),
+                                                  const Text(
+                                                    textAlign: TextAlign.center,
+                                                    'There were no result\nTry a new search.',
+                                                    style: TextStyle(
+                                                        fontSize: kTextSmall),
+                                                  ),
+                                                ],
                                               ),
-                                              Image.asset(
-                                                kNoResultImage,
-                                                fit: BoxFit.contain,
-                                                height: kSplashAppLogoHeight,
-                                                width: kSplashAppLogoWidth,
-                                              ),
-                                              const Text(
-                                                textAlign: TextAlign.center,
-                                                'There were no result\nTry a new search.',
-                                                style: TextStyle(fontSize: kTextSmall),
-                                              ),
-                                            ],
-                                          ),
-                                        ));
+                                            ));
                             }
                           },
                         ),
@@ -238,7 +285,9 @@ class RatingAndPriceSectionView extends StatelessWidget {
               showRatingAndPriceGeneralDialog(context, bloc);
             },
             child: Container(
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(kMarginSmall), color: Colors.black.withOpacity(0.1)),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(kMarginSmall),
+                  color: Colors.black.withOpacity(0.1)),
               child: const Row(
                 children: [
                   SizedBox(
@@ -261,7 +310,9 @@ class RatingAndPriceSectionView extends StatelessWidget {
               showRatingAndPriceGeneralDialog(context, bloc);
             },
             child: Container(
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(kMarginSmall), color: Colors.black.withOpacity(0.1)),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(kMarginSmall),
+                  color: Colors.black.withOpacity(0.1)),
               child: const Row(
                 children: [
                   SizedBox(
@@ -328,11 +379,15 @@ class SearchBarWithBackArrowView extends StatelessWidget {
                     child: TextField(
                       enabled: true,
                       onChanged: (value) {
-                        var bloc = Provider.of<SearchProductBloc>(context, listen: false);
+                        var bloc = Provider.of<SearchProductBloc>(context,
+                            listen: false);
                         bloc.queryStreamController.sink.add(value);
                       },
                       cursorColor: kPrimaryColor,
-                      decoration: InputDecoration(border: InputBorder.none, hintText: AppLocalizations.of(context)!.searchHere, hintStyle: const TextStyle(fontSize: kTextRegular)),
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: AppLocalizations.of(context)!.searchHere,
+                          hintStyle: const TextStyle(fontSize: kTextRegular)),
                     ),
                   ),
                 ],
@@ -351,7 +406,8 @@ class RatingAndPriceDialogView extends StatefulWidget {
   const RatingAndPriceDialogView({super.key, required this.bloc});
 
   @override
-  State<RatingAndPriceDialogView> createState() => _RatingAndPriceDialogViewState();
+  State<RatingAndPriceDialogView> createState() =>
+      _RatingAndPriceDialogViewState();
 }
 
 class _RatingAndPriceDialogViewState extends State<RatingAndPriceDialogView> {
@@ -384,18 +440,22 @@ class _RatingAndPriceDialogViewState extends State<RatingAndPriceDialogView> {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
-                bool isSelected = selectedRating == double.parse(ratingDummyData[index]);
+                bool isSelected =
+                    selectedRating == double.parse(ratingDummyData[index]);
                 return InkWell(
                   onTap: () {
                     setState(() {
                       selectedRating = double.parse(ratingDummyData[index]);
                     });
-                    widget.bloc.onChangedRating(double.parse(ratingDummyData[index]));
+                    widget.bloc
+                        .onChangedRating(double.parse(ratingDummyData[index]));
                   },
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(kMarginMedium),
-                      color: isSelected ? kPrimaryColor : Colors.black.withOpacity(0.1),
+                      color: isSelected
+                          ? kPrimaryColor
+                          : Colors.black.withOpacity(0.1),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -416,7 +476,11 @@ class _RatingAndPriceDialogViewState extends State<RatingAndPriceDialogView> {
                 );
               },
               itemCount: ratingDummyData.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 5, mainAxisSpacing: 10.0, crossAxisSpacing: 10.0, childAspectRatio: 3 / 1.4),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 5,
+                  mainAxisSpacing: 10.0,
+                  crossAxisSpacing: 10.0,
+                  childAspectRatio: 3 / 1.4),
             ),
             Container(
               margin: const EdgeInsets.symmetric(vertical: kMarginLarge),
@@ -449,7 +513,8 @@ class _RatingAndPriceDialogViewState extends State<RatingAndPriceDialogView> {
   }
 }
 
-void showRatingAndPriceGeneralDialog(BuildContext context, SearchProductBloc bloc) {
+void showRatingAndPriceGeneralDialog(
+    BuildContext context, SearchProductBloc bloc) {
   showGeneralDialog(
     context: context,
     barrierDismissible: true,

@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/utils/images.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:smile_shop/localization/app_localizations.dart';
 
 import '../blocs/wallet_password_bloc.dart';
 import '../widgets/common_dialog.dart';
@@ -56,7 +56,8 @@ class WalletPasswordPage extends StatelessWidget {
                               bloc.onTapShowPassword();
                             },
                             isSecure: bloc.isShowPassword,
-                            hintLabel:AppLocalizations.of(context)!.setYourPassword,
+                            hintLabel:
+                                AppLocalizations.of(context)!.setYourPassword,
                             onChangeValue: (value) {
                               bloc.onPasswordChanged(value);
                             }),
@@ -72,7 +73,8 @@ class WalletPasswordPage extends StatelessWidget {
                               bloc.onTapShowRetypePassword();
                             },
                             isSecure: bloc.isShowRetypePassword,
-                            hintLabel: AppLocalizations.of(context)!.reTypeYourPassword,
+                            hintLabel: AppLocalizations.of(context)!
+                                .reTypeYourPassword,
                             onChangeValue: (value) {
                               bloc.onConfirmPasswordChanged(value);
                             }),
@@ -104,10 +106,10 @@ class WalletPasswordPage extends StatelessWidget {
                           decoration: BoxDecoration(
                               color: kPrimaryColor,
                               borderRadius: BorderRadius.circular(4)),
-                          child:  Center(
+                          child: Center(
                             child: Text(
                               AppLocalizations.of(context)!.confirm,
-                              style:const TextStyle(color: kBackgroundColor),
+                              style: const TextStyle(color: kBackgroundColor),
                             ),
                           ),
                         ),

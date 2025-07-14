@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
 class DailyCheckInListItem extends StatelessWidget {
-  const DailyCheckInListItem({super.key,
-    required this.day,
-    required this.bgColor});
+  const DailyCheckInListItem(
+      {super.key, required this.day, required this.bgColor});
 
   final int day;
   final Color bgColor;
@@ -21,7 +20,7 @@ class DailyCheckInListItem extends StatelessWidget {
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(4),
               color: bgColor.withValues(alpha: 0.2)),
-          child:  Center(
+          child: Center(
             child: Text('Day$day'),
           ),
         ),

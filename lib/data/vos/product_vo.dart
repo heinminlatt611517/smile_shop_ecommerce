@@ -1,10 +1,11 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:hive_flutter/adapters.dart';
 import 'package:json_annotation/json_annotation.dart';
+
 import 'package:smile_shop/data/vos/brand_vo.dart';
 import 'package:smile_shop/data/vos/specification_vo.dart';
 import 'package:smile_shop/data/vos/sub_category_vo.dart';
 import 'package:smile_shop/data/vos/variant_vo.dart';
-import 'package:smile_shop/network/api_constants.dart';
 
 import '../../persistence/hive_constants.dart';
 
@@ -204,5 +205,10 @@ class ProductVO {
       }
     }
     return colorMap;
+  }
+
+  @override
+  String toString() {
+    return 'ProductVO(id: $id, name: $name, sku: $sku, highlight: $highlight, description: $description, price: $price, brandId: $brandId, rating: $rating, subcategoryId: $subcategoryId, image: $image, images: $images, subcategory: $subcategory, brand: $brand, variantVO: $variantVO, qtyCount: $qtyCount, isChecked: $isChecked, totalPrice: $totalPrice, colorName: $colorName, isFavourite: $isFavourite, isAddedToCartProduct: $isAddedToCartProduct, size: $size, specificationList: $specificationList, video: $video, detailImages: $detailImages, isFavouriteProduct: $isFavouriteProduct)';
   }
 }

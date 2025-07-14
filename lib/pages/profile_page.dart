@@ -30,7 +30,7 @@ import 'package:smile_shop/widgets/error_dialog_view.dart';
 import 'package:smile_shop/widgets/logout_dialog_view.dart';
 import 'package:smile_shop/widgets/require_log_in_view.dart';
 import 'package:smile_shop/widgets/svg_image_view.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:smile_shop/localization/app_localizations.dart';
 
 import '../data/model/smile_shop_model.dart';
 import '../data/model/smile_shop_model_impl.dart';
@@ -83,43 +83,59 @@ class _ProfilePageState extends State<ProfilePage> {
                               children: [
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(30),
-                                  child: CachedNetworkImage(height: 60, width: 60, fit: BoxFit.cover, imageUrl: user?.profileImage == '' ? errorImageUrl : user?.profileImage ?? errorImageUrl),
+                                  child: CachedNetworkImage(
+                                      height: 60,
+                                      width: 60,
+                                      fit: BoxFit.cover,
+                                      imageUrl: user?.profileImage == ''
+                                          ? errorImageUrl
+                                          : user?.profileImage ??
+                                              errorImageUrl),
                                 ),
                                 const SizedBox(
                                   height: 10,
                                 ),
                                 Text(
                                   user?.name ?? '',
-                                  style: const TextStyle(fontSize: kTextRegular2x),
+                                  style:
+                                      const TextStyle(fontSize: kTextRegular2x),
                                 ),
                                 const SizedBox(
                                   height: 10,
                                 ),
                                 Text(
                                   user?.phone ?? '',
-                                  style: const TextStyle(fontSize: kTextRegular2x),
+                                  style:
+                                      const TextStyle(fontSize: kTextRegular2x),
                                 ),
                                 const SizedBox(
                                   height: 10,
                                 ),
                                 GestureDetector(
                                   onTap: () async {
-                                    final bool? isUpdated = await Navigator.of(context).push(
+                                    final bool? isUpdated =
+                                        await Navigator.of(context).push(
                                       MaterialPageRoute(
                                           builder: (builder) => EditProfilePage(
                                                 userVo: user,
                                               )),
                                     );
                                     if (isUpdated == true) {
-                                      context.read<ProfileBloc>().getProfile(context);
+                                      context
+                                          .read<ProfileBloc>()
+                                          .getProfile(context);
                                     }
                                   },
                                   child: Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-                                    decoration: BoxDecoration(color: kMTicketColor.withOpacity(0.3), borderRadius: BorderRadius.circular(5)),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 16, vertical: 5),
+                                    decoration: BoxDecoration(
+                                        color: kMTicketColor.withOpacity(0.3),
+                                        borderRadius: BorderRadius.circular(5)),
                                     child: Text(
                                       AppLocalizations.of(context)!.edit,
-                                      style: const TextStyle(fontSize: kTextSmall),
+                                      style:
+                                          const TextStyle(fontSize: kTextSmall),
                                     ),
                                   ),
                                 )
@@ -161,15 +177,18 @@ class _ProfilePageState extends State<ProfilePage> {
                                     crossAxisSpacing: 10,
                                     shrinkWrap: true,
                                     padding: EdgeInsets.zero,
-                                    physics: const NeverScrollableScrollPhysics(),
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
                                     children: _buildMyOrderItems(context),
                                   ),
                                 ),
                               ),
 
                               Selector<ProfileBloc, bool>(
-                                selector: (context, bloc) => bloc.isNewNotiExist,
-                                builder: (context, isNewNoti, child) => GridView.count(
+                                selector: (context, bloc) =>
+                                    bloc.isNewNotiExist,
+                                builder: (context, isNewNoti, child) =>
+                                    GridView.count(
                                   crossAxisCount: 4,
                                   mainAxisSpacing: 0,
 
@@ -179,7 +198,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                   /// Horizontal spacing between items
                                   shrinkWrap: true,
                                   physics: const NeverScrollableScrollPhysics(),
-                                  children: _buildProfileItems(context, isNewNoti),
+                                  children:
+                                      _buildProfileItems(context, isNewNoti),
                                 ),
                               )
                             ],
@@ -212,30 +232,42 @@ class _ProfilePageState extends State<ProfilePage> {
 
     items.add(InkWell(
       onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(builder: (_) => const MyOrderPage(tabIndex: 1)));
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => const MyOrderPage(tabIndex: 0)));
       },
-      child: _buildProfileItem(context, title: AppLocalizations.of(context)!.toPay, assetImagePath: kToPayIcon),
+      child: _buildProfileItem(context,
+          title: AppLocalizations.of(context)!.all,
+          assetImagePath: kToPayIcon),
     ));
 
     items.add(InkWell(
       onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(builder: (_) => const MyOrderPage(tabIndex: 2)));
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => const MyOrderPage(tabIndex: 1)));
       },
-      child: _buildProfileItem(context, title: AppLocalizations.of(context)!.toShip, assetImagePath: kToShipIcon),
+      child: _buildProfileItem(context,
+          title: AppLocalizations.of(context)!.inWareHouse,
+          assetImagePath: kToShipIcon),
     ));
 
     items.add(InkWell(
       onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(builder: (_) => const MyOrderPage(tabIndex: 3)));
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => const MyOrderPage(tabIndex: 2)));
       },
-      child: _buildProfileItem(context, title: AppLocalizations.of(context)!.toReceive, assetImagePath: kToReceiveIcon),
+      child: _buildProfileItem(context,
+          title: AppLocalizations.of(context)!.onGoing,
+          assetImagePath: kToReceiveIcon),
     ));
 
     items.add(InkWell(
       onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(builder: (_) => const MyOrderPage(tabIndex: 4)));
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => const MyOrderPage(tabIndex: 3)));
       },
-      child: _buildProfileItem(context, title: AppLocalizations.of(context)!.toReview, assetImagePath: kToReviewIcon),
+      child: _buildProfileItem(context,
+          title: AppLocalizations.of(context)!.delivered,
+          assetImagePath: kToReviewIcon),
     ));
 
     return items;
@@ -246,52 +278,73 @@ class _ProfilePageState extends State<ProfilePage> {
     List<Widget> items = [];
     items.add(InkWell(
       onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(builder: (_) => const RefundPage()));
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (_) => const RefundPage()));
       },
-      child: _buildProfileItem(context, title: AppLocalizations.of(context)!.refund, assetImagePath: kRefundIcon),
+      child: _buildProfileItem(context,
+          title: AppLocalizations.of(context)!.refund,
+          assetImagePath: kRefundIcon),
     ));
 
     items.add(InkWell(
       onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(builder: (_) => const SmilePointPage()));
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (_) => const SmilePointPage()));
       },
-      child: _buildProfileItem(context, title: AppLocalizations.of(context)!.smileWallet, assetImagePath: kSmileIcon),
+      child: _buildProfileItem(context,
+          title: AppLocalizations.of(context)!.smileWallet,
+          assetImagePath: kSmileIcon),
     ));
 
     items.add(InkWell(
       onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(builder: (_) => const PromotionPointPage()));
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => const PromotionPointPage()));
       },
-      child: _buildProfileItem(context, title: AppLocalizations.of(context)!.promotionPoint, assetImagePath: kPointIcon),
+      child: _buildProfileItem(context,
+          title: AppLocalizations.of(context)!.promotionPoint,
+          assetImagePath: kPointIcon),
     ));
 
     items.add(InkWell(
       onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(builder: (_) => const PackagePage()));
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (_) => const PackagePage()));
       },
-      child: _buildProfileItem(context, title: AppLocalizations.of(context)!.package, assetImagePath: kPackageIcon),
+      child: _buildProfileItem(context,
+          title: AppLocalizations.of(context)!.package,
+          assetImagePath: kPackageIcon),
     ));
 
     items.add(InkWell(
       onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(builder: (_) => const MyFavouritePage()));
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (_) => const MyFavouritePage()));
       },
-      child: _buildProfileItem(context, title: AppLocalizations.of(context)!.myFavourite, assetImagePath: kFavouriteIcon),
+      child: _buildProfileItem(context,
+          title: AppLocalizations.of(context)!.myFavourite,
+          assetImagePath: kFavouriteIcon),
     ));
 
     items.add(InkWell(
       onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(builder: (_) => const LanguagePage()));
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (_) => const LanguagePage()));
       },
-      child: _buildProfileItem(context, title: AppLocalizations.of(context)!.language, assetImagePath: kLanguageIcon),
+      child: _buildProfileItem(context,
+          title: AppLocalizations.of(context)!.language,
+          assetImagePath: kLanguageIcon),
     ));
 
     if (GetStorage().read(kBoxKeyLoginUserType) == kTypeEndUser) {
       items.add(InkWell(
         onTap: () {
-          Navigator.of(context).push(MaterialPageRoute(builder: (_) => const MyTeamPage()));
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (_) => const MyTeamPage()));
         },
-        child: _buildProfileItem(context, title: AppLocalizations.of(context)!.myTeam, assetImagePath: kMyTeamIcon),
+        child: _buildProfileItem(context,
+            title: AppLocalizations.of(context)!.myTeam,
+            assetImagePath: kMyTeamIcon),
       ));
     }
 
@@ -302,26 +355,39 @@ class _ProfilePageState extends State<ProfilePage> {
                   needReturnValue: false,
                 )));
       },
-      child: _buildProfileItem(context, title: AppLocalizations.of(context)!.address, assetImagePath: kAddressIcon),
+      child: _buildProfileItem(context,
+          title: AppLocalizations.of(context)!.address,
+          assetImagePath: kAddressIcon),
     ));
 
     items.add(InkWell(
       onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(builder: (_) => const NotificationPage()));
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (_) => const NotificationPage()));
       },
-      child: _buildProfileItem(context, showBadge: isNewNoti, title: AppLocalizations.of(context)!.notification, assetImagePath: kNotiSvgIcon),
+      child: _buildProfileItem(context,
+          showBadge: isNewNoti,
+          title: AppLocalizations.of(context)!.notification,
+          assetImagePath: kNotiSvgIcon),
     ));
 
     items.add(InkWell(
       onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ReferralCodePage()));
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (_) => const ReferralCodePage()));
       },
-      child: _buildProfileItem(context, title: AppLocalizations.of(context)!.referralCode, assetImagePath: kReferralIcon),
+      child: _buildProfileItem(context,
+          title: AppLocalizations.of(context)!.referralCode,
+          assetImagePath: kReferralIcon),
     ));
 
-    items.add(_buildProfileItem(context, title: AppLocalizations.of(context)!.aboutUs, assetImagePath: kAboutUsIcon));
+    items.add(_buildProfileItem(context,
+        title: AppLocalizations.of(context)!.aboutUs,
+        assetImagePath: kAboutUsIcon));
 
-    items.add(_buildProfileItem(context, title: AppLocalizations.of(context)!.contactUs, assetImagePath: kContactUsIcon));
+    items.add(_buildProfileItem(context,
+        title: AppLocalizations.of(context)!.contactUs,
+        assetImagePath: kContactUsIcon));
 
     items.add(InkWell(
       onTap: () {
@@ -329,10 +395,14 @@ class _ProfilePageState extends State<ProfilePage> {
             context: context,
             dialogWidget: LogoutDialogView(onLogout: () {
               _model.clearSaveLoginData();
-              Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (builder) => const LoginPage()), (Route<dynamic> route) => false);
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (builder) => const LoginPage()),
+                  (Route<dynamic> route) => false);
             }));
       },
-      child: _buildProfileItem(context, title: AppLocalizations.of(context)!.logout, assetImagePath: kLogoutIcon),
+      child: _buildProfileItem(context,
+          title: AppLocalizations.of(context)!.logout,
+          assetImagePath: kLogoutIcon),
     ));
 
     items.add(Consumer<ProfileBloc>(
@@ -344,7 +414,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 bloc.deleteAccount().then((response) {
                   if (response.status == 200) {
                     _model.clearSaveLoginData();
-                    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (builder) => const LoginPage()), (Route<dynamic> route) => false);
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                            builder: (builder) => const LoginPage()),
+                        (Route<dynamic> route) => false);
                   }
                 }).catchError((error) {
                   showCommonDialog(
@@ -354,7 +427,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 });
               }));
         },
-        child: _buildProfileItem(context, title: AppLocalizations.of(context)!.deleteAccount, assetImagePath: kDeleteIcon),
+        child: _buildProfileItem(context,
+            title: AppLocalizations.of(context)!.deleteAccount,
+            assetImagePath: kDeleteIcon),
       ),
     ));
 
@@ -362,7 +437,10 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 }
 
-Widget _buildProfileItem(BuildContext context, {required String title, required String assetImagePath, bool showBadge = false}) {
+Widget _buildProfileItem(BuildContext context,
+    {required String title,
+    required String assetImagePath,
+    bool showBadge = false}) {
   double itemWidth = (MediaQuery.of(context).size.width - 30) / 4;
   return SizedBox(
     width: itemWidth,
@@ -385,7 +463,9 @@ Widget _buildProfileItem(BuildContext context, {required String title, required 
         Text(
           title,
           textAlign: TextAlign.center,
-          style:  TextStyle(fontSize:Responsive(context).isTablet ? kTextRegular : kTextSmall),
+          style: TextStyle(
+              fontSize:
+                  Responsive(context).isTablet ? kTextRegular : kTextSmall),
         )
       ],
     ),

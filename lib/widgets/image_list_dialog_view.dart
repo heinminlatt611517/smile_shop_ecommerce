@@ -3,18 +3,16 @@ import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
-import 'package:photo_view/photo_view.dart';
-import 'package:smile_shop/network/api_constants.dart';
 import 'package:smile_shop/utils/colors.dart';
-import 'package:smile_shop/widgets/cached_network_image_view.dart';
 import 'package:video_player/video_player.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:smile_shop/localization/app_localizations.dart';
 
 class ImageListDialogView extends StatefulWidget {
   final List<String> imageList;
   final int index;
   final String? video;
-  const ImageListDialogView({super.key, required this.imageList, required this.index, this.video});
+  const ImageListDialogView(
+      {super.key, required this.imageList, required this.index, this.video});
 
   @override
   State<ImageListDialogView> createState() => _ImageListDialogViewState();
@@ -24,7 +22,8 @@ class _ImageListDialogViewState extends State<ImageListDialogView> {
   late PageController pageController;
   VideoPlayerController? playerController;
   ChewieController? chewieController;
-  TransformationController _transformationController = TransformationController();
+  final TransformationController _transformationController =
+      TransformationController();
   bool _isZoomed = false;
   final double _zoomScale = 2.5; // Zoom factor
   @override
@@ -32,7 +31,9 @@ class _ImageListDialogViewState extends State<ImageListDialogView> {
     super.initState();
     setState(() {
       // check video is contain , index will be -1
-      int realIndex = ((widget.video?.isNotEmpty ?? false)) ? widget.index + 1 : widget.index;
+      int realIndex = ((widget.video?.isNotEmpty ?? false))
+          ? widget.index + 1
+          : widget.index;
       pageController = PageController(initialPage: realIndex);
     });
     videoInitialized();
@@ -74,7 +75,8 @@ class _ImageListDialogViewState extends State<ImageListDialogView> {
 
   double _getCurrentScale() {
     final matrix = _transformationController.value;
-    return sqrt(matrix[0] * matrix[0] + matrix[1] * matrix[1]); // Extract scale from matrix
+    return sqrt(matrix[0] * matrix[0] +
+        matrix[1] * matrix[1]); // Extract scale from matrix
   }
 
   void _onDoubleTap(TapDownDetails details, BoxConstraints constraints) {
@@ -107,16 +109,21 @@ class _ImageListDialogViewState extends State<ImageListDialogView> {
           children: [
             PageView.builder(
               controller: pageController,
-              physics: _isZoomed ? const NeverScrollableScrollPhysics() : const PageScrollPhysics(),
-              itemCount: widget.imageList.length + ((widget.video?.isNotEmpty ?? false) ? 1 : 0),
+              physics: _isZoomed
+                  ? const NeverScrollableScrollPhysics()
+                  : const PageScrollPhysics(),
+              itemCount: widget.imageList.length +
+                  ((widget.video?.isNotEmpty ?? false) ? 1 : 0),
               itemBuilder: (context, index) {
-                int realIndex = index - ((widget.video?.isNotEmpty ?? false) ? 1 : 0);
+                int realIndex =
+                    index - ((widget.video?.isNotEmpty ?? false) ? 1 : 0);
                 if (realIndex == -1) {
                   // VIDEO EXISTS
 
                   return chewieController != null
                       ? LayoutBuilder(builder: (context, constraints) {
-                          double videoAspectRatio = playerController?.value.aspectRatio ?? 1;
+                          double videoAspectRatio =
+                              playerController?.value.aspectRatio ?? 1;
                           double maxWidth = constraints.maxWidth;
                           double calculatedHeight = maxWidth / videoAspectRatio;
 
@@ -158,9 +165,11 @@ class _ImageListDialogViewState extends State<ImageListDialogView> {
                       onInteractionEnd: (details) {
                         double currentScale = _getCurrentScale();
                         if (currentScale < 1.1) {
-                          setState(() => _isZoomed = false); // Allow PageView scrolling when nearly normal
+                          setState(() => _isZoomed =
+                              false); // Allow PageView scrolling when nearly normal
                         } else {
-                          setState(() => _isZoomed = true); // Disable scrolling when zoomed in
+                          setState(() => _isZoomed =
+                              true); // Disable scrolling when zoomed in
                         }
                       },
                       child: CachedNetworkImage(
@@ -199,8 +208,11 @@ class _ImageListDialogViewState extends State<ImageListDialogView> {
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Container(
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: Colors.black38),
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: Colors.black38),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   child: Text(
                     AppLocalizations.of(context)!.doubleTapToZoom,
                     style: const TextStyle(color: Colors.grey),

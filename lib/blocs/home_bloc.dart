@@ -10,9 +10,10 @@ import 'package:smile_shop/network/api_constants.dart';
 import 'package:smile_shop/network/requests/favourite_product_request.dart';
 import 'package:smile_shop/network/requests/pop_up_request.dart';
 import 'package:smile_shop/utils/images.dart';
+import 'package:smile_shop/utils/strings.dart';
 import 'package:smile_shop/widgets/session_expired_dialog_view.dart';
 import 'package:smile_shop/widgets/welcome_dialog_view.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:smile_shop/localization/app_localizations.dart';
 import '../data/vos/user_vo.dart';
 import '../widgets/common_dialog.dart';
 
@@ -33,6 +34,7 @@ class HomeBloc extends ChangeNotifier {
   UserVO? userProfile;
   var currentLanguage = kAcceptLanguageEn;
   String currentFlagImage = kEnglishImg;
+  ScrollController scrollController = ScrollController();
   final Map<String, String> languageFlagMap = {
     'en': kEnglishImg,
     'my': kMyanmarImg,
@@ -41,16 +43,22 @@ class HomeBloc extends ChangeNotifier {
 
   HomeBloc(BuildContext context) {
     ///get data from database
-    authToken = _smileShopModel.getLoginResponseFromDatabase()?.refreshToken ?? "";
-    accessToken = _smileShopModel.getLoginResponseFromDatabase()?.accessToken ?? "";
-    endUserId = _smileShopModel.getLoginResponseFromDatabase()?.data?.id.toString() ?? "0";
+    authToken =
+        _smileShopModel.getLoginResponseFromDatabase()?.refreshToken ?? "";
+    accessToken =
+        _smileShopModel.getLoginResponseFromDatabase()?.accessToken ?? "";
+    endUserId =
+        _smileShopModel.getLoginResponseFromDatabase()?.data?.id.toString() ??
+            "0";
     init();
 
     if (endUserId != "0") {
       // already log in
       // then check user access token key is expired
       ///get user profile data
-      _smileShopModel.userProfile(accessToken, kAcceptLanguageEn).then((response) {
+      _smileShopModel
+          .userProfile(accessToken, kAcceptLanguageEn)
+          .then((response) {
         userProfile = response;
         if (response.showPopUp == 0) {
           getHomePopupData(response.id ?? 0, context);
@@ -65,6 +73,13 @@ class HomeBloc extends ChangeNotifier {
         }
       });
     }
+
+    scrollController.addListener(() {
+      if (scrollController.position.pixels ==
+          scrollController.position.maxScrollExtent) {
+        getProducts();
+      }
+    });
   }
   void init() async {
     await loadLanguage();
@@ -112,20 +127,29 @@ class HomeBloc extends ChangeNotifier {
     });
 
     ///get categories list
-    _smileShopModel.categories("home", currentLanguage).then((categoryResponse) {
+    _smileShopModel
+        .categories("home", currentLanguage)
+        .then((categoryResponse) {
       categories = categoryResponse;
       _notifySafely();
     });
 
+    getCategoryListForHomePage();
+
     ///get product list
-    _smileShopModel.products(accessToken, currentLanguage, int.parse(endUserId), productPage).then((productResponse) {
+    _smileShopModel
+        .products(
+            accessToken, currentLanguage, int.parse(endUserId), productPage)
+        .then((productResponse) {
       productList = productResponse.products ?? [];
       debugPrint("Length>>>>>>>${productList.length}");
       _notifySafely();
     });
 
     ///get brands and categories
-    _smileShopModel.getBrandsAndCategories(authToken, kAcceptLanguageEn, endUserId).then((brandsAndCategoriesResponse) {
+    _smileShopModel
+        .getBrandsAndCategories(authToken, kAcceptLanguageEn, endUserId)
+        .then((brandsAndCategoriesResponse) {
       brandAndCategoryVO = brandsAndCategoriesResponse;
       _notifySafely();
     });
@@ -134,7 +158,9 @@ class HomeBloc extends ChangeNotifier {
   ///get home popup data
   void getHomePopupData(int userId, BuildContext context) {
     var popUpRequest = PopupRequest(userId);
-    _smileShopModel.getHomePopUpData(kAcceptLanguageEn, accessToken, popUpRequest).then((response) {
+    _smileShopModel
+        .getHomePopUpData(kAcceptLanguageEn, accessToken, popUpRequest)
+        .then((response) {
       ///welcome pop up
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showCommonDialog(
@@ -155,7 +181,9 @@ class HomeBloc extends ChangeNotifier {
   void updateHomePopupData(int userId, BuildContext context) {
     _showPopupLoading();
     var popUpRequest = PopupRequest(userId);
-    _smileShopModel.updateHomePopUp(kAcceptLanguageEn, accessToken, popUpRequest).then((response) {
+    _smileShopModel
+        .updateHomePopUp(kAcceptLanguageEn, accessToken, popUpRequest)
+        .then((response) {
       if (response.status == 200) {
         Navigator.pop(context);
       }
@@ -169,8 +197,12 @@ class HomeBloc extends ChangeNotifier {
     productPage += 1;
     debugPrint("GetProducts for page $productPage");
 
-    _smileShopModel.products(accessToken, currentLanguage, int.parse(endUserId), productPage).then((productResponse) {
-      if (productResponse.products != null && productResponse.products!.isNotEmpty) {
+    _smileShopModel
+        .products(
+            accessToken, currentLanguage, int.parse(endUserId), productPage)
+        .then((productResponse) {
+      if (productResponse.products != null &&
+          productResponse.products!.isNotEmpty) {
         productList.addAll(productResponse.products!);
         _hideLoading();
       } else {
@@ -183,7 +215,8 @@ class HomeBloc extends ChangeNotifier {
     if (product == null) return;
 
     if (endUserId.isEmpty || endUserId == "0") {
-      showSnackBar(context, AppLocalizations.of(context)!.need_login, Colors.deepOrange);
+      showSnackBar(
+          context, AppLocalizations.of(context)!.need_login, Colors.deepOrange);
       return;
     }
     var favoriteProductRequest = FavouriteProductRequest(
@@ -221,11 +254,33 @@ class HomeBloc extends ChangeNotifier {
     });
   }
 
+  List<CategoryVO> getCategoryListForHomePage() {
+    CategoryVO category2000 = CategoryVO(
+        name: getBelow3000Text(currentLanguage),
+        image: "assets/images/3000.png",
+        type: CategoryType.below3000);
+
+    CategoryVO categoryPromotion = CategoryVO(
+        name: getPromotionPointText(currentLanguage),
+        image: "assets/images/promotions.png",
+        type: CategoryType.promotionPoint);
+    if (categories.length > 4) {
+      // trim to 4 count to make 6
+      List<CategoryVO> trimmedCategory = categories.take(4).toList();
+      return [category2000, ...trimmedCategory, categoryPromotion];
+    } else {
+      return [category2000, ...categories, categoryPromotion];
+    }
+  }
+
   void getProductsWhileOnTapFavourite() {
     productList.clear();
     productPage = 1;
-    _smileShopModel.products(authToken, currentLanguage, int.parse(endUserId), 1).then((productResponse) {
-      if (productResponse.products != null && productResponse.products!.isNotEmpty) {
+    _smileShopModel
+        .products(authToken, currentLanguage, int.parse(endUserId), 1)
+        .then((productResponse) {
+      if (productResponse.products != null &&
+          productResponse.products!.isNotEmpty) {
         productList.addAll(productResponse.products!);
         _hideLoading();
       } else {
@@ -234,7 +289,8 @@ class HomeBloc extends ChangeNotifier {
     });
   }
 
-  void showSnackBar(BuildContext context, String description, Color snackBarColor) {
+  void showSnackBar(
+      BuildContext context, String description, Color snackBarColor) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(description),
@@ -242,6 +298,19 @@ class HomeBloc extends ChangeNotifier {
         duration: const Duration(seconds: 2),
       ),
     );
+  }
+
+  Future<bool> onWillPop() async {
+    if (scrollController.offset > 0) {
+      // If not at top, scroll to top instead of popping
+      scrollController.animateTo(
+        0,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+      return false; // prevent popping
+    }
+    return true; // allow popping
   }
 
   void _showPopupLoading() {

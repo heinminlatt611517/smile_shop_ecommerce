@@ -1,7 +1,9 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:hive_flutter/adapters.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import '../../persistence/hive_constants.dart';
+
 part 'size_vo.g.dart';
 
 @JsonSerializable()
@@ -20,4 +22,7 @@ class SizeVO {
   factory SizeVO.fromJson(Map<String, dynamic> json) => _$SizeVOFromJson(json);
 
   Map<String, dynamic> toJson() => _$SizeVOToJson(this);
+
+  @override
+  String toString() => 'SizeVO(variantProductId: $variantProductId, value: $value)';
 }

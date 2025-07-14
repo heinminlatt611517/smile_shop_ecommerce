@@ -56,6 +56,18 @@ class OrderVO {
   @JsonKey(name: 'delivery_histories')
   final List<DeliveryHistoryVO>? deliveryHistory;
 
+  @JsonKey(name: 'delivery_type')
+  final String? deliveryType;
+
+  @JsonKey(name: 'delivery_fees')
+  final int? deliveryFee;
+
+  @JsonKey(name: 'coupon_discount_amount')
+  final String? couponDiscountAmount;
+
+  @JsonKey(name: 'used_points')
+  final int? usedPoints;
+
   String getStatus() {
     if (paymentStatus == "cancel" || paymentStatus == "paid") {
       return paymentStatus!;
@@ -64,11 +76,46 @@ class OrderVO {
     }
   }
 
-  bool isCOD() => (paymentType?.toString() == "cod" || paymentType?.toString() == "cod");
+  bool isCOD() =>
+      (paymentType?.toString() == "cod" || paymentType?.toString() == "cod");
 
-  OrderVO({this.id, this.headId, this.enduserId, this.orderNo, this.subtotal, this.paymentType, this.paymentStatus, this.userType, this.enduserAddressId, this.deliveryStatus, this.createdAt, this.updatedAt, this.image, this.addressVO, this.orderProducts, this.deliveryHistory});
+  double getTotalFees() {
+    double totalProdutPrice = orderProducts?.fold(
+            0.0,
+            (sum, item) =>
+                (sum ?? 0) + (double.tryParse(item.subtotal ?? "0") ?? 0)) ??
+        0.0;
 
-  factory OrderVO.fromJson(Map<String, dynamic> json) => _$OrderVOFromJson(json);
+    return totalProdutPrice +
+        (double.tryParse(deliveryFee?.toString() ?? '0') ?? 0) -
+        (double.tryParse(couponDiscountAmount?.toString() ?? '0') ?? 0);
+  }
+
+  OrderVO({
+    this.id,
+    this.headId,
+    this.enduserId,
+    this.orderNo,
+    this.subtotal,
+    this.paymentType,
+    this.paymentStatus,
+    this.userType,
+    this.enduserAddressId,
+    this.deliveryStatus,
+    this.createdAt,
+    this.updatedAt,
+    this.image,
+    this.addressVO,
+    this.orderProducts,
+    this.deliveryHistory,
+    this.deliveryType,
+    this.deliveryFee,
+    this.couponDiscountAmount,
+    this.usedPoints,
+  });
+
+  factory OrderVO.fromJson(Map<String, dynamic> json) =>
+      _$OrderVOFromJson(json);
 
   Map<String, dynamic> toJson() => _$OrderVOToJson(this);
 }

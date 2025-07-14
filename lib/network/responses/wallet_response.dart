@@ -1,5 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:smile_shop/data/vos/user_vo.dart';
 import 'package:smile_shop/data/vos/wallet_vo.dart';
 
 part 'wallet_response.g.dart';

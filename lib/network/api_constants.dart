@@ -1,5 +1,6 @@
 ///Base Url
 const String kBaseUrl = "https://smileshopmm.com";
+
 ///End
 const String kEndPointLogin = "/api/auth/login";
 const String kEndPointRegister = "/api/register";
@@ -25,18 +26,18 @@ const String kEndPointAddressCategory = "/api/address-categroy";
 const String kEndPointDeleteAddress = "/api/delete/address";
 const String kEndPointStates = "/api/state";
 const String kEndPointTownships = "/api/state";
-const String kEndPointOrder  = '/api/order';
-const String kEndPointOrderList  = '/api/profile/orders';
-const String kEndPointOrderDetails  = '/api/profile/order/detail';
-const String kEndPointPayments  = '/api/payments';
-const String kEndPointWallet  = '/api/wallet';
-const String kEndPointWalletTransitionLogs  = '/api/wallet/histories';
-const String kEndPointCheckWalletAmount  = '/api/wallet/check-wallet-amount';
-const String kEndPointCheckWalletPassword  = '/api/wallet/check-password';
-const String kEndPointSetWalletPassword  = '/api/wallet/set-password';
-const String kEndPointRechargeWallet  = '/api/wallet/recharge';
-const String kEndPointGetUserCheckIn  = '/api/user-checkin';
-const String kEndPointPostUserCheckIn  = '/api/checkin';
+const String kEndPointOrder = '/api/order';
+const String kEndPointOrderList = '/api/profile/orders';
+const String kEndPointOrderDetails = '/api/profile/order/detail';
+const String kEndPointPayments = '/api/payments';
+const String kEndPointWallet = '/api/wallet';
+const String kEndPointWalletTransitionLogs = '/api/wallet/histories';
+const String kEndPointCheckWalletAmount = '/api/wallet/check-wallet-amount';
+const String kEndPointCheckWalletPassword = '/api/wallet/check-password';
+const String kEndPointSetWalletPassword = '/api/wallet/set-password';
+const String kEndPointRechargeWallet = '/api/wallet/recharge';
+const String kEndPointGetUserCheckIn = '/api/user-checkin';
+const String kEndPointPostUserCheckIn = '/api/checkin';
 const String kEndPointCampaign = '/api/campaign';
 const String kEndPointCampaignDetail = '/api/campaign/detail';
 const String kEndPointCampaignJoin = '/api/campaign/join';
@@ -50,18 +51,24 @@ const String kEndPointGetMyTeams = '/api/profile/myteam';
 const String kEndPointGetPackages = '/api/packages';
 const String kEndPointGetPackageDetails = '/api/packages';
 const String kEndPointCheckOrderStatus = '/api/order/check-status';
+const String kEndPointWalletRechargeOrderStatus = '/api/wallet/check-recharge-status';
 const String kEndPointCampaignHistory = '/api/campaign/history';
 const String kEndPointGetHomePagePopupData = '/api/homepage-popup';
 const String kEndPointUpdateHomePagePopupData = '/api/update-homepage-popup';
-const String kEndPointForgotPasswordOtpRequest = '/api/auth/forget-password/otp-request';
-const String kEndPointForgotPasswordOtpVerify = "/api/auth/forget-password/otp-verify";
-const String kEndPointForgotPasswordSetPassword = "/api/auth/forget-password/set-password";
+const String kEndPointForgotPasswordOtpRequest =
+    '/api/auth/forget-password/otp-request';
+const String kEndPointForgotPasswordOtpVerify =
+    "/api/auth/forget-password/otp-verify";
+const String kEndPointForgotPasswordSetPassword =
+    "/api/auth/forget-password/set-password";
 const String kEndPointChangePassword = "/api/change/password";
 const String kEndPointGetRefundReason = "/api/refund-reason";
 const String kEndPointAccountDelete = "/api/profile/delete-account";
 const String kEndPointAddFavouriteProduct = "/api/toggle-favourite-product";
-const String kEndPointGetFavouriteProduct= "/api/favourite-products";
-
+const String kEndPointGetFavouriteProduct = "/api/favourite-products";
+const String kEndPointGetCustomCategoryProducts =
+    "/api/filter/product/custom-category";
+const String kEndPointCoupon = "/api/coupons";
 
 ///Parameters
 const String kParamApiKey = "api_key";
@@ -84,7 +91,7 @@ const String kFieldEndUserId = "enduser_id";
 const String kFieldProductId = "product_id";
 const String kFieldSubTotal = "subtotal";
 const String kFieldPaymentType = "payment_type";
-const String kFieldItems= "items";
+const String kFieldItems = "items";
 const String kFieldCode = "code";
 const String kFieldDeviceId = "device_id";
 const String kFieldFcmToken = "fcm_token";
@@ -93,13 +100,17 @@ const String kFieldName = "name";
 const String kFieldPage = "page";
 const String kFieldLoginPassword = "login_password";
 const String kFieldPaymentPassword = "payment_password";
-const String kFieldAppType= "app_type";
+const String kFieldAppType = "app_type";
 const String kFieldImage = 'image';
 const String kParamOrderType = "order_type";
 const String kTypeToShip = "to_ship";
 const String kTypeToPay = "to_pay";
 const String kTypeToReceive = "to_receive";
 const String kTypeToReview = "to_review";
+const String kTypeDelivered = "delivered";
+const String kTypeFailed = "failed";
+const String kTypeStartDeliver = "start_deliver";
+const String kTypeInWarehouse = "in_warehouse";
 const String kLogTypeIncome = "income";
 const String kLogTypeOutCome = "outcome";
 const String kFieldTotal = "total";
@@ -115,7 +126,12 @@ const String kFieldOldPassword = "oldPassword";
 const String kFieldNewPassword = "newPassword";
 const String kFieldConfirmPassword = "confirmPassword";
 const String kFieldPasswordType = "password_type";
-
+const String kFieldPerPage = "perPage";
+const String kFieldCategory = "category";
+const String kFieldDeliveryType = "delivery_type";
+const String kFieldCouponId = "coupon_id";
+const String kFieldAddressId = "address_id";
+const String kFieldTransactionId = "transaction_id";
 
 ///Constant Values
 const String kApiKey = "d21502dc3a2218747cba4f76ca9eb7b0";
@@ -132,4 +148,5 @@ const kEnglish = "Eng";
 const kMyanmar = "MM";
 const kChinese = "Ch";
 
-const errorImageUrl = "https://i0.wp.com/www.bishoprook.com/wp-content/uploads/2021/05/placeholder-image-gray-16x9-1.png?ssl=1";
+const errorImageUrl =
+    "https://i0.wp.com/www.bishoprook.com/wp-content/uploads/2021/05/placeholder-image-gray-16x9-1.png?ssl=1";

@@ -11,8 +11,7 @@ import 'package:smile_shop/widgets/custom_app_bar_view.dart';
 
 import '../widgets/loading_view.dart';
 import 'campaign_details_page.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
+import 'package:smile_shop/localization/app_localizations.dart';
 
 class MyTeamPage extends StatelessWidget {
   const MyTeamPage({super.key});
@@ -23,7 +22,7 @@ class MyTeamPage extends StatelessWidget {
       create: (context) => MyTeamBloc(),
       child: Scaffold(
         backgroundColor: kBackgroundColor,
-        appBar:  CustomAppBarView(
+        appBar: CustomAppBarView(
           title: AppLocalizations.of(context)?.myTeam ?? '',
         ),
         body: Selector<MyTeamBloc, bool>(
@@ -39,9 +38,8 @@ class MyTeamPage extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                    Consumer<MyTeamBloc>(
-                    builder: (context, bloc, child) =>
-                           Container(
+                        Consumer<MyTeamBloc>(
+                          builder: (context, bloc, child) => Container(
                             height: 100,
                             width: double.infinity,
                             padding: const EdgeInsets.symmetric(
@@ -53,26 +51,26 @@ class MyTeamPage extends StatelessWidget {
                             child: Row(
                               children: [
                                 Container(
-                                    height: 60,
-                                    width: 60,
-                                    decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                            color: Colors.black, width: 2)),
-                                    child: ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(kMarginXLarge),
-                                        child: CachedNetworkImageView(
-                                            imageHeight: 60,
-                                            imageWidth: 60,
-                                            imageUrl:
-                                                bloc.userProfile?.profileImage ?? errorImageUrl)),
-
+                                  height: 60,
+                                  width: 60,
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                          color: Colors.black, width: 2)),
+                                  child: ClipRRect(
+                                      borderRadius:
+                                          BorderRadius.circular(kMarginXLarge),
+                                      child: CachedNetworkImageView(
+                                          imageHeight: 60,
+                                          imageWidth: 60,
+                                          imageUrl:
+                                              bloc.userProfile?.profileImage ??
+                                                  errorImageUrl)),
                                 ),
                                 const SizedBox(
                                   width: kMargin30,
                                 ),
-                                 Column(
+                                Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -80,7 +78,7 @@ class MyTeamPage extends StatelessWidget {
                                     const SizedBox(
                                       height: kMargin10,
                                     ),
-                                    Text(bloc.userProfile?.phone ??""),
+                                    Text(bloc.userProfile?.phone ?? ""),
                                   ],
                                 )
                               ],

@@ -5,7 +5,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:smile_shop/data/vos/banner_vo.dart';
 import 'package:smile_shop/data/vos/brand_and_category_vo.dart';
+import 'package:smile_shop/data/vos/coupon_vo.dart';
 import 'package:smile_shop/data/vos/notification_vo.dart';
+import 'package:smile_shop/data/vos/payment_status_vo.dart';
 import 'package:smile_shop/data/vos/popup_data_vo.dart';
 import 'package:smile_shop/data/vos/refund_reason_vo.dart';
 import 'package:smile_shop/network/requests/favourite_product_request.dart';
@@ -117,7 +119,7 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   Future<ProductResponseDataVO> products(
       String token, String acceptLanguage, int endUserId, int page) {
     return mApi
-        .products('Bearer $token', acceptLanguage, endUserId, page)
+        .products('Bearer $token', acceptLanguage, endUserId, page, 30)
         .asStream()
         .map((response) => response.data ?? ProductResponseDataVO())
         .first
@@ -235,6 +237,27 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
         .catchError((error) {
       throw _createException(error);
     });
+  }
+
+  @override
+  Future<List<ProductVO>> getCustomCategoryProducts(String token,
+      String acceptLanguage, int pageNo, int perPage, String category) async {
+    try {
+      print(
+          "LANGUANGE ======= $acceptLanguage , PageNo ========== $pageNo, PERPAGE ========= $perPage, Category ========== $category");
+      return mApi
+          .getCustomCategoryProducts(
+              token, acceptLanguage, pageNo, perPage, category)
+          .then(
+        (value) {
+          print("VALUE =========> $value");
+          return value.data?.products ?? [];
+        },
+      );
+    } catch (e) {
+      print("E ============> $e");
+      throw _createException(e);
+    }
   }
 
   @override
@@ -399,6 +422,7 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
         .map((response) => response.data ?? [])
         .first
         .catchError((error) {
+      print("Error in orderList: $error");
       throw _createException(error);
     });
   }
@@ -419,8 +443,14 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   }
 
   @override
-  Future<List<ProductVO>> searchProductsBySubCategoryId(String token,
-      String acceptLanguage, String endUserId, int pageNo, int subCategoryId) {
+  Future<List<ProductVO>> searchProductsBySubCategoryId(
+      String token,
+      String acceptLanguage,
+      String endUserId,
+      int pageNo,
+      int subCategoryId,
+      int? minRange,
+      int? maxRange) {
     return mApi
         .searchProductsBySubCategoryId(
           'Bearer $token',
@@ -428,6 +458,8 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
           int.parse(endUserId),
           pageNo,
           subCategoryId,
+          minRange,
+          maxRange,
         )
         .asStream()
         .map((response) => response.data?.products ?? [])
@@ -438,11 +470,24 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   }
 
   @override
-  Future<List<ProductVO>> searchProductsCategoryId(String token,
-      String acceptLanguage, String endUserId, int pageNo, int categoryId) {
+  Future<List<ProductVO>> searchProductsCategoryId(
+      String token,
+      String acceptLanguage,
+      String endUserId,
+      int pageNo,
+      int categoryId,
+      int? minRange,
+      int? maxRange) {
     return mApi
-        .searchProductsByCategoryId("Bearer $token", acceptLanguage,
-            int.parse(endUserId), pageNo, categoryId)
+        .searchProductsByCategoryId(
+          "Bearer $token",
+          acceptLanguage,
+          int.parse(endUserId),
+          pageNo,
+          categoryId,
+          minRange,
+          maxRange,
+        )
         .asStream()
         .map((response) => response.data?.products ?? [])
         .first
@@ -595,10 +640,23 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
       String itemList,
       String appType,
       String paymentData,
-      int usedPoint) {
+      int usedPoint,
+      String deliveryType,
+      int? couponId,
+      int addressId) {
     return mApi
-        .postOrder("Bearer $token", acceptLanguage, subTotal, paymentType,
-            itemList, appType, paymentData, usedPoint)
+        .postOrder(
+            "Bearer $token",
+            acceptLanguage,
+            subTotal,
+            paymentType,
+            itemList,
+            appType,
+            paymentData,
+            usedPoint,
+            deliveryType,
+            couponId,
+            addressId)
         .asStream()
         .map((response) => response)
         .first
@@ -864,13 +922,13 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
   }
 
   @override
-  Future<SuccessNetworkResponse> checkOrderStatus(
+  Future<PaymentStatusVO?> checkOrderStatus(
       String acceptLanguage, String token, OrderStatusRequest request) {
     return mApi
         .checkOrderStatus(acceptLanguage, 'Bearer $token', request)
         .asStream()
         .map((response) {
-          return response;
+          return response.data;
         })
         .first
         .catchError((error) {
@@ -1038,6 +1096,31 @@ class RetrofitDataAgentImpl extends SmileShopDataAgent {
         .getNotificationList('Bearer $token', acceptLanguage)
         .asStream()
         .map((response) => response.data ?? [])
+        .first
+        .catchError((error) {
+      throw _createException(error);
+    });
+  }
+
+  @override
+  Future<List<CouponVO>> getCouponList(String token) {
+    return mApi
+        .getCouponList('Bearer $token')
+        .asStream()
+        .map((response) => response.data ?? [])
+        .first
+        .catchError((error) {
+      throw _createException(error);
+    });
+  }
+
+  @override
+  Future<PaymentStatusVO?> getWalletRechargeStatus(
+      String token, String transactionId) async {
+    return mApi
+        .checkWalletRechargeStatus('Bearer $token', transactionId)
+        .asStream()
+        .map((response) => response.data)
         .first
         .catchError((error) {
       throw _createException(error);

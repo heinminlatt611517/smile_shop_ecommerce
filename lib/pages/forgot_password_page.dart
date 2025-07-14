@@ -6,7 +6,7 @@ import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/utils/images.dart';
 import 'package:smile_shop/widgets/common_dialog.dart';
 import 'package:smile_shop/widgets/error_dialog_view.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:smile_shop/localization/app_localizations.dart';
 
 import '../blocs/forgot_password_bloc.dart';
 import '../widgets/loading_view.dart';
@@ -54,38 +54,36 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                       const SizedBox(
                         height: 80,
                       ),
-
                       Consumer<ForgotPasswordBloc>(
                         builder: (context, bloc, child) => normalPhoneTextField(
                             controller: phoneController,
-                            hint: AppLocalizations.of(context)!.enterPhoneNumber,
+                            hint:
+                                AppLocalizations.of(context)!.enterPhoneNumber,
                             context: context,
                             onChangeTextField: (v) {
                               bloc.onPhoneNumberChanged(v);
                             },
-                            onChanged: (val) {
-                            }, phoneCode: ''),
+                            onChanged: (val) {},
+                            phoneCode: ''),
                       ),
-
                       const SizedBox(
                         height: kMargin34,
                       ),
-
-
                       GestureDetector(
                         onTap: () {
-                          var bloc =
-                              Provider.of<ForgotPasswordBloc>(context, listen: false);
+                          var bloc = Provider.of<ForgotPasswordBloc>(context,
+                              listen: false);
 
-                          bloc.onTapNext().then((value){
+                          bloc.onTapNext().then((value) {
                             if (value.status == 200) {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (builder) => OtpPage(
-                                      requestId:
-                                      value.data?.requestId.toString(),
-                                      phone: value.data?.to,
-                                      referralCode:value.data?.referralCode,
-                                      isFromForgotPasswordPage: true,)));
+                                        requestId:
+                                            value.data?.requestId.toString(),
+                                        phone: value.data?.to,
+                                        referralCode: value.data?.referralCode,
+                                        isFromForgotPasswordPage: true,
+                                      )));
                             }
                           }).catchError((error) {
                             showCommonDialog(
@@ -100,10 +98,10 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                           decoration: BoxDecoration(
                               color: kPrimaryColor,
                               borderRadius: BorderRadius.circular(4)),
-                          child:  Center(
+                          child: Center(
                             child: Text(
-                             AppLocalizations.of(context)!.next,
-                              style:const TextStyle(color: kBackgroundColor),
+                              AppLocalizations.of(context)!.next,
+                              style: const TextStyle(color: kBackgroundColor),
                             ),
                           ),
                         ),

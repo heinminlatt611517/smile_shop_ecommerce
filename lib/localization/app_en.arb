@@ -117,8 +117,8 @@
   "selectAll" : "Select All",
   "usePromotion" : "Use promotion",
   "noUse"  : "No Use",
-  "standardDelivery" : "Standard Delivery",
-  "specialDelivery" : "Special Delivery",
+  "standardDelivery" : "Quick Delivery",
+  "specialDelivery" : "Free Delivery",
   "thankForShoppingWithUs" : "Thanks for shopping with us.",
   "weAppreciateYourSupportAndHope" : "We appreciate your support and hope you enjoy your purchase. Feel free to reach out if you need any assistance. We look forward to serving you again!",
   "yourOrderIsCompleted" : "Your order is completed.",
@@ -159,5 +159,16 @@
   "leftReferralCodeEmpty" : "If you don't have a referral code, leave it blank.",
   "toViewMyTeamMembers" : "To view my team members",
   "doubleTapToZoom" : "Double Tap to Zoom In/Out",
-  "category": "Category"
+  "category": "Category",
+  "inWareHouse" : "In Warehouse",
+  "onGoing" : "Start Deliver",
+  "delivered" : "Delivered",
+  "toViewMyWallet" : "To view my wallet",
+  "pickUp" : "Pick Up",
+  "findMyPickUp" : "Find My Pickup",
+  "coupon": "Coupon",
+  "deliveryFee" : "Delivery Fee",
+  "subTotal" : "Sub Total",
+  "failed" : "Failed",
+  "detailAddress" : "Detail Address"
   }

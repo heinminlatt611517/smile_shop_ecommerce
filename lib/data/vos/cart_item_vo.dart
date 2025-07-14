@@ -1,7 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:hive_flutter/adapters.dart';
 
-import 'package:smile_shop/data/vos/brand_vo.dart';
 import 'package:smile_shop/data/vos/color_vo.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
 import 'package:smile_shop/data/vos/size_vo.dart';
@@ -60,9 +59,7 @@ class CartItemVo {
         image: image,
         price: price,
         size: size,
-        subcategory: SubcategoryVO(
-          name: subCategory
-        ),
+        subcategory: SubcategoryVO(name: subCategory),
         totalPrice: (quantity ?? 0) * (variantPrice ?? 0),
         variantVO: [
           VariantVO(

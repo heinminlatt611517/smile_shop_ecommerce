@@ -5,7 +5,7 @@ import 'package:smile_shop/blocs/app_language_bloc.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/utils/images.dart';
 import 'package:smile_shop/widgets/common_button_view.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:smile_shop/localization/app_localizations.dart';
 import '../utils/colors.dart';
 import '../widgets/custom_app_bar_view.dart';
 
@@ -83,13 +83,17 @@ class LanguagePageState extends State<LanguagePage> {
             GestureDetector(
               onTap: () => _setLanguage('en'),
               child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                 margin: const EdgeInsets.symmetric(vertical: 8),
                 decoration: BoxDecoration(
-                  color: _selectedLanguage == 'en' ? kPrimaryColor : Colors.white,
+                  color:
+                      _selectedLanguage == 'en' ? kPrimaryColor : Colors.white,
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                    color: _selectedLanguage == 'en' ? kPrimaryColor : Colors.black,
+                    color: _selectedLanguage == 'en'
+                        ? kPrimaryColor
+                        : Colors.black,
                     width: 0.5,
                   ),
                 ),
@@ -105,7 +109,9 @@ class LanguagePageState extends State<LanguagePage> {
                       languageMap['en']!,
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
-                        color: _selectedLanguage == 'en' ? Colors.white : Colors.black,
+                        color: _selectedLanguage == 'en'
+                            ? Colors.white
+                            : Colors.black,
                       ),
                     ),
                   ],
@@ -117,13 +123,17 @@ class LanguagePageState extends State<LanguagePage> {
             GestureDetector(
               onTap: () => _setLanguage('my'),
               child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                 margin: const EdgeInsets.symmetric(vertical: 8),
                 decoration: BoxDecoration(
-                  color: _selectedLanguage == 'my' ? kPrimaryColor : Colors.white,
+                  color:
+                      _selectedLanguage == 'my' ? kPrimaryColor : Colors.white,
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                    color: _selectedLanguage == 'my' ? kPrimaryColor : Colors.black,
+                    color: _selectedLanguage == 'my'
+                        ? kPrimaryColor
+                        : Colors.black,
                     width: 0.5,
                   ),
                 ),
@@ -134,13 +144,14 @@ class LanguagePageState extends State<LanguagePage> {
                       height: 30,
                       width: 30,
                     ),
-                    
                     const SizedBox(width: 10),
                     Text(
                       languageMap['my']!,
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
-                        color: _selectedLanguage == 'my' ? Colors.white : Colors.black,
+                        color: _selectedLanguage == 'my'
+                            ? Colors.white
+                            : Colors.black,
                       ),
                     ),
                   ],
@@ -152,13 +163,17 @@ class LanguagePageState extends State<LanguagePage> {
             GestureDetector(
               onTap: () => _setLanguage('zh'),
               child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                 margin: const EdgeInsets.symmetric(vertical: 8),
                 decoration: BoxDecoration(
-                  color: _selectedLanguage == 'zh' ? kPrimaryColor : Colors.white,
+                  color:
+                      _selectedLanguage == 'zh' ? kPrimaryColor : Colors.white,
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                    color: _selectedLanguage == 'zh' ? kPrimaryColor : Colors.black,
+                    color: _selectedLanguage == 'zh'
+                        ? kPrimaryColor
+                        : Colors.black,
                     width: 0.5,
                   ),
                 ),
@@ -174,7 +189,9 @@ class LanguagePageState extends State<LanguagePage> {
                       languageMap['zh']!,
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
-                        color: _selectedLanguage == 'zh' ? Colors.white : Colors.black,
+                        color: _selectedLanguage == 'zh'
+                            ? Colors.white
+                            : Colors.black,
                       ),
                     ),
                   ],

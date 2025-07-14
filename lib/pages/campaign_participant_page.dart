@@ -7,8 +7,7 @@ import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/widgets/custom_app_bar_view.dart';
 import 'package:smile_shop/widgets/loading_view.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
+import 'package:smile_shop/localization/app_localizations.dart';
 
 class CampaignParticipantPage extends StatelessWidget {
   const CampaignParticipantPage({super.key, required this.campaignId});
@@ -21,14 +20,15 @@ class CampaignParticipantPage extends StatelessWidget {
       create: (_) => CampaignParticipantBloc(campaignId),
       child: Scaffold(
         backgroundColor: kBackgroundColor,
-        appBar:  CustomAppBarView(
+        appBar: CustomAppBarView(
           title: AppLocalizations.of(context)!.participants,
         ),
         body: Selector<CampaignParticipantBloc, bool?>(
           selector: (context, bloc) => bloc.isLoading,
           builder: (_, loading, child) => loading == true
               ? const LoadingView(
-                  indicator: Indicator.ballSpinFadeLoader, indicatorColor: kPrimaryColor)
+                  indicator: Indicator.ballSpinFadeLoader,
+                  indicatorColor: kPrimaryColor)
               : Consumer<CampaignParticipantBloc>(
                   builder: (context, bloc, child) => Padding(
                     padding: const EdgeInsets.symmetric(
@@ -40,7 +40,8 @@ class CampaignParticipantPage extends StatelessWidget {
                           const SizedBox(
                             height: 40,
                           ),
-                           Text(AppLocalizations.of(context)!.participantsInThisCampaign),
+                          Text(AppLocalizations.of(context)!
+                              .participantsInThisCampaign),
                           ListView.builder(
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),

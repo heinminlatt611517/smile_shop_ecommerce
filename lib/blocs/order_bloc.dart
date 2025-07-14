@@ -21,17 +21,20 @@ class OrderBloc extends ChangeNotifier {
     authToken =
         _smileShopModel.getLoginResponseFromDatabase()?.accessToken ?? "";
 
-
     ///get order by type
     switch (index) {
+      // case 1:
+      //   getOrdersByType(kTypeToPay);
+      case 0:
+        getAllOrder();
       case 1:
-        getOrdersByType(kTypeToPay);
+        getOrdersByType(kTypeInWarehouse);
       case 2:
-        getOrdersByType(kTypeToShip);
+        getOrdersByType(kTypeStartDeliver);
       case 3:
-        getOrdersByType(kTypeToReceive);
+        getOrdersByType(kTypeDelivered);
       case 4:
-        getOrdersByType(kTypeToReview);
+        getOrdersByType(kTypeFailed);
     }
   }
 
@@ -43,13 +46,12 @@ class OrderBloc extends ChangeNotifier {
       orders = orderResponse;
       orderType = "";
       notifyListeners();
-    }).whenComplete(()=> _hideLoading());
+    }).whenComplete(() => _hideLoading());
   }
 
   void getOrdersByType(String type) {
     _showLoading();
     if (type == "") {
-      debugPrint("WithoudType>>>>>>>$type");
       _smileShopModel
           .orderList(authToken, kAcceptLanguageEn)
           .then((orderResponse) {
@@ -59,11 +61,10 @@ class OrderBloc extends ChangeNotifier {
         notifyListeners();
       }).whenComplete(() => _hideLoading());
     } else {
-      debugPrint("Type>>>>>>$type");
       _smileShopModel
           .getOrderListByOrderType(authToken, kAcceptLanguageEn, type)
           .then((orderResponse) {
-            orders.clear();
+        orders.clear();
         orders = orderResponse;
         orderType = type;
         notifyListeners();
@@ -75,10 +76,10 @@ class OrderBloc extends ChangeNotifier {
     var cancelOrderRequest = OrderCancelRequest(orderId);
     _smileShopModel
         .cancelOrder(authToken, kAcceptLanguageEn, cancelOrderRequest)
-        .then((value){
-          if(value.status == 200){
-            getOrdersByType(orderType);
-          }
+        .then((value) {
+      if (value.status == 200) {
+        getOrdersByType(orderType);
+      }
     });
   }
 

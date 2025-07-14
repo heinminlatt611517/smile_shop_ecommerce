@@ -159,5 +159,16 @@
   "leftReferralCodeEmpty" : "မျှဝေကုဒ်မရှိပါက ဘာမှမထည့်ပဲထားပါ။",
   "toViewMyTeamMembers" : "အဖွဲ့ဝင်များကိုကြည့်ရန်",
   "doubleTapToZoom" : "Zoomဆွဲရန် နှစ်ချက်နှိပ်ပါ",
-  "category": "အမျိုးအစားများ"
+  "category": "အမျိုးအစားများ",
+  "inWareHouse" : "ဂိုဒေါင်ထဲမှာ",
+  "onGoing" : "စတင်ပို့ဆောင်",
+  "delivered" : "ပို့ဆောင်ပြီး",
+  "toViewMyWallet" : "Walletကိုကြည့်ရန်",
+  "pickUp"  : "ကိုယ်တိုင်ယူမည်",
+  "findMyPickUp" : "ထုတ်ယူရမည့်နေရာကိုကြည့်ရန်",
+  "coupon": "Coupon",
+  "deliveryFee" : "ပို့ဆောင်ခ",
+  "subTotal" : "Sub Total",
+  "failed" : "မအောင်မြင်သော",
+  "detailAddress" : "လိပ်စာအသေးစိတ်"
 }

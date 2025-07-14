@@ -1,5 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:smile_shop/data/vos/login_data_vo.dart';
 import 'package:smile_shop/data/vos/package_vo.dart';
 import 'package:smile_shop/data/vos/user_vo.dart';
 import 'package:smile_shop/network/api_constants.dart';

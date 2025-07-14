@@ -14,13 +14,21 @@ import '../widgets/loading_view.dart';
 class ProductCategoryPage extends StatelessWidget {
   final String? categoryName;
   final int? subCategoryId;
+  final int? minPrice;
+  final int? maxPrice;
 
-  const ProductCategoryPage({super.key, required this.categoryName, required this.subCategoryId});
+  const ProductCategoryPage(
+      {super.key,
+      required this.categoryName,
+      required this.subCategoryId,
+      this.minPrice,
+      this.maxPrice});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => ProductCategoryBloc(subCategoryId ?? 0),
+      create: (context) => ProductCategoryBloc(subCategoryId ?? 0,
+          minPrice: minPrice, maxPrice: maxPrice),
       child: Scaffold(
           backgroundColor: kBackgroundColor,
           appBar: CustomAppBarView(title: categoryName),
@@ -106,7 +114,12 @@ class SearchBarWithBackArrowView extends StatelessWidget {
                 Expanded(
                   child: TextField(
                     enabled: false,
-                    decoration: InputDecoration(border: InputBorder.none, hintText: kSearchHereHintLabel, hintStyle: TextStyle(fontSize: kTextRegular, fontWeight: FontWeight.bold)),
+                    decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: kSearchHereHintLabel,
+                        hintStyle: TextStyle(
+                            fontSize: kTextRegular,
+                            fontWeight: FontWeight.bold)),
                   ),
                 ),
               ],
@@ -143,7 +156,8 @@ class ProductsView extends StatelessWidget {
                       return TrendingProductListItemView(
                         productVO: products[index],
                         onTapFavourite: (product) {
-                          var bloc = Provider.of<ProductCategoryBloc>(context, listen: false);
+                          var bloc = Provider.of<ProductCategoryBloc>(context,
+                              listen: false);
                           bloc.onTapFavourite(product, context);
                         },
                       );
@@ -153,7 +167,8 @@ class ProductsView extends StatelessWidget {
                       crossAxisCount: 2,
                       mainAxisSpacing: 14.0,
                       crossAxisSpacing: 10.0,
-                      childAspectRatio: Responsive(context).isTablet ? 1 : 2 / 2.7,
+                      childAspectRatio:
+                          Responsive(context).isTablet ? 1 : 2 / 2.7,
                     ),
                   );
       },

@@ -5,7 +5,6 @@ import 'package:smile_shop/data/model/smile_shop_model.dart';
 import 'package:smile_shop/data/model/smile_shop_model_impl.dart';
 import 'package:smile_shop/data/vos/cart_item_vo.dart';
 import 'package:smile_shop/data/vos/login_data_vo.dart';
-import 'package:smile_shop/data/vos/product_vo.dart';
 
 class CartBloc extends ChangeNotifier {
   final SmileShopModel _smileShopModel = SmileShopModelImpl();

@@ -3,7 +3,7 @@ import 'package:smile_shop/pages/login_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/widgets/common_button_view.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:smile_shop/localization/app_localizations.dart';
 
 class RequireLogInView extends StatelessWidget {
   const RequireLogInView({super.key});
@@ -11,8 +11,10 @@ class RequireLogInView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8)),
-      padding: const EdgeInsets.symmetric(horizontal: kMarginMedium2, vertical: kMarginMedium3),
+      decoration: BoxDecoration(
+          color: Colors.white, borderRadius: BorderRadius.circular(8)),
+      padding: const EdgeInsets.symmetric(
+          horizontal: kMarginMedium2, vertical: kMarginMedium3),
       margin: const EdgeInsets.symmetric(horizontal: kMarginMedium2),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -30,9 +32,11 @@ class RequireLogInView extends StatelessWidget {
             labelColor: Colors.white,
             bgColor: kPrimaryColor,
             onTapButton: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => const LoginPage()));
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => const LoginPage()));
             },
-          )
+          ),
+          SizedBox(height: MediaQuery.of(context).padding.bottom)
         ],
       ),
     );

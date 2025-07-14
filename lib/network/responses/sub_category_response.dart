@@ -1,5 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:smile_shop/data/vos/category_vo.dart';
 import 'package:smile_shop/data/vos/sub_category_vo.dart';
 
 part 'sub_category_response.g.dart';

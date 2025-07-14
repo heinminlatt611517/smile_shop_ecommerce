@@ -18,7 +18,7 @@ import '../widgets/common_dialog.dart';
 import '../widgets/error_dialog_view.dart';
 import '../widgets/loading_view.dart';
 import 'map_page.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:smile_shop/localization/app_localizations.dart';
 
 class AddNewAddressPage extends StatelessWidget {
   final int? addressId;
@@ -117,7 +117,10 @@ class AddNewAddressPage extends StatelessWidget {
                                         errorMessage: error.toString()));
                               });
                             }),
-                      )
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).padding.bottom,
+                      ),
                     ],
                   ),
                 ),
@@ -376,13 +379,15 @@ class StateTownshipAndMapDropdownView extends StatelessWidget {
               onChanged: (value) {
                 if (value == "") {
                   bloc.mapAddressNameController.clear();
-                  bloc.onChangedGoogleMapNamed("");
+                  bloc.onChangedGoogleMapNamed('');
+                } else {
+                  bloc.onChangedGoogleMapNamed(value);
                 }
               },
               controller: bloc.mapAddressNameController,
               cursorColor: kPrimaryColor,
               decoration: InputDecoration(
-                hintText: AppLocalizations.of(context)!.addAddress,
+                hintText: AppLocalizations.of(context)!.detailAddress,
                 hintStyle: const TextStyle(fontSize: kTextRegular),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),

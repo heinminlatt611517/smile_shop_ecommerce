@@ -1,5 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:smile_shop/data/vos/promotion_vo.dart';
 
 import '../../data/vos/promotion_data_vo.dart';
 

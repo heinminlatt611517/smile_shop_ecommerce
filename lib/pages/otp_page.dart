@@ -8,7 +8,7 @@ import 'package:smile_shop/pages/password_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/utils/strings.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:smile_shop/localization/app_localizations.dart';
 
 import '../widgets/common_dialog.dart';
 import '../widgets/error_dialog_view.dart';
@@ -70,9 +70,9 @@ class _OtpPageState extends State<OtpPage> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                       Text(
+                      Text(
                         AppLocalizations.of(context)!.checkYourPhone,
-                        style:const TextStyle(
+                        style: const TextStyle(
                             fontSize: kTextRegular3x,
                             color: Colors.black,
                             fontWeight: FontWeight.w500),
@@ -80,9 +80,10 @@ class _OtpPageState extends State<OtpPage> {
                       const SizedBox(
                         height: kMarginMedium3,
                       ),
-                       Text(
-                         AppLocalizations.of(context)!.weHaveHaveSendTheCodeToYourPhone,
-                        style:const TextStyle(
+                      Text(
+                        AppLocalizations.of(context)!
+                            .weHaveHaveSendTheCodeToYourPhone,
+                        style: const TextStyle(
                             fontSize: kTextRegular,
                             color: Colors.black,
                             fontWeight: FontWeight.w500),
@@ -175,16 +176,18 @@ class _OtpPageState extends State<OtpPage> {
                             bloc
                                 .onTapVerifyOtp(widget.requestId ?? "")
                                 .then((value) {
-                                  ///save referralCode to get storage
+                              ///save referralCode to get storage
                               final box = GetStorage();
-                              box.write(kBoxKeyReferralCode, widget.referralCode);
+                              box.write(
+                                  kBoxKeyReferralCode, widget.referralCode);
 
                               ///navigate to password page
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (builder) => PasswordPage(
                                         requestId: widget.requestId,
                                         phone: widget.phone,
-                                        isFromPasswordPage: widget.isFromForgotPasswordPage,
+                                        isFromPasswordPage:
+                                            widget.isFromForgotPasswordPage,
                                       )));
                             }).catchError((error) {
                               debugPrint("Error>>>>>>$error");
@@ -200,10 +203,10 @@ class _OtpPageState extends State<OtpPage> {
                             decoration: BoxDecoration(
                                 color: kPrimaryColor,
                                 borderRadius: BorderRadius.circular(4)),
-                            child:  Center(
+                            child: Center(
                               child: Text(
                                 AppLocalizations.of(context)!.verify,
-                                style:const TextStyle(color: kBackgroundColor),
+                                style: const TextStyle(color: kBackgroundColor),
                               ),
                             ),
                           ),

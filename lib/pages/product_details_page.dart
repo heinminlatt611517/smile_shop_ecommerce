@@ -24,7 +24,7 @@ import 'package:video_player/video_player.dart';
 import '../utils/dimens.dart';
 import '../utils/images.dart';
 import '../widgets/cached_network_image_view.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:smile_shop/localization/app_localizations.dart';
 import '../widgets/loading_view.dart';
 import '../widgets/svg_image_view.dart';
 import 'checkout_page.dart';
@@ -81,10 +81,16 @@ class _ProductDetailsPageState extends State<ProductDetailsPage>
                                     bloc.videoPlayerController,
                                 builder: (context, controller, child) =>
                                     SliverToBoxAdapter(
-                                  child: BannerSectionView(
-                                    images: product.images ?? [],
-                                    video: product.video,
-                                    playerController: controller,
+                                  child: Selector<ProductDetailsBloc, bool>(
+                                    selector: (context, bloc) =>
+                                        bloc.isVideoMute,
+                                    builder: (context, isVideoMute, child) =>
+                                        BannerSectionView(
+                                      images: product.images ?? [],
+                                      video: product.video,
+                                      playerController: controller,
+                                      isVideoMute: isVideoMute,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -190,10 +196,14 @@ class _ProductDetailsPageState extends State<ProductDetailsPage>
                             ? const RequireLogInView()
                             : Container(
                                 color: Colors.white,
-                                height: 80,
+                                height:
+                                    80 + MediaQuery.of(context).padding.bottom,
                                 width: double.infinity,
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: kMarginSmall),
+                                padding: EdgeInsets.only(
+                                    left: kMarginSmall,
+                                    right: kMarginSmall,
+                                    bottom:
+                                        MediaQuery.of(context).padding.bottom),
                                 child: Center(
                                   child: Row(
                                     mainAxisAlignment:
@@ -451,7 +461,7 @@ class ProductDetailsView extends StatelessWidget {
       padding: const EdgeInsets.only(top: kMarginLarge),
       child: ListView.builder(
         itemCount: images.length,
-        padding: EdgeInsets.zero,
+        padding: const EdgeInsets.only(bottom: kMargin154),
         itemBuilder: (context, index) {
           return Padding(
             padding: const EdgeInsets.only(
@@ -521,9 +531,14 @@ class BannerSectionView extends StatelessWidget {
   final String? video;
   final List<String> images;
   final VideoPlayerController? playerController;
+  final bool isVideoMute;
 
   BannerSectionView(
-      {super.key, required this.images, this.video, this.playerController});
+      {super.key,
+      required this.images,
+      this.video,
+      this.playerController,
+      required this.isVideoMute});
 
   final PageController _bannerPageController =
       PageController(viewportFraction: 1);
@@ -565,8 +580,39 @@ class BannerSectionView extends StatelessWidget {
                           },
                           child: (realIndex == -1)
                               ? playerController != null
-                                  ? VideoPlayer(
-                                      playerController!,
+                                  ? Stack(
+                                      children: [
+                                        VideoPlayer(
+                                          playerController!,
+                                        ),
+                                        Align(
+                                            alignment: Alignment.topRight,
+                                            child: Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: kMarginMedium2,
+                                                  vertical:
+                                                      MediaQuery.of(context)
+                                                              .padding
+                                                              .top +
+                                                          kMarginMedium3),
+                                              child: InkWell(
+                                                onTap: () {
+                                                  var bloc = Provider.of<
+                                                          ProductDetailsBloc>(
+                                                      context,
+                                                      listen: false);
+
+                                                  bloc.onTapMute();
+                                                },
+                                                child: Icon(
+                                                  isVideoMute
+                                                      ? Icons.volume_off
+                                                      : Icons.volume_up,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ))
+                                      ],
                                     )
                                   : const Center(
                                       child: Text("Video Can Not Be Played"),
@@ -641,6 +687,7 @@ class CategoryAndReturnPointView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(
@@ -713,6 +760,31 @@ class CategoryAndReturnPointView extends StatelessWidget {
             ],
           ),
         ),
+        // Container(
+        //   decoration: BoxDecoration(
+        //       color: Colors.white,
+        //       borderRadius: BorderRadius.circular(kMarginMedium)),
+        //   margin: const EdgeInsets.symmetric(
+        //       vertical: kMarginMedium, horizontal: kMarginMedium2),
+        //   padding: const EdgeInsets.symmetric(
+        //       vertical: kMarginMedium2, horizontal: kMarginMedium3),
+        //   child: Row(
+        //     children: [
+        //       const Text(
+        //         'Return Points',
+        //         style: TextStyle(
+        //           fontSize: kTextRegular,
+        //         ),
+        //       ),
+        //       const Spacer(),
+        //       PromotionPointView(
+        //         point: productVO?.variantVO?.isNotEmpty ?? true
+        //             ? productVO?.variantVO?.first.promotionPoint ?? 0
+        //             : 0,
+        //       ),
+        //     ],
+        //   ),
+        // ),
         Container(
           decoration: BoxDecoration(
               color: Colors.white,
@@ -721,22 +793,47 @@ class CategoryAndReturnPointView extends StatelessWidget {
               vertical: kMarginMedium, horizontal: kMarginMedium2),
           padding: const EdgeInsets.symmetric(
               vertical: kMarginMedium2, horizontal: kMarginMedium3),
-          child: Row(
+          child: Column(
             children: [
-              const Text(
-                'Return Points',
-                style: TextStyle(
-                  fontSize: kTextRegular,
-                ),
-              ),
-              const Spacer(),
-              PromotionPointView(
-                point: productVO?.variantVO?.isNotEmpty ?? true
-                    ? productVO?.variantVO?.first.redeemPoint ?? 0
-                    : 0,
+              Row(
+                children: [
+                  const Text(
+                    'Redeem Points',
+                    style: TextStyle(
+                      fontSize: kTextRegular,
+                    ),
+                  ),
+                  const Spacer(),
+                  PromotionPointView(
+                    point: productVO?.variantVO?.isNotEmpty ?? true
+                        ? productVO?.variantVO?.first.redeemPoint ?? 0
+                        : 0,
+                  ),
+                ],
               ),
             ],
           ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: kMarginMedium2),
+          child: RichText(
+              text: TextSpan(
+            children: [
+              const TextSpan(
+                text: "Purchase this & get ",
+                style: TextStyle(fontSize: kTextRegular2x, color: Colors.black),
+              ),
+              TextSpan(
+                text: "${productVO?.variantVO?.first.promotionPoint ?? 0}",
+                style: const TextStyle(
+                    fontSize: kTextRegular2x, color: kPrimaryColor),
+              ),
+              const TextSpan(
+                text: " promotion points",
+                style: TextStyle(fontSize: kTextRegular2x, color: Colors.black),
+              ),
+            ],
+          )),
         ),
       ],
     );
@@ -850,6 +947,9 @@ void showBuyNowOrAddToCartBottomSheet(
                             const SizedBox(
                               height: kMargin10,
                             ),
+                            Consumer<ProductDetailsBottomSheetBloc>(
+                                builder: (context, bloc, child) => Text(
+                                    "Available Qty ${bloc.selectedVariant?.inventoryVO?.quantity}")),
 
                             ///quality increase and decrease view
                             Consumer<ProductDetailsBottomSheetBloc>(
@@ -1134,7 +1234,11 @@ void showBuyNowOrAddToCartBottomSheet(
                                                 size: bloc.selectedVariant
                                                     ?.sizeVO?.value,
                                                 variantVO: [
-                                                  bloc.selectedVariant?.copyWith(qtyCount: bloc.quantityCount, ) ??
+                                                  bloc.selectedVariant
+                                                          ?.copyWith(
+                                                        qtyCount:
+                                                            bloc.quantityCount,
+                                                      ) ??
                                                       VariantVO()
                                                 ],
                                                 totalPrice:
@@ -1192,7 +1296,9 @@ void showBuyNowOrAddToCartBottomSheet(
                             CartItemVo cartItem = CartItemVo(
                               productId: productVO?.id,
                               productName: productName,
-                              image: bloc.selectedVariant?.images.first.url,
+                              image: bloc.selectedVariant?.images.firstOrNull
+                                      ?.url ??
+                                  '',
                               price: productVO?.price,
                               color: bloc.selectedVariant?.colorVO?.value,
                               size: bloc.selectedVariant?.sizeVO?.value,
@@ -1230,7 +1336,7 @@ void showBuyNowOrAddToCartBottomSheet(
 
                   ///spacer
                   const SizedBox(
-                    height: kMarginLarge,
+                    height: kMargin154,
                   ),
                 ],
               ),

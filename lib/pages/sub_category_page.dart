@@ -16,13 +16,17 @@ import '../list_items/trending_product_list_item_view.dart';
 
 class SubCategoryPage extends StatelessWidget {
   final CategoryVO? categoryVO;
+  final int? minPrice;
+  final int? maxPrice;
 
-  const SubCategoryPage({super.key, required this.categoryVO});
+  const SubCategoryPage(
+      {super.key, required this.categoryVO, this.minPrice, this.maxPrice});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => SubCategoryBloc(categoryVO?.id ?? 0),
+      create: (context) => SubCategoryBloc(categoryVO?.id ?? 0,
+          minPrice: minPrice, maxPrice: maxPrice),
       child: Scaffold(
           backgroundColor: kBackgroundColor,
           appBar: CustomAppBarView(
@@ -36,7 +40,8 @@ class SubCategoryPage extends StatelessWidget {
                 Selector<SubCategoryBloc, List<SubcategoryVO>>(
                     selector: (context, bloc) => bloc.subCategories,
                     builder: (context, subCategories, child) {
-                      SubCategoryBloc bloc = Provider.of<SubCategoryBloc>(context, listen: false);
+                      SubCategoryBloc bloc =
+                          Provider.of<SubCategoryBloc>(context, listen: false);
                       return subCategories.isNotEmpty
                           ? Padding(
                               padding: const EdgeInsets.all(kMarginMedium2),
@@ -47,6 +52,8 @@ class SubCategoryPage extends StatelessWidget {
                                   SliverToBoxAdapter(
                                     child: SubCategoryView(
                                       subCategories: subCategories,
+                                      minPrice: minPrice,
+                                      maxPrice: maxPrice,
                                     ),
                                   ),
 
@@ -87,8 +94,11 @@ class SubCategoryPage extends StatelessWidget {
 ///sub category view
 class SubCategoryView extends StatelessWidget {
   final List<SubcategoryVO> subCategories;
+  final int? minPrice;
+  final int? maxPrice;
 
-  const SubCategoryView({super.key, required this.subCategories});
+  const SubCategoryView(
+      {super.key, required this.subCategories, this.minPrice, this.maxPrice});
 
   @override
   Widget build(BuildContext context) {
@@ -105,6 +115,8 @@ class SubCategoryView extends StatelessWidget {
                 builder: (context) => ProductCategoryPage(
                   categoryName: subCategories[index].name,
                   subCategoryId: subCategories[index].id,
+                  minPrice: minPrice,
+                  maxPrice: maxPrice,
                 ),
               ),
             );
@@ -117,8 +129,6 @@ class SubCategoryView extends StatelessWidget {
       itemCount: subCategories.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 4,
-        mainAxisSpacing: 10.0,
-        crossAxisSpacing: 10.0,
       ),
     );
   }
@@ -142,7 +152,8 @@ class ProductsView extends StatelessWidget {
                   return TrendingProductListItemView(
                     productVO: products[index],
                     onTapFavourite: (product) {
-                      var bloc = Provider.of<SubCategoryBloc>(context, listen: false);
+                      var bloc =
+                          Provider.of<SubCategoryBloc>(context, listen: false);
                       bloc.onTapFavourite(product, context);
                     },
                   );

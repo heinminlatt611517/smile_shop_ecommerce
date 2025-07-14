@@ -74,9 +74,13 @@ class NotificationService {
       importance: Importance.high,
     );
 
-    await _localNotifications.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.createNotificationChannel(channel);
+    await _localNotifications
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(channel);
 
-    const initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
 
     // ios setup
     const initializationSettingsDarwin = DarwinInitializationSettings();
@@ -90,15 +94,14 @@ class NotificationService {
     await _localNotifications.initialize(
       initializationSettings,
       onDidReceiveNotificationResponse: (details) {
-        _handleBackgroundMessage(RemoteMessage(data: {
-          'data': details.payload
-        }));
+        _handleBackgroundMessage(
+            RemoteMessage(data: {'data': details.payload}));
       },
     );
 
     _isFlutterLocalNotificationsInitialized = true;
   }
-
+  
   void _handleBackgroundMessage(RemoteMessage message) {
     final data = message.data;
     print(data);
@@ -109,7 +112,8 @@ class NotificationService {
       notiFromNotiTap = NotificationVO.fromJson(formatData ?? {});
     }
     if (notiFromNotiTap?.notiType == 'news') {
-      navigatorKey.currentState?.pushNamed('/notification_detail', arguments: data);
+      navigatorKey.currentState
+          ?.pushNamed('/notification_detail', arguments: data);
     }
   }
 
@@ -135,6 +139,7 @@ class NotificationService {
   }
 }
 
+@pragma('vm:entry-point')
 Future<void> showNotification(RemoteMessage message) async {
   RemoteNotification? notification = message.notification;
   AndroidNotification? android = message.notification?.android;
@@ -147,7 +152,8 @@ Future<void> showNotification(RemoteMessage message) async {
         android: AndroidNotificationDetails(
           'high_importance_channel',
           'High Importance Notifications',
-          channelDescription: 'This channel is used for important notifications.',
+          channelDescription:
+              'This channel is used for important notifications.',
           importance: Importance.max,
           priority: Priority.max,
           icon: 'launcher_icon',

@@ -16,7 +16,7 @@ import 'package:smile_shop/utils/strings.dart';
 import 'package:smile_shop/widgets/common_dialog.dart';
 import 'package:smile_shop/widgets/error_dialog_view.dart';
 import 'package:smile_shop/widgets/input_view_lock_icon.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:smile_shop/localization/app_localizations.dart';
 
 import '../data/dummy_data/country_code.dart';
 import '../widgets/loading_view.dart';
@@ -52,20 +52,24 @@ class _LoginPageState extends State<LoginPage> {
                       const SizedBox(
                         height: 20,
                       ),
+
                       ///dealer
                       Align(
                         alignment: Alignment.centerRight,
                         child: IntrinsicWidth(
                           child: InkWell(
-                            onTap:(){
-                              Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                      builder: (builder) => const DealerLoginPage()));
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (builder) =>
+                                      const DealerLoginPage()));
                             },
                             child: Container(
-                              padding:const EdgeInsets.symmetric(vertical: kMarginSmall,horizontal: kMarginMedium),
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: kMarginSmall,
+                                  horizontal: kMarginMedium),
                               decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(kMarginMedium),
+                                  borderRadius:
+                                      BorderRadius.circular(kMarginMedium),
                                   border: Border.all(
                                     color: Colors.black,
                                   )),
@@ -73,7 +77,10 @@ class _LoginPageState extends State<LoginPage> {
                                 child: Column(
                                   children: [
                                     Icon(Icons.face),
-                                    Text('Dealer',style: TextStyle(fontSize: kTextSmall),),
+                                    Text(
+                                      'Dealer',
+                                      style: TextStyle(fontSize: kTextSmall),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -99,7 +106,8 @@ class _LoginPageState extends State<LoginPage> {
                       Consumer<LogInBloc>(
                         builder: (context, bloc, child) => normalPhoneTextField(
                             controller: phoneController,
-                            hint: AppLocalizations.of(context)!.enterPhoneNumber,
+                            hint:
+                                AppLocalizations.of(context)!.enterPhoneNumber,
                             phoneCode:
                                 "${selectedCountry.name} ${selectedCountry.code}",
                             context: context,
@@ -124,7 +132,8 @@ class _LoginPageState extends State<LoginPage> {
                               bloc.onTapShowPassword();
                             },
                             isSecure: bloc.isShowPassword,
-                            hintLabel: AppLocalizations.of(context)!.typeYourPassword,
+                            hintLabel:
+                                AppLocalizations.of(context)!.typeYourPassword,
                             onChangeValue: (value) {
                               bloc.onPasswordChanged(value);
                             }),
@@ -141,11 +150,12 @@ class _LoginPageState extends State<LoginPage> {
                           TextButton(
                               onPressed: () {
                                 Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (builder) => const ForgotPasswordPage()));
+                                    builder: (builder) =>
+                                        const ForgotPasswordPage()));
                               },
-                              child:  Text(
+                              child: Text(
                                 AppLocalizations.of(context)!.forgotPassword,
-                                style:const TextStyle(color: kPrimaryColor),
+                                style: const TextStyle(color: kPrimaryColor),
                               ))
                         ],
                       ),
@@ -161,8 +171,10 @@ class _LoginPageState extends State<LoginPage> {
 
                           bloc.onTapSign().then((value) {
                             if (value.statusCode == 200) {
-                              GetStorage().write(kBoxKeyLoginUserType, kTypeEndUser);
-                              GetStorage().write(kBoxKeyPromotionPoint, value.data?.data?.promotionPoints ?? 0);
+                              GetStorage()
+                                  .write(kBoxKeyLoginUserType, kTypeEndUser);
+                              GetStorage().write(kBoxKeyPromotionPoint,
+                                  value.data?.data?.promotionPoints ?? 0);
                               bloc.crateFirebaseChatUser(
                                   id: value.data?.data?.id ?? 0,
                                   name: value.data?.data?.name ?? "",
@@ -185,10 +197,10 @@ class _LoginPageState extends State<LoginPage> {
                           decoration: BoxDecoration(
                               color: kPrimaryColor,
                               borderRadius: BorderRadius.circular(4)),
-                          child:  Center(
+                          child: Center(
                             child: Text(
                               AppLocalizations.of(context)!.login,
-                              style:const TextStyle(color: kBackgroundColor),
+                              style: const TextStyle(color: kBackgroundColor),
                             ),
                           ),
                         ),
@@ -199,12 +211,13 @@ class _LoginPageState extends State<LoginPage> {
 
                       RichText(
                           text: TextSpan(children: [
-                         TextSpan(
-                            text: AppLocalizations.of(context)!.ifYouDontHaveAccount,
-                            style:const TextStyle(
+                        TextSpan(
+                            text: AppLocalizations.of(context)!
+                                .ifYouDontHaveAccount,
+                            style: const TextStyle(
                                 fontSize: kTextRegular, color: Colors.black)),
                         TextSpan(
-                            text:  AppLocalizations.of(context)!.signUp,
+                            text: AppLocalizations.of(context)!.signUp,
                             style: const TextStyle(
                                 fontSize: kTextRegular, color: kPrimaryColor),
                             recognizer: TapGestureRecognizer()

@@ -242,6 +242,7 @@ class _SmileShopApi implements SmileShopApi {
     String acceptLanguage,
     int endUserId,
     int page,
+    int perPage,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -253,6 +254,7 @@ class _SmileShopApi implements SmileShopApi {
     final _data = {
       'enduser_id': endUserId,
       'page': page,
+      'perPage': perPage,
     };
     final _options = _setStreamType<ProductResponse>(Options(
       method: 'POST',
@@ -626,9 +628,16 @@ class _SmileShopApi implements SmileShopApi {
     int endUserId,
     int page,
     int categoryID,
+    int? minPrice,
+    int? maxPrice,
   ) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'category_id': categoryID};
+    final queryParameters = <String, dynamic>{
+      r'category_id': categoryID,
+      r'min_price': minPrice,
+      r'max_price': maxPrice,
+    };
+    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{
       r'Authorization': token,
       r'Accept-Language': acceptLanguage,
@@ -727,9 +736,16 @@ class _SmileShopApi implements SmileShopApi {
     int endUserId,
     int page,
     int subcategoryID,
+    int? minPrice,
+    int? maxPrice,
   ) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'subcategory_id': subcategoryID};
+    final queryParameters = <String, dynamic>{
+      r'subcategory_id': subcategoryID,
+      r'min_price': minPrice,
+      r'max_price': maxPrice,
+    };
+    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{
       r'Authorization': token,
       r'Accept-Language': acceptLanguage,
@@ -1118,9 +1134,13 @@ class _SmileShopApi implements SmileShopApi {
     String appType,
     String paymentData,
     int usedPoint,
+    String deliveryType,
+    int? couponId,
+    int? addressId,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
+    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{
       r'Authorization': token,
       r'Accept-Language': acceptLanguage,
@@ -1133,7 +1153,11 @@ class _SmileShopApi implements SmileShopApi {
       'app_type': appType,
       'payment_data': paymentData,
       'used_point': usedPoint,
+      'delivery_type': deliveryType,
+      'coupon_id': couponId,
+      'address_id': addressId,
     };
+    _data.removeWhere((k, v) => v == null);
     final _options = _setStreamType<SuccessPaymentResponse>(Options(
       method: 'POST',
       headers: _headers,
@@ -2349,7 +2373,7 @@ class _SmileShopApi implements SmileShopApi {
   }
 
   @override
-  Future<SuccessNetworkResponse> checkOrderStatus(
+  Future<PaymentStatusResponse> checkOrderStatus(
     String acceptLanguage,
     String token,
     OrderStatusRequest request,
@@ -2363,7 +2387,7 @@ class _SmileShopApi implements SmileShopApi {
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
     _data.addAll(request.toJson());
-    final _options = _setStreamType<SuccessNetworkResponse>(Options(
+    final _options = _setStreamType<PaymentStatusResponse>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -2380,9 +2404,46 @@ class _SmileShopApi implements SmileShopApi {
           baseUrl,
         )));
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late SuccessNetworkResponse _value;
+    late PaymentStatusResponse _value;
     try {
-      _value = SuccessNetworkResponse.fromJson(_result.data!);
+      _value = PaymentStatusResponse.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<PaymentStatusResponse> checkWalletRechargeStatus(
+    String token,
+    String transactionId,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = {'transaction_id': transactionId};
+    final _options = _setStreamType<PaymentStatusResponse>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/api/wallet/check-recharge-status',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late PaymentStatusResponse _value;
+    try {
+      _value = PaymentStatusResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;
@@ -2754,6 +2815,87 @@ class _SmileShopApi implements SmileShopApi {
     late NotificationListResponse _value;
     try {
       _value = NotificationListResponse.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<ProductResponse> getCustomCategoryProducts(
+    String token,
+    String acceptLanguage,
+    int page,
+    int perPage,
+    String category,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{
+      r'Authorization': token,
+      r'Accept-Language': acceptLanguage,
+    };
+    _headers.removeWhere((k, v) => v == null);
+    final _data = {
+      'page': page,
+      'perPage': perPage,
+      'category': category,
+    };
+    final _options = _setStreamType<ProductResponse>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/api/filter/product/custom-category',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late ProductResponse _value;
+    try {
+      _value = ProductResponse.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<CouponResponse> getCouponList(String token) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<CouponResponse>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/api/coupons',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late CouponResponse _value;
+    try {
+      _value = CouponResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;

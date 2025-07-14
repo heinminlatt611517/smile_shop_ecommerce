@@ -11,7 +11,7 @@ import 'package:smile_shop/widgets/custom_app_bar_view.dart';
 
 import '../widgets/loading_view.dart';
 import 'add_new_address_page.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:smile_shop/localization/app_localizations.dart';
 
 class MyAddressPage extends StatelessWidget {
   final bool needReturnValue;
@@ -28,7 +28,8 @@ class MyAddressPage extends StatelessWidget {
         },
         child: Scaffold(
           backgroundColor: kBackgroundColor,
-          appBar: CustomAppBarView(title: AppLocalizations.of(context)?.myAddress ?? ''),
+          appBar: CustomAppBarView(
+              title: AppLocalizations.of(context)?.myAddress ?? ''),
           body: Selector<MyAddressBloc, bool>(
             selector: (context, bloc) => bloc.isLoading,
             builder: (context, isLoading, child) => Stack(
@@ -46,7 +47,8 @@ class MyAddressPage extends StatelessWidget {
                         ///add address view
                         InkWell(
                           onTap: () async {
-                            final bool? isUpdated = await Navigator.of(context).push(
+                            final bool? isUpdated =
+                                await Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (builder) => const AddNewAddressPage(),
                               ),
@@ -58,13 +60,16 @@ class MyAddressPage extends StatelessWidget {
                           child: Container(
                             height: 100,
                             decoration: BoxDecoration(
-                              border: Border.all(color: kPrimaryColor, width: 1),
-                              borderRadius: BorderRadius.circular(kMarginMedium2),
+                              border:
+                                  Border.all(color: kPrimaryColor, width: 1),
+                              borderRadius:
+                                  BorderRadius.circular(kMarginMedium2),
                             ),
                             child: Center(
                               child: Text(
                                 AppLocalizations.of(context)?.addAddress ?? '',
-                                style: const TextStyle(fontSize: kTextRegular2x),
+                                style:
+                                    const TextStyle(fontSize: kTextRegular2x),
                               ),
                             ),
                           ),
@@ -77,7 +82,8 @@ class MyAddressPage extends StatelessWidget {
                         ///address list item view
                         Selector<MyAddressBloc, List<AddressVO>>(
                           selector: (context, bloc) => bloc.addressList,
-                          builder: (context, addressList, child) => ListView.separated(
+                          builder: (context, addressList, child) =>
+                              ListView.separated(
                             itemCount: addressList.length,
                             shrinkWrap: true,
                             itemBuilder: (context, index) {
@@ -85,13 +91,15 @@ class MyAddressPage extends StatelessWidget {
                                 onTap: needReturnValue
                                     ? () {
                                         // Navigator.pop(context, '${addressList[index].townshipVO?.name},${addressList[index].stateVO?.name}');
-                                        Navigator.pop(context, addressList[index]);
+                                        Navigator.pop(
+                                            context, addressList[index]);
                                       }
                                     : null,
                                 child: AddressListItemView(
                                     addressVO: addressList[index],
                                     onTapEdit: () async {
-                                      final bool? isUpdated = await Navigator.of(context).push(
+                                      final bool? isUpdated =
+                                          await Navigator.of(context).push(
                                         MaterialPageRoute(
                                           builder: (builder) => EditAddressPage(
                                             addressVO: addressList[index],
@@ -99,7 +107,9 @@ class MyAddressPage extends StatelessWidget {
                                         ),
                                       );
                                       if (isUpdated == true) {
-                                        context.read<MyAddressBloc>().refreshAddress();
+                                        context
+                                            .read<MyAddressBloc>()
+                                            .refreshAddress();
                                       }
                                     }),
                               );

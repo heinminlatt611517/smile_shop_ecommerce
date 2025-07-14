@@ -46,3 +46,5 @@ const kUserLevelIcon = 'assets/images/user_level.png';
 const kEnglishImg = 'assets/images/english.png';
 const kMyanmarImg = 'assets/images/myanmar.png';
 const kChinaImg = 'assets/images/china.png';
+const kWallet = 'assets/images/wallet.png';
+const kCampaignTitleImage = 'assets/images/campaign_title.png';

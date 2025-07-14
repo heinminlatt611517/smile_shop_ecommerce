@@ -4,8 +4,10 @@ import 'package:smile_shop/data/vos/banner_vo.dart';
 import 'package:smile_shop/data/vos/campaign_vo.dart';
 import 'package:smile_shop/data/vos/cart_item_vo.dart';
 import 'package:smile_shop/data/vos/category_vo.dart';
+import 'package:smile_shop/data/vos/coupon_vo.dart';
 import 'package:smile_shop/data/vos/login_data_vo.dart';
 import 'package:smile_shop/data/vos/notification_vo.dart';
+import 'package:smile_shop/data/vos/payment_status_vo.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
 import 'package:smile_shop/data/vos/promotion_data_vo.dart';
 import 'package:smile_shop/data/vos/search_product_vo.dart';
@@ -46,7 +48,6 @@ import '../vos/package_vo.dart';
 import '../vos/payment_vo.dart';
 import '../vos/popup_data_vo.dart';
 import '../vos/product_response_data_vo.dart';
-import '../vos/promotion_vo.dart';
 import '../vos/refund_reason_vo.dart';
 import '../vos/refund_vo.dart';
 import '../vos/state_vo.dart';
@@ -170,15 +171,30 @@ abstract class SmileShopModel {
       String itemList,
       String appType,
       String paymentData,
-      int usedPoint);
+      int usedPoint,
+      String deliveryType,
+      int? couponId,
+      int addressId);
 
   Future<List<PaymentVO>> payments(
       String token, String acceptLanguage, String action);
-  Future<List<ProductVO>> searchProductsCategoryId(String token,
-      String acceptLanguage, String endUserId, int pageNo, int categoryId);
+  Future<List<ProductVO>> searchProductsCategoryId(
+      String token,
+      String acceptLanguage,
+      String endUserId,
+      int pageNo,
+      int categoryId,
+      int? minPrice,
+      int? maxPrice);
 
-  Future<List<ProductVO>> searchProductsBySubCategoryId(String token,
-      String acceptLanguage, String endUserId, int pageNo, int subCategoryId);
+  Future<List<ProductVO>> searchProductsBySubCategoryId(
+      String token,
+      String acceptLanguage,
+      String endUserId,
+      int pageNo,
+      int subCategoryId,
+      int? minPrice,
+      int? maxPrice);
 
   ///for cart list
   List<ProductVO> firstTimeGetProductFromDatabase();
@@ -284,7 +300,7 @@ abstract class SmileShopModel {
   Future<PackageVO> getPackageDetails(
       String token, String acceptLanguage, int id);
 
-  Future<SuccessNetworkResponse> checkOrderStatus(
+  Future<PaymentStatusVO?> checkOrderStatus(
       String acceptLanguage, String token, OrderStatusRequest request);
 
   Future<CampaignHistoryResponse> getCampaignHistory(
@@ -318,4 +334,12 @@ abstract class SmileShopModel {
 
   Future<List<NotificationVO>> getNotificationList(
       String token, String acceptLanguage);
+
+  Future<List<ProductVO>> getCustomCategoryProducts(
+      String token, String acceptLanguage, int pageNo, String category);
+
+  Future<List<CouponVO>> getCouponList(String token);
+
+  Future<PaymentStatusVO?> getWalletRechargeStatus(
+      String token, String transactionId);
 }

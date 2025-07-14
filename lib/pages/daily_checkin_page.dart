@@ -7,7 +7,7 @@ import 'package:smile_shop/data/vos/checkIn_vo.dart';
 import 'package:smile_shop/list_items/daily_checkin_list_item.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/utils/images.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:smile_shop/localization/app_localizations.dart';
 
 import '../utils/colors.dart';
 import '../widgets/loading_view.dart';
@@ -52,34 +52,45 @@ class DailyCheckInPage extends StatelessWidget {
                                   height: 20,
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.only(left: kMarginMedium2),
-                                  child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                                    InkWell(
-                                      onTap: () => Navigator.pop(context),
-                                      child: SvgPicture.asset(
-                                        kBackSvgIcon,
-                                        fit: BoxFit.contain,
-                                        height: 26,
-                                        width: 26,
-                                      ),
-                                    ),
-                                    Text(
-                                      AppLocalizations.of(context)!.dailyCheckIn,
-                                      style: const TextStyle(fontSize: kTextRegular2x, fontWeight: FontWeight.bold),
-                                    ),
-                                    const SizedBox(
-                                      width: 30,
-                                    )
-                                  ]),
+                                  padding: const EdgeInsets.only(
+                                      left: kMarginMedium2),
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        InkWell(
+                                          onTap: () => Navigator.pop(context),
+                                          child: SvgPicture.asset(
+                                            kBackSvgIcon,
+                                            fit: BoxFit.contain,
+                                            height: 26,
+                                            width: 26,
+                                          ),
+                                        ),
+                                        Text(
+                                          AppLocalizations.of(context)!
+                                              .dailyCheckIn,
+                                          style: const TextStyle(
+                                              fontSize: kTextRegular2x,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        const SizedBox(
+                                          width: 30,
+                                        )
+                                      ]),
                                 ),
                                 Row(
                                   children: [
                                     const Spacer(),
                                     Container(
-                                      margin: const EdgeInsets.only(right: kMargin25),
+                                      margin: const EdgeInsets.only(
+                                          right: kMargin25),
                                       height: kMargin25,
                                       width: kMargin50 + 5,
-                                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: kPrimaryColor),
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          color: kPrimaryColor),
                                       child: const Center(
                                         child: Text(
                                           'Rules',
@@ -91,14 +102,23 @@ class DailyCheckInPage extends StatelessWidget {
                                 ),
                                 Text(
                                   AppLocalizations.of(context)!.totalCount,
-                                  style: const TextStyle(fontSize: kTextRegular2x, fontWeight: FontWeight.bold),
+                                  style: const TextStyle(
+                                      fontSize: kTextRegular2x,
+                                      fontWeight: FontWeight.bold),
                                 ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      checkInVO.currentCheckInDay.toString() == "null" ? "0" : checkInVO.currentCheckInDay.toString(),
-                                      style: const TextStyle(fontSize: kMarginXLarge, color: kPrimaryColor, fontWeight: FontWeight.bold),
+                                      checkInVO.currentCheckInDay.toString() ==
+                                              "null"
+                                          ? "0"
+                                          : checkInVO.currentCheckInDay
+                                              .toString(),
+                                      style: const TextStyle(
+                                          fontSize: kMarginXLarge,
+                                          color: kPrimaryColor,
+                                          fontWeight: FontWeight.bold),
                                     ),
                                     const SizedBox(
                                       width: 5,
@@ -107,7 +127,9 @@ class DailyCheckInPage extends StatelessWidget {
                                       padding: EdgeInsets.only(top: 10),
                                       child: Text(
                                         'Days',
-                                        style: TextStyle(fontSize: kTextSmall, fontWeight: FontWeight.bold),
+                                        style: TextStyle(
+                                            fontSize: kTextSmall,
+                                            fontWeight: FontWeight.bold),
                                       ),
                                     ),
                                   ],
@@ -115,7 +137,8 @@ class DailyCheckInPage extends StatelessWidget {
                                 SizedBox(
                                   width: 180,
                                   height: 170,
-                                  child: Image.asset(kDailyCheckInCalendarImage),
+                                  child:
+                                      Image.asset(kDailyCheckInCalendarImage),
                                 ),
                                 Consumer<DailyCheckInBloc>(
                                   builder: (context, bloc, child) => InkWell(
@@ -125,11 +148,15 @@ class DailyCheckInPage extends StatelessWidget {
                                     child: Container(
                                       height: 36,
                                       width: 118,
-                                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: kPrimaryColor),
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          color: kPrimaryColor),
                                       child: Center(
                                         child: Text(
                                           AppLocalizations.of(context)!.checkIn,
-                                          style: const TextStyle(color: Colors.white),
+                                          style: const TextStyle(
+                                              color: Colors.white),
                                         ),
                                       ),
                                     ),
@@ -140,37 +167,58 @@ class DailyCheckInPage extends StatelessWidget {
                           ]),
                         ),
                         body: Container(
-                          decoration: const BoxDecoration(color: kBackgroundColor, borderRadius: BorderRadius.only(topLeft: Radius.circular(kMarginLarge), topRight: Radius.circular(kMarginLarge))),
-                          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                            const SizedBox(
-                              height: kMargin34,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: kMargin25),
-                              child: Text(AppLocalizations.of(context)!.checkInCount),
-                            ),
-                            const SizedBox(
-                              height: kMargin34 - 4,
-                            ),
-                            Expanded(
-                              child: GridView.builder(
-                                  padding: const EdgeInsets.symmetric(horizontal: kMargin25, vertical: kMargin25),
-                                  itemCount: _getItemCount(checkInVO),
-                                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 5, mainAxisExtent: 80, mainAxisSpacing: 40, crossAxisSpacing: 10),
-                                  itemBuilder: (context, index) {
-                                    Color bgColor = checkInVO.currentCheckInDay.toString() == "null"
-                                        ? Colors.grey
-                                        : (index < int.parse(checkInVO.currentCheckInDay.toString()))
-                                            ? kPrimaryColor
-                                            : Colors.grey;
+                          decoration: const BoxDecoration(
+                              color: kBackgroundColor,
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(kMarginLarge),
+                                  topRight: Radius.circular(kMarginLarge))),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(
+                                  height: kMargin34,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: kMargin25),
+                                  child: Text(AppLocalizations.of(context)!
+                                      .checkInCount),
+                                ),
+                                const SizedBox(
+                                  height: kMargin34 - 4,
+                                ),
+                                Expanded(
+                                  child: GridView.builder(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: kMargin25,
+                                          vertical: kMargin25),
+                                      itemCount: _getItemCount(checkInVO),
+                                      gridDelegate:
+                                          const SliverGridDelegateWithFixedCrossAxisCount(
+                                              crossAxisCount: 5,
+                                              mainAxisExtent: 80,
+                                              mainAxisSpacing: 40,
+                                              crossAxisSpacing: 10),
+                                      itemBuilder: (context, index) {
+                                        Color bgColor = checkInVO
+                                                    .currentCheckInDay
+                                                    .toString() ==
+                                                "null"
+                                            ? Colors.grey
+                                            : (index <
+                                                    int.parse(checkInVO
+                                                        .currentCheckInDay
+                                                        .toString()))
+                                                ? kPrimaryColor
+                                                : Colors.grey;
 
-                                    return DailyCheckInListItem(
-                                      bgColor: bgColor,
-                                      day: index + 1,
-                                    );
-                                  }),
-                            ),
-                          ]),
+                                        return DailyCheckInListItem(
+                                          bgColor: bgColor,
+                                          day: index + 1,
+                                        );
+                                      }),
+                                ),
+                              ]),
                         ),
                       )
                     : Container(
@@ -203,7 +251,10 @@ class DailyCheckInPage extends StatelessWidget {
   }
 
   int _getItemCount(CheckInVO checkInVO) {
-    int totalCheckIn = checkInVO.currentCheckInDay.toString() == "null" || checkInVO.currentCheckInDay.toString() == "0" ? 0 : int.parse(checkInVO.currentCheckInDay.toString());
+    int totalCheckIn = checkInVO.currentCheckInDay.toString() == "null" ||
+            checkInVO.currentCheckInDay.toString() == "0"
+        ? 0
+        : int.parse(checkInVO.currentCheckInDay.toString());
     if (totalCheckIn <= 10) {
       return 10;
     }

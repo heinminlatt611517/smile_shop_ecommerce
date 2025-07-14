@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:smile_shop/data/model/smile_shop_model.dart';
 import 'package:smile_shop/data/model/smile_shop_model_impl.dart';
@@ -38,7 +37,7 @@ class EditAddressBloc extends ChangeNotifier {
     ///get state list
     _smileShopModel.states().then((stateResponse) {
       states = stateResponse;
-      fetchTownshipsByStateId(addressVO?.stateId ?? 0);
+      fetchTownshipsByStateId(addressVO?.stateId ?? 0, addressVO?.townshipId);
       _notifySafely();
     });
   }
@@ -58,12 +57,12 @@ class EditAddressBloc extends ChangeNotifier {
   }
 
   ///fetch townships by state id
-  void fetchTownshipsByStateId(int stateId) {
+  void fetchTownshipsByStateId(int stateId, int? oldTownshipId) {
     _showTownshipLoading();
     _smileShopModel.townships(stateId).then((townshipResponse) {
       townships = [];
       townships = townshipResponse.townships ?? [];
-      townshipId = townships.first.id;
+      townshipId = oldTownshipId;
       _hideTownshipLoading();
       _notifySafely();
     });
@@ -98,10 +97,10 @@ class EditAddressBloc extends ChangeNotifier {
   }
 
   bool _validateAddressFields() {
-    if (phone == "" || phone.isEmpty) {
+    if ( phone.isEmpty) {
       return false;
     }
-    if (name == "" || name.isEmpty) {
+    if (name.isEmpty) {
       return false;
     }
     if (stateId == null) {
@@ -111,7 +110,7 @@ class EditAddressBloc extends ChangeNotifier {
       return false;
     }
 
-    if (googleMapName == "" || googleMapName.isEmpty) {
+    if (googleMapName.isEmpty) {
       return false;
     }
 
@@ -135,7 +134,7 @@ class EditAddressBloc extends ChangeNotifier {
 
   void onStateIdChanged(int stateId) {
     this.stateId = stateId;
-    fetchTownshipsByStateId(stateId);
+    fetchTownshipsByStateId(stateId, null);
     _notifySafely();
   }
 

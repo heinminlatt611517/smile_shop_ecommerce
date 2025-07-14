@@ -125,22 +125,22 @@ class AddNewAddressBloc extends ChangeNotifier {
     return _smileShopModel.deleteAddress(accessToken, addressId).whenComplete(() => _hideLoading());
   }
 
-  bool _validateAddressFields() {
-    if (phone == "" || phone.isEmpty) {
-      return false;
-    }
-    if (name == "" || name.isEmpty) {
-      return false;
-    }
-    if (stateId == null) {
-      return false;
-    }
-    if (townshipId == null) {
-      return false;
-    }
+  // bool _validateAddressFields() {
+  //   if (phone == "" || phone.isEmpty) {
+  //     return false;
+  //   }
+  //   if (name == "" || name.isEmpty) {
+  //     return false;
+  //   }
+  //   if (stateId == null) {
+  //     return false;
+  //   }
+  //   if (townshipId == null) {
+  //     return false;
+  //   }
 
-    return true;
-  }
+  //   return true;
+  // }
 
   void onPhoneNumberChanged(String phone) {
     this.phone = phone;

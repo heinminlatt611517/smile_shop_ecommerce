@@ -54,7 +54,7 @@ class SessionExpiredDialogView extends StatelessWidget {
             const Text(
               "Your session has expired. Please log in again.",
               textAlign: TextAlign.center,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: kTextRegular,
                 color: Colors.black,
                 fontWeight: FontWeight.normal,

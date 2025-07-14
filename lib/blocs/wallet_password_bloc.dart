@@ -2,9 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:smile_shop/data/model/smile_shop_model.dart';
 import 'package:smile_shop/data/model/smile_shop_model_impl.dart';
 import 'package:smile_shop/network/api_constants.dart';
-import 'package:smile_shop/network/requests/set_password_request.dart';
 import 'package:smile_shop/network/requests/set_wallet_password_request.dart';
-import 'package:smile_shop/network/responses/set_password_response.dart';
 import 'package:smile_shop/network/responses/success_network_response.dart';
 
 class WalletPasswordBloc extends ChangeNotifier {

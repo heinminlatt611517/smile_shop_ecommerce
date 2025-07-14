@@ -29,6 +29,7 @@ import 'package:smile_shop/network/responses/campaign_participant_response.dart'
 import 'package:smile_shop/network/responses/campaign_response.dart';
 import 'package:smile_shop/network/responses/category_response.dart';
 import 'package:smile_shop/network/responses/checkIn_response.dart';
+import 'package:smile_shop/network/responses/coupon_response.dart';
 import 'package:smile_shop/network/responses/favourite_product_response.dart';
 import 'package:smile_shop/network/responses/home_popup_data_response.dart';
 import 'package:smile_shop/network/responses/login_response.dart';
@@ -40,6 +41,7 @@ import 'package:smile_shop/network/responses/otp_response.dart';
 import 'package:smile_shop/network/responses/package_details_response.dart';
 import 'package:smile_shop/network/responses/packages_response.dart';
 import 'package:smile_shop/network/responses/payment_response.dart';
+import 'package:smile_shop/network/responses/payment_status_response.dart';
 import 'package:smile_shop/network/responses/product_details_response.dart';
 import 'package:smile_shop/network/responses/product_response.dart';
 import 'package:smile_shop/network/responses/profile_response.dart';
@@ -101,6 +103,7 @@ abstract class SmileShopApi {
     @Header(kHeaderAcceptLanguage) String acceptLanguage,
     @Field(kFieldEndUserId) int endUserId,
     @Field(kFieldPage) int page,
+    @Field(kFieldPerPage) int perPage,
   );
 
   @POST(kEndPointBrandsAndCategories)
@@ -158,6 +161,8 @@ abstract class SmileShopApi {
     @Field(kFieldEndUserId) int endUserId,
     @Field(kFieldPage) int page,
     @Query(kParamCategoryId) int categoryID,
+    @Query(kParamMinPrice) int? minPrice,
+    @Query(kParamMaxPrice) int? maxPrice,
   );
 
   @POST(kEndPointSearchProducts)
@@ -179,6 +184,8 @@ abstract class SmileShopApi {
     @Field(kFieldEndUserId) int endUserId,
     @Field(kFieldPage) int page,
     @Query(kParamSubCategoryId) int subcategoryID,
+    @Query(kParamMinPrice) int? minPrice,
+    @Query(kParamMaxPrice) int? maxPrice,
   );
 
   @POST(kEndPointSearchProducts)
@@ -244,6 +251,9 @@ abstract class SmileShopApi {
     @Field(kFieldAppType) String appType,
     @Field(kFieldPaymentData) String paymentData,
     @Field(kFieldUsedPoint) int usedPoint,
+    @Field(kFieldDeliveryType) String deliveryType,
+    @Field(kFieldCouponId) int? couponId,
+    @Field(kFieldAddressId) int? addressId,
   );
 
   @POST(kEndPointMakePayment)
@@ -434,10 +444,15 @@ abstract class SmileShopApi {
       @Path("id") int id);
 
   @POST(kEndPointCheckOrderStatus)
-  Future<SuccessNetworkResponse> checkOrderStatus(
+  Future<PaymentStatusResponse> checkOrderStatus(
       @Header(kHeaderAcceptLanguage) String acceptLanguage,
       @Header(kHeaderAuthorization) String token,
       @Body() OrderStatusRequest request);
+
+  @POST(kEndPointWalletRechargeOrderStatus)
+  Future<PaymentStatusResponse> checkWalletRechargeStatus(
+      @Header(kHeaderAuthorization) String token,
+      @Field(kFieldTransactionId) String transactionId);
 
   @GET(kEndPointCampaignHistory)
   Future<CampaignHistoryResponse> getCampaignHistory(
@@ -494,5 +509,19 @@ abstract class SmileShopApi {
   Future<NotificationListResponse> getNotificationList(
     @Header(kHeaderAuthorization) String token,
     @Header(kHeaderAcceptLanguage) String acceptLanguage,
+  );
+
+  @POST(kEndPointGetCustomCategoryProducts)
+  Future<ProductResponse> getCustomCategoryProducts(
+    @Header(kHeaderAuthorization) String token,
+    @Header(kHeaderAcceptLanguage) String acceptLanguage,
+    @Field(kFieldPage) int page,
+    @Field(kFieldPerPage) int perPage,
+    @Field(kFieldCategory) String category,
+  );
+
+  @POST(kEndPointCoupon)
+  Future<CouponResponse> getCouponList(
+    @Header(kHeaderAuthorization) String token,
   );
 }

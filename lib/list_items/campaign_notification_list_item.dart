@@ -10,7 +10,7 @@ class CampaignNotificationListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: kMarginMedium3),
+      margin: const EdgeInsets.only(bottom: kMarginMedium),
       padding: const EdgeInsets.symmetric(horizontal: kMarginMedium2),
       height: 70,width: double.infinity,decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(kMargin6 - 2)),
     child:const Row(

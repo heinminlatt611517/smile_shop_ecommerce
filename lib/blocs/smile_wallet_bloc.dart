@@ -7,9 +7,7 @@ import 'package:smile_shop/data/vos/wallet_vo.dart';
 import 'package:smile_shop/network/api_constants.dart';
 
 import '../network/requests/check_wallet_password_request.dart';
-import '../network/requests/login_request.dart';
 import '../network/requests/wallet_transition_request.dart';
-import '../network/responses/login_response.dart';
 import '../utils/strings.dart';
 
 class SmileWalletBloc extends ChangeNotifier {

@@ -3,7 +3,7 @@ import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:smile_shop/blocs/password_bloc.dart';
 import 'package:smile_shop/pages/login_page.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:smile_shop/localization/app_localizations.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/utils/images.dart';
@@ -18,7 +18,11 @@ class PasswordPage extends StatefulWidget {
   final String? requestId;
   final String? phone;
   final bool? isFromPasswordPage;
-  const PasswordPage({super.key,required this.requestId,required this.phone,required this.isFromPasswordPage});
+  const PasswordPage(
+      {super.key,
+      required this.requestId,
+      required this.phone,
+      required this.isFromPasswordPage});
 
   @override
   State<PasswordPage> createState() => _PasswordPageState();
@@ -34,18 +38,19 @@ class _PasswordPageState extends State<PasswordPage> {
       create: (context) => PasswordBloc(widget.isFromPasswordPage ?? false),
       child: Scaffold(
         backgroundColor: kBackgroundColor,
-        body: Selector<PasswordBloc,bool>(
-            selector: (context, bloc) => bloc.isLoading,
-            builder: (context, isLoading, child) =>
-           Stack(
-             children: [
-               SafeArea(
+        body: Selector<PasswordBloc, bool>(
+          selector: (context, bloc) => bloc.isLoading,
+          builder: (context, isLoading, child) => Stack(
+            children: [
+              SafeArea(
                   child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      const SizedBox(height: 116,),
+                      const SizedBox(
+                        height: 116,
+                      ),
                       SizedBox(
                         height: 100,
                         width: 100,
@@ -60,18 +65,19 @@ class _PasswordPageState extends State<PasswordPage> {
                       const SizedBox(
                         height: kMargin30,
                       ),
+
                       ///set your password view
                       Consumer<PasswordBloc>(
-                        builder: (context,bloc,child) =>
-                            InputViewLockIcon(
-                                toggleObscured: () {
-                                  bloc.onTapShowPassword();
-                                },
-                                isSecure: bloc.isShowPassword,
-                                hintLabel: AppLocalizations.of(context)!.setYourPassword,
-                                onChangeValue: (value){
-                                  bloc.onPasswordChanged(value);
-                                }),
+                        builder: (context, bloc, child) => InputViewLockIcon(
+                            toggleObscured: () {
+                              bloc.onTapShowPassword();
+                            },
+                            isSecure: bloc.isShowPassword,
+                            hintLabel:
+                                AppLocalizations.of(context)!.setYourPassword,
+                            onChangeValue: (value) {
+                              bloc.onPasswordChanged(value);
+                            }),
                       ),
                       const SizedBox(
                         height: kMargin34,
@@ -79,16 +85,16 @@ class _PasswordPageState extends State<PasswordPage> {
 
                       ///retype your password view
                       Consumer<PasswordBloc>(
-                        builder: (context,bloc,child) =>
-                            InputViewLockIcon(
-                                toggleObscured: () {
-                                  bloc.onTapShowRetypePassword();
-                                },
-                                isSecure: bloc.isShowRetypePassword,
-                                hintLabel: AppLocalizations.of(context)!.reTypeYourPassword,
-                                onChangeValue: (value){
-                                  bloc.onConfirmPasswordChanged(value);
-                                }),
+                        builder: (context, bloc, child) => InputViewLockIcon(
+                            toggleObscured: () {
+                              bloc.onTapShowRetypePassword();
+                            },
+                            isSecure: bloc.isShowRetypePassword,
+                            hintLabel: AppLocalizations.of(context)!
+                                .reTypeYourPassword,
+                            onChangeValue: (value) {
+                              bloc.onConfirmPasswordChanged(value);
+                            }),
                       ),
                       const SizedBox(
                         height: kMargin34,
@@ -98,13 +104,21 @@ class _PasswordPageState extends State<PasswordPage> {
                       GestureDetector(
                         onTap: () {
                           var bloc =
-                          Provider.of<PasswordBloc>(context, listen: false);
+                              Provider.of<PasswordBloc>(context, listen: false);
 
-                          bloc.onTapConfirm(widget.requestId??"", widget.phone??"").then((value) {
+                          bloc
+                              .onTapConfirm(
+                                  widget.requestId ?? "", widget.phone ?? "")
+                              .then((value) {
                             if (value.statusCode == 200) {
-                              bloc.crateFirebaseChatUser(id: value.data?.id ?? 0,name: value.data?.name ?? "",phone: value.data?.phone ?? "");
+                              bloc.crateFirebaseChatUser(
+                                  id: value.data?.id ?? 0,
+                                  name: value.data?.name ?? "",
+                                  phone: value.data?.phone ?? "");
                               Navigator.of(context).pushAndRemoveUntil(
-                                  MaterialPageRoute(builder: (builder) => const LoginPage()),(Route<dynamic> route) => false);
+                                  MaterialPageRoute(
+                                      builder: (builder) => const LoginPage()),
+                                  (Route<dynamic> route) => false);
                             }
                           }).catchError((error) {
                             showCommonDialog(
@@ -119,10 +133,10 @@ class _PasswordPageState extends State<PasswordPage> {
                           decoration: BoxDecoration(
                               color: kPrimaryColor,
                               borderRadius: BorderRadius.circular(4)),
-                          child:  Center(
+                          child: Center(
                             child: Text(
                               AppLocalizations.of(context)!.confirm,
-                              style:const TextStyle(color: kBackgroundColor),
+                              style: const TextStyle(color: kBackgroundColor),
                             ),
                           ),
                         ),
@@ -130,21 +144,21 @@ class _PasswordPageState extends State<PasswordPage> {
                     ],
                   ),
                 ),
-                         )),
+              )),
 
-               ///loading view
-               if (isLoading)
-                 Container(
-                   color: Colors.black12,
-                   child: const Center(
-                     child: LoadingView(
-                       indicatorColor: kPrimaryColor,
-                       indicator: Indicator.ballSpinFadeLoader,
-                     ),
-                   ),
-                 ),
-             ],
-           ),
+              ///loading view
+              if (isLoading)
+                Container(
+                  color: Colors.black12,
+                  child: const Center(
+                    child: LoadingView(
+                      indicatorColor: kPrimaryColor,
+                      indicator: Indicator.ballSpinFadeLoader,
+                    ),
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );

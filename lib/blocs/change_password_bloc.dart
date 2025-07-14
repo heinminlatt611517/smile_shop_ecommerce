@@ -1,14 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:smile_shop/data/model/smile_shop_model.dart';
 import 'package:smile_shop/data/model/smile_shop_model_impl.dart';
-import 'package:smile_shop/data/vos/firebase_user_vo.dart';
 import 'package:smile_shop/network/api_constants.dart';
-import 'package:smile_shop/network/requests/dealer_login_request.dart';
 import 'package:smile_shop/network/responses/success_network_response.dart';
 
-import '../network/firebase_api.dart';
-import '../network/requests/login_request.dart';
-import '../network/responses/login_response.dart';
 
 class ChangePasswordBloc extends ChangeNotifier {
   /// State

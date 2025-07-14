@@ -13,7 +13,10 @@ class TownshipVO {
   @JsonKey(name: 'name')
   final String? name;
 
-  TownshipVO({this.id, this.stateId, this.name});
+  @JsonKey(name: 'delivery_fees')
+  final int? deliveryFees;
+
+  TownshipVO({this.id, this.stateId, this.name, this.deliveryFees});
 
   factory TownshipVO.fromJson(Map<String, dynamic> json) =>
       _$TownshipVOFromJson(json);

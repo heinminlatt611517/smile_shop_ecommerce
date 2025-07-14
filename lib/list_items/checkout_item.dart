@@ -11,6 +11,7 @@ class CheckOutItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("product vo ==============> ${productVO.toString()}");
     return Container(
       padding: const EdgeInsets.symmetric(
           horizontal: kMarginMedium, vertical: kMarginMedium),
@@ -27,7 +28,8 @@ class CheckOutItem extends StatelessWidget {
                   child: CachedNetworkImageView(
                       imageHeight: 80,
                       imageWidth: 80,
-                      imageUrl: productVO.variantVO?.first.images.first.url ?? '')),
+                      imageUrl:
+                          productVO.variantVO?.first.image ?? '')),
               const SizedBox(
                 width: kMarginMedium3,
               ),
@@ -61,7 +63,7 @@ class CheckOutItem extends StatelessWidget {
                       height: 2,
                     ),
 
-                    ///color and size
+                    // /color and size
                     Row(
                       children: [
                         Expanded(
@@ -77,7 +79,7 @@ class CheckOutItem extends StatelessWidget {
                               child: Text(
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                'Color: ${productVO.variantVO?.first.colorVO?.value}',
+                                'Color: ${productVO.variantVO?.first.colorVO?.value ?? ""}',
                                 style: const TextStyle(
                                     fontSize: kTextSmall,
                                     color: kCartColorAndSizeColor),
@@ -97,7 +99,7 @@ class CheckOutItem extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(horizontal: 8),
                             child: Center(
                               child: Text(
-                                'Size: ${productVO.size}',
+                                'Size: ${productVO.size ?? ""}',
                                 style: const TextStyle(
                                     fontSize: kTextSmall,
                                     color: kCartColorAndSizeColor),
@@ -115,7 +117,7 @@ class CheckOutItem extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
-                          "KS ${productVO.variantVO?.first.price}",
+                          "Ks ${productVO.variantVO?.first.price ?? 0}",
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(fontSize: kTextRegular2x),
                         ),
@@ -123,11 +125,11 @@ class CheckOutItem extends StatelessWidget {
                           width: kMargin30,
                         ),
                         PromotionPointView(
-                          point: productVO.variantVO?.first.promotionPoint,
+                          point: productVO.variantVO?.first.promotionPoint ?? 0,
                         )
                       ],
                     ),
-                    Text('Qty: ${productVO.variantVO?.first.qtyCount}')
+                    Text('Qty: ${productVO.variantVO?.first.qtyCount ?? 0}')
                   ],
                 ),
               )

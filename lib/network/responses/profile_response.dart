@@ -1,6 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:smile_shop/data/vos/product_response_data_vo.dart';
-import 'package:smile_shop/data/vos/profile_vo.dart';
 import 'package:smile_shop/data/vos/user_vo.dart';
 
 part 'profile_response.g.dart';

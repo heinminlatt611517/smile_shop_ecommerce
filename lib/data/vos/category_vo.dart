@@ -25,10 +25,19 @@ class CategoryVO {
   @HiveField(3)
   final String? image;
 
-  CategoryVO({this.id, this.name,this.subCategories,this.image});
+  final CategoryType? type;
+
+  CategoryVO(
+      {this.id,
+      this.name,
+      this.subCategories,
+      this.image,
+      this.type = CategoryType.normal});
 
   factory CategoryVO.fromJson(Map<String, dynamic> json) =>
       _$CategoryVOFromJson(json);
 
   Map<String, dynamic> toJson() => _$CategoryVOToJson(this);
 }
+
+enum CategoryType { normal, below3000, promotionPoint }

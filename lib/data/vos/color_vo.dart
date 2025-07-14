@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:hive_flutter/adapters.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -22,4 +23,7 @@ class ColorVO {
       _$ColorVOFromJson(json);
 
   Map<String, dynamic> toJson() => _$ColorVOToJson(this);
+
+  @override
+  String toString() => 'ColorVO(variantProductId: $variantProductId, value: $value)';
 }

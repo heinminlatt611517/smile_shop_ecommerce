@@ -7,7 +7,6 @@ import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 import 'package:smile_shop/data/vos/notification_vo.dart';
 import 'package:smile_shop/utils/dimens.dart';
-import 'package:smile_shop/widgets/cached_network_image_view.dart';
 import 'package:smile_shop/widgets/custom_app_bar_view.dart';
 
 class BlogPage extends StatelessWidget {

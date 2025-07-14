@@ -4,7 +4,7 @@ import 'package:smile_shop/data/model/smile_shop_model.dart';
 import 'package:smile_shop/data/model/smile_shop_model_impl.dart';
 import 'package:smile_shop/data/vos/product_vo.dart';
 import 'package:smile_shop/network/api_constants.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:smile_shop/localization/app_localizations.dart';
 
 import '../network/requests/favourite_product_request.dart';
 
@@ -21,20 +21,27 @@ class ProductCategoryBloc extends ChangeNotifier {
   int pageNumber = 1;
   bool isLoading = false;
   ScrollController scrollController = ScrollController();
+  int? minPrice;
+  int? maxPrice;
 
-  ProductCategoryBloc(this.subCategoryId) {
+  ProductCategoryBloc(this.subCategoryId, {this.minPrice, this.maxPrice}) {
     scrollController.addListener(
       () {
-        if (scrollController.position.pixels == scrollController.position.maxScrollExtent) {
+        if (scrollController.position.pixels ==
+            scrollController.position.maxScrollExtent) {
           getProducts();
         }
       },
     );
 
     ///get data from database
-    authToken = _smileShopModel.getLoginResponseFromDatabase()?.refreshToken ?? "";
-    accessToken = _smileShopModel.getLoginResponseFromDatabase()?.accessToken ?? "";
-    endUserId = _smileShopModel.getLoginResponseFromDatabase()?.data?.id.toString() ?? "0";
+    authToken =
+        _smileShopModel.getLoginResponseFromDatabase()?.refreshToken ?? "";
+    accessToken =
+        _smileShopModel.getLoginResponseFromDatabase()?.accessToken ?? "";
+    endUserId =
+        _smileShopModel.getLoginResponseFromDatabase()?.data?.id.toString() ??
+            "0";
 
     _loadLanguage();
   }
@@ -53,7 +60,10 @@ class ProductCategoryBloc extends ChangeNotifier {
     }
     _notifySafely();
     _showLoading();
-    _smileShopModel.searchProductsBySubCategoryId(accessToken, currentLanguage, endUserId, 1, subCategoryId ?? 0).then((productResponse) {
+    _smileShopModel
+        .searchProductsBySubCategoryId(accessToken, currentLanguage, endUserId,
+            1, subCategoryId ?? 0, minPrice, maxPrice)
+        .then((productResponse) {
       products = productResponse;
       _notifySafely();
     }).whenComplete(() => _hideLoading());
@@ -62,7 +72,8 @@ class ProductCategoryBloc extends ChangeNotifier {
   void onTapFavourite(ProductVO? product, BuildContext context) {
     if (product == null) return;
     if (endUserId.isEmpty || endUserId == "0") {
-      showSnackBar(context, AppLocalizations.of(context)!.need_login, Colors.deepOrange);
+      showSnackBar(
+          context, AppLocalizations.of(context)!.need_login, Colors.deepOrange);
       return;
     }
     var favoriteProductRequest = FavouriteProductRequest(
@@ -102,11 +113,17 @@ class ProductCategoryBloc extends ChangeNotifier {
 
   Future<void> getProducts() async {
     ///get data from database
-    var authToken = _smileShopModel.getLoginResponseFromDatabase()?.refreshToken ?? "";
-    var endUserId = _smileShopModel.getLoginResponseFromDatabase()?.data?.id.toString() ?? "";
+    var authToken =
+        _smileShopModel.getLoginResponseFromDatabase()?.refreshToken ?? "";
+    var endUserId =
+        _smileShopModel.getLoginResponseFromDatabase()?.data?.id.toString() ??
+            "";
 
     ///get product list
-    await _smileShopModel.searchProductsBySubCategoryId(accessToken, kAcceptLanguageEn, endUserId, pageNumber, subCategoryId ?? 0).then((productResponse) {
+    await _smileShopModel
+        .searchProductsBySubCategoryId(accessToken, kAcceptLanguageEn,
+            endUserId, pageNumber, subCategoryId ?? 0, minPrice, maxPrice)
+        .then((productResponse) {
       pageNumber += 1;
       products.addAll(productResponse);
     });
@@ -114,7 +131,8 @@ class ProductCategoryBloc extends ChangeNotifier {
     _notifySafely();
   }
 
-  void showSnackBar(BuildContext context, String description, Color snackBarColor) {
+  void showSnackBar(
+      BuildContext context, String description, Color snackBarColor) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(description),

@@ -39,3 +39,7 @@ const kBoxProduct = "kBoxProduct";
 const kBoxFavouriteProduct = "kBoxFavouriteProduct";
 const kBoxUser = "kBoxUser";
 const kBoxCart = "kBoxCart";
+
+/// Shared Preferences Keys
+const kSharedPreferencesWalletPaymentIdKey = "kSharedPreferencesWalletPaymentIdKey";
+const kSharedPreferencesPaymentIdKey =  "kSharedPreferencesPaymentIdKey";

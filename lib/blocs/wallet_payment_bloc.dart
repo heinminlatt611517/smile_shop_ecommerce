@@ -1,15 +1,16 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smile_shop/data/model/smile_shop_model.dart';
 import 'package:smile_shop/data/model/smile_shop_model_impl.dart';
 import 'package:smile_shop/data/vos/payment_vo.dart';
 import 'package:smile_shop/network/api_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:smile_shop/pages/recharge_successful_page.dart';
+import 'package:smile_shop/persistence/hive_constants.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../network/requests/order_status_request.dart';
 import '../widgets/common_dialog.dart';
 import '../widgets/error_dialog_view.dart';
 import '../widgets/qr_dialog_view.dart';
@@ -29,6 +30,9 @@ class WalletPaymentBloc extends ChangeNotifier {
   Map<String, String> paymentData = {};
   var amountTextController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final _sharedPreferences = SharedPreferences.getInstance();
+
+  String? orderId;
 
   WalletPaymentBloc() {
     authToken =
@@ -42,6 +46,11 @@ class WalletPaymentBloc extends ChangeNotifier {
         .then((paymentListResponse) {
       payments = paymentListResponse;
       _notifySafely();
+    });
+
+    // clear wallet payment id from shared preferences
+    _sharedPreferences.then((prefs) {
+      prefs.remove(kSharedPreferencesWalletPaymentIdKey);
     });
   }
 
@@ -64,23 +73,26 @@ class WalletPaymentBloc extends ChangeNotifier {
         'app',
         jsonEncode(paymentData),
       )
-          .then((response) {
+          .then((response) async{
+        orderId = response.data?.orderId;
+
+        // Save orderId to shared preferences
+       await _sharedPreferences.then((prefs) {
+          prefs.setString(kSharedPreferencesWalletPaymentIdKey, orderId ?? "");
+        });
         if (response.data?.responseType == 'url') {
-          launchUrl(Uri.parse(response.data?.response)).then((val) {
-            startPollingOrderStatus(response.data?.orderId, context);
-          });
+          launchUrl(Uri.parse(response.data?.response)).then((val) {});
         } else if (response.data?.responseType == 'qr') {
           showCommonDialog(
-                  context: context,
-                  dialogWidget:
-                      QrDialogView(qrCodeString: response.data?.response));
-          startPollingOrderStatus(response.data?.orderId, context);
-
+              context: context,
+              dialogWidget:
+                  QrDialogView(qrCodeString: response.data?.response));
+          // startPollingOrderStatus(response.data?.orderId, context);
         } else if (response.data?.responseType == 'pin') {
-          startPollingOrderStatus(response.data?.orderId, context);
+          // startPollingOrderStatus(response.data?.orderId, context);
         } else {
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (builder) => const RechargeSuccessfulPage()));
+          // Navigator.of(context).push(MaterialPageRoute(
+          //     builder: (builder) => const RechargeSuccessfulPage()));
         }
       });
     } catch (error) {
@@ -109,7 +121,8 @@ class WalletPaymentBloc extends ChangeNotifier {
   }
 
   ///start polling order status
-  Future<void> startPollingOrderStatus(String? orderId, BuildContext context) async {
+  Future<void> startPollingOrderStatus(
+      String? orderId, BuildContext context) async {
     _showLoading();
     int retryCount = 0;
     int maxRetries = 30;
@@ -124,13 +137,20 @@ class WalletPaymentBloc extends ChangeNotifier {
 
       retryCount++;
 
-      checkOrderStatus(orderId).then((status) {
+      checkOrderStatus().then((status) {
         if (status == 'success') {
           timer.cancel();
           _hideLoading();
           showSuccessSnackBarAndNavigate(context);
         } else {
-          debugPrint("Order status: $status. Continuing to poll...");
+          timer.cancel();
+          _hideLoading();
+          showCommonDialog(
+            context: context,
+            dialogWidget: const ErrorDialogView(
+              errorMessage: 'Payment failed or is still pending.',
+            ),
+          );
         }
       }).catchError((error) {
         // timer.cancel();
@@ -141,11 +161,28 @@ class WalletPaymentBloc extends ChangeNotifier {
   }
 
   ///check order status
-  Future<String> checkOrderStatus(String? orderId) async {
-    var orderStatusRequest = OrderStatusRequest(orderId);
-    var response = await _smileShopModel.checkOrderStatus(
-        kAcceptLanguageEn, authToken, orderStatusRequest);
-    return response.status == 200 ? 'success' : 'failed';
+  Future<String> checkOrderStatus() async {
+    if (orderId == null || orderId!.isEmpty) {
+      return 'failed';
+    }
+
+    _showLoading();
+
+    var response = await _smileShopModel
+        .getWalletRechargeStatus(authToken, orderId ?? "")
+        .catchError((error) {});
+
+    _hideLoading();
+    if (response?.paymentStatus == null) {
+      return 'failed';
+    }
+
+    if (response?.paymentStatus == "pending") {
+      return 'failed';
+    }
+    return response?.paymentStatus?.toLowerCase() == "success".toLowerCase()
+        ? 'success'
+        : 'failed';
   }
 
   ///show snack bar and navigate to success page

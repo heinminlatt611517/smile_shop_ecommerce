@@ -7,7 +7,7 @@ import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/widgets/cached_network_image_view.dart';
 import 'package:smile_shop/widgets/custom_app_bar_view.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:smile_shop/localization/app_localizations.dart';
 
 class NotificationPage extends StatelessWidget {
   const NotificationPage({super.key});
@@ -31,7 +31,8 @@ class NotificationPage extends StatelessWidget {
                   ),
                 )
               : ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: kMarginMedium2),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: kMarginMedium2),
                   itemCount: notiList.length,
                   itemBuilder: (context, index) {
                     return NotificationCard(

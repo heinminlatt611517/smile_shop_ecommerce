@@ -69,7 +69,10 @@ class PaymentBloc extends ChangeNotifier {
       int subTotal,
       List<OrderVariantVO> variantVOList,
       BuildContext context,
-      bool? isFromCartPage) async {
+      bool? isFromCartPage,
+      String deliveryType,
+      int? couponId,
+      int addressId) async {
     _showLoading();
 
     List<Map<String, dynamic>> itemList =
@@ -80,7 +83,8 @@ class PaymentBloc extends ChangeNotifier {
       if (selectedIndex == 0) {
         var checkWalletAmountRequest = CheckWalletAmountRequest(subTotal);
         var checkWalletPasswordRequest = CheckWalletPasswordRequest(
-            GetStorage().read(kBoxKeyWalletPassword), CheckPasswordType.checkPassword);
+            GetStorage().read(kBoxKeyWalletPassword),
+            CheckPasswordType.checkPassword);
 
         await _smileShopModel.checkWalletAmount(
             authToken, kAcceptLanguageEn, checkWalletAmountRequest);
@@ -91,65 +95,67 @@ class PaymentBloc extends ChangeNotifier {
 
       await _smileShopModel
           .postOrder(
-        authToken,
-        kAcceptLanguageEn,
-        subTotal,
-        selectedPaymentType,
-        itemListJson,
-        'app',
-        jsonEncode(paymentData),
-        promotionPoint,
-      )
+              authToken,
+              kAcceptLanguageEn,
+              subTotal,
+              selectedPaymentType,
+              itemListJson,
+              'app',
+              jsonEncode(paymentData),
+              promotionPoint,
+              deliveryType,
+              couponId,
+              addressId)
           .then((response) {
         if (isFromCartPage == true) {
           clearAddToCartProductByProductIdFromDatabase();
         }
         if (response.data?.responseType == 'url') {
-          launchUrl(Uri.parse(response.data?.response)).then((val){
+          launchUrl(Uri.parse(response.data?.response)).then((val) {
             ///start polling order status
-            startPollingOrderStatus(response.data?.orderNo, context);
+            // startPollingOrderStatus(response.data?.orderNo, context);
           });
         } else if (response.data?.responseType == 'qr') {
           showCommonDialog(
               context: context,
               dialogWidget:
                   QrDialogView(qrCodeString: response.data?.response));
+
           ///start polling order status
-          startPollingOrderStatus(response.data?.orderNo, context);
+          // startPollingOrderStatus(response.data?.orderNo, context);
         } else if (response.data?.responseType == 'pin') {
           ///start polling order status
-          startPollingOrderStatus(response.data?.orderNo, context);
+          // startPollingOrderStatus(response.data?.orderNo, context);
         } else {
           Navigator.of(context).push(MaterialPageRoute(
               builder: (builder) => const OrderSuccessfulPage()));
         }
       });
     } catch (error) {
-      if(error.toString() == 'The password field is required.'){
+      if (error.toString() == 'The password field is required.') {
         _hideLoading();
         showCommonDialog(
             context: context,
-            dialogWidget:const SetWalletPasswordDialogView(message: 'Please set wallet password first.'));
-      }
-      else if(error.toString() == 'Not Enough Amount in wallet'){
+            dialogWidget: const SetWalletPasswordDialogView(
+                message: 'Please set wallet password first.'));
+      } else if (error.toString() == 'Not Enough Amount in wallet') {
         _hideLoading();
         showCommonDialog(
             context: context,
             dialogWidget: ErrorDialogView(errorMessage: error.toString()));
-      }
-      else{
+      } else {
         showCommonDialog(
             context: context,
             dialogWidget: ErrorDialogView(errorMessage: error.toString()));
       }
     } finally {
-     // _hideLoading();
+      // _hideLoading();
     }
   }
 
-
   ///start polling order status
-  Future<void> startPollingOrderStatus(String? orderId, BuildContext context) async {
+  Future<void> startPollingOrderStatus(
+      String? orderId, BuildContext context) async {
     _showLoading();
     int retryCount = 0;
     int maxRetries = 30;
@@ -170,6 +176,15 @@ class PaymentBloc extends ChangeNotifier {
           _hideLoading();
           showSuccessSnackBarAndNavigate(context);
         } else {
+          timer.cancel();
+          _hideLoading();
+          Navigator.pop(context);
+          showCommonDialog(
+            context: context,
+            dialogWidget: const ErrorDialogView(
+              errorMessage: 'Payment failed or is still pending.',
+            ),
+          );
           debugPrint("Order status: $status. Continuing to poll...");
         }
       }).catchError((error) {
@@ -185,7 +200,10 @@ class PaymentBloc extends ChangeNotifier {
     var orderStatusRequest = OrderStatusRequest(orderId);
     var response = await _smileShopModel.checkOrderStatus(
         kAcceptLanguageEn, authToken, orderStatusRequest);
-    return response.status == 200 ? 'success' : 'failed';
+    return (response?.paymentStatus?.toLowerCase() == "paid" ||
+            response?.paymentStatus?.toLowerCase() == "success")
+        ? 'success'
+        : 'failed';
   }
 
   ///show snack bar and navigate to success page
@@ -214,7 +232,8 @@ class PaymentBloc extends ChangeNotifier {
         var checkWalletAmountRequest =
             CheckWalletAmountRequest(int.parse(subTotal));
         var checkWalletPasswordRequest = CheckWalletPasswordRequest(
-            GetStorage().read(kBoxKeyWalletPassword), CheckPasswordType.checkPassword);
+            GetStorage().read(kBoxKeyWalletPassword),
+            CheckPasswordType.checkPassword);
 
         await _smileShopModel.checkWalletAmount(
             authToken, kAcceptLanguageEn, checkWalletAmountRequest);
@@ -234,9 +253,10 @@ class PaymentBloc extends ChangeNotifier {
           });
         } else if (response.data?.responseType == 'qr') {
           showCommonDialog(
-                  context: context,
-                  dialogWidget:
-                      QrDialogView(qrCodeString: response.data?.response));
+              context: context,
+              dialogWidget:
+                  QrDialogView(qrCodeString: response.data?.response));
+
           ///start polling order status
           startPollingOrderStatus(response.data?.orderId, context);
         } else if (response.data?.responseType == 'pin') {
@@ -246,7 +266,6 @@ class PaymentBloc extends ChangeNotifier {
           Navigator.of(context).push(MaterialPageRoute(
               builder: (builder) => const OrderSuccessfulPage()));
         }
-
       });
     } catch (error) {
       showCommonDialog(
@@ -256,7 +275,6 @@ class PaymentBloc extends ChangeNotifier {
       _hideLoading();
     }
   }
-
 
   void onSelectPayment(int index, String paymentType) {
     if (selectedIndex != index) {

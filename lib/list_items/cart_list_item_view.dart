@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:smile_shop/blocs/cart_bloc.dart';
 import 'package:smile_shop/data/vos/cart_item_vo.dart';
-import 'package:smile_shop/network/api_constants.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/widgets/cached_network_image_view.dart';

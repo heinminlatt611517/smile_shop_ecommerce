@@ -14,7 +14,7 @@ import 'package:smile_shop/widgets/input_view_lock_icon.dart';
 
 import '../utils/strings.dart';
 import '../widgets/loading_view.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:smile_shop/localization/app_localizations.dart';
 
 class DealerLoginPage extends StatefulWidget {
   const DealerLoginPage({super.key});
@@ -61,7 +61,8 @@ class _DealerLoginPageState extends State<DealerLoginPage> {
                       Consumer<LogInBloc>(
                         builder: (context, bloc, child) => InputViewLockIcon(
                             isSecure: true,
-                            hintLabel: AppLocalizations.of(context)!.typeYourEmailAddress,
+                            hintLabel: AppLocalizations.of(context)!
+                                .typeYourEmailAddress,
                             isMailIcon: true,
                             onChangeValue: (value) {
                               bloc.onChangedEmail(value);
@@ -75,7 +76,8 @@ class _DealerLoginPageState extends State<DealerLoginPage> {
                       ///password input view
                       Consumer<LogInBloc>(
                         builder: (context, bloc, child) => InputViewLockIcon(
-                            hintLabel: AppLocalizations.of(context)!.typeYourPassword,
+                            hintLabel:
+                                AppLocalizations.of(context)!.typeYourPassword,
                             toggleObscured: () {
                               bloc.onTapShowPassword();
                             },
@@ -96,8 +98,10 @@ class _DealerLoginPageState extends State<DealerLoginPage> {
 
                           bloc.onTapDealerSign().then((value) {
                             if (value.statusCode == 200) {
-                              GetStorage().write(kBoxKeyLoginUserType, kTypeDealer);
-                              GetStorage().write(kBoxKeyPromotionPoint, value.data?.data?.promotionPoints ?? 0);
+                              GetStorage()
+                                  .write(kBoxKeyLoginUserType, kTypeDealer);
+                              GetStorage().write(kBoxKeyPromotionPoint,
+                                  value.data?.data?.promotionPoints ?? 0);
                               bloc.crateFirebaseChatUser(
                                   id: value.data?.data?.id ?? 0,
                                   name: value.data?.data?.name ?? "",
@@ -120,10 +124,10 @@ class _DealerLoginPageState extends State<DealerLoginPage> {
                           decoration: BoxDecoration(
                               color: kPrimaryColor,
                               borderRadius: BorderRadius.circular(4)),
-                          child:  Center(
+                          child: Center(
                             child: Text(
                               AppLocalizations.of(context)!.login,
-                              style:const TextStyle(color: kBackgroundColor),
+                              style: const TextStyle(color: kBackgroundColor),
                             ),
                           ),
                         ),
@@ -131,7 +135,6 @@ class _DealerLoginPageState extends State<DealerLoginPage> {
                       const SizedBox(
                         height: kMargin30,
                       ),
-
                     ],
                   ),
                 ),

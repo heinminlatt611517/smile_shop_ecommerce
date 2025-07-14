@@ -60,6 +60,8 @@ CategoryVO _$CategoryVOFromJson(Map<String, dynamic> json) => CategoryVO(
           ?.map((e) => SubcategoryVO.fromJson(e as Map<String, dynamic>))
           .toList(),
       image: json['image'] as String?,
+      type: $enumDecodeNullable(_$CategoryTypeEnumMap, json['type']) ??
+          CategoryType.normal,
     );
 
 Map<String, dynamic> _$CategoryVOToJson(CategoryVO instance) =>
@@ -68,4 +70,11 @@ Map<String, dynamic> _$CategoryVOToJson(CategoryVO instance) =>
       'name': instance.name,
       'subcategory': instance.subCategories,
       'image': instance.image,
+      'type': _$CategoryTypeEnumMap[instance.type],
     };
+
+const _$CategoryTypeEnumMap = {
+  CategoryType.normal: 'normal',
+  CategoryType.below3000: 'below3000',
+  CategoryType.promotionPoint: 'promotionPoint',
+};

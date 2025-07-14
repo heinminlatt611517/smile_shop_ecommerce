@@ -6,7 +6,6 @@ import 'package:smile_shop/blocs/package_details_bloc.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/utils/images.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../widgets/loading_view.dart';
 
@@ -26,12 +25,11 @@ class PackageDetailsPage extends StatelessWidget {
             Container(
               decoration: const BoxDecoration(color: kBackgroundColor),
             ),
-            Selector<PackageDetailsBloc,bool>(
-              selector: (context,bloc)=>bloc.isLoading,
-              builder: (context,isLoading,child)=>
-               Stack(
-                 children: [
-                   Column(
+            Selector<PackageDetailsBloc, bool>(
+              selector: (context, bloc) => bloc.isLoading,
+              builder: (context, isLoading, child) => Stack(
+                children: [
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ///app bar
@@ -45,7 +43,8 @@ class PackageDetailsPage extends StatelessWidget {
                                 Navigator.pop(context);
                               },
                               child: Padding(
-                                padding: const EdgeInsets.only(left: kMarginMedium2),
+                                padding:
+                                    const EdgeInsets.only(left: kMarginMedium2),
                                 child: Image.asset(
                                   kBackIcon,
                                   fit: BoxFit.contain,
@@ -67,154 +66,155 @@ class PackageDetailsPage extends StatelessWidget {
                       ),
 
                       ///gold package dealer
-                       Consumer<PackageDetailsBloc>(
-                         builder: (context, bloc, child) => Padding(
-                           padding: const EdgeInsets.all(kMarginMedium2),
-                           child: Column(
-                             crossAxisAlignment: CrossAxisAlignment.start,
-                             children: [
-                               ///gold package dealer
-                               Container(
-                                 padding: const EdgeInsets.all(kMarginMedium2),
-                                 decoration: BoxDecoration(
-                                     color: const Color(0xffF7E1C5),
-                                     borderRadius:
-                                     BorderRadius.circular(kMarginMedium2)),
-                                 child: Column(
-                                   children: [
-                                     const Row(
-                                       children: [
-                                         Icon(Icons.title),
-                                         Text(
-                                           'Gold Package Dealer',
-                                           style: TextStyle(
-                                               fontSize: kTextRegular2x,
-                                               fontWeight: FontWeight.bold,
-                                               color: Colors.black),
-                                         )
-                                       ],
-                                     ),
+                      Consumer<PackageDetailsBloc>(
+                        builder: (context, bloc, child) => Padding(
+                          padding: const EdgeInsets.all(kMarginMedium2),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ///gold package dealer
+                              Container(
+                                padding: const EdgeInsets.all(kMarginMedium2),
+                                decoration: BoxDecoration(
+                                    color: const Color(0xffF7E1C5),
+                                    borderRadius:
+                                        BorderRadius.circular(kMarginMedium2)),
+                                child: Column(
+                                  children: [
+                                    const Row(
+                                      children: [
+                                        Icon(Icons.title),
+                                        Text(
+                                          'Gold Package Dealer',
+                                          style: TextStyle(
+                                              fontSize: kTextRegular2x,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black),
+                                        )
+                                      ],
+                                    ),
 
-                                     const SizedBox(
-                                       height: 20,
-                                     ),
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
 
-                                     ///progress view
-                                     Row(
-                                       children: [
-                                         const Text(
-                                           'Current Progress',
-                                           style: TextStyle(
-                                               fontSize: kTextSmall,
-                                               color: Colors.black),
-                                         ),
-                                         const Spacer(),
-                                         Text(
-                                           '${bloc.packages?.currentPurchase ?? 0}/${bloc.packages?.packagePrice ?? 0}',
-                                           style: const TextStyle(
-                                               fontSize: kTextSmall,
-                                               color: Colors.black),
-                                         )
-                                       ],
-                                     ),
-                                     const SizedBox(
-                                       height: 10,
-                                     ),
+                                    ///progress view
+                                    Row(
+                                      children: [
+                                        const Text(
+                                          'Current Progress',
+                                          style: TextStyle(
+                                              fontSize: kTextSmall,
+                                              color: Colors.black),
+                                        ),
+                                        const Spacer(),
+                                        Text(
+                                          '${bloc.packages?.currentPurchase ?? 0}/${bloc.packages?.packagePrice ?? 0}',
+                                          style: const TextStyle(
+                                              fontSize: kTextSmall,
+                                              color: Colors.black),
+                                        )
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
 
-                                     ///linear progress
-                                     if (bloc.packages?.packagePrice != null)
-                                       LinearProgressIndicator(
-                                         minHeight: 10,
-                                         value: bloc.packages!.packagePrice! /
-                                             1000000,
-                                         backgroundColor: Colors.grey,
-                                         valueColor:
-                                         const AlwaysStoppedAnimation<Color>(
-                                             kSecondaryColor),
-                                       ),
+                                    ///linear progress
+                                    if (bloc.packages?.packagePrice != null)
+                                      LinearProgressIndicator(
+                                        minHeight: 10,
+                                        value: bloc.packages!.packagePrice! /
+                                            1000000,
+                                        backgroundColor: Colors.grey,
+                                        valueColor:
+                                            const AlwaysStoppedAnimation<Color>(
+                                                kSecondaryColor),
+                                      ),
 
-                                     const SizedBox(
-                                       height: 10,
-                                     ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
 
-                                     const Row(
-                                       children: [
-                                         Text(
-                                           'Gold Package',
-                                           style: TextStyle(
-                                               fontSize: kTextSmall,
-                                               color: Colors.black),
-                                         ),
-                                         Spacer(),
-                                         Row(
-                                           children: [
-                                             Icon(
-                                               Icons.diamond,
-                                               size: 14,
-                                             ),
-                                             Text(
-                                               'Diamond Package',
-                                               style: TextStyle(
-                                                   fontSize: kTextSmall,
-                                                   color: Colors.black),
-                                             ),
-                                           ],
-                                         )
-                                       ],
-                                     ),
-                                   ],
-                                 ),
-                               ),
+                                    const Row(
+                                      children: [
+                                        Text(
+                                          'Gold Package',
+                                          style: TextStyle(
+                                              fontSize: kTextSmall,
+                                              color: Colors.black),
+                                        ),
+                                        Spacer(),
+                                        Row(
+                                          children: [
+                                            Icon(
+                                              Icons.diamond,
+                                              size: 14,
+                                            ),
+                                            Text(
+                                              'Diamond Package',
+                                              style: TextStyle(
+                                                  fontSize: kTextSmall,
+                                                  color: Colors.black),
+                                            ),
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
 
-                               const SizedBox(
-                                 height: 20,
-                               ),
+                              const SizedBox(
+                                height: 20,
+                              ),
 
-                               ///benefits view
-                               Visibility(
-                                 visible: bloc.packages?.benefits != null,
-                                 child: const Text(
-                                   'Benefits',
-                                   style: TextStyle(
-                                       fontSize: 16,
-                                       fontWeight: FontWeight.normal,
-                                       color: Colors.black),
-                                 ),
-                               ),
-                               const SizedBox(
-                                 height: 10,
-                               ),
-                               Visibility(
-                                 visible: bloc.packages?.benefits != null,
-                                 child: Container(
-                                   padding: const EdgeInsets.all(kMarginMedium2),
-                                   decoration: BoxDecoration(
-                                       borderRadius:
-                                       BorderRadius.circular(kMarginMedium2),
-                                       border: Border.all(color: kPrimaryColor)),
-                                   child:  HtmlWidget(bloc.packages?.benefits ?? ""),
-                                 ),
-                               )
-                             ],
-                           ),
-                         ),
-                       ),
+                              ///benefits view
+                              Visibility(
+                                visible: bloc.packages?.benefits != null,
+                                child: const Text(
+                                  'Benefits',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.black),
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Visibility(
+                                visible: bloc.packages?.benefits != null,
+                                child: Container(
+                                  padding: const EdgeInsets.all(kMarginMedium2),
+                                  decoration: BoxDecoration(
+                                      borderRadius:
+                                          BorderRadius.circular(kMarginMedium2),
+                                      border: Border.all(color: kPrimaryColor)),
+                                  child:
+                                      HtmlWidget(bloc.packages?.benefits ?? ""),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
                     ],
-                                 ),
+                  ),
 
-                   ///loading view
-                   if (isLoading)
-                     Container(
-                       color: Colors.black12,
-                       child: const Center(
-                         child: LoadingView(
-                           indicatorColor: kPrimaryColor,
-                           indicator: Indicator.ballSpinFadeLoader,
-                         ),
-                       ),
-                     ),
-                 ],
-               ),
+                  ///loading view
+                  if (isLoading)
+                    Container(
+                      color: Colors.black12,
+                      child: const Center(
+                        child: LoadingView(
+                          indicatorColor: kPrimaryColor,
+                          indicator: Indicator.ballSpinFadeLoader,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
             ),
           ],
         ),

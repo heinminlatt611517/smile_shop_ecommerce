@@ -213,7 +213,7 @@ class TrendingProductListItemView extends StatelessWidget {
                 Flexible(
                   child: Text(
                     (productVO?.variantVO?.isNotEmpty ?? false)
-                        ? '${productVO?.variantVO?.first.redeemPoint ?? 0} pt'
+                        ? '${productVO?.variantVO?.first.promotionPoint ?? 0} pt'
                         : '0 pt',
                     style: TextStyle(
                       height: 1.5,

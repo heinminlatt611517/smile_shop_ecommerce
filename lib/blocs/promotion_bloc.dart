@@ -3,13 +3,10 @@ import 'package:smile_shop/data/model/smile_shop_model.dart';
 import 'package:smile_shop/data/model/smile_shop_model_impl.dart';
 import 'package:smile_shop/data/vos/promotion_data_vo.dart';
 import 'package:smile_shop/data/vos/promotion_vo.dart';
-import 'package:smile_shop/data/vos/wallet_transaction_vo.dart';
 import 'package:smile_shop/data/vos/wallet_vo.dart';
 import 'package:smile_shop/network/api_constants.dart';
 
-import '../network/requests/login_request.dart';
 import '../network/requests/wallet_transition_request.dart';
-import '../network/responses/login_response.dart';
 
 class PromotionBloc extends ChangeNotifier {
   /// State

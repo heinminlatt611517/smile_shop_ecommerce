@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:smile_shop/blocs/edit_address_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:smile_shop/localization/app_localizations.dart';
 import 'package:smile_shop/data/vos/address_vo.dart';
 import 'package:smile_shop/data/vos/state_vo.dart';
 import 'package:smile_shop/data/vos/township_vo.dart';
@@ -41,7 +41,7 @@ class EditAddressPage extends StatelessWidget {
               ///body view
               SingleChildScrollView(
                 child: Padding(
-                  padding: const EdgeInsets.all(kMarginMedium2),
+                  padding: const EdgeInsets.symmetric(horizontal:  kMarginMedium2),
                   child: Column(
                     children: [
                       const SizedBox(

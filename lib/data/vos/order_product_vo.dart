@@ -72,4 +72,8 @@ class OrderProductVO {
   factory OrderProductVO.fromJson(Map<String, dynamic> json) => _$OrderProductVOFromJson(json);
 
   Map<String, dynamic> toJson() => _$OrderProductVOToJson(this);
+
+  int getTotalPrice() {
+    return ((double.tryParse(price ?? '0') ?? 0) * (qty ?? 1)).floor();
+  }
 }

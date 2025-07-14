@@ -7,7 +7,7 @@ import 'package:smile_shop/pages/otp_page.dart';
 import 'package:smile_shop/utils/colors.dart';
 import 'package:smile_shop/utils/dimens.dart';
 import 'package:smile_shop/utils/images.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:smile_shop/localization/app_localizations.dart';
 
 import '../data/dummy_data/country_code.dart';
 import '../widgets/common_dialog.dart';
@@ -65,7 +65,8 @@ class _SignUpPageState extends State<SignUpPage> {
                         builder: (context, bloc, child) => normalPhoneTextField(
                             controller: phoneController,
                             hint: '09**********',
-                            phoneCode: "${selectedCountry.name} ${selectedCountry.code}",
+                            phoneCode:
+                                "${selectedCountry.name} ${selectedCountry.code}",
                             context: context,
                             onChangeTextField: (value) {
                               bloc.onPhoneNumberChanged(value);
@@ -91,7 +92,16 @@ class _SignUpPageState extends State<SignUpPage> {
                               onChanged: (value) {
                                 bloc.onReferralCodeChanged(value);
                               },
-                              decoration: InputDecoration(filled: true, fillColor: kLoginTextFieldFillColor, border: InputBorder.none, contentPadding: const EdgeInsets.symmetric(horizontal: 21), hintText: AppLocalizations.of(context)!.enterReferralCode, hintStyle: const TextStyle(color: Colors.grey)),
+                              decoration: InputDecoration(
+                                  filled: true,
+                                  fillColor: kLoginTextFieldFillColor,
+                                  border: InputBorder.none,
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 21),
+                                  hintText: AppLocalizations.of(context)!
+                                      .enterReferralCode,
+                                  hintStyle:
+                                      const TextStyle(color: Colors.grey)),
                             ),
                           ),
                         ),
@@ -113,26 +123,34 @@ class _SignUpPageState extends State<SignUpPage> {
                       Consumer<SignupBloc>(
                         builder: (context, bloc, child) => GestureDetector(
                           onTap: () {
-                            var bloc = Provider.of<SignupBloc>(context, listen: false);
+                            var bloc =
+                                Provider.of<SignupBloc>(context, listen: false);
 
                             bloc.onTapSignUp().then((value) {
                               if (value.status == 200) {
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (builder) => OtpPage(
-                                          requestId: value.data?.requestId.toString(),
+                                          requestId:
+                                              value.data?.requestId.toString(),
                                           phone: value.data?.to,
-                                          referralCode: value.data?.referralCode,
+                                          referralCode:
+                                              value.data?.referralCode,
                                           isFromForgotPasswordPage: false,
                                         )));
                               }
                             }).catchError((error) {
-                              showCommonDialog(context: context, dialogWidget: ErrorDialogView(errorMessage: error.toString()));
+                              showCommonDialog(
+                                  context: context,
+                                  dialogWidget: ErrorDialogView(
+                                      errorMessage: error.toString()));
                             });
                           },
                           child: Container(
                             height: 40,
                             width: double.infinity,
-                            decoration: BoxDecoration(color: kPrimaryColor, borderRadius: BorderRadius.circular(4)),
+                            decoration: BoxDecoration(
+                                color: kPrimaryColor,
+                                borderRadius: BorderRadius.circular(4)),
                             child: Center(
                               child: Text(
                                 AppLocalizations.of(context)!.signUp,
@@ -150,10 +168,15 @@ class _SignUpPageState extends State<SignUpPage> {
                       Center(
                         child: RichText(
                             text: TextSpan(children: [
-                          TextSpan(text: AppLocalizations.of(context)!.ifYouAlreadyHaveAnAccount, style: const TextStyle(fontSize: kTextRegular, color: Colors.black)),
+                          TextSpan(
+                              text: AppLocalizations.of(context)!
+                                  .ifYouAlreadyHaveAnAccount,
+                              style: const TextStyle(
+                                  fontSize: kTextRegular, color: Colors.black)),
                           TextSpan(
                               text: ' ${AppLocalizations.of(context)!.login}',
-                              style: const TextStyle(fontSize: kTextRegular, color: kPrimaryColor),
+                              style: const TextStyle(
+                                  fontSize: kTextRegular, color: kPrimaryColor),
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () {
                                   Navigator.pop(context);

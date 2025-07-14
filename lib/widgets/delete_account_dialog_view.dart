@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../utils/colors.dart';
 import '../utils/dimens.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
+import 'package:smile_shop/localization/app_localizations.dart';
 
 class DeleteAccountDialogView extends StatelessWidget {
   final Function onTapConfirm;
@@ -42,19 +41,19 @@ class DeleteAccountDialogView extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-             Text(
+            Text(
               AppLocalizations.of(context)!.areYouSure,
-              style:const TextStyle(
+              style: const TextStyle(
                 fontSize: kTextRegular2x,
                 color: Colors.black,
                 fontWeight: FontWeight.w600,
               ),
             ),
             const SizedBox(height: 4),
-             Text(
-               AppLocalizations.of(context)!.doYouWantToDeleteAccount,
+            Text(
+              AppLocalizations.of(context)!.doYouWantToDeleteAccount,
               textAlign: TextAlign.center,
-              style:const TextStyle(
+              style: const TextStyle(
                 fontSize: kTextRegular,
                 color: Colors.black,
                 fontWeight: FontWeight.normal,
@@ -74,10 +73,10 @@ class DeleteAccountDialogView extends StatelessWidget {
                       decoration: BoxDecoration(
                           color: Colors.grey,
                           borderRadius: BorderRadius.circular(4)),
-                      child:  Center(
+                      child: Center(
                         child: Text(
                           AppLocalizations.of(context)!.cancel,
-                          style:const TextStyle(color: Colors.white),
+                          style: const TextStyle(color: Colors.white),
                         ),
                       ),
                     ),
@@ -95,10 +94,10 @@ class DeleteAccountDialogView extends StatelessWidget {
                       decoration: BoxDecoration(
                           color: kPrimaryColor,
                           borderRadius: BorderRadius.circular(4)),
-                      child:  Center(
+                      child: Center(
                         child: Text(
                           AppLocalizations.of(context)!.confirm,
-                          style:const TextStyle(color: Colors.white),
+                          style: const TextStyle(color: Colors.white),
                         ),
                       ),
                     ),

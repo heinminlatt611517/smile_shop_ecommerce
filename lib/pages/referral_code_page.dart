@@ -8,7 +8,7 @@ import 'package:smile_shop/utils/strings.dart';
 import 'package:smile_shop/widgets/common_button_view.dart';
 import 'package:smile_shop/widgets/svg_image_view.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:smile_shop/localization/app_localizations.dart';
 
 class ReferralCodePage extends StatelessWidget {
   const ReferralCodePage({super.key});
@@ -40,7 +40,9 @@ class ReferralCodePage extends StatelessWidget {
                 child: Row(
                   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const SizedBox(width: kMarginMedium2,),
+                    const SizedBox(
+                      width: kMarginMedium2,
+                    ),
                     InkWell(
                       onTap: () {
                         Navigator.pop(context);
@@ -55,11 +57,18 @@ class ReferralCodePage extends StatelessWidget {
                       child: Text(
                         AppLocalizations.of(context)?.referralCode ?? '',
                         textAlign: TextAlign.center,
-                        style: const TextStyle(fontSize: kTextRegular22, color: Colors.black, fontWeight: FontWeight.w600),
+                        style: const TextStyle(
+                            fontSize: kTextRegular22,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w600),
                       ),
                     ),
-                    Container(width: 26,),
-                    const SizedBox(width: kMarginMedium2,),
+                    Container(
+                      width: 26,
+                    ),
+                    const SizedBox(
+                      width: kMarginMedium2,
+                    ),
                   ],
                 ),
               ),
@@ -68,20 +77,27 @@ class ReferralCodePage extends StatelessWidget {
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(vertical: kMarginMedium2),
-                margin: const EdgeInsets.only(top: 146, left: kMarginMedium2, right: kMarginMedium2),
-                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(kMarginMedium2)),
+                margin: const EdgeInsets.only(
+                    top: 146, left: kMarginMedium2, right: kMarginMedium2),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(kMarginMedium2)),
                 child: Column(
                   children: [
                     Text(
                       AppLocalizations.of(context)?.yourReferralCodeIs ?? '',
-                      style: const TextStyle(fontSize: kTextSmall, color: Colors.black),
+                      style: const TextStyle(
+                          fontSize: kTextSmall, color: Colors.black),
                     ),
                     const SizedBox(
                       height: kMarginMedium2,
                     ),
                     Text(
                       GetStorage().read(kBoxKeyReferralCode) ?? "",
-                      style: const TextStyle(fontSize: 32, color: kPrimaryColor, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          fontSize: 32,
+                          color: kPrimaryColor,
+                          fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(
                       height: kMarginMedium2,
@@ -95,7 +111,8 @@ class ReferralCodePage extends StatelessWidget {
                       height: kMarginMedium2,
                     ),
                     QrImageView(
-                      data: 'https://smile.saxdihtan.asia/signup?referral_code=${GetStorage().read(kBoxKeyReferralCode) ?? ""}',
+                      data:
+                          'https://smile.saxdihtan.asia/signup?referral_code=${GetStorage().read(kBoxKeyReferralCode) ?? ""}',
                       version: QrVersions.auto,
                       size: 220.0,
                     ),
@@ -105,11 +122,14 @@ class ReferralCodePage extends StatelessWidget {
                     SizedBox(
                         width: 260,
                         child: CommonButtonView(
-                            label: AppLocalizations.of(context)?.shareReferralCode ?? '',
+                            label: AppLocalizations.of(context)
+                                    ?.shareReferralCode ??
+                                '',
                             labelColor: Colors.white,
                             bgColor: kPrimaryColor,
                             onTapButton: () {
-                              launchURL("https://smile.saxdihtan.asia/signup?referral_code=${GetStorage().read(kBoxKeyReferralCode) ?? ""}");
+                              launchURL(
+                                  "https://smile.saxdihtan.asia/signup?referral_code=${GetStorage().read(kBoxKeyReferralCode) ?? ""}");
                             })),
                     const SizedBox(
                       height: kMarginXXLarge,
